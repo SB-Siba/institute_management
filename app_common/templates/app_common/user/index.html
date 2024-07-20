@@ -1,0 +1,314 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}{% endblock title %}</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+2VbM5rtGx8e8vgKVSuFy4K47R6JwSwUKF1WDEw" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fPOxyf8a+pV/h5vN8yrRtSKfPe/DMAqz6Z5s5Pp63ZZhVkZf5VIJ2ZlC8kr7U5UZ"
+        crossorigin="anonymous"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Sono:wght@200;300;400;500;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <main>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand me-lg-5 me-0" href="{% url 'app_common:home' %}">
+                    <!-- {% static 'shopingsite/pod-talk-logo.png' %} -->
+                    <img src="" class="logo-image img-fluid"
+                        alt="templatemo pod talk">
+                </a>
+
+                <form action="" method="post"
+                    class="custom-form search-form flex-fill me-3" role="search">
+                    {% csrf_token %}
+                    <div class="input-group input-group-lg">
+                        <input name="search-box" type="search" class="form-control" id="search"
+                            placeholder="Search Books" aria-label="Search">
+
+                        <button type="submit" class="form-control" id="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </form>
+                <!-- <div id="search-suggestions"></div> -->
+                <div id="search-suggestions" class="position-absolute border mx-auto" style="display: none;"></div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav1"
+                    aria-controls="navbarNav1" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav1">
+                    <ul class="navbar-nav ms-lg-auto text-black">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'app_common:home' %}">Home</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="">About</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:logout' %}">log out</a>
+                        </li>
+                        <li class="nav-item dropdown hhh">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink1" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.full_name }}</a>
+                            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink1">
+                                <li><a class="dropdown-item" href="{% url 'users:profile' %}">Account Details</a></li>
+                                <li><a class="dropdown-item" href="">Subscribed Books</a></li>
+                                <li><a class="dropdown-item" href="">Order Books</a></li>
+                                <li><a class="dropdown-item" href="">Become A Partner</a></li>
+                                <li><a class="dropdown-item" href="{% url 'users:passwordchange' %}">Change Password</a></li>
+                                <li>
+                                    <button class="form-control btn btn-link text-decoration-none text-black"><a
+                                            href="{% url 'users:logout' %}"
+                                            class="form-control btn btn-link text-decoration-none text-black">Logout</a></button>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href=""><i
+                                    class="fas fa-shopping-cart text-primary"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </main>
+    {% block main_content %}
+
+    {% endblock main_content %}
+
+    <footer class="site-footer mt-0 pt-0 mb-0 pb-0">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                <span class="fw-bold">Get connected with us on social networks : </span>
+            </div>
+            <!-- Left -->
+
+            <!-- Right -->
+            <div>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <!-- Right -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-2">
+                            <img src="" class="logo-image img-fluid mb-2"
+                                alt="templatemo pod talk" style="height: 50px; width: 50px;"><br>Audiobook Pvt. Ltd.
+                        </h6>
+                        <p class="text-black">
+                            Dive into captivating audiobooks across genres. Join our community and start
+                            your listening journey today!
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Biography & Memoir</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Science Fiction & Fantasy</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Business & Careers</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Education & Learning</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Pricing</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Settings</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Orders</a>
+                        </p>
+                        <p class="text-black">
+                            <a href="#!" class="text-reset">Help</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                        <p class="text-black">
+                            <i class="fas fa-envelope me-3"></i>
+                            info@example.com
+                        </p>
+                        <p class="text-black"><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                        <p class="text-black"><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2021 Copyright:
+            <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+
+    {% block js_block %}
+
+    {% endblock js_block %}
+    <!-- JAVASCRIPT FILES -->
+    <script>
+        $(document).ready(function() {
+            $('#search').keyup(function() {
+                var search_term = $(this).val();
+                if (search_term.length >= 1) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '',
+                        data: {
+                            'search_term': search_term,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            var suggestionsHtml = '';
+                            response.forEach(function(product) {
+                                // Modify the suggestionsHtml to include both title and ID
+                                suggestionsHtml += '<div class="suggestion border-bottom border-1 cursor-pointer suggestion-hover" data-id="' + product.id + '">' + product.title + '</div>';
+                            });
+                            $('#search-suggestions').html(suggestionsHtml).show();
+                        }
+                    });
+                } else {
+                    $('#search-suggestions').hide();
+                }
+            });
+
+            // Handle click on suggestion
+            $(document).on('click', '.suggestion', function() {
+                // Get the ID of the clicked suggestion
+                var productId = $(this).data('id');
+                // Construct the URL using Django template syntax
+                var productUrl = ''.replace('0', productId);
+                // Redirect the user to the product details page
+                window.location.href = productUrl;
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).click(function(event) {
+                if (!$(event.target).closest('#search-suggestions').length && !$(event.target).is('#search')) {
+                    $('#search-suggestions').hide();
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const navLinks = document.querySelectorAll('.nav-link');
+    
+          // Function to set active class based on current URL
+          const setActiveLink = () => {
+            const currentPath = window.location.pathname;
+            navLinks.forEach(link => {
+              if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            });
+          };
+    
+          // Set active link on page load
+          setActiveLink();
+    
+          // Add event listener to each nav link
+          navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+              navLinks.forEach(nav => nav.classList.remove('active'));
+              this.classList.add('active');
+            });
+          });
+    
+          // Listen for URL changes (if navigation is done via AJAX or other methods)
+          window.addEventListener('popstate', setActiveLink);
+        });
+    </script>
+    
+
+</body>
+
+</html>

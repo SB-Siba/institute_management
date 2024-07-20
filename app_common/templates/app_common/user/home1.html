@@ -1,0 +1,271 @@
+{% extends 'app_common/user/index.html' %}
+{% load static %}
+{% block title %}
+Home Page
+{% endblock title %}
+{% block main_content %}
+<section class="hero-section">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-12">
+                <div class="text-center mb-5 pb-2">
+                    <h1 class="text-black">Listen & Discover: Your Audiobook Destination</h1>
+
+                    <p class="text-black">Dive into captivating audiobooks across genres. Join our community and start
+                        your listening journey today!</p>
+
+                    <a href="#section_2" class="btn custom-btn smoothscroll mt-3">Start listening</a>
+                </div>
+
+                <div class="carousel-container">
+                    <div class="owl-carousel owl-theme px-0">
+                        {% for book in audioBookss %}
+                        <div class="owl-carousel-info-wrap item">
+                            <img src="{{ book.audiobook_image.url }}" class="owl-carousel-image img-fluid" alt="" style="height: 400px;">
+                
+                            <div class="owl-carousel-info">
+                                <small class="mb-2">{{ book.title }}</small><br>
+                                <span class="badge">{{ book.book_discount_price }}</span>
+                                <span class="badge bg-danger" style="text-decoration: line-through;">{{ book.book_max_price }}</span>
+                            </div>
+                
+                            <div class="social-share">
+                                <ul class="social-icon">
+                                    <li class="social-icon-item">
+                                        <a href="" class="social-icon-link fa fa-info-circle"></a>
+                                    </li>
+                                    <li class="social-icon-item">
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ book.id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="social-icon-link fas fa-shopping-cart"></button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<section class="latest-podcast-section section-padding pb-0" id="section_2">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-12 col-12">
+                <div class="section-title-wrap mb-5">
+                    <h4 class="section-title">Recent Audiobooks</h4>
+                </div>
+            </div>
+            {% for a_book in recent_audioBooks %}
+            <div class="col-lg-6 col-12 mb-4 mb-lg-0">
+                <div class="custom-block d-flex">
+                    <div class="">
+                        <div class="custom-block-icon-wrap">
+                            <div class="section-overlay"></div>
+                            <a href="detail-page.html" class="custom-block-image-wrap">
+                                <img src="{{a_book.audiobook_image.url}}" class="custom-block-image img-fluid" alt="">
+
+                                <a href="" class="custom-block-icon">
+                                    <li class="social-icon-item">
+                                        <i class="social-icon-link fa fa-info-circle"></i>
+                                    </li>
+                                </a>
+                            </a>
+                        </div>
+
+                        <div class="mt-2">
+                            {% if user_subscription %}
+                                <a href="" class="btn custom-btn">
+                                    Explore
+                                </a>
+                            {% else %}
+                                <a href="" class="btn custom-btn">
+                                    Subscribe
+                                </a>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+
+                    <div class="custom-block-info">
+                        <h5 class="mb-2">
+                            <a href="">
+                                {{a_book.title}}
+                            </a>
+                        </h5>
+
+
+
+                        <p class="mb-0 scrollable"><small>{{ a_book.description }}</small></p>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+</section>
+<!-- Category wise products -->
+<section class="topics-section section-padding pb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+                <div class="section-title-wrap mb-5">
+                    <h4 class="section-title">Category Wise Books</h4>
+                </div>
+            </div>
+            <div class="col-lg-12 col-12">
+                <div class="d-flex justify-content-evenly mb-5">
+                    <div><a href="#" class="category-link active" data-category="">All</a></div>
+                    {% for category in category_obj %}
+                    <div><a href="#" class="category-link" data-category="{{ category.title }}">{{ category.title }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" >
+        <div class="row" id="productList">
+            
+        </div>
+    </div>
+
+</section>
+
+<section class="topics-section section-padding pb-0" id="section_3">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-12">
+                <div class="section-title-wrap mb-5">
+                    <h4 class="section-title">Trending Books</h4>
+                </div>
+            </div>
+            {% for t_book,e_count in booksandepisode %}
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+                <div class="custom-block custom-block-overlay">
+                    <a href="" class="custom-block-image-wrap">
+                        <img src="{{t_book.audiobook_image.url}}" class="custom-block-image img-fluid" alt="">
+                    </a>
+
+                    <div class="custom-block-info custom-block-overlay-info">
+                        <h5 class="mb-1">
+                            <a href="">
+                                <small>Details</small>
+                            </a>
+                        </h5>
+
+                        <p class="badge mb-0">Episodes - {{e_count}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
+
+{% block js_block %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchProducts(""); // Fetch all products initially
+
+        document.querySelectorAll('.category-link').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelectorAll('.category-link').forEach(function (link) {
+                    link.classList.remove('active');
+                });
+                // Add 'active' class to the clicked link
+                this.classList.add('active');
+                var category = this.getAttribute('data-category');
+                fetchProducts(category); // Fetch products based on the selected category
+                console.log(category)
+            });
+        });
+    });
+
+    function fetchProducts(category) {
+        var url = "/filter-books/?category=" + encodeURIComponent(category);
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+
+                var productList = document.getElementById('productList');
+                productList.innerHTML = '';
+                if (data.length === 0) {
+                    productList.innerHTML = '<div class="d-flex justify-content-center fw-bold">No products available</div>';
+                } else {
+                    data.forEach(product => {
+                        var productHTML = `
+                            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+                                <div class="custom-block custom-block-overlay">
+                                    <a href="/productdetails/${product.id}" class="custom-block-image-wrap">
+                                        <img src="${product.image_url}" class="custom-block-image img-fluid" alt="">
+                                    </a>
+                                    <div class="custom-block-info custom-block-overlay-info">
+                                        <div class="mb-1"style="height: 50px;">
+                                            <a href="">
+                                                ${product.name}
+                                            </a>
+                                        </div>
+                                        <div class="audio-container my-1 d-flex justify-content-between">
+                                            <audio id="audio-${product.id}" src="${product.audio_file_url}"></audio>
+                                            <a class="playpause-btn" onclick="togglePlayPause('audio-${product.id}',this)">
+                                                <i class="social-icon-link fa fa-play"></i>
+                                            </a>
+                                            ${generateSubscriptionButton(product.id)}
+                                        </div>
+                                        <div class="d-flex justify-content-between my-3">
+                                            <p class="badge mb-0 bg-danger" style="text-decoration: line-through;">OldPrice: ${product.old_price}</p>
+                                            <p class="badge mb-0 bg-success">Price: ${product.price}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        productList.innerHTML += productHTML;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+            });
+    }
+
+    function generateSubscriptionButton(productId) {
+        var isUserSubscribed = {{ user_subscription|yesno:"true,false" }};
+        if (isUserSubscribed) {
+            return `<a href="/subscribebookepisodes/${productId}" class="btn btn-outline-primary">Explore To Listen</a>`;
+        } else {
+            return `<a href="/pricingpage" class="btn btn-outline-primary">Subscribe To Listen</a>`;
+        }
+    }
+
+    function togglePlayPause(audioId, button) {
+        var audio = document.getElementById(audioId);
+        if (audio.paused) {
+            audio.play();
+            button.innerHTML = '<i class="social-icon-link fa fa-pause"></i>';
+        } else {
+            audio.pause();
+            button.innerHTML = '<i class="social-icon-link fa fa-play"></i>';
+        }
+    }
+</script>
+
+{% endblock js_block %}

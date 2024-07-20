@@ -1,0 +1,16 @@
+{% extends 'shoppingsite/index.html' %}
+{% load static %}
+{% block title %}
+Add Address
+{% endblock title %}
+{% block main_content %}
+<div class="container mt-3" style="width: 60%;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <div>
+            <button class="btn btn-primary w-full" type="submit">Add</button>
+        </div>
+    </form>
+</div>
+{% endblock main_content %}
