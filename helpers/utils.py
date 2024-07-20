@@ -2,6 +2,8 @@ from .decorators import *
 from django.core.paginator import Paginator
 from rest_framework.pagination import PageNumberPagination
 import uuid
+import base64
+
 
 def get_rand_number(number_of_digit):
     return str(int(str(uuid.uuid4().int)[:number_of_digit]))
@@ -59,3 +61,18 @@ def dict_filter(data_dict, filters):
         if key in filters:
             result[key] = value
     return result
+
+
+def generate_unique_id(digit):
+    return str(int(str(uuid.uuid4().int)[:digit]))
+
+
+def encoding_string(string_data):
+    encoded_bytes = base64.b64encode(string_data.encode('utf-8'))
+    encoded_string = encoded_bytes.decode('utf-8')
+    return encoded_string
+
+def decode_string(encoded_string):
+    decoded_bytes = base64.b64decode(encoded_string)
+    decoded_string = decoded_bytes.decode('utf-8')
+    return decoded_string

@@ -1,7 +1,7 @@
 from django.urls import path
 from users import views
-from users.forms import CustomPasswordResetForm, PasswordChangeForm
-from users.user_views import user_views
+from users import forms
+from users.user_views import user_views,admin_views
 from django.contrib.auth import views as auth_view
 
 app_name = 'users'
@@ -9,14 +9,12 @@ app_name = 'users'
 
 urlpatterns = [
     #Authentication urls
+    path('', user_views.HomeView.as_view(), name='home'),
+    path('admin/', admin_views.AdminDashboard.as_view(), name='admin_dashboard'),
     path('signup', views.Registration.as_view(), name = "signup"),
     path('login', views.Login.as_view(), name = "login"),
-    path("passwordChange/",auth_view.PasswordChangeView.as_view(template_name = 'users/authtemp/changepassword.html',form_class = PasswordChangeForm,success_url = '/passwordchangedone'),name='passwordchange'),
-    path("passwordchangedone/",auth_view.PasswordChangeDoneView.as_view(template_name = 'users/authtemp/changepassworddone.html'),name='passwordchangedone'),
-    path('password-reset/', views.CustomPasswordResetView.as_view(),name='password-reset'),
-    path('password-reset/done/', views.CustomPasswordResetDoneView.as_view(),name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-    path('password-reset-complete/',views.CustomPasswordResetCompleteView.as_view(),name='password_reset_complete'),
+    path('forgot-password/', views.ForgotPasswordView.as_view(), name='forgot_password'),
+    path('reset-password/<str:token>/', views.ResetPasswordView.as_view(), name='reset_password'),
     path('logout/', views.Logout.as_view(), name = "logout"),
 
 

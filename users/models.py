@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser ,PermissionsMixin
 from PIL import Image
 from users.manager import MyAccountManager
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from helpers import utils
+import uuid
+
 
 def generate_random_string():
     random_uuid = uuid.uuid4()
@@ -53,5 +58,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
+    def send_reset_password_email(self):
+        token = self.generate_reset_password_token()
+        reset_link = f"http://35.154.55.245/reset-password/{token}/"
+        subject = 'Reset your password'
+        message = f'Hi {self.full_name},\n\nTo reset your password, please click the link below:\n\n{reset_link}\n\nIf you did not request this, please ignore this email.'
+        send_mail(subject, message, 'info@swastikwealthcare.com', [self.email])
+        
+        
+        
+    def generate_reset_password_token(self):
+        token = str(uuid.uuid4())
+        self.token = token
+        self.save()
+        return token
+    
+    def reset_password(self, token, new_password):
+        # Check if the token is valid (you may want to implement token validation logic here)
+        if self.token == token:
+            # Set the new password and save the user
+            self.set_password(new_password)
+            self.token = None  # Clear the token after password reset
+            self.save()
+            return True
+        else:
+            return False
 
