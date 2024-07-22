@@ -55,12 +55,12 @@ class Registration(View):
                             message = f"""\
                             Dear {full_name},
                             Your account has been created successfully on our site. You can login now."""
-                            from_email = "forverify.noreply@gmail.com"
+                            from_email = "noreplyf577@gmail.com"
                             send_mail(subject, message, from_email,[user_email], fail_silently=False)
 
                             new_user.save()
                             messages.success(request, 'Registration Successful!')
-                            return redirect('users:login')
+                            return redirect('users:home')
                         except Exception as e:
                             print("Error in sending verfication mail",e)
                             messages.error(request,'Email could not be sent due to some error.Please contact support for further assistance.')

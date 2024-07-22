@@ -3,20 +3,46 @@ from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPa
 from . import models
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-
-
-def validate_contact(value):
-    if not value.isdigit() or len(value) != 10:
-        raise ValidationError('Contact number must be exactly 10 digits.')
+from django.core.validators import RegexValidator
+import re
+# def validate_contact(value):
+#     if not value.isdigit() or len(value) != 10:
+#         raise ValidationError('Contact number must be exactly 10 digits.')
 
 class SignUpForm(forms.Form):
     full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
+    email = forms.EmailField(max_length=254, help_text='Enter a valid email address.',
                              widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
-        validators=[validate_contact],widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    contact = forms.CharField(max_length=10,help_text=' Enter Mobile Number',
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 6 :
+            raise ValidationError('Password length must be 6 characters.')
+
+        if not re.search(r'[A-Za-z]', password):
+            raise ValidationError('Password must contain at least one alphabet.')
+
+        if not re.search(r'[0-9]', password):
+            raise ValidationError('Password must contain at least one number.')
+
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            raise ValidationError('Password must contain at least one special character.')
+
+        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', 'Passwords do not match.')
+
+        return cleaned_data
 
 class LoginForm(forms.Form):
     email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -55,7 +81,7 @@ class UpdateProfileForm(forms.Form):
     full_name.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Full Name',"required":"required"})
 
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
-        validators=[validate_contact],widget=forms.TextInput(attrs={'class': 'form-control'}))
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     bio = forms.CharField(required=False, widget=forms.Textarea(attrs={"class":"form-control","rows":"1"}))
     bio.widget.attrs.update({'class': 'form-control','type':'text'})
