@@ -2,6 +2,9 @@
 {% load static %}
 {% block content %}
 
+
+
+{% comment %}
 <!-- Section: Design Block -->
 <div class="background-radial-gradient overflow-hidden h-100 mb-0">
     <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -26,9 +29,9 @@
           <div class="card bg-glass">
             <div class="card-body px-4 py-5 px-md-5">
                 <form method="post" action="">
-              
+             
                     {% csrf_token %}
-                              <h1 class="mt-4 mb-3"> Login</h1>         
+                              <h5 class="mt-4 mb-3"> Login1</h5>         
                     {% for field in form %}
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label text-white">{{field.label}}:</label>
@@ -63,4 +66,40 @@
       
     </div>
 </div>
+
+{% endcomment %}
+
+<section>
+  
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Click here to login
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <img src="{% static 'users\images\logo.png' %}" alt="logo">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% csrf_token %}
+        <h5 class="mt-4 mb-3"> Login1</h5> 
+        <p>Deepak kumar dutta</p>        
+            {% for field in form %}
+        <div class="mb-3">
+        <label for="recipient-name" class="col-form-label text-white">{{field.label}}:</label>
+            {{field}}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">SIGN IN</button>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
 {% endblock content %}
