@@ -31,7 +31,7 @@
                 <form method="post" action="">
              
                     {% csrf_token %}
-                              <h5 class="mt-4 mb-3"> Login1</h5>         
+                              <h5 class="mt-4 mb-3"> Login2</h5>         
                     {% for field in form %}
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label text-white">{{field.label}}:</label>
@@ -43,16 +43,14 @@
                         <button class="btn btn-primary w-full mt-5" type="submit">Log in</button>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="{% url 'users:password-reset' %}"
+                        <a href="{% url 'users:forgot_password' %}"
                             class="text-sm text-white mt-5 mb-5 text-primary-hover text-underline" style="font-weight: bold;">Forgot
                             password?</a>
                     </div>
                     <div class="form-group mt-2">
                         {% include 'snippets/alert.html' %}
                     </div>
-                    <div class="form-group mt-2">
-                        {% include 'snippets/alert.html' %}
-                    </div>
+                    
                 </form>
             </div>
           </div>
@@ -80,14 +78,15 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <img src="{% static 'users\images\logo.png' %}" alt="logo">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+      <div class="modal-header border-0 loginHeader">
+        <img src="{% static 'users/images/logo.png' %}" class="mx-auto" alt="logo">
+        <button type="button" class="btn-close me" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
       <div class="modal-body">
         {% csrf_token %}
-        <h5 class="mt-4 mb-3"> Login1</h5> 
-        <p>Deepak kumar dutta</p>        
+        <h5 class="mt-4 mb-3">Welcome back! Sign in with</h5> 
+        <button><a href="#">Facebook</a></button>
             {% for field in form %}
         <div class="mb-3">
         <label for="recipient-name" class="col-form-label text-white">{{field.label}}:</label>

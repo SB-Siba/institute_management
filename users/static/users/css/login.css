@@ -2,7 +2,10 @@
     height:5rem;
     width: 5rem;
 } 
-
+.loginHeader{
+    display: flex;
+    justify-content: space-around;
+}
 
 .modal-body p{
     font-size: 5rem;
