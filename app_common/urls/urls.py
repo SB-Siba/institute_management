@@ -1,12 +1,11 @@
-# from django.urls import path
-# from users import views
-# from app_common.app_common_views import user_views,admin_views
+from django.urls import path
+from app_common import views
 
 
-# app_name = 'app_common'
+app_name = 'app_common'
 
 
 
-# urlpatterns = [
-    
-# ]
+urlpatterns = [
+    path('about',views.AboutPage.as_view(),name="about"),    
+]

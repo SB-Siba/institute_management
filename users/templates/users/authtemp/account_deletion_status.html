@@ -1,0 +1,14 @@
+{% extends "users/user/index.html" %}
+
+{% block content %}
+  <h2>Account Deletion Status</h2>
+  {% if user.deletion_requested %}
+    <p>Your account is scheduled for deletion in {{ days_remaining }} days.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button name="cancel_deletion" type="submit" class="btn btn-warning">Cancel Deletion</button>
+    </form>
+  {% else %}
+    <p>Your account is not scheduled for deletion.</p>
+  {% endif %}
+{% endblock %}

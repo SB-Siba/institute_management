@@ -10,6 +10,8 @@
   <meta name="author" content="" />
 
   <title>landingpage</title>
+  <link rel="icon" href="../../../static/app_common/images/greenlogo.png">
+
 
   <!-- CSS FILES -->
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
@@ -26,14 +28,14 @@
   <nav id="co">
     <article>
       <div id="logo">
-        <a href="{% url 'users:home' %}" class="navbar-brand me-lg-5 me-0" style="padding-left: 100px">
+        <a href="" class="navbar-brand me-lg-5 me-0" style="padding-left: 100px">
           <!-- {% static 'shopingsite/pod-talk-logo.png' %} -->
           <img src="" class="logo-image img-fluid" alt="templatemo pod talk" />
         </a>
       </div>
       <div id="menu">
         <ol>
-          <li><a href="" class="x">Help</a></li>
+          <li><a href="{% url 'app_common:about' %}" class="x">Help</a></li>
           <li><a href="">|</a></li>
           <li>
             <a href="{% url 'users:login' %}" class="x">Log in</a>

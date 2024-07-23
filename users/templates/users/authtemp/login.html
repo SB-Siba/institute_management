@@ -2,6 +2,9 @@
 {% load static %}
 {% block content %}
 
+
+
+{% comment %}
 <!-- Section: Design Block -->
 <div class="background-radial-gradient overflow-hidden h-100 mb-0">
     <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -26,9 +29,9 @@
           <div class="card bg-glass">
             <div class="card-body px-4 py-5 px-md-5">
                 <form method="post" action="">
-              
+             
                     {% csrf_token %}
-                              <h1 class="mt-4 mb-3"> Login</h1>         
+                              <h5 class="mt-4 mb-3"> Login1</h5>         
                     {% for field in form %}
                     <div class="mb-3">
                         <label for="recipient-name" class="col-form-label text-white">{{field.label}}:</label>
@@ -57,8 +60,31 @@
             <small>Dont't have an account?</small>
             <a href="{% url 'users:signup' %}" class="text-warning text-sm font-semibold">Sign up</a>
         </div>
+        <div class="text-center">
+          <a href="{% url 'users:password-reset' %}" class="text-sm text-white text-primary-hover font-semibold" style="font-weight: bold;">Forgot?</a>
+      </div>
       </div>
       
     </div>
+</div>
+
+{% endcomment %}
+
+<h2>Login</h2>
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+<a href="{% url 'users:password-reset' %}" class="text-sm text-white text-primary-hover font-semibold" style="font-weight: bold;">Forgot?</a>
+
+<div class="text-center">
 </div>
 {% endblock content %}

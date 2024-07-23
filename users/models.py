@@ -24,7 +24,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     address = models.JSONField(default= dict, null=True, blank=True)
-    
+    deletion_requested = models.BooleanField(default=False)
+    deletion_date = models.DateTimeField(null=True, blank=True)
     wallet = models.FloatField(default=0.0)
    
     token = models.CharField(max_length=100, null=True, blank=True)
@@ -84,3 +85,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return False
 
+    def request_deletion(self):
+        """Request account deletion."""
+        self.deletion_requested = True
+        self.deletion_date = timezone.now() + timedelta(days=30)
+        self.save()
+
+    def cancel_deletion(self):
+        """Cancel account deletion."""
+        self.deletion_requested = False
+        self.deletion_date = None
+        self.save()

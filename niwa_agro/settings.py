@@ -23,6 +23,9 @@ AUTHENTICATION_BACKENDS = [
 # Application definition
 
 INSTALLED_APPS = [
+
+    'celery',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,6 +38,8 @@ INSTALLED_APPS = [
     'cart',
     'payment',
     'app_common'
+
+
 
 
     
@@ -161,3 +166,22 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreplyf577@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxlb pidz ggno lujv'
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
+
+
+
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'delete_expired_accounts': {
+        'task': 'users.tasks.delete_expired_accounts',
+        'schedule': 86400.0,  # every 24 hours
+    },
+}
