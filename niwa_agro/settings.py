@@ -17,9 +17,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = "users.User"
-# AUTHENTICATION_BACKENDS = [
-#     "django.contrib.auth.backends.ModelBackend",
-# ]
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -160,3 +160,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreplyf577@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxlb pidz ggno lujv'
+DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
