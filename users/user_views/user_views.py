@@ -1,6 +1,6 @@
+from django.shortcuts import render, redirect
 from datetime import datetime
 from django.conf import settings
-from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from users import forms

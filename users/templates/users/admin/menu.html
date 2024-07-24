@@ -6,9 +6,20 @@
           <i class="fa fa-dashboard"></i> Dashboard </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" href="" role="button" aria-expanded="true" aria-controls="sidebar-projects">
-          <i class="fa fa-users"></i> Users List </a>
-      </li>
+        <a class="nav-link font-bold"style="background:none" href="#" data-bs-toggle="collapse" data-bs-target="#usersList" role="button" aria-expanded="false" aria-controls="usersList">
+            <i class="fas fa-users"></i> Users Management
+        </a>
+        <div class="collapse" id="usersList">
+            <ul class="nav nav-sm flex-column">
+                <li class="nav-item">
+                    <a href="{% url 'users:add_user' %}" class="nav-link font-bold"><i class="fas fa-users"></i>Add User</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'users:userslist' %}" class="nav-link font-bold"><i class="fas fa-user-plus"></i>View All Users </a>
+                </li>
+            </ul>
+        </div>
+    </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">

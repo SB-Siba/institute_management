@@ -1,0 +1,91 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<center>
+    {% include 'snippets/alert.html' %}
+</center>
+<header>
+    <div class="container-fluid">
+        <div class="border-bottom pt-6">
+            <div class="row align-items-center">
+                <div class="col-sm col-12">
+                    <h1 class="h2 ls-tight">All Users</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+</header>
+
+<main class="py-6 bg-surface-secondary">
+    
+    
+    <div class="container-fluid">
+        <div class="vstack gap-4">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col"><strong>ID</strong></th>
+                                <th scope="col"><strong>Name</strong></th>
+                                <th scope="col"><strong>Contact</strong></th>
+                                <th scope="col"><strong>Email</strong></th>
+                                <th scope="col" style="padding-left: 100px;"><strong>Action</strong></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        
+                        
+                        <tbody id="test_table_tbody">
+                            {% for user in user_obj %}
+                                <tr>
+                                    <td>
+                                        <a class="text-heading text-primary-hover font-semibold" href="#">{{user.id}}</a>
+                                    </td>
+                                    <td>{{user.full_name}}</td>
+                                    
+                                    <td>{{user.contact}}</td>
+                                    <td>{{user.email}}</td>
+                                    
+                                    <td>
+                                        <a href="{% url 'users:user_detail' user.id %}" class="btn btn-secondary">View</a>
+                                        <a href="{% url 'users:edit_userrr' user.id %}" class="btn btn-secondary">edit</a>
+                                        <a href="{% url 'users:deleteuser' user.id %}" class="btn btn-secondary">delete</a> 
+                                    </td>
+                                    
+                                </tr> 
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer border-0 py-5">
+                </div>
+            </div>
+        </div>
+    </div>
+</main> 
+
+
+<!-- test create modal -->
+<div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Username:</strong> <span id="modal-username"></span></p>
+                <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                <p><strong>First Name:</strong> <span id="modal-firstname"></span></p>
+                <p><strong>Last Name:</strong> <span id="modal-lastname"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

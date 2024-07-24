@@ -1,0 +1,25 @@
+{% extends 'users/admin/base.html' %}
+
+{% block content %}
+<section class="content">
+    <div class="container mt-4">
+        <div class="card" style="max-width: 700px; margin: 0 auto; background-color: white; color: black;"> <!-- Added background-color and text color -->
+            <div class="card-header" style="background-color: white; color: black;">
+                <h4 class="text-center">Update User Information</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="mt-4 d-flex justify-content-center"> <!-- Added d-flex and justify-content-center classes -->
+                        <button class="btn btn-primary  border-0" type="submit" style="background-color:#b8d1f5">Update</button>
+
+                    </div>
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

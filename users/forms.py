@@ -117,3 +117,21 @@ class AddressForm(forms.Form):
     
     zipcode = forms.IntegerField()
     zipcode.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Pincode',"required":"required"})
+
+
+
+class EditUserForm(forms.Form):
+    model =models.User
+    email = forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
+    full_name = forms.CharField(label="Full Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
+    contact = forms.IntegerField(label="Contact",widget=forms.NumberInput(attrs={"class":"form-control"}))
+
+
+
+class AddUserForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ['email', 'full_name', 'contact', 'password']  # Include necessary fields
+
+    # Optionally, you can add custom validation or widgets
+    password = forms.CharField(widget=forms.PasswordInput)
