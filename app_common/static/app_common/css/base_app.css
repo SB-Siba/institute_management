@@ -6,14 +6,15 @@
     --para: #0f0f0f;
     --para-tint: #e4e4e4;
     --third: #fff;
-    --helper: #8490ff;
+    --helper: #97ff84;
     --helper-tint: #f3f4ff;
     --bg: rgb(249 249 255);
-    --gradient: linear-gradient(0deg, rgb(132 144 255) 0%, rgb(98 189 252) 100%);
+    --gradient: linear-gradient(0deg, rgb(248, 248, 248) 0%, rgb(156, 205, 240) 100%);
     --shadpw: 0px 0px 20px 0px rgb(132 144 255 / 20%);
     --header: #fff6f4;
     --viewmoreButton:#76e1a1;
     --MoreDetails:#ff9f1a;
+    --aboutniwa:#043b18;
   }
 
   * {
