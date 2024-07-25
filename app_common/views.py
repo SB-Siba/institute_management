@@ -15,6 +15,9 @@ class AboutPage(View):
 
 def get_rand_number(length=5):
     return ''.join(random.choices(string.digits, k=length))
+
+
+    
 class contactMesage(View):
     template = app + "contact_page.html"
  

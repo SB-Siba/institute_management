@@ -189,7 +189,7 @@ class CustomPasswordResetConfirmView(FormView):
     def get_user(self, uidb64):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
-            return UserModel._default_manager.get(pk=uid)
+            return models.User._default_manager.get(pk=uid)
         except (
             TypeError,
             ValueError,
@@ -221,7 +221,7 @@ class CustomPasswordResetCompleteView(TemplateView):
 
 
 class AccountDeletionRequestView(LoginRequiredMixin, View):
-    template_name = app +'authtemp/account_deletion.html'
+    template_name = 'app/authtemp/account_deletion.html'  # Adjust the path as necessary
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -230,12 +230,12 @@ class AccountDeletionRequestView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user = request.user
         if not user.deletion_requested:
-            user.request_deletion()
+            user.request_deletion()  # Call the request_deletion method
             messages.success(request, "Your account is scheduled for deletion in 30 days.")
         return redirect('account_deletion_status')
 
 class AccountDeletionStatusView(LoginRequiredMixin, View):
-    template_name = app + 'authtemp/account_deletion_status.html'
+    template_name = 'app/authtemp/account_deletion_status.html'  # Adjust the path as necessary
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -245,11 +245,6 @@ class AccountDeletionStatusView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user = request.user
         if 'cancel_deletion' in request.POST and user.deletion_requested:
-            user.cancel_deletion()
+            user.cancel_deletion()  # Call the cancel_deletion method
             messages.success(request, "Account deletion canceled.")
         return redirect('account_deletion_status')
-    def post(self, request):
-        user = request.user
-        user.cancel_account_deletion()
-        messages.success(request, "Your account deletion request has been canceled.")
-        return redirect('account-deletion-request')
