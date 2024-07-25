@@ -16,7 +16,7 @@ class HomeView(View):
     def get(self, request):
         user = request.user
         if not user.is_authenticated:
-
+            form = forms.LoginForm()
             return render(request, self.un_template, locals())
             
         return render(request, self.template, locals())
