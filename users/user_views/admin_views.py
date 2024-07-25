@@ -8,6 +8,8 @@ from users import models,forms
 
 app = "users/admin/"
 
+# admin dashboard and manage users list
+
 @method_decorator(utils.super_admin_only, name='dispatch')
 class AdminDashboard(View):
     template = app + "index.html"  # Update the template path if necessary

@@ -7,7 +7,9 @@ urlpatterns = [
     
     
     path("", include("users.urls.urls")),
-    path("niwa_agro", include("app_common.urls.urls")),  
+    path("niwa_agro", include("app_common.urls.urls")),
+    path("product", include("product.urls.urls")),  
+
 
 ]
 if settings.DEBUG:

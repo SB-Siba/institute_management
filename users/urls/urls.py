@@ -2,6 +2,7 @@ from django.urls import path
 from users import views
 from users import forms
 from users.user_views import user_views,admin_views
+from app_common.app_common_views import app_common_views
 from django.contrib.auth import views as auth_view
 from users.forms import CustomPasswordResetForm, PasswordChangeForm
 app_name = 'users'
@@ -9,7 +10,7 @@ app_name = 'users'
 
 urlpatterns = [
     #Authentication urls
-    path('', user_views.HomeView.as_view(), name='home'),
+    path('', app_common_views.HomeView.as_view(), name='home'),
     path('admin/', admin_views.AdminDashboard.as_view(), name='admin_dashboard'),
     path('signup', views.Registration.as_view(), name = "signup"),
     path('login', views.Login.as_view(), name = "login"),

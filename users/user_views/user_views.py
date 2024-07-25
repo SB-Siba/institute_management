@@ -9,18 +9,7 @@ from uuid import uuid4
 
 app = "users"
 
-
-class HomeView(View):
-    template =  "users/user/home.html"
-    un_template = "app_common/landing_page.html"
-    def get(self, request):
-        user = request.user
-        if not user.is_authenticated:
-
-            return render(request, self.un_template, locals())
-            
-        return render(request, self.template, locals())
-
+# user profiles
 class ProfileView(View):
     template = app + "user/userprofile.html"
 

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect , HttpResponse
+from django.utils import timezone
 from django.views import View
 from django.contrib import messages
 from django.contrib import auth
@@ -27,7 +28,7 @@ from django.core.mail import EmailMultiAlternatives
 
 app = "users/"
 
-
+# authentications
 class Registration(View):
     model = models.User
     template = app + 'authtemp/registration.html'
@@ -221,7 +222,7 @@ class CustomPasswordResetCompleteView(TemplateView):
 
 
 class AccountDeletionRequestView(LoginRequiredMixin, View):
-    template_name = 'app/authtemp/account_deletion.html'  # Adjust the path as necessary
+    template_name = app + 'authtemp/account_deletion.html'  # Adjust the path as necessary
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -231,11 +232,11 @@ class AccountDeletionRequestView(LoginRequiredMixin, View):
         user = request.user
         if not user.deletion_requested:
             user.request_deletion()  # Call the request_deletion method
-            messages.success(request, "Your account is scheduled for deletion in 30 days.")
-        return redirect('account_deletion_status')
+            messages.success(request, "Your account is deleted in 30 days.")
+        return redirect('users:account_deletion_status')
 
 class AccountDeletionStatusView(LoginRequiredMixin, View):
-    template_name = 'app/authtemp/account_deletion_status.html'  # Adjust the path as necessary
+    template_name = app + 'authtemp/account_deletion_status.html'  # Adjust the path as necessary
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -247,4 +248,4 @@ class AccountDeletionStatusView(LoginRequiredMixin, View):
         if 'cancel_deletion' in request.POST and user.deletion_requested:
             user.cancel_deletion()  # Call the cancel_deletion method
             messages.success(request, "Account deletion canceled.")
-        return redirect('account_deletion_status')
+        return redirect('users:account_deletion_status')

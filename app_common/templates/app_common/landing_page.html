@@ -1,6 +1,6 @@
 {% extends 'app_common/base.html' %}
  {% load static %}
- {% block title%} Home Page {% endblock title %} 
+ {% block title%} Home{% endblock title %} 
  {% block content %}
 
 <!-- --------------------banner section--------------- -->
@@ -140,80 +140,159 @@
 <!-- --------------------New Arrival Collection--------------max card should be 4- -->
 
 <section class="m-lg-4 m-2">
-
-
-  <div class="container ">
+  <div class="container">
     <div class="mb-lg-3 mb-3">
       <h3 class="text-success">New Arrivals</h3>
-    </div> 
- 
-  
-    <div class="row">
-
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common\images\img2.jpg' %}" style=" height: 15rem;" class="card-img-top object-fit-cover" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning "><a href="" class="text-decoration-none  text-white">Add to Cart</a></button>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common\images\img4.jpg' %}" style=" height: 15rem;" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning "><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-          
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common\images\img2.jpg' %}" style=" height: 15rem;" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning "><a href="" class="text-decoration-none  text-white">Add to Cart</a></button>
-          
-          </div>
-        </div>
-      </div>
-        
-
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common\images\img3.jpg' %}" style=" height: 15rem;" class="card-img-top object-fit-contain" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning "><a href="" class="text-decoration-none  text-white">Add to Cart</a></button>
-          
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Carousel for small screens -->
+
+
+<swiper-container class="mySwiper d-lg-none h-100" init="false">
+<swiper-slide >
+  <div class="card" >
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+    </div>
+  </div>
+</swiper-slide>
+<swiper-slide>
+  <div class="card" >
+    <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+    </div>
+  </div>
+</swiper-slide>
+<swiper-slide>
+  <div class="card" >
+    <img src="{% static 'app_common/images/image4.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+    </div>
+  </div>
+</swiper-slide>
+<swiper-slide>
+  <div class="card" >
+    <img src="{% static 'app_common/images/image5.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+    </div>
+  </div>
+</swiper-slide>
+</swiper-container>
+    
+    
+
+    <!-- Grid for large screens -->
+    <div class="row d-none d-lg-flex">
+      <div class="col-lg">
+        <div class="card" style="width: 18rem;">
+          <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 15rem;" class="card-img-top object-fit-cover" alt="...">
+          <div class="card-body">
+            <h6>Name of your plant etc</h6>
+            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
+            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="card" style="width: 18rem;">
+          <img src="{% static 'app_common/images/img4.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h6>Name of your plant etc</h6>
+            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
+            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="card" style="width: 18rem;">
+          <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h6>Name of your plant etc</h6>
+            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
+            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="card" style="width: 18rem;">
+          <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 15rem;" class="card-img-top object-fit-contain" alt="...">
+          <div class="card-body">
+            <h6>Name of your plant etc</h6>
+            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
+            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="d-flex justify-content-center viewmoreButton">
       <button class="btn d-flex justify-content-center"><a href="#" class="text-decoration-none text-dark">View More Products</a></button>
     </div>
-</div>
-
-
+  </div>
 </section>
 <!-- --------------------End New Arrival Collection--------------max card should be 4- -->
 
 
 
-<!-- --------------------Clients Testimonial------------ -->
 
+
+
+<!-- ------------------------- why  choose  niwa---------------------- -->
+<section class="whychoose p-lg-5 p-3">
+  <h4 class="text-center text-success">Why Choose Niwa Agro</h4>
+  <div class="row text-center container p-lg-4 p-3 chooseniwa_logo">
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg2.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Free Replacements if Damaged</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg3.svg' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Quality Assured</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg4.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Secure and Recyclable Packaging</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg5.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Handpicked Plant Care Tips</h5>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- --------------------------about niwa agro-------------------------------- -->
+<section class="container">
+  <div class="aboutniwa">
+      <img src="{% static 'app_common/images/img8.webp' %}" alt="">
+      <h6>About Us</h6>
+  </div>
+  <div class="aboutniwa1 my-3 my-lg-5 text-center">
+      <p>Niwa Agro Innovations, a newly founded woman-led Private Limited Company established on April 24, 2024, is dedicated to <br>
+          revolutionizing global agriculture through sustainable practices. Their mission is to enhance soil productivity while preserving
+          soil microorganisms, producing <br> eco-friendly agricultural inputs, and promoting soilless farming in urban areas.</p>
+      <div>
+          <button class="btn btn-warning fs-5 fs-lg"><a href="#" class="text-white text-decoration-none">Learn More</a></button>
+      </div>
+  </div>
+</section>
+
+  
+ <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+<script src="{% static 'app_common/js/landing_page.js' %}"></script>
 
 
 {% endblock content %}
