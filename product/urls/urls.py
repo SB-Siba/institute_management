@@ -1,0 +1,29 @@
+from django.urls import path
+from product import views
+from django.conf import settings
+from product.product_views import admin_product_views,user_product_views
+from django.conf.urls.static import static
+
+
+app_name = 'product'
+
+
+
+urlpatterns = [
+    # catagory
+    path("catagory/catagory_list", admin_product_views.CategoryList.as_view(), name="category_list"),
+    path("catagory/catagory_update/<str:category_id>", admin_product_views.CategoryUpdate.as_view(), name="category_update"),
+    path("catagory/catagory_delete/<str:catagory_id>", admin_product_views.CatagotyDelete.as_view(), name="catagory_delete"),
+
+    #product web
+    path("product/product_add", admin_product_views.ProductAdd.as_view(), name="product_add"),
+    path("product/product_update/<str:product_uid>", admin_product_views.ProductUpdate.as_view(), name="product_update"),
+    path("product/product_delete/<str:product_uid>", admin_product_views.ProductDelete.as_view(), name="product_delete"),
+    path("product/product_list", admin_product_views.ProductList.as_view(), name="product_list"),
+    path("product/product_search", admin_product_views.ProductSearch.as_view(), name="product_search"),
+    path("product/product_filter", admin_product_views.ProductFilter.as_view(), name="product_filter"),
+    
+]   
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

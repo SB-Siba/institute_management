@@ -1,0 +1,416 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+
+  <!-- ---------CSS FILES--------- -->
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/base_app.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/landing_page.css' %}">
+  <link rel="stylesheet" type="text/css" href="">
+
+  <!------------ ICONS FILE------ -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!------------ BOOTSTRAP FILE------ -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+  <!------------ ADDITIONAL FILES------ -->
+</head>
+
+<body>
+  <header class="p-lg-3">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-lg-2 col-6" id="menu-bar">
+          <!-- logo -->
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
+              class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="list-unstyled">
+                <li><a class="nav-link" href="#">Home</a></li>
+                <li><a class="nav-link" href="#">about us</a></li>
+                <li><a class="nav-link" href="#">Plants</a></li>
+                <li><a class="nav-link" href="#">Seeds</a></li>
+                <li><a class="nav-link" href="#">Pots & Planters</a></li>
+                <li><a class="nav-link" href="#">Plant Care</a></li>
+              </ul>
+            </div>
+          </div>
+          <a class="navbar-brand" href="#">
+            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" width="100" height="60" class="">
+          </a>
+        </div>
+
+        <!-- full screen header -->
+        <div class="col-lg-6 d-none d-lg-block" id="nav_buttons">
+          <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about' %}">About us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Plants</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Seeds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pots & Planters</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Plant Care</a>
+            </li>
+          </ul>
+        </div>
+        <!-- close full screen header -->
+
+        <!-- login modal -->
+        <div class="col-lg-2 col-6 d-flex justify-content-around ">
+          <button type="button" class="btn" id="search-icon">
+            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="">
+            <i class="fa-regular fa-user HeaderIcons text-success"></i>
+          </button>
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+          </button>
+          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success  "></i></button>
+        </div>
+        
+        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
+          {% csrf_token %}
+          <div class="input-group">
+            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+          </div>
+        </form>
+        
+        <!-- end login modal -->
+
+       
+      </div>
+    </div>
+  </header>
+  {% block content %}
+  
+  
+  
+  {% endblock %}
+  
+  <!-- logo -->
+  <!-- <nav id="co">
+    <article>
+      <div id="logo">
+        <a href="{% url 'users:home' %}" class="navbar-brand me-lg-5 me-0" style="padding-left: 100px">
+          <!-- {% static 'shopingsite/pod-talk-logo.png' %} --
+          <img src="" class="logo-image img-fluid" alt="templatemo pod talk" />
+        </a>
+      </div>
+      <div id="menu">
+        <ol>
+          <li><a href="{% url 'app_common:about' %}" class="x">Help</a></li>
+          <li><a href="">|</a></li>
+          <li>
+            <a href="{% url 'users:login' %}" class="x">Log in</a>
+          </li>
+        </ol>
+      </div>
+    </article>
+  </nav>
+
+  <!-- end logo -->
+
+  <!-- start header 
+
+  <nav class="navbar custom navbar-expand-lg">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-12 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item" style="padding-left: 80px">
+            <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}"
+              style="padding-top: 15px">Home</a>
+          </li>
+          <!-- <li class="nav-item">
+              <a class="nav-link active" href="#">Browse</a>
+            </li> -
+
+            <nav class="navbar navbar-expand-lg">
+              <div class="container-fluid">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                      <ul class="navbar-nav">
+                          <li class="nav-item dropdown hhh">
+                              <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">Browse</a>
+                              <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink1">
+                                  <div style="width: 300px;">
+                                      <h3 class="mx-3">AUDIOBOOK CATEGORIES</h3>
+                                      <ul style="list-style-type: none; padding-left: 0;">
+                                          {% for category in categories %}
+                                          {% if forloop.counter <= 3 %}
+                                          <li>
+                                              <a class="dropdown-item" href="">{{ category }}</a>
+                                          </li>
+                                          {% endif %}
+                                          {% endfor %}
+                                          <li>
+                                              <a class="dropdown-item" href="">Show more</a>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </nav>
+          
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-disabled="true" href=""
+              style="padding-top: 15px">About membership
+            </a>
+          </li>
+        </ul>
+
+
+  <div>
+    <form action="" method="post" class="d-flex" role="search"
+      style="padding-right: 80px; width: 550px;">
+      {% csrf_token %}
+      <div class="input-group input-group-lg">
+        <input name="search-box" type="search" class="form-control me-4" id="search" placeholder="Search Books"
+          aria-label="Search">
+
+        <button type="submit" class="btn btn-outline-success" id="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <div id="search-suggestions" class="position-absolute border mx-auto" style="display: none;"></div>
+  </div>
+  </div>
+  </div>
+  </nav> -->
+  <!-- end header -->
+  
+  <!-- end page 4 -->
+
+  <div class="mt-3">
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-white" style="background-color: #45526e">
+      <!-- Grid container -->
+      <div class="container p-4 pb-0">
+        <!-- Section: Links -->
+        <section class="">
+          <!--Grid row-->
+          <div class="row">
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">
+                Audiobook
+              </h6>
+              <p>
+                Here you can use rows and columns to organize your footer
+                content. Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit.
+              </p>
+            </div>
+            <!-- Grid column -->
+
+            <hr class="w-100 clearfix d-md-none" />
+
+            <!-- Grid column -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">Products</h6>
+              <p>
+                <a class="text-white">MDBootstrap</a>
+              </p>
+              <p>
+                <a class="text-white">MDWordPress</a>
+              </p>
+              <p>
+                <a class="text-white">BrandFlow</a>
+              </p>
+              <p>
+                <a class="text-white">Bootstrap Angular</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+
+            <hr class="w-100 clearfix d-md-none" />
+
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">
+                Useful links
+              </h6>
+              <p>
+                <a class="text-white">Your Account</a>
+              </p>
+              <p>
+                <a class="text-white">Become an Affiliate</a>
+              </p>
+              <p>
+                <a class="text-white">Shipping Rates</a>
+              </p>
+              <p>
+                <a class="text-white">Help</a>
+              </p>
+            </div>
+
+            <!-- Grid column -->
+            <hr class="w-100 clearfix d-md-none" />
+
+            <!-- Grid column -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+              <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+              <p><i class="fas fa-envelope mr-3"></i> info@gmail.com</p>
+              <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+              <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+            </div>
+            <!-- Grid column -->
+          </div>
+          <!--Grid row-->
+        </section>
+        <!-- Section: Links -->
+
+        <hr class="my-3">
+
+        <!-- Section: Copyright -->
+        <section class="p-3 pt-0">
+          <div class="row d-flex align-items-center">
+            <!-- Grid column -->
+            <div class="col-md-7 col-lg-8 text-center text-md-start">
+              <!-- Copyright -->
+              <div class="p-3">
+                © 2020 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+              </div>
+              <!-- Copyright -->
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+              <!-- Facebook -->
+              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
+                  class="fab fa-facebook-f"></i></a>
+
+              <!-- Twitter -->
+              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
+                  class="fab fa-twitter"></i></a>
+
+              <!-- Google -->
+              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
+                  class="fab fa-google"></i></a>
+
+              <!-- Instagram -->
+              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
+                  class="fab fa-instagram"></i></a>
+            </div>
+            <!-- Grid column -->
+          </div>
+        </section>
+        <!-- Section: Copyright -->
+      </div>
+      <!-- Grid container -->
+    </footer>
+    <!-- Footer -->
+  </div>
+  {% block js %}
+
+  {% endblock js %}
+  <script>
+    $(document).ready(function () {
+      $('#search').keyup(function () {
+        var search_term = $(this).val();
+        if (search_term.length >= 1) {
+          $.ajax({
+            type: 'POST',
+            url: '',
+            data: {
+              'search_term': search_term,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (response) {
+              var suggestionsHtml = '';
+              response.forEach(function (product) {
+                // Modify the suggestionsHtml to include both title and ID
+                suggestionsHtml += '<div class="suggestion border-bottom border-1 cursor-pointer suggestion-hover" data-id="' + product.id + '">' + product.title + '</div>';
+              });
+              $('#search-suggestions').html(suggestionsHtml).show();
+            }
+          });
+        } else {
+          $('#search-suggestions').hide();
+        }
+      });
+
+      // Handle click on suggestion
+      $(document).on('click', '.suggestion', function () {
+        // Get the ID of the clicked suggestion
+        var productId = $(this).data('id');
+        // Construct the URL using Django template syntax
+        var productUrl = ''.replace('0', productId);
+        // Redirect the user to the product details page
+        window.location.href = productUrl;
+      });
+
+      // Hide suggestions when clicking outside
+      $(document).click(function (event) {
+        if (!$(event.target).closest('#search-suggestions').length && !$(event.target).is('#search')) {
+          $('#search-suggestions').hide();
+        }
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchIcon = document.getElementById('search-icon');
+      const searchForm = document.getElementById('search-form');
+      
+      searchIcon.addEventListener('click', function () {
+        if (searchForm.style.display === 'block') {
+          searchForm.style.display = 'none';
+        } else {
+          searchForm.style.display = 'block';
+        }
+      });
+  
+      searchForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent actual form submission for demonstration
+        // Add your form submission logic here, e.g., AJAX request
+        searchForm.style.display = 'none';
+      });
+    });
+  </script>
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+  
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+.carousel-control-next i,.carousel-control-prev i{
+    background-color: #0d6d30;
+    padding: 20px;
+    border-radius: 45%;
+    font-size: 1rem;
+    color: white;
+}
+.carousel-item img{
+    height: 33rem;
+}
+.content-wrapper h4{
+    font-family: 'poppins', sans-serif;
+    color: #0f6d3e;
+    font-size: 1rem;
+    line-height:2rem;
+    font-weight: 500;
+}
+.viewmoreButton button{
+    background-color:var(--viewmoreButton);
+    margin: 1rem;
+}
+.card-body{
+    line-height: 1.9;
+}
+
+
+
+@media (max-width:768px) {
+    .carousel-item img{
+        height: 15rem;
+    }
+    .carousel-control-next i,.carousel-control-prev i{
+        background-color: #0d6d30;
+        padding: 10px;
+        border-radius: 45%;
+        font-size: .5rem;
+        color: white;
+    }
+    .content-wrapper h4{
+        font-family: 'poppins', sans-serif;
+        color: #0f6d3e;
+        font-size: .9rem;
+        line-height:1.5rem;
+        font-weight: 500;
+    }
+    .container div h3{
+        font-size: 1.2rem;
+    }
+  
+   .card-body h6{
+    font-size: .8rem;
+    text-align: left;
+    margin: -2px;
+   }
+   .card-body small{
+    font-size: 0.7rem;
+    margin: -2px;
+    color: #0d6d30;
+   }
+   .card-body button{
+    font-size: 0.7rem;
+   }
+  
+   .chooseniwa_logo div img{
+    height: 15px;
+    width:15px
+  }
+  .chooseniwa_logo div h5{
+    font-size: 0.8rem;
+  }
+}
+/* small swiper */
+
+swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+
+  .chooseniwa_logo div img{
+    height: 50px;
+    width:50px
+  }
+  .whychoose{
+    background:var(--gradient);
+  }
+
+
+  .aboutniwa {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.aboutniwa img {
+    height: 250px;
+    width: 500px;
+    border-radius: 47% 53% 47% 53% / 0% 0% 100% 100%;
+    overflow: hidden;
+}
+
+.aboutniwa h6 {
+    position: absolute;
+    top: 68%;
+    height: 80px;
+    width: 360px;
+    background: var(--aboutniwa);
+    font-size: 3.2rem;
+    text-align: center;
+    font-weight: 700;
+    border-radius: 40px;
+    color: white;
+}
+
+.aboutniwa1 p {
+    font-size: 1rem;
+}
+
+.aboutniwa1 .btn {
+    margin-top: 1rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .aboutniwa img {
+        height: 200px;
+        width: 400px;
+    }
+
+    .aboutniwa h6 {
+        font-size: 2.4rem;
+        width: 300px;
+    }
+
+    .aboutniwa1 p {
+        font-size: 0.9rem;
+    }
+    .aboutniwa1 .btn {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .aboutniwa {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aboutniwa img {
+        height: 150px;
+        width: 300px;
+    }
+
+    .aboutniwa h6 {
+        font-size: 2rem;
+        width: 250px;
+        top: 60%;
+    }
+
+    .aboutniwa1 p {
+        font-size: 0.8rem;
+    }
+
+    .aboutniwa1 .btn {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .aboutniwa img {
+        height: 120px;
+        width: 240px;
+    }
+
+    .aboutniwa h6 {
+        font-size: 1.6rem;
+        width: 200px;
+        top: 50%;
+    }
+
+    .aboutniwa1 p {
+        font-size: 0.7rem;
+    }
+
+    .aboutniwa1 .btn {
+        font-size: 0.7rem;
+    }
+}

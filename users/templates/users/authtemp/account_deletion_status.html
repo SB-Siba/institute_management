@@ -1,0 +1,16 @@
+{% extends "users/user/index.html" %}
+<div class="form-group mt-2">
+  {% include 'snippets/alert.html' %}
+</div>
+{% block content %}
+  <h2>Account Deletion Status</h2>
+  {% if user.deletion_requested %}
+    <p>Your account will be deleted  in {{ days_remaining }} days.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button name="cancel_deletion" type="submit" class="btn btn-warning">Cancel Deletion</button>
+    </form>
+  {% else %}
+    <p>You cancled you acoount to delete .</p>
+  {% endif %}
+{% endblock %}
