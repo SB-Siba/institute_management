@@ -85,7 +85,7 @@
        <div class="col">
         <div class="image-wrapper">
         <a href="">
-            <img src="" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+            <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
         </a>
       </div>
       <div class="content-wrapper">
@@ -97,7 +97,7 @@
      <div class="col">
       <div class="image-wrapper">
       <a href="">
-          <img src="" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+          <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
       </a>
     </div>
     <div class="content-wrapper">
@@ -110,7 +110,7 @@
    <div class="col">
     <div class="image-wrapper">
     <a href="">
-        <img src="" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+        <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
     </a>
   </div>
   <div class="content-wrapper">
@@ -124,7 +124,7 @@
  <div class="col">
     <div class="image-wrapper">
       <a href="">
-           <img src="" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+           <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
         </a>
     </div>
     <div class="content-wrapper">
@@ -161,30 +161,30 @@
 </swiper-slide>
 <swiper-slide>
   <div class="card" >
-    <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <small> <b> ₹65235 </b><s>₹6542</s>(30% off)</small>
       <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
     </div>
   </div>
 </swiper-slide>
 <swiper-slide>
   <div class="card" >
-    <img src="{% static 'app_common/images/image4.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <img src="{% static 'app_common/images/img4.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <small> <b> ₹65235 </b><s>₹6542</s>(35% off)</small>
       <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
     </div>
   </div>
 </swiper-slide>
 <swiper-slide>
   <div class="card" >
-    <img src="{% static 'app_common/images/image5.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <img src="{% static 'app_common/images/img5.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <small> <b> ₹65235 </b><s>₹6542</s>(39% off)</small>
       <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
     </div>
   </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="col-lg">
         <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common/images/img4.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
+          <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
           <div class="card-body">
             <h6>Name of your plant etc</h6>
             <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
@@ -275,6 +275,7 @@
 
 
 <!-- --------------------------about niwa agro-------------------------------- -->
+
 <section class="container">
   <div class="aboutniwa">
       <img src="{% static 'app_common/images/img8.webp' %}" alt="">
@@ -289,10 +290,130 @@
       </div>
   </div>
 </section>
+<!-- --------------------------End about niwa agro-------------------------------- -->
 
+
+<!-- --------------------------Testimonial------------------------------- -->
+
+<section >
+  <div class="testimonial">
+  <div class="row">
+     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
+         <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
+      </div>
+  </div>
+  <div class="container">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
+           </button>
+       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2">
+       </button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3">
+      </button>
+     </div>               
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-img">
+         <img src="{% static 'app_common\images\person4.jpg'%}">
+        </div>
+        <div class="carousel-caption">
+         <h5 class="testimonial-name">Priyanka Choudhary</h5>
+         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet  consectetur,adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos  voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img">
+         <img src="{% static 'app_common\images\person2.jpg'%}">
+        </div>
+        <div class="carousel-caption">
+         <h5 class="testimonial-name">Smruti Rekha Nayak</h5>
+         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet  consectetur,adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos         voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img">
+         <img src="{% static 'app_common\images\person3.jpg'%}">
+        </div>
+        <div class="carousel-caption">
+         <h5 class="testimonial-name">Tapas Kumar Nanda</h5>
+         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
+        </div>
+      </div>
+     </div>
+     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+     <span class="visually-hidden">Previous</span>
+   </button>
+   <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+   </button>
+  </div>
+</div>
+</div>
+</section>
+<!-- --------------------------End Testimonial------------------------------- -->
   
+<!-- --------------------------------------------Start Accordian------------------------------------- -->
+
+<section class=" p-lg-5 p-3 Accordian">
+  <div class="row">
+    <div class="col-12 d-flex align-items-center justify-content-center flex-column">
+        <h2 class="section-heading border-bottom p-lg-3 p-2">Frequently Asked Questions:</h2>
+     </div>
+ </div>
+  <div class="container">
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Accordion Item #1
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Accordion Item #2
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Accordion Item #3
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- --------------------------------------------End Accordian------------------------------------- -->
+
+
  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 <script src="{% static 'app_common/js/landing_page.js' %}"></script>
+<script src="{% static 'app_common/js/base.js' %}"></script>
+
 
 
 {% endblock content %}
