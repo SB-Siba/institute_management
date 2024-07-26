@@ -141,22 +141,44 @@ font-family:"Inter", sans-serif;
 }
 
 
-/* ------------------Tablets------------ */
+/* Media Queries for Responsiveness */
+
+/* ------------------Laptop( lg)------------ */
+
+@media (max-width: 1024px){
+#nav_buttons ul li a{
+  font-size: 11px;
+  padding: 0 2px;
+}
+
+}
+/* ------------------End Laptop( lg)------------ */
+
+/* ------------------Tablets(md)------------ */
+
 @media (max-width: 768px) {
+
+  #menu_button {
+    display: block;
+  margin-left: -40px;
+  font-size: 1.5rem;
+  }
+
   .row div ul li a {
-    font-size: 14px; /* Adjust as needed for better readability */
+    font-size: 12px; 
   }
 
   .row div li {
-    margin-bottom: 0.5rem; /* Add some space between list items */
+    margin: 1px; 
   }
 
   footer {
-    padding: 2rem 0;
+    padding: 2rem 1rem;
+    font-size: 5px;
   }
 
   .row div p, .row div h6 {
-    font-size: 16px; /* Adjust for better readability on smaller screens */
+    font-size: 10px; 
   }
   .row div p i{
     padding: 3px;
@@ -164,12 +186,21 @@ font-family:"Inter", sans-serif;
   }
   
   .modal-content {
-    margin-top: 15vh;
+    margin-top:10vh;
     max-width: 90%;
   }
+  .navbar-brand{
+display: flex;
+justify-content: center;
+position: relative;
+
+  }
   .navbar-brand img{
-    height: 50px;
-    width: 60px;
+    height: 40px;
+    width: 50px;
+    position: absolute;
+    right: 0%;
+    bottom: 20%;
   }
   .modal-dialog {
     display: flex;
@@ -177,23 +208,21 @@ font-family:"Inter", sans-serif;
     justify-content: center;
   }
   
-  .modal-content {
-    margin-top: 30vh;
-    max-width: 90%;
-  }
+  
   
 }
+/* ------------------End Tablets( md)------------ */
 
-/* ------------Mobiles---------------- */
+/* ------------------Mobile( sm)------------ */
 
   @media screen and (max-width: 576px) {
 
     .row div ul li a {
-      font-size: 12px; /* Adjust as needed for better readability */
+      font-size: 12px; 
     }
   
     .row div li {
-      margin-bottom: 0.4rem; /* Add some space between list items */
+      margin-bottom: 0.4rem;
     }
   
     footer {
@@ -201,7 +230,7 @@ font-family:"Inter", sans-serif;
     }
   
     .row div p, .row div h6 {
-      font-size: 14px; /* Adjust for better readability on smaller screens */
+      font-size: 14px; 
     }
     .modal-dialog {
       display: flex;
@@ -295,4 +324,4 @@ font-family:"Inter", sans-serif;
     
   }
 
-  
+  /* ------------------end Mobile( sm)------------ */
