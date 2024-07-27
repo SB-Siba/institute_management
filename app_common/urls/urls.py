@@ -9,5 +9,10 @@ app_name = 'app_common'
 
 urlpatterns = [
     # static pages
-    path('about',app_common_views.AboutPage.as_view(),name="about"),    
+    path('about_us/',app_common_views.AboutUs.as_view(),name="about_us"),    
+    path('contact_us/',app_common_views.ContactUs.as_view(),name="contact_us"),
+    path('terms_conditions/',app_common_views.TermsConditions.as_view(),name="terms_conditions"),
+    path('privacy_policy/',app_common_views.PrivacyPolicy.as_view(),name="privacy_policy"),
+    path('retrun_policy/',app_common_views.ReturnPolicy.as_view(),name="retrun_policy"),
+
 ]

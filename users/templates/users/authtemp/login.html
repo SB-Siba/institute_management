@@ -121,4 +121,16 @@
  -->
 
 </section>
+<script>
+  $(document).ready(function(){
+      {% if messages %}
+          {% for message in messages %}
+              alert("{{ message }}");
+              {% if message.tags == 'success' %}
+                  // window.location.href = "{% url 'users:home' %}";
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+  });
+</script>
 {% endblock content %}

@@ -23,8 +23,7 @@ urlpatterns = [
     path('logout/', views.Logout.as_view(), name = "logout"),
     path('logout-confirmation/', views.LogoutConfirmationView.as_view(), name='logout_confirmation'),
     path('cancel-logout/', views.CancelLogoutView.as_view(), name='cancel_logout'),
-     path('account/delete/', views.AccountDeletionRequestView.as_view(), name='account_deletion_request'),
-    path('account/deletion-status/', views.AccountDeletionStatusView.as_view(), name='account_deletion_status'),
+    path('account-deletion/', views.AccountDeletionView.as_view(), name='account_deletion'),
 
 
     #user profile

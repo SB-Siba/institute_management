@@ -12,7 +12,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length= 255, null= True, blank= True)
     email = models.EmailField(null=True,blank=True,unique=True)
     password = models.TextField(null=True,blank=True)
-    contact = models.CharField(max_length= 10, null=True, blank=True)
+    contact = models.CharField(max_length= 10, null=True, blank=True, unique=True)
     profile_pic = models.ImageField(upload_to="user_profile_pic/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)

@@ -64,7 +64,7 @@
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about' %}">About us</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Plants</a>
@@ -73,7 +73,7 @@
               <a class="nav-link" href="{% url 'users:logout_confirmation' %}">Logout</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'users:account_deletion_request' %}">Delete account</a>
+              <a href="{% url 'users:account_deletion' %}" class="btn btn-danger">Manage Account Deletion</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled">Plant Care</a>
@@ -126,7 +126,7 @@
       </div>
       <div id="menu">
         <ol>
-          <li><a href="{% url 'app_common:about' %}" class="x">Help</a></li>
+          <li><a href="" class="x">Help</a></li>
           <li><a href="">|</a></li>
           <li>
             <a href="{% url 'users:login' %}" class="x">Log in</a>

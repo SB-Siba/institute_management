@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect , HttpResponse
 from django.utils import timezone
 from django.views import View
+from django.http import JsonResponse
+import json
 from django.contrib import messages
 from django.contrib import auth
 from users.forms import SignUpForm,LoginForm,CustomPasswordResetForm,CustomSetPasswordForm
@@ -25,6 +27,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 app = "users/"
 
@@ -43,42 +46,35 @@ class Registration(View):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             contact = form.cleaned_data.get('contact')
-            confirm_password = form.cleaned_data.get('confirm_password')
             full_name = form.cleaned_data.get('full_name')
 
-            user = auth.authenticate(request, username=email, password=password)
-            if user is None:
-                try:
-                    if password == confirm_password:
-                        new_user = self.model(email=email, full_name=full_name, contact=contact)
-                        new_user.set_password(password)
-                        try:
-                            user_email = email
-                            subject = "Registration Successful."
-                            message = f"""\
-                            Dear {full_name},
-                            Your account has been created successfully on our site. You can login now."""
-                            from_email = "noreplyf577@gmail.com"
-                            send_mail(subject, message, from_email, [user_email], fail_silently=False)
+            try:
+                new_user = self.model(email=email, full_name=full_name, contact=contact)
+                new_user.set_password(password)
+                new_user.save()
+                new_user_login = authenticate(request, username=email, password=password)
+                if new_user_login is not None:
+                    login(request, new_user_login)
+                    
+                    # Send registration success email
+                    send_mail(
+                        'Registration Successful',
+                        f'Hello {full_name},\n\nYour registration was successful! You are now logged in.\n\nThank you for registering with us.',
+                        settings.DEFAULT_FROM_EMAIL,
+                        [email],
+                        fail_silently=False,
+                    )
+                    
+                    messages.success(request, "Registration successful! You are now logged in.")
+                    return redirect('users:home')
+                else:
+                    messages.error(request, "Authentication failed. Please try again.")
+            except Exception as e:
+                print(e)
+                messages.error(request, 'Something went wrong while registering your account. Please try again later.')
+        else:
+            messages.error(request, 'Please correct the errors below.')
 
-                            new_user.save()
-                            messages.success(request, 'Registration Successful!')
-                            
-                            # Auto login the user
-                            login(request, new_user)
-                            return redirect('users:home')
-                        except Exception as e:
-                            print("Error in sending verification mail", e)
-                            messages.error(request, 'Email could not be sent due to some error. Please contact support for further assistance.')
-                            return redirect('users:signup')
-                    else:
-                        messages.error(request, "Password does not match with Confirm Password")
-                        return redirect('users:signup')
-                except Exception as e:
-                    print(e)
-                    messages.error(request, 'Something went wrong while registering your account. Please try again later.')
-            else:
-                messages.error(request, "User already exists.")
         return render(request, self.template, {'form': form})
 
 
@@ -221,22 +217,8 @@ class CustomPasswordResetCompleteView(TemplateView):
 
 
 
-class AccountDeletionRequestView(LoginRequiredMixin, View):
+class AccountDeletionView(LoginRequiredMixin, View):
     template_name = app + 'authtemp/account_deletion.html'  # Adjust the path as necessary
-
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        return render(request, self.template_name, {'user': user})
-
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        if not user.deletion_requested:
-            user.request_deletion()  # Call the request_deletion method
-            messages.success(request, "Your account is deleted in 30 days.")
-        return redirect('users:account_deletion_status')
-
-class AccountDeletionStatusView(LoginRequiredMixin, View):
-    template_name = app + 'authtemp/account_deletion_status.html'  # Adjust the path as necessary
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -245,7 +227,23 @@ class AccountDeletionStatusView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        if 'cancel_deletion' in request.POST and user.deletion_requested:
-            user.cancel_deletion()  # Call the cancel_deletion method
-            messages.success(request, "Account deletion canceled.")
-        return redirect('users:account_deletion_status')
+
+        try:
+            data = json.loads(request.body)
+            action = data.get('action')
+
+            if action == 'cancel_deletion' and user.deletion_requested:
+                user.cancel_deletion()  # Call the cancel_deletion method
+                messages.success(request, "Account deletion canceled.")
+                return JsonResponse({'success': True, 'message': 'Account deletion canceled.'})
+
+            elif action == 'request_deletion' and not user.deletion_requested:
+                user.request_deletion()  # Call the request_deletion method
+                messages.success(request, "Your account will be deleted in 30 days.")
+                return JsonResponse({'success': True, 'message': 'Your account will be deleted in 30 days.'})
+
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid action or state.'}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON.'}, status=400)

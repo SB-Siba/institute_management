@@ -1,0 +1,298 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Rufina:wght@400;700&family=Work+Sans:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap');
+
+:root {
+    --heading: rgb(0 10 45);
+    --para: #0f0f0f;
+    --para-tint: #e4e4e4;
+    --third: #fff;
+    --helper: #97ff84;
+    --helper-tint: #f3f4ff;
+    --bg: rgb(249 249 255);
+    --gradient: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(115, 201, 118) 100%);
+    --shadpw: 0px 0px 20px 0px rgb(132 144 255 / 20%);
+    --header: #fff6f4;
+    --viewmoreButton:#76e1a1;
+    --MoreDetails:#ff9f1a;
+    --aboutniwa:#043b18;
+    --footer:#212121;
+    --h6:#7a877a;
+    --gradient2: linear-gradient(to right, #FF0099,#203bb3,#5e05ac , #f02f32 );
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 100%;
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  header {
+    background-color: var(--header);
+  }
+#header_rows{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+  .HeaderButton li a {
+    font-family: 'poppins', sans-serif;
+    font-size: .8rem;
+    letter-spacing:2px;
+  }
+
+  .HeaderIcons {
+    font-size: 1.2rem;
+  }
+#menu_button{
+    display: none;
+}
+.loginHeader {
+  position: relative;
+  min-height: 90px;
+}
+.loginHeader img {
+  height: 50px;
+  width: 70px;
+  position: absolute;
+  left: 40%;
+}
+.navbar-brand img{
+  height: 60px;
+  width: 80px;
+}
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  margin-top: 10vh;
+  max-width: 75%;
+}
+
+.modal-content {
+  width: 10px;
+}
+
+
+
+
+
+
+
+footer {
+  background-color: var(--footer);
+  padding: 3rem 0;
+  color: var(--third);
+}
+
+.footer_div_ul div ul li a {
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 400;
+line-height: 30px;
+font-family:"Inter", sans-serif;
+}
+
+.footer_div_ul div h6{
+color: var(--h6);
+font-size:13px;
+font-weight: 400;
+text-transform: uppercase;
+}
+
+.row div p{
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 400;
+line-height: 25px;
+font-family:"Inter", sans-serif;
+}
+
+.row div p i{
+  padding: 5px;
+}
+
+.row div li {
+  list-style: none;
+}
+
+.footer_subhead p{
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 100;
+line-height: auto;
+font-family:"Inter", sans-serif;
+}
+
+
+/* ------------------Tablets------------ */
+@media (max-width: 768px) {
+  .row div ul li a {
+    font-size: 14px; /* Adjust as needed for better readability */
+  }
+
+  .row div li {
+    margin-bottom: 0.5rem; /* Add some space between list items */
+  }
+
+  footer {
+    padding: 2rem 0;
+  }
+
+  .row div p, .row div h6 {
+    font-size: 16px; /* Adjust for better readability on smaller screens */
+  }
+  .row div p i{
+    padding: 3px;
+    margin-top: 5px;
+  }
+  
+  .modal-content {
+    margin-top: 15vh;
+    max-width: 90%;
+  }
+  .navbar-brand img{
+    height: 50px;
+    width: 60px;
+  }
+  .modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    margin-top: 30vh;
+    max-width: 90%;
+  }
+  
+}
+
+/* ------------Mobiles---------------- */
+
+  @media screen and (max-width: 576px) {
+
+    .row div ul li a {
+      font-size: 12px; /* Adjust as needed for better readability */
+    }
+  
+    .row div li {
+      margin-bottom: 0.4rem; /* Add some space between list items */
+    }
+  
+    footer {
+      padding: 1rem 0;
+    }
+  
+    .row div p, .row div h6 {
+      font-size: 14px; /* Adjust for better readability on smaller screens */
+    }
+    .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      margin-top: 30vh;
+      max-width: 90%;
+    }
+    #nav_buttons {
+      display: none;
+    }
+    
+  .HeaderIcons {
+    font-size: 1.2rem;
+  }
+      #menu-bar{
+   display: flex;
+   justify-content:space-between;
+  }
+    #menu_button {
+      display: block;
+    margin-left: -40px;
+    font-size: 1.5rem;
+  
+
+    }
+    header{
+      padding: 2rem;
+    }
+    #searchButtons{
+    width: 100%;
+}
+    
+    .modal-dialog {
+      max-width: 90%;
+    }
+
+    .modal-content {
+      width: 100%;
+      padding: 1rem;
+      margin: auto;
+    }
+
+    .modal-header img {
+      height: 50px;
+      width: 50px;
+    }
+
+    .loginHeader {
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .btn {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .modal-body h5 {
+      font-size: 1.25rem;
+    }
+
+    .modal-footer {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .modal-footer small, .modal-footer a {
+      font-size: 0.875rem;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 20%;
+      right: 5%;
+    }
+    .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      margin-top: 10vh;
+      max-width: 90%;
+    }
+    
+  }
+
+  

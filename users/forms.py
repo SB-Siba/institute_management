@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from . import models
+from users.models import User
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -10,6 +10,7 @@ import re
 #         raise ValidationError('Contact number must be exactly 10 digits.')
 
 class SignUpForm(forms.Form):
+
     full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(max_length=254, help_text='Enter a valid email address.',
                              widget=forms.EmailInput(attrs={'class': 'form-control'}))
@@ -17,6 +18,21 @@ class SignUpForm(forms.Form):
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email address already exists")
+        return email
+
+    def clean_contact(self):
+        contact = self.cleaned_data.get('contact')
+        if User.objects.filter(contact=contact).exists():
+            raise forms.ValidationError("Contact number already exists")
+        return contact
+
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -121,7 +137,7 @@ class AddressForm(forms.Form):
 
 
 class EditUserForm(forms.Form):
-    model =models.User
+    model =User
     email = forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
     full_name = forms.CharField(label="Full Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
     contact = forms.IntegerField(label="Contact",widget=forms.NumberInput(attrs={"class":"form-control"}))
@@ -130,7 +146,7 @@ class EditUserForm(forms.Form):
 
 class AddUserForm(forms.ModelForm):
     class Meta:
-        model = models.User
+        model = User
         fields = ['email', 'full_name', 'contact', 'password']  # Include necessary fields
 
     # Optionally, you can add custom validation or widgets
