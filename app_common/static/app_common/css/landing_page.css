@@ -1,12 +1,36 @@
 .carousel-control-next i,.carousel-control-prev i{
-    background-color: #0d6d30;
+    background-color:var(--Carouselbutton);
     padding: 20px;
     border-radius: 45%;
     font-size: 1rem;
-    color: white;
+    color: var(--third);
 }
 .carousel-item img{
     height: 33rem;
+}
+
+
+.image-wrapper{
+  height: 200px;
+  width: 200px;
+  /* border: 2px solid var(--Carouselbutton); */
+  border-radius: 50%;
+  overflow: hidden;
+ transition:transform 0.5s ;
+}
+.image-wrapper:hover{
+  transform: scale(1.07);
+  
+}
+.image-wrapper a img{
+  height: auto;
+  width:100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+ transform: scale(1.15);
+}
+.image-wrapper a img:hover{
+  transform: scale(1.03);
 }
 .content-wrapper h4{
     font-family: 'poppins', sans-serif;
@@ -14,9 +38,10 @@
     font-size: 1rem;
     line-height:2rem;
     font-weight: 500;
+    margin: 10px 0;
 }
 .viewmoreButton button{
-    background-color:var(--viewmoreButton);
+    background-color:var(--viewmoreProducts);
     margin: 1rem;
 }
 .card-body{
@@ -410,8 +435,8 @@ width: 100%;
       flex-direction: column;
     }
       .carousel-img1 {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         position: absolute;
         left:50%;
         transform: translateX(-50%);
@@ -429,7 +454,7 @@ width: 100%;
         }
         
         .testimonial-name {
-          font-size: 10px;
+          font-size: 5px;
           font-weight: 500;
           font-family: 'Poppins', sans-serif;
           text-transform: capitalize;
@@ -445,7 +470,10 @@ width: 100%;
         font-size: 12px;
       }
 }
+/* ------------------end Mobile( sm)------------ */
 
+
+/* ------------------Extra Mobile( xsm)------------ */
 @media (max-width: 376px) {
     .aboutniwa img {
         height: 120px;
@@ -511,7 +539,7 @@ width: 100%;
       }
 }
 
-/* ------------------end Mobile( sm)------------ */
+
 
 
 
