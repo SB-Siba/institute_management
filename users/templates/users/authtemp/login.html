@@ -43,7 +43,7 @@
                         <button class="btn btn-primary w-full mt-5" type="submit">Log in</button>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="{% url 'users:forgot_password' %}"
+                        <a href="{% url 'users:password-reset' %}"
                             class="text-sm text-white mt-5 mb-5 text-primary-hover text-underline" style="font-weight: bold;">Forgot
                             password?</a>
                     </div>
@@ -99,11 +99,13 @@
               <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
               {{ field }}
             </div>
+            
           {% endfor %}
-          <a href="{% url 'users:forgot_password' %}" class="d-block text-dark text-start text-decoration-none">Forgot password?</a>
           <div class="d-grid mt-2">
             <button type="button" class="btn btn-success w-100 p-2" data-bs-dismiss="modal">SIGN IN</button>
           </div>
+          <a href="{% url 'users:password-reset' %}" class="d-block text-dark text-start text-decoration-none">Forgot password?</a>
+          
         </form>
       </div>
       <div class="modal-footer justify-content-center border-0">
@@ -121,71 +123,6 @@
 
 
  
- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Trigger buttons -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal1">Open Modal 1</button>
-    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal2">Open Modal 2</button> -->
-
-    <!-- Modal 1 -->
-    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1Label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal1Label">Modal 1</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    This is Modal 1.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="switchToModal2">Switch to Modal 2</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 2 -->
-    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="modal2Label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal2Label">Modal 2</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    This is Modal 2.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="switchToModal1">Switch to Modal 1</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        document.getElementById('switchToModal2').addEventListener('click', function () {
-            $('#modal1').modal('hide');
-            $('#modal2').modal('show');
-        });
-
-        document.getElementById('switchToModal1').addEventListener('click', function () {
-            $('#modal2').modal('hide');
-            $('#modal1').modal('show');
-        });
-    </script>
-
  
 
 </section>

@@ -1,6 +1,6 @@
+from django.shortcuts import render, redirect
 from datetime import datetime
 from django.conf import settings
-from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from users import forms
@@ -27,7 +27,7 @@ class ProfileView(View):
     def get(self, request):
         user = request.user
         print(user)
-        # category_obj = Category.objects.all()
+       
         userobj = models.User.objects.get(email=user.email)
         try:
             profileobj = models.User.objects.get(user=userobj)
@@ -46,7 +46,7 @@ class UpdateProfileView(View):
 
     def get(self, request):
         user = request.user
-        # category_obj = Category.objects.all()
+        
         userobj = models.User.objects.get(email=user.email)
         print(userobj)
     

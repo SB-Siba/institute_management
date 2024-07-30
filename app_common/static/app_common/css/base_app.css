@@ -352,14 +352,14 @@ position: relative;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 101;
-    background:rgb(143, 243, 143);
+    background:var(--third);
     padding: 40px 20px;
-    max-width: 320px;
+    max-width: 350px;
     /* min-height: 60vh; */
     width: 100%;
     border-radius: 12px;
     pointer-events: all;
-    opacity: 0;
+display: none;
     transition: all 0.5s ease-out;
 }
 
@@ -400,6 +400,7 @@ position: relative;
 .signup_form {
     display: none;
     
+    
 }
 
 .form_container.active .login_form {
@@ -411,23 +412,24 @@ position: relative;
 }
 
 .home.show .form_container {
-    opacity: 1;
+    display: block;
     pointer-events: auto;
     transform: translate(-50%, -50%) scale(1);
 }
 
-/* .home::before {
+   .home::before {
     content: "";
-    height: 100%;
+    height: 200%;
     width: 100%;
-    background-color: #3f3e3e6d;
-    /* background-position: center; */
-    position: absolute;
+    background-color: #2c2b2ba2;
+    background-position: center;
+    margin-top: -30%;
+    position: fixed;
     z-index: 100;
     opacity: 0;
     pointer-events: none;
     transition: all 0.5s ease-out;
-} */
+}  
 
 .home.show::before {
     opacity: 1;
@@ -444,4 +446,8 @@ position: relative;
   font-family: 'Poppins',sans-serif;
   font-weight: 600;
   color: var(--Carouselbutton);
+}
+.login_form form p,.signup_form form p{
+  margin: 0;
+  font-size: 13px;
 }

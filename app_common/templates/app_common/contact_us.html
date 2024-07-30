@@ -1,0 +1,130 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+contact Us
+{% endblock title %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="">
+
+    <style>
+      .text{
+        font-size: 14px;
+      }
+      .input-container input{
+        font-size: 14px;
+      }
+      .input-container textarea{
+        font-size: 14px;
+      }
+      .image-container{
+    height: 200px;
+}
+.my_image {
+    height: 100%;
+}
+@media (max-width: 768px) {
+  .image-container{
+    height: 30vh; /* Reduced height for smaller screens */
+  }
+
+  .my_image {
+    object-fit:fill; /* Ensure the image fits within the container without being squeezed */
+    height: 100%;  /* Ensure the image fits within the container without being squeezed */
+  }
+}
+@media (max-width: 768px) {
+  .image-container{
+    height: 25vh; /* Reduced height for smaller screens */
+  }
+
+  .my_image {
+    object-fit:fill; /* Ensure the image fits within the container without being squeezed */
+    height: 100%;  /* Ensure the image fits within the container without being squeezed */
+  }
+}
+    </style>
+</head>
+<section class="    " style="min-height: 60vh;">
+    <div class="row ">
+        <div class="image-container">
+            <img src="" class="d-block w-100 my_image  img-fluid hero-img" alt="Slide 1" />
+        </div>
+    </div>
+    {% include 'snippets/alert.html' %}
+    
+    <div class="row  justify-content-center mt-5 mb-3 px-0   "> <!-- Center the column -->
+        <div class="col-lg-9 px-0">
+           <div class="row border rounded mx-0 bg-white ">
+                <div class="col-lg-6">
+                    <div class="contact-info my-4 ms-4">
+                        <h4 class="title mb-4">Let's get in touch</h4>
+                        <p class="text pb-3" >
+                            We're here to help! For any questions, assistance with your order, or feedback, please don't hesitate to contact us. Our team is ready to assist you.
+                        </p>
+            
+                        <div class="info">
+                            <div class="information d-flex mb-3">
+                                <i class="fas fa-map-marker-alt pt-1"></i> &nbsp; &nbsp;
+                                <p class="text">Gobindapur,Panikoili,Jajpur, 755043</p>
+                            </div>
+                            <div class="information d-flex mb-3">
+                                <i class="fas fa-envelope  pt-1"></i> &nbsp; &nbsp;
+                                <p class="text"> contactus@treeranga.com</p>
+                            </div>
+                            <div class="information d-flex mb-3">
+                                <i class="fas fa-phone   pt-1"></i>&nbsp;&nbsp;
+                                <p class="text">6372100300</p>
+                            </div>
+                        </div>
+            
+                        <div class="social-media mt-5">
+                            <p class="text">Connect with us :</p>
+                            <div class="social-icons">
+                                <a href="#">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+          <div class="col-lg-6 contact-form rounded ">
+            <div class="contact-form ">
+                
+    
+                <form action="" class="px-4 py-4 " autocomplete="off" method="post">
+                    {% csrf_token %}
+                    <h4 class="text-white mb-4">Contact us</h4>
+    
+                    <div class="input-container  mb-3">
+                        {{ form.full_name }}
+                    </div>
+                    <div class="input-container mb-3">
+                        {{ form.email }}
+                    </div>
+                    <div class="input-container mb-3">
+                        {{ form.mobile_no }}
+                    </div>
+                    <div class="input-container mb-3">
+                        {{ form.message }}
+                    </div>
+                    <input type="submit" value="Send" class="btn btn-100" />
+                </form>
+            </div>
+          </div>
+           </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

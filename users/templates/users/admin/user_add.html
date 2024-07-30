@@ -1,0 +1,60 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New User</title>
+    <link rel="stylesheet" href="{% static 'app_common/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'app_common/css/styles.css' %}">
+    <style>
+        .custom-card-header {
+            background-color: white !important;
+            color:black !important;
+        }
+        .custom-card-header h2 {
+            color:black  !important;
+        }
+        .custom-btn {
+            background-color:#b8d1f5 !important;
+            border-color:white !important;
+            color: black !important;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .btn-secondary.custom-back-btn {
+            background-color:#b8d1f5 !important;
+            border-color: white !important;
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header custom-card-header text-white">
+                        <h2 class="text-center">Add New User</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% include 'snippets/alert.html' %}
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">Save</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'app_common/js/jquery.min.js' %}"></script>
+    <script src="{% static 'app_common/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'app_common/js/main.js' %}"></script>
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,36 @@
+INSERT INTO users_user (
+    id,
+    last_login,
+    full_name,
+    email,
+    password,
+    contact,
+    is_active,
+    is_superuser,
+    is_staff,
+    address,
+    wallet,
+    token,
+    meta_data,
+    profile_pic,
+    deletion_date,
+    deletion_requested
+  )
+VALUES (
+    'id:bigint',
+    'last_login:timestamp with time zone',
+    'full_name:character varying',
+    'email:character varying',
+    'password:text',
+    'contact:character varying',
+    is_active:boolean,
+    is_superuser:boolean,
+    is_staff:boolean,
+    'address:jsonb',
+    'wallet:double precision',
+    'token:character varying',
+    'meta_data:jsonb',
+    'profile_pic:character varying',
+    'deletion_date:timestamp with time zone',
+    deletion_requested:boolean
+  );
