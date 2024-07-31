@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from helpers import utils
 import uuid
+from django.conf import settings
 from helpers.methods import request_deletion , cancel_deletion
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -36,7 +37,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def __str__(self):
         return self.email
-
+    def send_reset_password_email(self):
+        token = self.generate_reset_password_token()
+        reset_link = f"http://http://127.0.0.1:8000/reset-password/{token}/"
+        subject = 'Reset your password'
+        message = f'Hi {self.full_name},\n\nTo reset your password, please click the link below:\n\n{reset_link}\n\nIf you did not request this, please ignore this email.'
+        send_mail(subject, message,settings.DEFAULT_FROM_EMAIL,[self.email]) 
+    def generate_reset_password_token(self):
+        token = str(uuid.uuid4())
+        self.token = token
+        self.save()
+        return token
+    def reset_password(self, token, new_password):
+        # Check if the token is valid (you may want to implement token validation logic here)
+        if self.token == token:
+            # Set the new password and save the user
+            self.set_password(new_password)
+            self.token = None  # Clear the token after password reset
+            self.save()
+            return True
+        else:
+            return False
 User.request_deletion = request_deletion
 User.cancel_deletion = cancel_deletion
     

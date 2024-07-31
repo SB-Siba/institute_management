@@ -1,10 +1,9 @@
 from django.urls import path
 from users import views
 from users import forms
-from users.user_views import user_views,admin_views
+from users.user_views import user_views,admin_views,auth_views
 from app_common.app_common_views import app_common_views
 from django.contrib.auth import views as auth_view
-from users.forms import CustomPasswordResetForm, PasswordChangeForm
 app_name = 'users'
 
 
@@ -12,18 +11,12 @@ urlpatterns = [
     #Authentication urls
     path('', app_common_views.HomeView.as_view(), name='home'),
     path('admin/', admin_views.AdminDashboard.as_view(), name='admin_dashboard'),
-    path('signup', views.Registration.as_view(), name = "signup"),
-    path('login', views.Login.as_view(), name = "login"),
-    path("passwordChange/",auth_view.PasswordChangeView.as_view(template_name = 'users/authtemp/changepassword.html',form_class = PasswordChangeForm,success_url = '/passwordchangedone'),name='passwordchange'),
-    path("passwordchangedone/",auth_view.PasswordChangeDoneView.as_view(template_name = 'users/authtemp/changepassworddone.html'),name='passwordchangedone'),
-    path('password-reset/', views.CustomPasswordResetView.as_view(),name='password-reset'),
-    path('password-reset/done/', views.CustomPasswordResetDoneView.as_view(),name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-    path('password-reset-complete/',views.CustomPasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    path('logout/', views.Logout.as_view(), name = "logout"),
-    path('logout-confirmation/', views.LogoutConfirmationView.as_view(), name='logout_confirmation'),
-    path('cancel-logout/', views.CancelLogoutView.as_view(), name='cancel_logout'),
-    path('account-deletion/', views.AccountDeletionView.as_view(), name='account_deletion'),
+    path('signup', auth_views.Registration.as_view(), name = "signup"),
+    path('login', auth_views.Login.as_view(), name = "login"),
+    path('forgot_password/', auth_views.ForgotPasswordView.as_view(), name = "forgot_password"),
+    path('reset_password/<str:token>/', auth_views.ResetPasswordView.as_view(), name = "reset_password"),
+    path('logout/', auth_views.Logout.as_view(), name = "logout"),
+    path('account-deletion/', auth_views.AccountDeletionView.as_view(), name='account_deletion'),
 
 
     #user profile

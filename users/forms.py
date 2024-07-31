@@ -64,33 +64,25 @@ class LoginForm(forms.Form):
     email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     
-class PasswordChangeForm(PasswordChangeForm):
-    old_password = forms.CharField(label='Old Password',widget=forms.PasswordInput(attrs= {'autofocus':True,'autocomplete':'current-password','class':'form-control'}))
-    new_password1 = forms.CharField(label='New Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-    new_password2 = forms.CharField(label='Cofirm Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-
-class CustomPasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(
-        max_length=254,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control text-black',
-            'placeholder': 'Email Address'
-        })
-    )
-
-class CustomSetPasswordForm(SetPasswordForm):
-    new_password1 = forms.CharField(
-        label="New Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    new_password2 = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-    )
-
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("No user found with this email address.")
+        return email
+ 
+class ResetPasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get('new_password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if new_password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
+ 
 
 
 class UpdateProfileForm(forms.Form):

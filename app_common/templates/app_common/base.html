@@ -32,6 +32,98 @@
 </head>
 
 <body>
+  {% if user.is_authenticated %}
+
+  <header class="p-lg-3">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-lg-2 col-6" id="menu-bar">
+          <!-- logo -->
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
+              class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="list-unstyled">
+                <li><a class="nav-link" href="#">Home</a></li>
+                <li><a class="nav-link" href="#">about us</a></li>
+                <li><a class="nav-link" href="#">Plants</a></li>
+                <li><a class="nav-link" href="#">Seeds</a></li>
+                <li><a class="nav-link" href="#">Pots & Planters</a></li>
+                <li><a class="nav-link" href="{% url 'users:logout' %}">Log out</a></li>
+              </ul>
+            </div>
+          </div>
+          <a class="navbar-brand" href="{% url 'users:home' %}">
+            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
+          </a>
+        </div>
+
+        <!-- full screen header -->
+        <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
+          <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="">About us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Plants</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Seeds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:logout' %}">logout</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Plant Care</a>
+            </li>
+          </ul>
+        </div>
+        <!-- close full screen header -->
+
+        <!-- ----------Side buttons ------------->
+        <div class="col-lg-2 col-6 d-flex justify-content-around align-items-center">
+          <button type="button" class="btn" id="search-icon">
+            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+          </button>
+          <!-- <button type="button" class="btn">
+            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
+          </button> -->
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i>
+          </button>
+          <button type="button" class="btn">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+          </button>
+          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></button>
+        </div>
+          
+         
+        
+        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
+          {% csrf_token %}
+          <div class="input-group">
+            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+          </div>
+        </form>
+        
+        <!-- end ------- Side buttons --->
+
+       
+      </div>
+    </div>
+  </header>
+  {% elif not user.is_authenticated %}
+
   <header class="p-lg-3">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
@@ -120,6 +212,7 @@
       </div>
     </div>
   </header>
+  {% endif %}
 
 
 
