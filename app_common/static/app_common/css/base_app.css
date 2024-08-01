@@ -12,13 +12,15 @@
     --bg: rgb(249 249 255);
     --gradient: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(115, 201, 118) 100%);
     --shadpw: 0px 0px 20px 0px rgb(132 144 255 / 20%);
-    --header: #fff6f4;
-    --viewmoreButton:#76e1a1;
+    --headernav: #a0a0a0;
+    --viewmoreProducts:#76e1a1;
     --MoreDetails:#ff9f1a;
     --aboutniwa:#043b18;
     --footer:#212121;
     --h6:#7a877a;
     --gradient2: linear-gradient(to right, #FF0099,#203bb3,#5e05ac , #f02f32 );
+    --Carouselbutton: #0d6d30;
+  --addtocart:#ffca2c;
   }
 
   * {
@@ -49,7 +51,26 @@
     font-family: 'poppins', sans-serif;
     font-size: .8rem;
     letter-spacing:2px;
+    position: relative;
+    color:var(--headernav) ;
+    padding: 0 2px;
+  
   }
+ 
+.HeaderButton li a:after{
+  position: absolute;
+  content: "";
+  background-color:  #FF0099;
+  width: 0%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  transition:all 0.5s ease-in-out;
+}
+.HeaderButton li a:hover::after{
+  width: 100%;
+ 
+}
 
   .HeaderIcons {
     font-size: 1.2rem;
@@ -141,22 +162,44 @@ font-family:"Inter", sans-serif;
 }
 
 
-/* ------------------Tablets------------ */
+/* Media Queries for Responsiveness */
+
+/* ------------------Laptop( lg)------------ */
+
+@media (max-width: 1024px){
+#nav_buttons ul li a{
+  font-size: 11px;
+  padding: 0 2px;
+}
+
+}
+/* ------------------End Laptop( lg)------------ */
+
+/* ------------------Tablets(md)------------ */
+
 @media (max-width: 768px) {
+
+  #menu_button {
+    display: block;
+  margin-left: -40px;
+  font-size: 1.5rem;
+  }
+
   .row div ul li a {
-    font-size: 14px; /* Adjust as needed for better readability */
+    font-size: 12px; 
   }
 
   .row div li {
-    margin-bottom: 0.5rem; /* Add some space between list items */
+    margin: 1px; 
   }
 
   footer {
-    padding: 2rem 0;
+    padding: 2rem 1rem;
+    font-size: 5px;
   }
 
   .row div p, .row div h6 {
-    font-size: 16px; /* Adjust for better readability on smaller screens */
+    font-size: 10px; 
   }
   .row div p i{
     padding: 3px;
@@ -164,12 +207,21 @@ font-family:"Inter", sans-serif;
   }
   
   .modal-content {
-    margin-top: 15vh;
+    margin-top:10vh;
     max-width: 90%;
   }
+  .navbar-brand{
+display: flex;
+justify-content: center;
+position: relative;
+
+  }
   .navbar-brand img{
-    height: 50px;
-    width: 60px;
+    height: 40px;
+    width: 50px;
+    position: absolute;
+    right: 0%;
+    bottom: 20%;
   }
   .modal-dialog {
     display: flex;
@@ -177,23 +229,21 @@ font-family:"Inter", sans-serif;
     justify-content: center;
   }
   
-  .modal-content {
-    margin-top: 30vh;
-    max-width: 90%;
-  }
+  
   
 }
+/* ------------------End Tablets( md)------------ */
 
-/* ------------Mobiles---------------- */
+/* ------------------Mobile( sm)------------ */
 
   @media screen and (max-width: 576px) {
 
     .row div ul li a {
-      font-size: 12px; /* Adjust as needed for better readability */
+      font-size: 12px; 
     }
   
     .row div li {
-      margin-bottom: 0.4rem; /* Add some space between list items */
+      margin-bottom: 0.4rem;
     }
   
     footer {
@@ -201,7 +251,7 @@ font-family:"Inter", sans-serif;
     }
   
     .row div p, .row div h6 {
-      font-size: 14px; /* Adjust for better readability on smaller screens */
+      font-size: 14px; 
     }
     .modal-dialog {
       display: flex;
@@ -295,4 +345,109 @@ font-family:"Inter", sans-serif;
     
   }
 
-  
+  /* ------------------end Mobile( sm)------------ */
+.form_container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    background:var(--third);
+    padding: 40px 20px;
+    max-width: 350px;
+    /* min-height: 60vh; */
+    width: 100%;
+    border-radius: 12px;
+    pointer-events: all;
+display: none;
+    transition: all 0.5s ease-out;
+}
+
+.form_close {
+    position: absolute;
+    top: 30px;
+    right: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    opacity: 0.7;
+}
+
+.log_reg_logo {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.option_field {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+.form_container a {
+    text-decoration: none;
+    font-family: 'Poppins',sans-serif;
+}
+
+.form_container a:hover {
+    text-decoration: underline;
+    transition: all 0.3s ease-in-out;
+}
+
+.signup_form {
+    display: none;
+    
+    
+}
+
+.form_container.active .login_form {
+    display: none;
+}
+
+.form_container.active .signup_form {
+    display: block;
+}
+
+.home.show .form_container {
+    display: block;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+   .home::before {
+    content: "";
+    height: 200%;
+    width: 100%;
+    background-color: #2c2b2ba2;
+    background-position: center;
+    margin-top: -30%;
+    position: fixed;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease-out;
+}  
+
+.home.show::before {
+    opacity: 1;
+    pointer-events: all;
+}
+.Login_Signup{
+  font-size: 12px;
+  font-family: 'Poppins',sans-serif;
+  font-weight: 400;
+  margin: 10px 0;
+}
+#SignUp,#SignIn{
+  font-size: 12px;
+  font-family: 'Poppins',sans-serif;
+  font-weight: 600;
+  color: var(--Carouselbutton);
+}
+.login_form form p,.signup_form form p{
+  margin: 0;
+  font-size: 13px;
+}

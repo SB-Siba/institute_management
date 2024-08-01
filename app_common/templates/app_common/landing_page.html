@@ -34,9 +34,8 @@
 
 <!-- --------------------end banner section--------------- -->
 
+
 <!-- --------------------android app--------------- -->
-
-
 <section>
   <div class="d-flex justify-content-center align-items-center p-lg-3 p-2 bg-warning fs-4">
     Download App! &nbsp; 
@@ -45,99 +44,92 @@
 </section>
 <!-- --------------------end android app--------------- -->
 
+
+
 <!-- --------------------Shop by collection--------------- -->
 
 <section class="m-lg-4 m-2">
-  <div class="container ">
+  <div class="">
       <div class="mb-lg-3 mb-3">
         <h3 class="text-success">Shop By Collection</h3>
       </div> 
    
-
-    <div class="row row-cols-2 row-cols-lg-6 ">
+        <!-- ----------------max card should be 5 in =----------------- -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 row-cols-xl-6 ">
 
        <!-- ---------category 1-------- -->
 
-        <div class="col">
+        <div class="col content-wrapper">
           <div class="image-wrapper">
             <a href="#">
-                <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+                <img src="{% static 'app_common\images\image5.webp' %}" alt=""  width="175" height="224">
             </a>
           </div>
-          <div class="content-wrapper">
-            <h4>Pots & Planters</h4>
-          </div>
+          <h4 class="text-center">Pots & Planters</h4>
         </div>
 
     <!-- ---------category 2-------- -->
-        <div class="col">
+        <div class="col content-wrapper">
           <div class="image-wrapper">
           <a href="">
-              <img src="{% static 'app_common\images\image6.jpg' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+              <img src="{% static 'app_common\images\img9.webp' %}" alt=""  width="175" height="224">
           </a>
         </div>
-        <div class="content-wrapper">
-          <h4>Watering Equipments</h4>
-        </div>
+        <h4 class="text-center">Flower Seeds</h4>
       </div>
 
        <!-- ---------category 3-------- -->
-       <div class="col">
+       <div class="col content-wrapper">
         <div class="image-wrapper">
         <a href="">
-            <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+            <img src="{% static 'app_common\images\img10.jpg' %}"width="175" height="224">
         </a>
       </div>
-      <div class="content-wrapper">
-        <h4>Stands</h4>
-      </div>
+      <h4 class="text-center">Stands</h4>
     </div>
 
      <!-- ---------category 4-------- -->
-     <div class="col">
+     <div class="col content-wrapper">
       <div class="image-wrapper">
       <a href="">
-          <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+          <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
       </a>
     </div>
-    <div class="content-wrapper">
-      <h4>Soil & Fertilizers</h4>
-    </div>
+    <h4 class="text-center">Soil & Fertilizers</h4>
   </div>
 
 
    <!-- ---------category 5-------- -->
-   <div class="col">
+   <div class="col content-wrapper ">
     <div class="image-wrapper">
     <a href="">
-        <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+        <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
     </a>
   </div>
-  <div class="content-wrapper">
-    <h4>Plant Support</h4>
-  </div>
+  <h4 class="text-center">Plant Support</h4>
 </div>
 
 
 
+
  <!-- ---------category 6-------- -->
- <div class="col">
+ <div class="col content-wrapper">
     <div class="image-wrapper">
       <a href="">
-           <img src="{% static 'app_common\images\image5.webp' %}" alt="" style="--object-position:50.0% 50.0%;" width="175" height="224">
+           <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
         </a>
     </div>
-    <div class="content-wrapper">
-        <h4>Gardening Tools</h4>
-      </div>
+    <h4 class="text-center">Gardening Tools</h4>
     </div>
+
+
   </div> 
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->
 
 
-<!-- --------------------New Arrival Collection--------------max card should be 4- -->
+<!-- --------------------New Arrival Collection--------------- -->
 
 <section class="m-lg-4 m-2">
   <div class="container">
@@ -145,104 +137,98 @@
       <h3 class="text-success">New Arrivals</h3>
     </div>
 
-    <!-- Carousel for small screens -->
 
+<swiper-container class="mySwiper d-lg-flex h-100" init="false">
+  <!-- 1 -->
 
-<swiper-container class="mySwiper d-lg-none h-100" init="false">
 <swiper-slide >
   <div class="card" >
     <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
       <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
-      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+          <a href="" class="btn btn-warning text-white">Add to Cart</a>
+   </div>
+  </div>
+</swiper-slide>
+
+<!-- 2-->
+
+<swiper-slide >
+  <div class="card" >
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
     </div>
   </div>
 </swiper-slide>
+<!-- 3 -->
+<swiper-slide >
+  <div class="card" >
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
+    </div>
+  </div>
+</swiper-slide>
+<!-- 4 -->
+<swiper-slide >
+  <div class="card" >
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <div class="card-body p-1">
+      <h6>Name of your plant etc</h6>
+      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
+    </div>
+  </div>
+</swiper-slide>
+<!-- 5 -->
 <swiper-slide>
   <div class="card" >
     <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
       <small> <b> ₹65235 </b><s>₹6542</s>(30% off)</small>
-      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
     </div>
   </div>
 </swiper-slide>
+<!-- 6 -->
 <swiper-slide>
   <div class="card" >
-    <img src="{% static 'app_common/images/img4.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
       <small> <b> ₹65235 </b><s>₹6542</s>(35% off)</small>
-      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
     </div>
   </div>
 </swiper-slide>
+<!-- 7 -->
 <swiper-slide>
   <div class="card" >
-    <img src="{% static 'app_common/images/img5.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
+    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
     <div class="card-body p-1">
       <h6>Name of your plant etc</h6>
       <small> <b> ₹65235 </b><s>₹6542</s>(39% off)</small>
-      <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-    </div>
+      <a href="" class="btn btn-warning text-white">Add to Cart</a>
+        </div>
   </div>
 </swiper-slide>
+
 </swiper-container>
     
-    
-
-    <!-- Grid for large screens -->
-    <div class="row d-none d-lg-flex">
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 15rem;" class="card-img-top object-fit-cover" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 15rem;" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg">
-        <div class="card" style="width: 18rem;">
-          <img src="{% static 'app_common/images/img3.jpg' %}" style="height: 15rem;" class="card-img-top object-fit-contain" alt="...">
-          <div class="card-body">
-            <h6>Name of your plant etc</h6>
-            <small><s>₹6542</s> <b>from ₹65235 </b>(32% off)</small>
-            <button class="btn btn-warning"><a href="" class="text-decoration-none text-white">Add to Cart</a></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+        
     <div class="d-flex justify-content-center viewmoreButton">
       <button class="btn d-flex justify-content-center"><a href="#" class="text-decoration-none text-dark">View More Products</a></button>
     </div>
   </div>
 </section>
-<!-- --------------------End New Arrival Collection--------------max card should be 4- -->
+<!-- --------------------End New Arrival Collection--------------- -->
 
 
 
@@ -314,7 +300,7 @@
      </div>               
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <div class="carousel-img">
+        <div class="carousel-img1">
          <img src="{% static 'app_common\images\person4.jpg'%}">
         </div>
         <div class="carousel-caption">
@@ -323,7 +309,7 @@
         </div>
       </div>
       <div class="carousel-item">
-        <div class="carousel-img">
+        <div class="carousel-img1">
          <img src="{% static 'app_common\images\person2.jpg'%}">
         </div>
         <div class="carousel-caption">
@@ -332,7 +318,7 @@
         </div>
       </div>
       <div class="carousel-item">
-        <div class="carousel-img">
+        <div class="carousel-img1">
          <img src="{% static 'app_common\images\person3.jpg'%}">
         </div>
         <div class="carousel-caption">
@@ -355,7 +341,7 @@
 </section>
 <!-- --------------------------End Testimonial------------------------------- -->
   
-<!-- --------------------------------------------Start Accordian------------------------------------- -->
+<!-- --------------------------Start Accordian------------------------------------- -->
 
 <section class=" p-lg-5 p-3 Accordian">
   <div class="row">
@@ -364,50 +350,52 @@
      </div>
  </div>
   <div class="container">
-    <div class="accordion" id="accordionExample">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Accordion Item #1
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <div class="accordion-item ">
+        <h2 class="accordion-header" id="flush-headingOne">
+          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            What is Niwa Agro?
           </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Niwa Agro is an agricultural company specializing in [specific services/products, e.g., sustainable farming solutions, organic produce, etc.].
+            You can reach us via email at [email address], call us at [phone number], or fill out the contact form on our website.We offer a range of products including [list of products such as organic vegetables, fruits, grains, etc.].Our services include [list of services such as agricultural consulting, farm management, sustainable farming practices, etc.].All our products are certified organic and meet [specific standards, e.g., USDA Organic, EU Organic Certification].
           </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingTwo">
+          <button class="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            What farming practices does Niwa Agro use?
+          </button>
+        </h2>
+        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">We use sustainable and environmentally friendly farming practices, including [specific practices such as crop rotation, no-till farming, integrated pest management, etc.].We implement rigorous quality control measures at every stage of production, from planting to harvest, to ensure our products meet the highest standards.</div>
         </div>
       </div>
       <div class="accordion-item">
-        <h2 class="accordion-header" id="headingTwo">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Accordion Item #2
+        <h2 class="accordion-header" id="flush-headingThree">
+          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+            How can I place an order with Niwa Agro?
           </button>
         </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingThree">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Accordion Item #3
-          </button>
-        </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-          </div>
+        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">You can place an order through our website, by phone, or by visiting one of our partner retailers.
+
+            12. Does Niwa Agro offer home delivery?
+            Yes, we offer home delivery services in [specific areas/regions]. Delivery times and fees vary based on location.
+            
+            13. What payment methods does Niwa Agro accept?
+            We accept various payment methods including credit/debit cards, PayPal, and bank transfers.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
-
 <!-- --------------------------------------------End Accordian------------------------------------- -->
+
+
+
 
 
  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>

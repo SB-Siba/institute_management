@@ -75,14 +75,7 @@
           <div class="hstack gap-2">
             <div class="input-group input-group-sm input-group-inline"></div>
           </div>
-          <div class="btn-group">
-            <a
-              data-bs-toggle="modal"
-              data-bs-target="#create_catagory"
-              class=" catagory-btn  btn-neutral">
-              <i class="bi bi-plus ">Create New Category</i>
-            </a>
-          </div>
+          
         </div>
   
         <div class="  tablecard">
@@ -144,42 +137,6 @@
   </main>
   
   <!-- test create modal -->
-  <div
-    class="modal fade "
-    id="create_catagory"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog ">
-      <div class="modal-content ">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">ADD NEW CATEGORY</h5>
-          <button
-            type="button"
-            class="btn-close BtM"
-            data-bs-dismiss="modal"
-            aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %} {% for field in form %}
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label"
-                >{{field.label}}:</label
-              >
-              {{field}}
-            </div>
-            {% endfor %}
   
-            <center>
-              <button class="btn btn-success BtM" type="submit">
-                Create Catagory
-              </button>
-            </center>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>  
 </body>
 {% endblock content %}

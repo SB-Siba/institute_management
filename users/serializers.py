@@ -33,13 +33,13 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = [
-            'contact',
+            'email',
             'password',
         ]
         extra_kwargs = {
-            'contact': {'required': True},
+            'email': {'required': True},
             'password': {'required': True},
-            }
+        }
         
 
 class UserSerializer(serializers.ModelSerializer):

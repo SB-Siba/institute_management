@@ -11,13 +11,13 @@ import re
 
 class SignUpForm(forms.Form):
 
-    full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(max_length=254, help_text='Enter a valid email address.',
-                             widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    contact = forms.CharField(max_length=10,help_text=' Enter Mobile Number',
-        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter your full Name'}))
+    email = forms.EmailField(max_length=254,
+                             widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Enter valid email address'}))
+    contact = forms.CharField(max_length=10,
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Mobile Number'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Confirm Password'}))
 
 
 
@@ -61,8 +61,8 @@ class SignUpForm(forms.Form):
         return cleaned_data
 
 class LoginForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter valid email address'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter password'}))
     
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField()
@@ -96,11 +96,6 @@ class UpdateProfileForm(forms.Form):
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-    bio = forms.CharField(required=False, widget=forms.Textarea(attrs={"class":"form-control","rows":"1"}))
-    bio.widget.attrs.update({'class': 'form-control','type':'text'})
-
-    password = forms.CharField(label='Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control','placeholder':'Only if you want to change then type here.'}),required=False)
-
     profile_pic = forms.FileField(label='Select an image file', required=False)
     profile_pic.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
@@ -113,6 +108,9 @@ class AddressForm(forms.Form):
 
     landmark2 = forms.CharField(max_length=255)
     landmark2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
+
+    contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     country = forms.CharField(max_length=255)
     country.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})

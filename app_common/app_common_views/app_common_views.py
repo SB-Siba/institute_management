@@ -68,3 +68,10 @@ class ReturnPolicy(View):
     def get(self, request):
        
         return render(request, self.template)
+
+class OurServices(View):
+    template = app + "our_services.html"
+
+    def get(self, request):
+       
+        return render(request, self.template)
