@@ -7,8 +7,12 @@
 }
 .carousel-item img{
     height: 33rem;
+    width: 100%;
+    margin-left: -10px;
 }
-
+.AppDownload{
+  margin-top: -10px;
+}
 
 .image-wrapper{
   height: 200px;
@@ -220,6 +224,10 @@ width: 100%;
  
 /* Media Queries for Responsiveness */
 
+/* ------------------Laptop( xl)------------ */
+@media (min-width: 1025px){
+
+}
 /* ------------------Laptop( lg)------------ */
 @media (max-width: 1024px){
   .card-body h6{
@@ -398,10 +406,10 @@ width: 100%;
 /* ------------------End Tablets( md)------------ */
 
 
-/* ------------------Mobile( sm)------------ */
+/* ------------------Mobile(L)------------ */
 
 
-@media (max-width: 576px) {
+@media (max-width:425px) {
     .aboutniwa {
         flex-direction: column;
         align-items: center;
@@ -473,8 +481,10 @@ width: 100%;
 /* ------------------end Mobile( sm)------------ */
 
 
-/* ------------------Extra Mobile( xsm)------------ */
-@media (max-width: 376px) {
+/* ------------------Extra Mobile( md)------------ */
+@media (max-width: 375px) {
+
+
     .aboutniwa img {
         height: 120px;
         width: 240px;
@@ -547,7 +557,22 @@ width: 100%;
 
  
   
-  @media (max-width: 480px) {
+  @media (max-width:320px) {
+    .carousel-control-next i,.carousel-control-prev i{
+      background-color:var(--Carouselbutton);
+      padding: 20px;
+      border-radius: 45%;
+      font-size: 1rem;
+      color: var(--third);
+  }
+  .carousel-item img{
+      height:20rem;
+      width:40rem;
+      margin-left: -10px;
+  }
+  .AppDownload{
+    margin-top: -10px;
+  }
     .section-heading {
       font-size: 20px;
     }
