@@ -14,17 +14,16 @@ from django.contrib import messages
 # -------------------------------------------- custom import
 from . import swagger_doc
 from helpers import utils, api_permission
-from . import models as common_model
+from users import models
 
-from . import serializer as common_serializer
-from .serializer import ForgotPasswordSerializer
+from users import serializers
 from .forms import NewPasswordForm
-from . import tasks
+from users import tasks
 
 class SignupApi(APIView):
 
-    serializer_class= common_serializer.SignupSerializer
-    model= common_model.User
+    serializer_class= serializers.SignupSerializer
+    model=models.User
 
     @swagger_auto_schema(
         tags=["authentication"],
@@ -55,7 +54,7 @@ class SignupApi(APIView):
 class Login(APIView):
 
     model= common_model.User
-    serializer_class = common_serializer.LoginSerializer
+    serializer_class = serializers.LoginSerializer
 
     @swagger_auto_schema(
         tags=["authentication"],
@@ -64,11 +63,11 @@ class Login(APIView):
     )
     def post(self, request):
         resp = {}
-        contact= request.data['contact']
+        contact= request.data['email']
         password= request.data['password']
         try:
-            user = common_model.User.objects.get(contact=contact)
-        except common_model.User.DoesNotExist:
+            user = models.User.objects.get(email=email)
+        except models.User.DoesNotExist:
             user = None
             return Response({
                 "status":400,
@@ -86,10 +85,10 @@ class Login(APIView):
             token, _ = Token.objects.get_or_create(user=user)
             resp['token']= str(token.key)
             resp['status']= 200
-            resp['user']= common_serializer.UserSerializer(user).data
+            resp['user']= serializers.UserSerializer(user).data
         else:
             resp['status']= 400
-            resp['message']= "Login Failed or Account Not Found"
+            resp['message']= "Invalid email or password"
         
         return Response(resp)
 

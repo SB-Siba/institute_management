@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from . import models
+from users.models import User
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -10,13 +10,29 @@ import re
 #         raise ValidationError('Contact number must be exactly 10 digits.')
 
 class SignUpForm(forms.Form):
-    full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(max_length=254, help_text='Enter a valid email address.',
-                             widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    contact = forms.CharField(max_length=10,help_text=' Enter Mobile Number',
-        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+    full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter your full Name'}))
+    email = forms.EmailField(max_length=254,
+                             widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Enter valid email address'}))
+    contact = forms.CharField(max_length=10,
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Mobile Number'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Confirm Password'}))
+
+
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email address already exists")
+        return email
+
+    def clean_contact(self):
+        contact = self.cleaned_data.get('contact')
+        if User.objects.filter(contact=contact).exists():
+            raise forms.ValidationError("Contact number already exists")
+        return contact
+
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -45,36 +61,28 @@ class SignUpForm(forms.Form):
         return cleaned_data
 
 class LoginForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter valid email address'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter password'}))
     
-class PasswordChangeForm(PasswordChangeForm):
-    old_password = forms.CharField(label='Old Password',widget=forms.PasswordInput(attrs= {'autofocus':True,'autocomplete':'current-password','class':'form-control'}))
-    new_password1 = forms.CharField(label='New Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-    new_password2 = forms.CharField(label='Cofirm Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-
-class CustomPasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(
-        max_length=254,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control text-black',
-            'placeholder': 'Email Address'
-        })
-    )
-
-class CustomSetPasswordForm(SetPasswordForm):
-    new_password1 = forms.CharField(
-        label="New Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    new_password2 = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-    )
-
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("No user found with this email address.")
+        return email
+ 
+class ResetPasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get('new_password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if new_password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
+ 
 
 
 class UpdateProfileForm(forms.Form):
@@ -88,11 +96,6 @@ class UpdateProfileForm(forms.Form):
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-    bio = forms.CharField(required=False, widget=forms.Textarea(attrs={"class":"form-control","rows":"1"}))
-    bio.widget.attrs.update({'class': 'form-control','type':'text'})
-
-    password = forms.CharField(label='Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control','placeholder':'Only if you want to change then type here.'}),required=False)
-
     profile_pic = forms.FileField(label='Select an image file', required=False)
     profile_pic.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
@@ -105,6 +108,9 @@ class AddressForm(forms.Form):
 
     landmark2 = forms.CharField(max_length=255)
     landmark2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
+
+    contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     country = forms.CharField(max_length=255)
     country.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
@@ -121,7 +127,7 @@ class AddressForm(forms.Form):
 
 
 class EditUserForm(forms.Form):
-    model =models.User
+    model =User
     email = forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
     full_name = forms.CharField(label="Full Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
     contact = forms.IntegerField(label="Contact",widget=forms.NumberInput(attrs={"class":"form-control"}))
@@ -130,7 +136,7 @@ class EditUserForm(forms.Form):
 
 class AddUserForm(forms.ModelForm):
     class Meta:
-        model = models.User
+        model = User
         fields = ['email', 'full_name', 'contact', 'password']  # Include necessary fields
 
     # Optionally, you can add custom validation or widgets

@@ -1,12 +1,36 @@
 .carousel-control-next i,.carousel-control-prev i{
-    background-color: #0d6d30;
+    background-color:var(--Carouselbutton);
     padding: 20px;
     border-radius: 45%;
     font-size: 1rem;
-    color: white;
+    color: var(--third);
 }
 .carousel-item img{
     height: 33rem;
+}
+
+
+.image-wrapper{
+  height: 200px;
+  width: 200px;
+  /* border: 2px solid var(--Carouselbutton); */
+  border-radius: 50%;
+  overflow: hidden;
+ transition:transform 0.5s ;
+}
+.image-wrapper:hover{
+  transform: scale(1.07);
+  
+}
+.image-wrapper a img{
+  height: auto;
+  width:100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+ transform: scale(1.15);
+}
+.image-wrapper a img:hover{
+  transform: scale(1.03);
 }
 .content-wrapper h4{
     font-family: 'poppins', sans-serif;
@@ -14,9 +38,10 @@
     font-size: 1rem;
     line-height:2rem;
     font-weight: 500;
+    margin: 10px 0;
 }
 .viewmoreButton button{
-    background-color:var(--viewmoreButton);
+    background-color:var(--viewmoreProducts);
     margin: 1rem;
 }
 .card-body{
@@ -25,50 +50,7 @@
 
 
 
-@media (max-width:768px) {
-    .carousel-item img{
-        height: 15rem;
-    }
-    .carousel-control-next i,.carousel-control-prev i{
-        background-color: #0d6d30;
-        padding: 10px;
-        border-radius: 45%;
-        font-size: .5rem;
-        color: white;
-    }
-    .content-wrapper h4{
-        font-family: 'poppins', sans-serif;
-        color: #0f6d3e;
-        font-size: .9rem;
-        line-height:1.5rem;
-        font-weight: 500;
-    }
-    .container div h3{
-        font-size: 1.2rem;
-    }
-  
-   .card-body h6{
-    font-size: .8rem;
-    text-align: left;
-    margin: -2px;
-   }
-   .card-body small{
-    font-size: 0.7rem;
-    margin: -2px;
-    color: #0d6d30;
-   }
-   .card-body button{
-    font-size: 0.7rem;
-   }
-  
-   .chooseniwa_logo div img{
-    height: 15px;
-    width:15px
-  }
-  .chooseniwa_logo div h5{
-    font-size: 0.8rem;
-  }
-}
+
 /* small swiper */
 
 swiper-container {
@@ -138,25 +120,286 @@ swiper-container {
     margin-top: 1rem;
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    .aboutniwa img {
-        height: 200px;
-        width: 400px;
-    }
 
-    .aboutniwa h6 {
-        font-size: 2.4rem;
-        width: 300px;
-    }
 
-    .aboutniwa1 p {
-        font-size: 0.9rem;
-    }
-    .aboutniwa1 .btn {
-        font-size: 0.7rem;
-    }
+/* ---------------------testimonial---------------------------- */
+
+.testimonial {
+    width: 100%;
+    height: auto;
+    background: var(--gradient);
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .section-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    margin-top: 40px;
+    text-transform: capitalize;
+    color: #3b3b3b;
+    text-align: center;
+  }
+  
+  .carousel-item {
+    min-height: 300px;
+    margin: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+.carousel-img1 {
+  width: 130px;
+  height: 130px;
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  top: 0%;
+  border-radius: 10% 10%;
+  overflow: hidden;
+  object-fit: fill;
 }
+.carousel-img1 img{
+height: 100%;
+width: 100%;
+}
+  
+  .carousel-img1 img {
+    width: 100%;
+    height: 100%;
+    
+
+  }
+  
+  .carousel-caption {
+    text-align: center;
+   
+   
+  }
+  
+  .testimonial-name {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    color: var(--para);
+  }
+  
+  .carousel-caption p {
+    background: var(--gradient2);
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .testimonial-icon {
+    font-size: 30px;
+    color: var(--gradient2);
+    margin-top: -5px;
+    margin-right: 5px;
+  }
+  
+  .carousel-control-next-icon,
+  .carousel-control-prev-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+  }
+  
+  .carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+  }
+  
+
+
+ 
+/* Media Queries for Responsiveness */
+
+/* ------------------Laptop( lg)------------ */
+@media (max-width: 1024px){
+  .card-body h6{
+    font-size: .78rem;
+    text-align: left;
+    margin: -2px;
+   }
+   .card-body small{
+    font-size: 0.72rem;
+    margin: -2px;
+    color: #0d6d30;
+   }
+   .card-body button{
+    font-size: 0.7rem;
+   }
+   .carousel-item {
+    min-height: 300px;
+    margin: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+    .carousel-img1 {
+      width: 120px;
+      height: 120px;
+      position: absolute;
+      left:50%;
+      transform: translateX(-50%);
+      top: 0%;
+      border-radius: 10% 10%;
+      overflow: hidden;
+      object-fit: fill;
+    }
+    .carousel-img1 img{
+    height: 100%;
+    width: 100%;
+    }
+      .carousel-caption {
+        text-align: center;
+      }
+      
+      .testimonial-name {
+        font-size: 18px;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        text-transform: capitalize;
+        color: var(--para);
+      }
+      .testimonial-icon {
+        font-size: 25px;
+      }
+      .carousel-caption p {
+        background: var(--gradient2);
+        background-clip: text;
+        color: transparent;
+        font-size: 15px;
+      }
+      
+}
+
+/* ------------------End Laptop( lg)------------ */
+
+/* ------------------Tablets( md)------------ */
+
+@media (max-width: 768px)  {
+  .carousel-item img{
+    height: 19rem;
+    }
+ 
+  .carousel-control-next i,.carousel-control-prev i{
+      background-color: #0d6d30;
+      /* padding: 10px; */
+      border-radius: 45%;
+      font-size: .7rem;
+      color: white;
+
+  }
+  .content-wrapper h4{
+      font-family: 'poppins', sans-serif;
+      color: #0f6d3e;
+      font-size: .8rem;
+      line-height:1rem;
+      font-weight: 500;
+  }
+  .container div h3{
+      font-size: 1.1rem;
+  }
+
+ .card-body h6{
+  font-size: .8rem;
+  text-align: left;
+  margin: -2px;
+ }
+ .card-body small{
+  font-size: 0.7rem;
+  margin: -2px;
+  color: #0d6d30;
+ }
+ .card-body button{
+  font-size: 0.7rem;
+ }
+
+ .chooseniwa_logo div img{
+  height: 15px;
+  width:15px
+}
+.chooseniwa_logo div h5{
+  font-size: 0.8rem;
+}
+.aboutniwa img {
+  height: 200px;
+  width: 400px;
+}
+
+.aboutniwa h6 {
+  font-size: 2.4rem;
+  width: 300px;
+}
+
+.aboutniwa1 p {
+  font-size: 0.9rem;
+}
+.aboutniwa1 .btn {
+  font-size: 0.7rem;
+}
+.section-heading {
+  font-size: 24px;
+}
+.carousel-item {
+  min-height: 300px;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+  .carousel-img1 {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left:50%;
+    transform: translateX(-50%);
+    top: 0%;
+    border-radius: 10% 10%;
+    overflow: hidden;
+    object-fit: fill;
+  }
+  .carousel-img1 img{
+  height: 100%;
+  width: 100%;
+  }
+    .carousel-caption {
+      text-align: center;
+    }
+    
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      text-transform: capitalize;
+      color: var(--para);
+    }
+    .testimonial-icon {
+  font-size: 22px;
+}
+.carousel-caption p {
+  background: var(--gradient2);
+  background-clip: text;
+  color: transparent;
+  font-size: 14px;
+}
+}
+/* ------------------End Tablets( md)------------ */
+
+
+/* ------------------Mobile( sm)------------ */
+
 
 @media (max-width: 576px) {
     .aboutniwa {
@@ -182,9 +425,56 @@ swiper-container {
     .aboutniwa1 .btn {
         font-size: 0.7rem;
     }
+    .carousel-item {
+      min-height: 300px;
+      margin: 10px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+      .carousel-img1 {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        left:50%;
+        transform: translateX(-50%);
+        top: 0%;
+        border-radius: 10% 10%;
+        overflow: hidden;
+        object-fit: fill;
+      }
+      .carousel-img1 img{
+      height: 100%;
+      width: 100%;
+      }
+        .carousel-caption {
+          text-align: center;
+        }
+        
+        .testimonial-name {
+          font-size: 5px;
+          font-weight: 500;
+          font-family: 'Poppins', sans-serif;
+          text-transform: capitalize;
+          color: var(--para);
+        }
+        .testimonial-icon {
+      font-size: 20px;
+      }
+      .carousel-caption p {
+        background: var(--gradient2);
+        background-clip: text;
+        color: transparent;
+        font-size: 12px;
+      }
 }
+/* ------------------end Mobile( sm)------------ */
 
-@media (max-width: 375px) {
+
+/* ------------------Extra Mobile( xsm)------------ */
+@media (max-width: 376px) {
     .aboutniwa img {
         height: 120px;
         width: 240px;
@@ -203,4 +493,81 @@ swiper-container {
     .aboutniwa1 .btn {
         font-size: 0.7rem;
     }
+    .carousel-item {
+      min-height: 250px;
+      margin: 5px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+      .carousel-img1 {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        left:50%;
+        transform: translateX(-50%);
+        top: 0%;
+        border-radius: 10% 10%;
+        overflow: hidden;
+        object-fit: fill;
+      }
+      .carousel-img1 img{
+      height: 100%;
+      width: 100%;
+      }
+        .carousel-caption {
+          text-align: center;
+        }
+        
+        .testimonial-name {
+          font-size: 5px;
+          font-weight: 200;
+          font-family: 'Poppins', sans-serif;
+          text-transform: capitalize;
+          color: var(--para);
+        }
+        .testimonial-icon {
+      font-size: 16px;
+      }
+      .carousel-caption p {
+        background: var(--gradient2);
+        background-clip: text;
+        color: transparent;
+        font-size: 10px;
+      }
 }
+
+
+
+
+
+/* ------------------start extra small Mobile( none)------------ */
+
+ 
+  
+  @media (max-width: 480px) {
+    .section-heading {
+      font-size: 20px;
+    }
+  
+    .carousel-img {
+      width: 80px;
+      height: 80px;
+    }
+  
+    .testimonial-name {
+      font-size: 16px;
+    }
+  
+    .carousel-caption p {
+      font-size: 12px;
+    }
+  
+    .testimonial-icon {
+      font-size: 25px;
+    }
+  }
+  
+/* ------------------end extra small Mobile( none)------------ */

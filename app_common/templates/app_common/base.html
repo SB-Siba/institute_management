@@ -10,22 +10,39 @@
   <!-- ---------CSS FILES--------- -->
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/base_app.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/landing_page.css' %}">
-  <link rel="stylesheet" type="text/css" href="">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common\css\return.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common\css\privacy.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common\css\about_us.css' %}">
 
   <!------------ ICONS FILE------ -->
+  <link rel="icon" href="{% static 'app_common/images/logo1.png' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+
 
   <!------------ BOOTSTRAP FILE------ -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+    
+
+   
+    
   <!------------ ADDITIONAL FILES------ -->
+
+
+
+
 </head>
 
 <body>
+  {% if user.is_authenticated %}
+
   <header class="p-lg-3">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
@@ -48,23 +65,120 @@
                 <li><a class="nav-link" href="#">Plants</a></li>
                 <li><a class="nav-link" href="#">Seeds</a></li>
                 <li><a class="nav-link" href="#">Pots & Planters</a></li>
-                <li><a class="nav-link" href="#">Plant Care</a></li>
+                <li><a class="nav-link" href="{% url 'users:logout' %}">Log out</a></li>
               </ul>
             </div>
           </div>
-          <a class="navbar-brand" href="#">
-            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" width="100" height="60" class="">
+          <a class="navbar-brand" href="{% url 'users:home' %}">
+            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
           </a>
         </div>
 
         <!-- full screen header -->
-        <div class="col-lg-6 d-none d-lg-block" id="nav_buttons">
+        <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
           <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about' %}">About us</a>
+              <a class="nav-link active" aria-current="page" href="">About us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Plants</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Seeds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">Pots & Planters</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:account_details' %}">Account detail</a>
+            </li>
+          </ul>
+        </div>
+        <!-- close full screen header -->
+
+        <!-- ----------Side buttons ------------->
+        <div class="col-lg-2 col-6 d-flex justify-content-around align-items-center">
+          <button type="button" class="btn" id="search-icon">
+            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+          </button>
+          <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-regular fa-circle-user HeaderIcons text-success"></i> {{request.user.full_name |truncatechars:10}}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'users:account_details' %}">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
+            </ul>
+          </div>
+          <button type="button" class="btn">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+          </button>
+          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></button>
+        </div>
+          
+         
+        
+        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
+          {% csrf_token %}
+          <div class="input-group">
+            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+          </div>
+        </form>
+        
+        <!-- end ------- Side buttons --->
+
+       
+      </div>
+    </div>
+  </header>
+  {% elif not user.is_authenticated %}
+
+  <header class="p-lg-3">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-lg-1 col-6" id="menu-bar">
+      
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
+              class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="list-unstyled">
+                <li><a class="nav-link" href="#">Home</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:about_us' %}">about us</a></li>
+                <li><a class="nav-link" href="#">Plants</a></li>
+                <li><a class="nav-link" href="#">Seeds</a></li>
+                <li><a class="nav-link" href="#">Pots & Planters</a></li>
+                <li><a class="nav-link" href="#">Plant Care</a></li>
+              </ul>
+            </div>
+          </div>
+          <a class="navbar-brand" href="{% url 'users:home' %}">
+            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
+          </a>
+        </div>
+
+        <!-- full screen header -->
+
+
+        <div class="col-lg-7 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
+          <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
+            <li class="nav-item" id="Navbarlinks">
+              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Plants</a>
@@ -76,122 +190,115 @@
               <a class="nav-link" href="#">Pots & Planters</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled">Plant Care</a>
+              <a class="nav-link">Plant Care</a>
             </li>
           </ul>
         </div>
         <!-- close full screen header -->
 
-        <!-- login modal -->
-        <div class="col-lg-2 col-6 d-flex justify-content-around ">
+        <!-- ----------Side buttons ------------->
+        <div class="col-lg-3 col-md-4 col-6 d-flex justify-content-around align-items-center">
           <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search  text-success" aria-hidden="true"></i>
           </button>
-          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="">
-            <i class="fa-regular fa-user HeaderIcons text-success"></i>
+          <!-- <button type="button" class="btn">
+            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
+          </button> -->
+          <button type="button" class="btn" id="form_open">
+            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i>
           </button>
-          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+          <button type="button" class="btn">
+            <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
+           
           </button>
-          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success  "></i></button>
+          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></button>
         </div>
+          
+         
         
-        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
+        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
           <div class="input-group">
             <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
           </div>
         </form>
         
-        <!-- end login modal -->
+        <!-- end ------- Side buttons --->
 
        
       </div>
     </div>
   </header>
+  {% endif %}
+
+
+
+
+
+<!-- --------------------loginmodal------------- -->
+
+<div class="home">
+  <div class="form_container position-fixed">
+    <div class="p-lg-3">
+      <img src="{% static 'app_common/images/logo1.png' %}" class="mx-auto log_reg_logo" style="width: 40px;" alt="logo">
+    <i class="fa-solid fa-xmark form_close"></i>  
+    </div>
+  
+    <!-- login form -->
+    <div class="form login_form text-dark">
+      <h6 class="text-center">Welcome back! Sign in with</h6>
+      <form class="mt-3 text-dark" method="post" action="">
+          {% csrf_token %}
+          {{ login_form.as_p }}
+          <div class="option_field">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                      Remember me
+                  </label>
+              </div>
+              <a href="" class="d-block text-dark text-start text-decoration-none">Forgot password?</a>
+          </div>
+          <div class="d-grid mt-2">
+              <button type="submit" name="login" class="btn btn-success w-100 p-2">SIGN IN</button>
+          </div>
+          <div class="Login_Signup text-center">
+              New Here? <a href="#" id="SignUp"> Create an account</a>
+          </div>
+      </form>
+  </div>
+
+      <!-- regitstration -->
+ <div class="form signup_form text-dark">
+    <h6 class="text-center">Create an account with</h6>
+        <form class=" text-dark" >
+          {% csrf_token %}
+         {{signup_form.as_p}}
+        
+         <div class="d-grid mt-2">
+           <button type="button" class="btn btn-success w-100 p-2">SIGN UP</button>
+         </div>
+         <div class="Login_Signup text-center">
+           Already have an account?<a href="#" id="SignIn"> SignIn</a>
+         </div>
+       </form>
+      </div>
+  </div>
+</div>
+
+
+<!-- -----------------------------endloginmodal---------------------------- -->
+
+
+
+
   {% block content %}
   
   
   
   {% endblock %}
   
-  <!-- logo -->
-  <!-- <nav id="co">
-    <article>
-      <div id="logo">
-        <a href="{% url 'users:home' %}" class="navbar-brand me-lg-5 me-0" style="padding-left: 100px">
-          <!-- {% static 'shopingsite/pod-talk-logo.png' %} --
-          <img src="" class="logo-image img-fluid" alt="templatemo pod talk" />
-        </a>
-      </div>
-      <div id="menu">
-        <ol>
-          <li><a href="{% url 'app_common:about' %}" class="x">Help</a></li>
-          <li><a href="">|</a></li>
-          <li>
-            <a href="{% url 'users:login' %}" class="x">Log in</a>
-          </li>
-        </ol>
-      </div>
-    </article>
-  </nav>
-
-  <!-- end logo -->
-
-  <!-- start header 
-
-  <nav class="navbar custom navbar-expand-lg">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul class="navbar-nav me-auto my-2 my-lg-12 navbar-nav-scroll" style="--bs-scroll-height: 100px">
-          <li class="nav-item" style="padding-left: 80px">
-            <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}"
-              style="padding-top: 15px">Home</a>
-          </li>
-          <!-- <li class="nav-item">
-              <a class="nav-link active" href="#">Browse</a>
-            </li> -
-
-            <nav class="navbar navbar-expand-lg">
-              <div class="container-fluid">
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-                      <ul class="navbar-nav">
-                          <li class="nav-item dropdown hhh">
-                              <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">Browse</a>
-                              <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink1">
-                                  <div style="width: 300px;">
-                                      <h3 class="mx-3">AUDIOBOOK CATEGORIES</h3>
-                                      <ul style="list-style-type: none; padding-left: 0;">
-                                          {% for category in categories %}
-                                          {% if forloop.counter <= 3 %}
-                                          <li>
-                                              <a class="dropdown-item" href="">{{ category }}</a>
-                                          </li>
-                                          {% endif %}
-                                          {% endfor %}
-                                          <li>
-                                              <a class="dropdown-item" href="">Show more</a>
-                                          </li>
-                                      </ul>
-                                  </div>
-                              </ul>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-          </nav>
-          
-
-          <li class="nav-item">
-            <a class="nav-link active" aria-disabled="true" href=""
-              style="padding-top: 15px">About membership
-            </a>
-          </li>
-        </ul>
-
+  <!-- --------- 
 
   <div>
     <form action="" method="post" class="d-flex" role="search"
@@ -215,133 +322,134 @@
   
   <!-- end page 4 -->
 
-  <div class="mt-3">
-    <!-- Footer -->
-    <footer class="text-center text-lg-start text-white" style="background-color: #45526e">
-      <!-- Grid container -->
-      <div class="container p-4 pb-0">
-        <!-- Section: Links -->
-        <section class="">
-          <!--Grid row-->
-          <div class="row">
-            <!-- Grid column -->
-            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h6 class="text-uppercase mb-4 font-weight-bold">
-                Audiobook
-              </h6>
-              <p>
-                Here you can use rows and columns to organize your footer
-                content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                elit.
-              </p>
+
+
+
+  <!-- -------------------------Footer------------------------- -->
+  <footer class=" ">
+    <div class="container  border-bottom border-secondary ">
+      <div class="row mb-lg-4 ">
+  
+        <div class="col-12 col-md-4">
+          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul ">
+            <div >
+              <ul class="p-0">
+                <h6>About Us</h6>
+                <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
+                <li><a href="">Careers</a></li>
+                <li><a href="{% url 'app_common:contact_us' %}">Contact Us</a></li>
+                <li><a href="">Locate Us</a></li>
+              </ul>
             </div>
-            <!-- Grid column -->
-
-            <hr class="w-100 clearfix d-md-none" />
-
-            <!-- Grid column -->
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-              <h6 class="text-uppercase mb-4 font-weight-bold">Products</h6>
-              <p>
-                <a class="text-white">MDBootstrap</a>
-              </p>
-              <p>
-                <a class="text-white">MDWordPress</a>
-              </p>
-              <p>
-                <a class="text-white">BrandFlow</a>
-              </p>
-              <p>
-                <a class="text-white">Bootstrap Angular</a>
-              </p>
+            <div class="text-start">
+              <ul class="p-0">
+                <h6>Customer Care</h6>
+                <li><a href="">Track Order</a></li>
+                <li><a href="">Shipping Policy</a></li>
+                <li><a href="">Payments</a></li>
+                <li><a href=""></a></li>
+              </ul>
             </div>
-            <!-- Grid column -->
-
-            <hr class="w-100 clearfix d-md-none" />
-
-            <!-- Grid column -->
-            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-              <h6 class="text-uppercase mb-4 font-weight-bold">
-                Useful links
-              </h6>
-              <p>
-                <a class="text-white">Your Account</a>
-              </p>
-              <p>
-                <a class="text-white">Become an Affiliate</a>
-              </p>
-              <p>
-                <a class="text-white">Shipping Rates</a>
-              </p>
-              <p>
-                <a class="text-white">Help</a>
-              </p>
-            </div>
-
-            <!-- Grid column -->
-            <hr class="w-100 clearfix d-md-none" />
-
-            <!-- Grid column -->
-            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-              <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
-              <p><i class="fas fa-envelope mr-3"></i> info@gmail.com</p>
-              <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
-              <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
-            </div>
-            <!-- Grid column -->
           </div>
-          <!--Grid row-->
-        </section>
-        <!-- Section: Links -->
-
-        <hr class="my-3">
-
-        <!-- Section: Copyright -->
-        <section class="p-3 pt-0">
-          <div class="row d-flex align-items-center">
-            <!-- Grid column -->
-            <div class="col-md-7 col-lg-8 text-center text-md-start">
-              <!-- Copyright -->
-              <div class="p-3">
-                © 2020 Copyright:
-                <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-              </div>
-              <!-- Copyright -->
+        </div>
+  
+        <div class="col-12 col-md-4">
+          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul">
+            <div class="d-none d-md-block d-lg-block">
+              <ul>
+              <h6>Help</h6>
+                <li><a href="">Locate Stores</a></li>
+                <li><a href="">Own Grown</a></li>
+                <li><a href="">Garden Services</a></li>
+                <li><a href="">Maintenance</a></li>
+              </ul>
             </div>
-            <!-- Grid column -->
-
-            <!-- Grid column -->
-            <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
-              <!-- Facebook -->
-              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
-                  class="fab fa-facebook-f"></i></a>
-
-              <!-- Twitter -->
-              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
-                  class="fab fa-twitter"></i></a>
-
-              <!-- Google -->
-              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
-                  class="fab fa-google"></i></a>
-
-              <!-- Instagram -->
-              <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button"><i
-                  class="fab fa-instagram"></i></a>
+            <div class="d-none d-md-block d-lg-block ">
+              <ul>
+              <h6>Consumer Policy</h6>
+                <li><a href="">Security</a></li>
+                <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
+                <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
+                <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
+              </ul>
             </div>
-            <!-- Grid column -->
           </div>
-        </section>
-        <!-- Section: Copyright -->
+        </div>
+  
+        <div class="col-12 col-md-4">
+          <div class="row row-cols-2 row-cols-sm-2 border-start border-secondary ms-lg-2  footer_div_ul">
+            <div>
+              <h6>Get in Touch</h6>
+              <p><i class="fa-solid fa-phone"></i> +91 -7735955569</p>
+              <p><i class="fa-solid fa-envelope"></i> niwacare@outlook.com</p>
+              
+              <h6>Socials:</h6>
+              <p class="fs-5">
+                <i class="fa-brands fa-facebook"></i>
+                <i class="fa-brands fa-instagram"></i>
+                <i class="fa-brands fa-whatsapp"></i>
+                <i class="fa-brands fa-square-x-twitter"></i>
+                <i class="fa-brands fa-youtube"></i>
+              </p>
+            </div>
+            <div>
+              <h6>Registered Office Address</h6>
+              <p>Plot No: 3298/5536,<br>
+                C-8, Lane-5A,<br>
+                Gouri Nagar,<br>
+                Old Town (Khorda),<br>
+                Bhubaneswar, Khorda- 751002,<br>
+                Odisha</p>
+            </div>
+          </div>
+        </div>
+  
       </div>
-      <!-- Grid container -->
-    </footer>
-    <!-- Footer -->
-  </div>
+    </div>
+    <div class="text-center mt-4 ps-3 pe-3 mt-lg-3 footer_subhead">
+      <p class="">This Website is Designed and Developed by ❤ Techavia IT Solutions.  @Copyright 2024 Niwa Agro Pvt. Ltd.</p>
+    </div>
+  </footer>
+  
+       
   {% block js %}
 
   {% endblock js %}
+  
+  <script> 
+document.addEventListener("DOMContentLoaded", function() {
+    const formOpenBtn = document.querySelector("#form_open"),
+          home = document.querySelector(".home"),
+          formContainer = document.querySelector(".form_container"),
+          formCloseBtn = document.querySelector(".form_close"),
+          signupBtn = document.querySelector("#SignUp"),
+          loginBtn = document.querySelector("#SignIn");
+
+    formOpenBtn.addEventListener("click", () => {
+        home.classList.add("show");
+    });
+
+    formCloseBtn.addEventListener("click", () => {
+        home.classList.remove("show");
+        formContainer.classList.remove("active");
+    });
+
+    signupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.add("active");
+    });
+
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.remove("active");
+    });
+});
+
+  </script>
   <script>
+
+
+
     $(document).ready(function () {
       $('#search').keyup(function () {
         var search_term = $(this).val();
@@ -405,12 +513,12 @@
       });
     });
   </script>
-  
-  
+ 
+    
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-  
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 </body>
 
 </html>

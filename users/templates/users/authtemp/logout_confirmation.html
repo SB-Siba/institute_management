@@ -1,4 +1,5 @@
 <h2>Are you sure you want to logout?</h2>
-    
-    <a href="{% url 'users:logout' %}"><button type="button">Logout</button></a>
-    <a href="{% url 'users:cancel_logout' %}"><button type="button">Cancel</button></a>
+
+<!-- The URL pattern 'logout' is used here -->
+<a href="{% url 'users:logout' %}?confirm"><button type="button">Logout</button></a>
+<a href="{% url 'users:logout' %}?cancel"><button type="button">Cancel</button></a>

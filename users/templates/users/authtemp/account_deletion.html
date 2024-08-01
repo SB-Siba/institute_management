@@ -1,12 +1,55 @@
-{% extends "users/user/index.html" %}
+{% extends 'app_common/base.html' %}
+
+
 <div class="form-group mt-2">
   {% include 'snippets/alert.html' %}
 </div>
+
 {% block content %}
   <h2>Account Deletion</h2>
-  <p>Are you sure you want to delete your account?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete My Account</button>
-  </form>
+  {% if user.deletion_requested %}
+    <p>Your account will be deleted in {{ days_remaining }} days.</p>
+    <button id="cancel-deletion-btn" class="btn btn-warning">Cancel Account Deletion</button>
+  {% else %}
+    <p>Are you sure you want to delete your account?</p>
+    <button id="delete-account-btn" class="btn btn-danger">Delete My Account</button>
+  {% endif %}
+
+  <script>
+    const csrfToken = '{{ csrf_token }}';
+
+    // Function to handle fetch requests
+    function handleAction(action) {
+      fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ action: action }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          window.location.reload();  // Refresh to update UI
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Delete Account Button
+    document.getElementById('delete-account-btn')?.addEventListener('click', function () {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        handleAction('request_deletion');
+      }
+    });
+
+    // Cancel Deletion Button
+    document.getElementById('cancel-deletion-btn')?.addEventListener('click', function () {
+      if (confirm('Are you sure you want to cancel the account deletion?')) {
+        handleAction('cancel_deletion');
+      }
+    });
+  </script>
 {% endblock %}
