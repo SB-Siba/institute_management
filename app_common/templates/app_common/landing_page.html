@@ -54,76 +54,23 @@
         <h3 class="text-success">Shop By Collection</h3>
       </div> 
    
-        <!-- ----------------max card should be 5 in =----------------- -->
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 row-cols-xl-6 ">
+    <!-- Ensure a maximum of 6 cards are displayed -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 row-cols-xl-6">
 
-       <!-- ---------category 1-------- -->
-
+        {% for category in categories %}
+        <a href="{% url 'product:products_of_category' category.title %}">
         <div class="col content-wrapper">
           <div class="image-wrapper">
-            <a href="#">
-                <img src="{% static 'app_common\images\image5.webp' %}" alt=""  width="175" height="224">
-            </a>
+           
+                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="185" height="330">
+          
           </div>
-          <h4 class="text-center">Pots & Planters</h4>
+          <h4 class="text-center">{{ category.title }}</h4>
         </div>
-
-    <!-- ---------category 2-------- -->
-        <div class="col content-wrapper">
-          <div class="image-wrapper">
-          <a href="">
-              <img src="{% static 'app_common\images\img9.webp' %}" alt=""  width="175" height="224">
-          </a>
-        </div>
-        <h4 class="text-center">Flower Seeds</h4>
-      </div>
-
-       <!-- ---------category 3-------- -->
-       <div class="col content-wrapper">
-        <div class="image-wrapper">
-        <a href="">
-            <img src="{% static 'app_common\images\img10.jpg' %}"width="175" height="224">
-        </a>
-      </div>
-      <h4 class="text-center">Stands</h4>
-    </div>
-
-     <!-- ---------category 4-------- -->
-     <div class="col content-wrapper">
-      <div class="image-wrapper">
-      <a href="">
-          <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
       </a>
-    </div>
-    <h4 class="text-center">Soil & Fertilizers</h4>
-  </div>
+        {% endfor %}
 
-
-   <!-- ---------category 5-------- -->
-   <div class="col content-wrapper ">
-    <div class="image-wrapper">
-    <a href="">
-        <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
-    </a>
-  </div>
-  <h4 class="text-center">Plant Support</h4>
-</div>
-
-
-
-
- <!-- ---------category 6-------- -->
- <div class="col content-wrapper">
-    <div class="image-wrapper">
-      <a href="">
-           <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
-        </a>
-    </div>
-    <h4 class="text-center">Gardening Tools</h4>
-    </div>
-
-
-  </div> 
+    </div> 
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->

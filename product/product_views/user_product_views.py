@@ -1,13 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from product.models import Products, Category
+from wishlist.models import WshList
 from django.conf import settings
 
-app = 'product/user/'
+app = 'product/'
 
 
 class AllCategoriesView(View):
-    template = app + "all_categories.html"
+    template = app + "user/all_categories.html"
 
     def get(self, request):
         category_obj = Category.objects.all()
@@ -19,7 +20,7 @@ class AllCategoriesView(View):
 
 
 class ShowProductsView(View):
-    template = app + 'productsofcategory.html'
+    template = app + 'user/productofcategory.html'
 
     def get(self, request, category_name):
         user = request.user
@@ -38,16 +39,12 @@ class ShowProductsView(View):
         })
 
 class ProductDetailsView(View):
-    template_name = app + 'product_details.html'
+    template_name = app + 'user/product_details.html'
 
     def get(self, request, p_id):
         user = request.user
         category_obj = Category.objects.all()
-
-        # Fetch the product
         product_obj = get_object_or_404(Products, id=p_id)
-
-        # Handle wishlist items for authenticated users
         wishlist_items = []
         if user.is_authenticated:
             wishlist = WshList.objects.filter(user=request.user).first()
