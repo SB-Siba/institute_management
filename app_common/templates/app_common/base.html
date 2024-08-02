@@ -102,16 +102,16 @@
         <!-- ----------Side buttons ------------->
         <div class="col-lg-3 col-6 d-flex justify-content-around align-items-center">
           <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+            <i class="fa fa-search Header_Icons" aria-hidden="true"></i>
           </button>
           <a href="{% url 'users:account_details' %}" class="text-decoration-none">
-            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i> <b class="text-dark">{{request.user.full_name |truncatechars:7}}</b>
+            <i class="fa-regular fa-circle-user Header_Icons"></i> <b class="text-dark">{{request.user.full_name |truncatechars:7}}</b>
           </a>
           <a href="">
-            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+            <i class="fa-regular fa-heart Header_Icons"></i>
           </a>
           <a href="">
-            <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
+            <i class="fa-solid fa-cart-shopping Header_Icons"></i>
           </a>
          
         </div>
@@ -193,20 +193,16 @@
 
         <!-- ----------Side buttons ------------->
         <div class="col-lg-3 col-md-4 col-6 d-flex justify-content-around align-items-center">
-          <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+          <button type="button" class="btn Header_Icons" id="search-icon">
+            <i class="fa fa-search " aria-hidden="true"></i>
           </button>
           <!-- <button type="button" class="btn">
             <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
           </button> -->
-          <button type="button" class="btn" id="form_open">
-            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i>
-          </button>
-          <button type="button" class="btn">
-            <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
-           
-          </button>
-          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></button>
+         
+           <a href="" class="btn Header_Icons" id="form_open" ><i class="fa-regular fa-circle-user"></i></a>
+            <a href=""class="btn Header_Icons"> <i class="fa-regular fa-heart "></i></a>
+            <a href="" class="btn Header_Icons"><i class="fa-solid fa-cart-shopping "></i></a>
         </div>
           
          

@@ -1,0 +1,117 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+
+{% block title %}
+Product Details - {{ product_obj.name }}
+{% endblock title %}
+
+{% block content %}
+<style>
+    .details-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .product-image {
+        flex: 1 1 40%;
+        max-width: 400px;
+    }
+    .product-image img {
+        width: 100%;
+        height: auto;
+    }
+    .product-details {
+        flex: 1 1 50%;
+    }
+    .price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #00836C;
+    }
+    .original-price {
+        text-decoration: line-through;
+        color: #888;
+        margin-left: 10px;
+    }
+    .wishlist-btn {
+        background-color: transparent;
+        border: 2px solid #00836C;
+        color: #00836C;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .wishlist-btn.in-wishlist {
+        background-color: #00836C;
+        color: white;
+    }
+    .wishlist-btn:hover {
+        background-color: #007a5c;
+        border-color: #007a5c;
+        color: white;
+    }
+    .description {
+        margin-top: 20px;
+    }
+    .similar-products {
+        margin-top: 40px;
+    }
+    .similar-products h3 {
+        margin-bottom: 20px;
+    }
+    .similar-products .product-card {
+        width: 200px;
+        margin: 0 10px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="details-section">
+        <div class="product-image">
+            <img src="{{ MEDIA_URL }}{{ product_obj.images.0 }}" alt="{{ product_obj.name }}">
+        </div>
+        <div class="product-details">
+            <h1>{{ product_obj.name }}</h1>
+            <div class="price">
+                ₹{{ product_obj.product_discount_price }}
+                {% if product_obj.product_max_price %}
+                <span class="original-price">₹{{ product_obj.product_max_price }}</span>
+                {% endif %}
+            </div>
+            <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
+                {% if product_obj in wishlist_items %}
+                In Wishlist
+                {% else %}
+                Add to Wishlist
+                {% endif %}
+            </button>
+            <div class="description">
+                <h3>Description</h3>
+                <p>{{ product_obj.product_long_description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="similar-products">
+        <h3>Similar Products</h3>
+        <div class="d-flex flex-wrap">
+            {% for similar_product in similar_product_list %}
+            <div class="product-card card">
+                <a href="{% url 'shoppingsite:productdetails' similar_product.id %}" style="text-decoration: none;">
+                    <img src="{{ MEDIA_URL }}{{ similar_product.images.0 }}" class="card-img-top" alt="{{ similar_product.name }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ similar_product.name }}</h5>
+                    <p class="card-text">
+                        <span class="price">₹{{ similar_product.product_discount_price }}</span>
+                        <span class="original-price">₹{{ similar_product.product_max_price }}</span>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

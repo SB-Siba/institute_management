@@ -2,15 +2,24 @@ from django.shortcuts import render, redirect
 from django.views import View
 from app_common import forms
 from users.forms import LoginForm
+from product.models import Category
 app = "app_common/"
 
 
 # static pages 
 
+
 class HomeView(View):
     template = app + "landing_page.html"
+
     def get(self, request):
-        return render(request, self.template)
+        # Fetch the first 6 categories to display on the home page
+        categories = Category.objects.all()
+        
+        context = {
+            'categories': categories,
+        }
+        return render(request, self.template, context)
 
 
 class AboutUs(View):
