@@ -1,23 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from app_common import forms
-from users.forms import LoginForm,SignUpForm
+from users.forms import LoginForm
 app = "app_common/"
 
 
 # static pages 
 
 class HomeView(View):
-    template =  "users/user/home.html"
-    un_template = app + "landing_page.html"
+    template = app + "landing_page.html"
     def get(self, request):
-        user = request.user
-        if not user.is_authenticated:
-            form1 = LoginForm
-            form2 = SignUpForm
-            return render(request, self.un_template, locals())
-            
-        return render(request, self.template, locals())
+        return render(request, self.template)
 
 
 class AboutUs(View):

@@ -64,33 +64,25 @@ class LoginForm(forms.Form):
     email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter valid email address'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter password'}))
     
-class PasswordChangeForm(PasswordChangeForm):
-    old_password = forms.CharField(label='Old Password',widget=forms.PasswordInput(attrs= {'autofocus':True,'autocomplete':'current-password','class':'form-control'}))
-    new_password1 = forms.CharField(label='New Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-    new_password2 = forms.CharField(label='Cofirm Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control'}))
-
-class CustomPasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(
-        max_length=254,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control text-black',
-            'placeholder': 'Email Address'
-        })
-    )
-
-class CustomSetPasswordForm(SetPasswordForm):
-    new_password1 = forms.CharField(
-        label="New Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    new_password2 = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class': 'form-control text-black'}),
-        strip=False,
-    )
-
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("No user found with this email address.")
+        return email
+ 
+class ResetPasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get('new_password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if new_password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
+ 
 
 
 class UpdateProfileForm(forms.Form):
@@ -104,11 +96,6 @@ class UpdateProfileForm(forms.Form):
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-    bio = forms.CharField(required=False, widget=forms.Textarea(attrs={"class":"form-control","rows":"1"}))
-    bio.widget.attrs.update({'class': 'form-control','type':'text'})
-
-    password = forms.CharField(label='Password',widget=forms.PasswordInput(attrs= {'autocomplete':'current-password','class':'form-control','placeholder':'Only if you want to change then type here.'}),required=False)
-
     profile_pic = forms.FileField(label='Select an image file', required=False)
     profile_pic.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
@@ -121,6 +108,9 @@ class AddressForm(forms.Form):
 
     landmark2 = forms.CharField(max_length=255)
     landmark2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
+
+    contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
+        validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     country = forms.CharField(max_length=255)
     country.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})

@@ -1,34 +1,61 @@
-{% extends 'shoppingsite/index.html' %}
-{% load static %}
-{% block title %}
-Address
-{% endblock title %}
-{% block main_content %}
-<div class="container mt-5">
-    <div class="row">
-        <h5 class="card-title">{{request.user.full_name}} Your Address</h5>
-        {% if address %}
-            {% for i in address %}
-            <div class="card mx-2 mb-2 text-black" style="width: 23rem; background-color: #d7e9df;">
-                <div class="card-body">
-                    <p class="card-text">
-                        <li>Landmark 1 : {{i.landmark1}}</li>
-                        <li>Landmark 2 : {{i.landmark2}}</li>
-                        <li>Country : {{i.country}}</li>
-                        <li>State : {{i.state}}</li>
-                        <li>City : {{i.city}}</li>
-                        <li>Zipcode : {{i.zipcode}}</li>
-                    </p>
-                    <a href="{% url 'users:delete_address' i.id %}" class="card-link btn btn-danger">Delete</a>
-                </div>
+{% extends 'app_common/base.html' %}
+{% load static %} 
+{% block title %} AllAddress {% endblock title %} 
+{% block content %}
+<style>
+  .active {
+      color: #ffffff;
+      background-color: #00836C;
+      border-radius: 5px;
+      outline: none;
+    }
+    #card-text {
+      font-size: 14px ;
+    }
+</style>
+<div class="" style="min-height: 60vh;">
+ 
+  <div class="row mx-0">
+    {% include 'users/user/index.html' %}
+    <div class="col-sm-9 col-lg-9 mt-5">
+      <h5 class="card-title mb-2 ms-3 mt-3" >
+        {{request.user.full_name}} Your Address
+      </h5>
+      <div class="row px-0 mx-0 mt-3">
+        {% for i in addresses %}
+        <div class="col-md-6">
+          <div
+            class="card mx-2 mb-2 text-black"
+            style="background-color: #9fe2bf">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 m text-muted">
+                Address {{forloop.counter}}
+              </h6>
+              <p class="card-text" >
+                <li id="card-text">Landmark 1: {{i.landmark1}}</li>
+                <li id="card-text">Landmark 2: {{i.landmark2}}</li>
+                <li id="card-text">Country: {{i.country}}</li>
+                <li id="card-text">Mobile No: {{i.mobile_no}}</li>
+                <li id="card-text">State: {{i.state}}</li>
+                <li id="card-text">City: {{i.city}}</li>
+                <li id="card-text">Zipcode: {{i.zipcode}}</li>
+              </p>
+              <a
+                href="{% url 'users:profile_delete_address' i.id %}"
+                class="card-link btn btn-danger"
+                ><i class="fas fa-trash"></i></a
+              >
+              <a
+                href="{% url 'users:profile_update_address' i.id %}"
+                class="card-link btn hover  " style="background-color: #00836C;"
+                ><i class="fas fa-pencil text-white"></i></a
+              >
             </div>
-            {% endfor %}
-        {% else %}
-            <a href="{% url 'users:addaddress' %}" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
-                style="z-index: 1;">
-                Add Address
-            </a>
-        {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
-{% endblock main_content %}
+{% endblock content %}
