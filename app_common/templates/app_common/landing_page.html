@@ -5,7 +5,7 @@
 
 <!-- --------------------banner section--------------- -->
 
-<section> 
+<section>
   <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -37,9 +37,9 @@
 
 <!-- --------------------android app--------------- -->
 <section class="AppDownload">
-  <div class="d-flex justify-content-center align-items-center">
+  <div class="d-flex justify-content-center align-items-center p-lg-3 p-2 bg-warning fs-4">
     Download App! &nbsp; 
-    <a href="#" class="text-decoration-none text-white android_button">FOR ANDROID</a>
+    <button class="btn btn-success "><a href="#" class="text-decoration-none text-white">FOR ANDROID</a></button>
   </div>
 </section>
 <!-- --------------------end android app--------------- -->
@@ -48,27 +48,82 @@
 
 <!-- --------------------Shop by collection--------------- -->
 
-<section class="background_bg Shop_by">
-  <div>
-      <h3>Shop By Collection</h3>
-    <!-- Ensure a maximum of 6 cards are displayed -->
+<section class="m-lg-4 m-2">
+  <div class="">
+      <div class="mb-lg-3 mb-3">
+        <h3 class="text-success">Shop By Collection</h3>
+      </div> 
+   
+        <!-- ----------------max card should be 5 in =----------------- -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 row-cols-xl-6 ">
 
-    <div class="row">
+       <!-- ---------category 1-------- -->
 
-        {% for category in categories %}
-      
-        <div class="col col-12 col-md-4 col-lg-2 m-auto content-wrapper text-center">
+        <div class="col content-wrapper">
           <div class="image-wrapper">
-            <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}">
-              </a>
+            <a href="#">
+                <img src="{% static 'app_common\images\image5.webp' %}" alt=""  width="185" height="230">
+            </a>
           </div>
-         <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none"> <h4 >{{ category.title }}</h4></a>
+          <h4 class="text-center">Pots & Planters</h4> 
         </div>
-     
-        {% endfor %}
-        
-    </div> 
+
+    <!-- ---------category 2-------- -->
+        <div class="col content-wrapper">
+          <div class="image-wrapper">
+          <a href="">
+              <img src="{% static 'app_common\images\img9.webp' %}" alt=""  width="185" height="230">
+          </a>
+        </div>
+        <h4 class="text-center">Flower Seeds</h4>
+      </div>
+
+       <!-- ---------category 3-------- -->
+       <div class="col content-wrapper">
+        <div class="image-wrapper">
+        <a href="">
+            <img src="{% static 'app_common\images\img10.jpg' %}" width="185" height="230">
+        </a>
+      </div>
+      <h4 class="text-center">Stands</h4>
+    </div>
+
+     <!-- ---------category 4-------- -->
+     <div class="col content-wrapper">
+      <div class="image-wrapper">
+      <a href="">
+          <img src="{% static 'app_common\images\image5.webp' %}" alt=""  width="185" height="230">
+      </a>
+    </div>
+    <h4 class="text-center">Soil & Fertilizers</h4>
+  </div>
+
+
+   <!-- ---------category 5-------- -->
+   <div class="col content-wrapper ">
+    <div class="image-wrapper">
+    <a href="">
+        <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="185" height="230">
+    </a>
+  </div>
+  <h4 class="text-center">Plant Support</h4>
+</div>
+
+
+
+
+ <!-- ---------category 6-------- -->
+ <div class="col content-wrapper">
+    <div class="image-wrapper">
+      <a href="">
+           <img src="{% static 'app_common\images\image5.webp' %}" alt="" width="175" height="224">
+        </a>
+    </div>
+    <h4 class="text-center">Gardening Tools</h4>
+    </div>
+
+
+  </div> 
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->
@@ -76,12 +131,12 @@
 
 <!-- --------------------New Arrival Collection--------------- -->
 
-<section class="Shop_by">
+<section class="m-lg-5 m-md-4 m-2">
   <div class="">
-    <h3>New Arrivals</h3>
+    <div class="mb-lg-3 mb-3">
+      <h3 class="text-success">New Arrivals</h3>
+    </div>
 
-
-    
 
 <swiper-container class="mySwiper d-lg-flex h-100" init="false">
   <!-- 1 -->
@@ -350,4 +405,3 @@
 
 
 {% endblock content %}
-

@@ -3,51 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap');
 
 :root {
-  /* ----------------------colors------------- */
-    --primary1: #a0a0a0;
-    --primary2:#F6F1E9;
-    --primary3:#fff;
-    --secondary: rgba(57, 145, 25, 1);
-    --secondary2:#F9B208;
-    --footer:#212121;
-    --black:rgb(0,0,0);
-    --page-bag:#f8f8f8;
-
-            /* font-sizes  */
-    /*---------------------- Large Screen------------------- */
-    --h6-font-size:1.2rem;
-    --p-font-size:1.4rem;
-    --h3-font-size:4rem;
-    --h4-font-size:1.9rem;
-
-    /*--------------------- fontsfamily---------------------- */
-
-
-    .android_button{
-      display: inline-block;
-      outline: 0;
-      cursor: pointer;
-      border: none;
-      padding: 0 5rem;
-      height: 4.5rem;
-      line-height: 4.5rem;
-      border-radius: 0.7rem;
-      font-weight: 500;
-      font-size: 1.4rem;
-      background:var(--secondary);
-      color:var(--primary3);
-      box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%);
-      transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
-    }
-    .button:hover{
-      background:rgba(38, 106, 13, 0.9);
-      box-shadow: 0 6px 20px rgb(93 93 93 / 23%);
-  }
-/* 
     --heading: rgb(0 10 45);
     --para: #0f0f0f;
     --para-tint: #e4e4e4;
-    --third: ;
+    --third: #fff;
     --helper: #97ff84;
     --helper-tint: #f3f4ff;
     --bg: rgb(249 249 255);
@@ -61,7 +20,7 @@
     --h6:#7a877a;
     --gradient2: linear-gradient(to right, #FF0099,#203bb3,#5e05ac , #f02f32 );
     --Carouselbutton: #0d6d30;
-  --addtocart:#ffca2c; */
+  --addtocart:#ffca2c;
   }
 
   * {
@@ -71,7 +30,7 @@
   }
 
   html {
-    font-size: 62.5%;
+    font-size: 100%;
     font-family: "Poppins", sans-serif;
   }
 
@@ -81,7 +40,7 @@
   }
 
   header {
-    background-color: var(--primary2);
+    background-color: var(--header);
   }
 #header_rows{
   display: flex;
@@ -90,10 +49,10 @@
 }
   .HeaderButton li a {
     font-family: 'poppins', sans-serif;
-    font-size: 1.3rem;
+    font-size: .8rem;
     letter-spacing:2px;
     position: relative;
-    color:var(--primary1) ;
+    color:var(--headernav) ;
     padding: 0 2px;
   
   }
@@ -112,51 +71,81 @@
   width: 100%;
  
 }
-  .Header_Icons i{
-    font-size: 2rem;
-    color: var(--secondary);
+
+  .HeaderIcons {
+    font-size: 1.2rem;
   }
 #menu_button{
     display: none;
 }
-.navbar-brand img{
-  height: 5rem;
-  width: 5rem;
+.loginHeader {
+  position: relative;
+  min-height: 90px;
 }
+.loginHeader img {
+  height: 50px;
+  width: 70px;
+  position: absolute;
+  left: 40%;
+}
+.navbar-brand img{
+  height: 60px;
+  width: 80px;
+}
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  margin-top: 10vh;
+  max-width: 75%;
+}
+
+.modal-content {
+  width: 10px;
+}
+
+
+
+
+
+
 
 footer {
   background-color: var(--footer);
-  padding: 4rem 0;
-  color: var(--primary3);
+  padding: 3rem 0;
+  color: var(--third);
 }
 
 .footer_div_ul div ul li a {
   text-decoration: none;
-  color: var(--primary3);
-  font-size:var(--p-font-size);
+  color: var(--third);
+  font-size:12px;
   font-weight: 400;
-  line-height: 3rem;
-  font-family:"Inter", sans-serif;
+line-height: 30px;
+font-family:"Inter", sans-serif;
 }
 
 .footer_div_ul div h6{
-color: var(--primary1);
-font-size:var(--h6-font-size);
+color: var(--h6);
+font-size:13px;
 font-weight: 400;
 text-transform: uppercase;
 }
 
 .row div p{
   text-decoration: none;
-  color: var(--primary3);
-  font-size:var(--p-font-size);
+  color: var(--third);
+  font-size:12px;
   font-weight: 400;
-  line-height: 2.5rem;
+line-height: 25px;
 font-family:"Inter", sans-serif;
 }
 
 .row div p i{
-  padding: 0.5rem;
+  padding: 5px;
 }
 
 .row div li {
@@ -165,11 +154,11 @@ font-family:"Inter", sans-serif;
 
 .footer_subhead p{
   text-decoration: none;
-  color: var(--primary3);
-  font-size:var(--p-font-size);
-  font-weight: 200;
-  line-height: 3rem;
-  font-family:"Inter", sans-serif;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 100;
+line-height: auto;
+font-family:"Inter", sans-serif;
 }
 
 
