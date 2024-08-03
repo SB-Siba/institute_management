@@ -1,87 +1,48 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} add product {% endblock title %}
+{% block title %} Add Product {% endblock title %}
 {% block content %}
-<style>
-    #vstack {
-        border: none  ;
-        font-family: 'Poppins', sans-serif; 
-        border-radius: 0;
-    }
+    
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to toggle the visibility of product forms based on product type selection
+            function toggleProductForms() {
+                const productType = $('#id_product_type').val();
+                if (productType === 'simple') {
+                    $('#simple-product-formset').show(); // Show simple product formset
+                } else {
+                    $('#simple-product-formset').hide(); // Hide simple product formset
+                }
+            }
 
-    .BtM {
-        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-    .form-control::placeholder{
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-    }
-    .form-group label{
-        margin-bottom: 5px;
-        font-size: 14px;
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
-    } 
-    .form-control{
-        margin-bottom: 15px;
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-    }
-  
-    .update-form {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        background-color: rgb(255, 255, 255)    ;
-    }
-</style>
-
-<main class="py-6 bg-surface-secondary">
-    <div class="container-fluid">
-        <div class="vstack  ">
-            <div class="card bg-surface-secondary p-0 create_test" id="vstack">
-                <form action="" method="post" enctype="multipart/form-data" style="width: 80%;" class="update-form  py-5 px-3" id="productForm">
-                    {% csrf_token %}
-                    <div class="row px-3">
-                        {% for field in form.visible_fields %}
-                            <div class="col-md-6 col-6 col-sm-6 form-group" id="field_{{ field.name }}">
-                                {{ field.label_tag }}
-                                {{ field }}
-                            </div>
-                        {% endfor %}
-                        <div class="col-md-6 col-6 col-sm-6  form-group" id="field_images">
-                            <label for="id_images">Images:</label>
-                            <input type="file" name="images" class="form-control" id="id_images" multiple>
-                        </div>
-                        
-                    </div>
-                    <br>
-                    <center><button type="submit" class="btn BtM px-12 btn-success">Add Product</button></center>
-                </form>
-            </div>
-        </div>
-    </div>
-</main>
-{% endblock content %}
-
-{% block js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const maxpriceField = document.getElementById('field_product_max_price');
-        const discountpriceField = document.getElementById('field_product_discount_price');
-        const imagesField = document.getElementById('field_images');
-        const stockField = document.getElementById('field_stock');
-
-        function toggleFields() {
-            const selectedVariant = variantField.value;
-            const showFields = selectedVariant === 'None';
-            const fieldsToToggle = [maxpriceField, discountpriceField, imagesField, sizeField, colorField, videosField, stockField];
-
-            fieldsToToggle.forEach(field => {
-                field.style.display = showFields ? 'block' : 'none';
+            // Bind the change event of product type selector to the toggle function
+            $('#id_product_type').change(function() {
+                toggleProductForms();
             });
-        }
 
-        variantField.addEventListener('change', toggleFields);
-        toggleFields(); // Initial call to set visibility based on current value
-    });
-</script>
-{% endblock js %}
+            // Initial call to ensure correct form visibility on page load
+            toggleProductForms();
+        });
+    </script>
+
+    <h1>Add Product</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Main product form always visible -->
+        {{ form.as_p }}
+
+        <!-- Simple product formset, initially hidden -->
+        <div id="simple-product-formset" style="display: none;">
+            <h2>Simple Product Details</h2>
+            {{ simple_product_formset.management_form }}
+            {% for form in simple_product_formset %}
+                {{ form.as_p }}
+            {% endfor %}
+        </div>
+
+        <button type="submit">Save Product</button>
+    </form>
+
+
+{% endblock content %}

@@ -1,6 +1,6 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} all products {% endblock title %}
+{% block title %} All Products {% endblock title %}
 {% block content %}
 
 <center>
@@ -9,53 +9,61 @@
 
 <head>
     <style>
-    .tablecard{
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; 
+    .tablecard {
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
-    .cat-img2{
+
+    .cat-img2 {
         height: 90px;
-        weight: 90px !important;
+        width: 90px !important;
         object-fit: cover;
         display: block;
         margin: 0 auto;
     }
+
     .catagory-btn {
-      color: black;
-      margin: auto 10px;
-      padding: 5px 10px ;
-      background-color: #f2f5f7;
-      border: none;
-      border-radius: 5px;
-      box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;  
+        color: black;
+        margin: auto 10px;
+        padding: 5px 10px;
+        background-color: #f2f5f7;
+        border: none;
+        border-radius: 5px;
+        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
     }
-    .BtM{
-      box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
+
+    .BtM {
+        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
     }
-    #tb-head{
-    background-color:#28B673;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
+
+    #tb-head {
+        background-color: #28B673;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
     }
-    .BtM2{
-    border-radius: 4px;      
-    background: #e0e0e0;
-    box-shadow:  4px 4px 17px #f0eeee,-4px -4px 17px #ffffff;
+
+    .BtM2 {
+        border-radius: 4px;
+        background: #e0e0e0;
+        box-shadow: 4px 4px 17px #f0eeee, -4px -4px 17px #ffffff;
     }
-    .headinG{
-    color: navy;
-    font-weight: 500;
-    font-size: 30px;
-    margin-left:13px;
-    font-family: 'Poppins', sans-serif;
-    } 
-    #test_table_tbody{
-    font-family: 'Poppins', sans-serif;
+
+    .headinG {
+        color: navy;
+        font-weight: 500;
+        font-size: 30px;
+        margin-left: 13px;
+        font-family: 'Poppins', sans-serif;
     }
-    .px-5{
-        text-align:center;
+
+    #test_table_tbody {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .px-5 {
+        text-align: center;
     }
     </style>
 </head>
@@ -72,8 +80,6 @@
 </header>
 
 <main class="py-6 bg-surface-secondary">
-
-
     <div class="container-fluid">
         <div class="vstack gap-4">
             <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
@@ -87,7 +93,7 @@
                             <option value="name">Name</option>
                         </select>
 
-                        <input type="text" name="query" placeholder="Serch Here" class="form-control" required />
+                        <input type="text" name="query" placeholder="Search Here" class="form-control" required />
 
                         <button type="submit" class="btn btn-sm BtM2 btn-neutral">
                             <i class="fa-solid fa-magnifying-glass" style="color: #8c00ff;"></i>
@@ -99,7 +105,7 @@
                     <button data-bs-toggle="modal" data-bs-target="#select_filter" class=" btn-sm btn-neutral">
                         <i class="fa-solid fa-filter  mt-2" style="color: #098cf1;"></i>
                     </button>
-                    
+
                     <a href="{% url 'product:product_add' %}" class=" btn-sm btn-neutral" style="color: black;">
                         <i class="bi bi-plus">Create New Product</i>
                     </a>
@@ -123,53 +129,54 @@
                         <form method="post" action="">
                             {% csrf_token %}
                             <tbody id="test_table_tbody">
-                                {% for product in product_list %}
+                                {% for product in data_list %}
                                 <tr {% if product.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
                                     <td class="px-5">
                                         <a class="text-heading text-primary-hover font-semibold"
                                             href="{% url 'product:product_update' product.uid %}">
-                                            {{product.uid}}
+                                            {{ product.uid }}
                                         </a>
                                     </td>
-                                    <td class="px-5">{{product.name|truncatewords:5}}</td>
+                                    <td class="px-5">{{ product.name|truncatewords:5 }}</td>
                                     <td class="">
-                                        {% if product.images %}
-                                            <div class="row" >
-                                                {% for image in product.images|slice:":4" %}
-                                                    <div class="col-6 col-md-6 mb-1 px-1">
-                                                        <img  class="cat-img2" src="{{ MEDIA_URL }}{{ image }}" alt=" Image" >
-                                                    </div>
-                                                {% endfor %}
+                                        {% if product.images.all %}
+                                        <div class="row">
+                                            {% for image in product.images.all|slice:":4" %}
+                                            <div class="col-6 col-md-6 mb-1 px-1">
+                                                <img class="cat-img2" src="{{ MEDIA_URL }}{{ image.image.url }}"
+                                                    alt="Image">
                                             </div>
+                                            {% endfor %}
+                                        </div>
                                         {% endif %}
-                                        <!-- <img src="{{ product.image.url }}" alt=" Image" width="100" height="100"> -->
                                     </td>
-                                    <td class="px-5">{{product.brand}}</td>
-                                    <td class="px-5">{{product.product_discount_price}}</td>
-                                    <td class="px-5">{{product.stock}}</td>
+                                    <td class="px-5">{{ product.brand }}</td>
+                                    <td class="px-5">{{ product.product_discount_price }}</td>
+                                    <td class="px-5">{{ product.stock }}</td>
                                     <td class="px-5">
                                         <a href="{% url 'product:product_update' product.uid %}"
                                             class="btn btn-sm btn-square btn-neutral BtM">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a onclick="delete_product(this)" p_name="{{product.name}}" p_uid="{{product.uid}}">
+                                        <a onclick="delete_product(this)" p_name="{{ product.name }}"
+                                            p_uid="{{ product.uid }}">
                                             <button type="button"
                                                 class="btn btn-sm btn-square btn-neutral text-danger-hover BtM">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </a>
-    
+
                                     </td>
                                 </tr>
                                 {% endfor %}
-    
+
                             </tbody>
                         </form>
 
                     </table>
 
                 </div>
-                    
+
             </div>
         </div>
     </div>
@@ -186,7 +193,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="product_delete_name">
-                
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -198,7 +205,7 @@
     </div>
 </div>
 
-<!-- test create modal -->
+<!-- Product filter modal -->
 <div class="modal fade" id="select_filter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -208,38 +215,31 @@
             </div>
             <div class="modal-body">
                 <div style="display:flex;" class="product_filter">
-                    <a href="{% url 'product:product_filter' %}?filter_by=trending">Trending</a>
-                    <a href="{% url 'product:product_filter' %}?filter_by=show_as_new">New Products</a>
-                    <a href="{% url 'product:product_filter' %}?filter_by=display_as_bestseller">Best-Seller</a>
-                    {% comment %} <a href="{% url 'product:product_filter' %}?filter_by=hide">Hidden</a> {% endcomment %}
-                    <a href="{% url 'product:product_filter' %}?filter_by=all">All</a>
+                    <a href="">Trending</a>
+                    <a href="">New Products</a>
+                    <a href="">Best-Seller</a>
+                    {% comment %} <a href="">Hidden</a> {% endcomment %}
+                    <a href="">All</a>
                 </div>
             </div>
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
 
 
+<script>
+function delete_product(obj) {
+    var product_name = obj.getAttribute("p_name");
+    var product_uid = obj.getAttribute("p_uid");
+    var confirm_delete_btn = document.getElementById("confirm_delete_btn");
+    var product_delete_name = document.getElementById("product_delete_name");
+    confirm_delete_btn.setAttribute("href", "{% url 'product:product_delete' '0' %}".replace('0', product_uid));
+    product_delete_name.innerHTML = "Are you sure you want to delete <b>" + product_name + "</b>?";
+    $('#product_delete').modal('show');
+}
+</script>
 
 {% endblock content %}
-{% block js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-    function delete_product(element){
-        var product_name = element.getAttribute('p_name');
-        var product_uid = element.getAttribute('p_uid');
-        
-        var target = document.getElementById('product_delete_name');
-        target.innerHTML = "<p>Product Name : <b>"+product_name+"</b> ("+product_uid+")</p>";
-
-        var delete_url = '/admin_dashboard/product/product_delete/'+product_uid+'';
-        document.getElementById('confirm_delete_btn').setAttribute('href', delete_url);
-
-        var myModal = new bootstrap.Modal(document.getElementById('product_delete')); //modal id
-        myModal.show(); //to open a modal
-    }
-</script>
-{% endblock js %}
