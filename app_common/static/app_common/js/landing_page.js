@@ -14,7 +14,11 @@ Object.assign(swiperEl, {
       slidesPerView: 4,
       spaceBetween: 40,
     },
-  });
-  swiperEl.initialize();
-
-
+    1024: {
+      slidesPerView: 5,
+      spaceBetween: 50,
+    },
+  },
+});
+swiperEl.initialize();
+ 

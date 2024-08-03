@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from app_common import forms
 from users.forms import LoginForm
-from product.models import Category
+from product.models import Category,Products
+from django.conf import settings
 app = "app_common/"
 
 
@@ -15,8 +16,15 @@ class HomeView(View):
     def get(self, request):
         # Fetch the first 6 categories to display on the home page
         categories = Category.objects.all()
+        trending_products = Products.objects.filter(trending="yes")
+        new_products = Products.objects.filter(show_as_new="yes")
+
+        
         context = {
             'categories': categories,
+            'trending_products': trending_products,
+            'new_products': new_products,
+            'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)
 

@@ -87,85 +87,25 @@
 
 <swiper-container class="mySwiper d-lg-flex h-100" init="false">
   <!-- 1 -->
+  {% for product in new_products %}
 
-<swiper-slide >
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
-          <a href="" class="btn btn-warning text-white">Add to Cart</a>
-   </div>
-  </div>
-</swiper-slide>
-
-<!-- 2-->
-
-<swiper-slide >
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
+  <swiper-slide>
+    <div class="card">
+      <img src="{{ MEDIA_URL }}{{ product.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
+      <div class="card-body p-1">
+        <h6>{{ product.name }}</h6>
+        <small>
+          <b>₹{{ product.product_discount_price }}</b>
+          {% if product.product_max_price %}
+          <s>₹{{ product.product_max_price }}</s>
+          {% endif %}
+        </small>
+        <a href="{% url 'product:product_detail' product.id %}" class="btn btn-warning text-white">View Details</a>
+        <a href="#" class="btn btn-warning text-white">Add to Cart</a>
+      </div>
     </div>
-  </div>
-</swiper-slide>
-<!-- 3 -->
-<swiper-slide >
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
-    </div>
-  </div>
-</swiper-slide>
-<!-- 4 -->
-<swiper-slide >
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(32% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
-    </div>
-  </div>
-</swiper-slide>
-<!-- 5 -->
-<swiper-slide>
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(30% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
-    </div>
-  </div>
-</swiper-slide>
-<!-- 6 -->
-<swiper-slide>
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(35% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
-    </div>
-  </div>
-</swiper-slide>
-<!-- 7 -->
-<swiper-slide>
-  <div class="card" >
-    <img src="{% static 'app_common/images/img2.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="...">
-    <div class="card-body p-1">
-      <h6>Name of your plant etc</h6>
-      <small> <b> ₹65235 </b><s>₹6542</s>(39% off)</small>
-      <a href="" class="btn btn-warning text-white">Add to Cart</a>
-        </div>
-  </div>
-</swiper-slide>
+  </swiper-slide>
+{% endfor %}
 
 </swiper-container>
     
@@ -347,7 +287,6 @@
 
  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 <script src="{% static 'app_common/js/landing_page.js' %}"></script>
-<script src="{% static 'app_common/js/base.js' %}"></script>
 
 
 
