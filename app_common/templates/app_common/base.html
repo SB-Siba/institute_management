@@ -61,7 +61,7 @@
             <div class="offcanvas-body">
               <ul class="list-unstyled">
                 <li><a class="nav-link" href="#">Home</a></li>
-                <li><a class="nav-link" href="#">about us</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:about_us' %}">about us</a></li>
                 <li><a class="nav-link" href="#">Plants</a></li>
                 <li><a class="nav-link" href="#">Seeds</a></li>
                 <li><a class="nav-link" href="#">Pots & Planters</a></li>
@@ -81,7 +81,7 @@
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="">About us</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Plants</a>
@@ -514,7 +514,6 @@ document.addEventListener("DOMContentLoaded", function() {
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 </body>
 
 </html>

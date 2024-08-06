@@ -126,6 +126,7 @@ Products Of {{ category_obj.title }} Category
                 </a>
                 <div class="card-body">
                     <h5 class="card-title pb-2">{{ product.name }}</h5>
+                    <p class="card-title text-dark pb-2">{{ product.product_short_description |truncatechars:20 }}</p>
                     <p class="card-text">
                         <span id="discount_price">₹{{ product.product_discount_price }}</span> 
                         <span id="max_price"><s>₹{{ product.product_max_price }}</s></span>

@@ -90,6 +90,16 @@ Product Details - {{ product_obj.name }}
                 <h3>Description</h3>
                 <p>{{ product_obj.product_long_description }}</p>
             </div>
+            <div class="buttons mt-4">
+                   
+                <a href="" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1  cart-btn">
+                    Add To Cart
+                </a>
+                <a href="" class="btn btn-success  fs-6 fw-bold mt-2 mx-1  buy-btn">
+                    Buy Now
+                </a>
+           
+        </div>
         </div>
     </div>
 
@@ -98,15 +108,18 @@ Product Details - {{ product_obj.name }}
         <div class="d-flex flex-wrap">
             {% for similar_product in similar_product_list %}
             <div class="product-card card">
-                <a href="{% url 'shoppingsite:productdetails' similar_product.id %}" style="text-decoration: none;">
+                <a href="{% url 'product:product_detail' similar_product.id %}" style="text-decoration: none;">
                     <img src="{{ MEDIA_URL }}{{ similar_product.images.0 }}" class="card-img-top" alt="{{ similar_product.name }}">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ similar_product.name }}</h5>
                     <p class="card-text">
                         <span class="price">₹{{ similar_product.product_discount_price }}</span>
+                        {% if similar_product.product_max_price %}
                         <span class="original-price">₹{{ similar_product.product_max_price }}</span>
+                        {% endif %}
                     </p>
+                    <a href="{% url 'product:product_detail' similar_product.id %}" class="btn btn-success product-btn w-100">Product Details</a>
                 </div>
             </div>
             {% endfor %}
