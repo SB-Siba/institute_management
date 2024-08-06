@@ -208,7 +208,7 @@ class ProductUpdate(View):
             "image_gallery_formset": image_gallery_formset,
             "product": product
         }
-        return render(request, self.template_name, context)
+        return render(request, self.template, context)
 
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -252,7 +252,7 @@ class ProductUpdate(View):
             "image_gallery_formset": image_gallery_formset,
             "product": product
         }
-        return render(request, self.template_name, context)
+        return render(request, self.template, context)
 
 
 
@@ -260,7 +260,7 @@ class ProductUpdate(View):
 class ProductDelete(View):
 
     def post(self, request, pk):
-        product = get_object_or_404(Product, pk=pk)
+        product = get_object_or_404(Products, pk=pk)
         try:
             product.delete()
             messages.success(request, "Product deleted successfully.")
