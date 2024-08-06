@@ -15,8 +15,8 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes")
-        new_products = Products.objects.filter(show_as_new="yes")
+        trending_products = Products.objects.filter(trending="yes").prefetch_related('simple_products__image_gallery')
+        new_products = Products.objects.filter(show_as_new="yes").prefetch_related('simple_products__image_gallery')
 
         
         context = {

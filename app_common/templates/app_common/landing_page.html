@@ -80,39 +80,44 @@
   <div class="">
     <h3>New Arrivals</h3>
 
-
+    <swiper-container class="mySwiper d-lg-flex h-100" init="false">
+      <!-- 1 -->
+      {% for product in new_products %}
+        {% if product.simple_products.exists %}
+          {% with product.simple_products.first as simple_product %}
+            <swiper-slide>
+              <div class="card">
+                {% if product.image %}
+                  <img src="{{ MEDIA_URL }}{{ product.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
+                {% elif simple_product.image_gallery.images.all %}
+                  <img src="{{ MEDIA_URL }}{{ simple_product.image_gallery.images.first }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
+                {% else %}
+                  <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
+                {% endif %}
+                <div class="card-body p-1">
+                  <h6>{{ product.name }}</h6>
+                  <small>
+                    <b>₹{{ simple_product.product_discount_price }}</b>
+                    {% if simple_product.product_max_price %}
+                      <s>₹{{ simple_product.product_max_price }}</s>
+                    {% endif %}
+                  </small>
+                  <a href="{% url 'product:product_detail' product.id %}" class="btn btn-warning text-white">View Details</a>
+                  <a href="#" class="btn btn-warning text-white">Add to Cart</a>
+                </div>
+              </div>
+            </swiper-slide>
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    </swiper-container>
     
-
-<swiper-container class="mySwiper d-lg-flex h-100" init="false">
-  <!-- 1 -->
-  {% for product in new_products %}
-
-  <swiper-slide>
-    <div class="card">
-      <img src="{{ MEDIA_URL }}{{ product.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
-      <div class="card-body p-1">
-        <h6>{{ product.name }}</h6>
-        <small>
-          <b>₹{{ product.product_discount_price }}</b>
-          {% if product.product_max_price %}
-          <s>₹{{ product.product_max_price }}</s>
-          {% endif %}
-        </small>
-        <a href="{% url 'product:product_detail' product.id %}" class="btn btn-warning text-white">View Details</a>
-        <a href="#" class="btn btn-warning text-white">Add to Cart</a>
-      </div>
-    </div>
-  </swiper-slide>
-{% endfor %}
-
-</swiper-container>
-    
-        
     <div class="d-flex justify-content-center viewmoreButton">
       <button class="btn d-flex justify-content-center"><a href="#" class="text-decoration-none text-dark">View More Products</a></button>
     </div>
   </div>
 </section>
+
 <!-- --------------------End New Arrival Collection--------------- -->
 
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from product.models import Products, Category
+from product.models import Products, Category,SimpleProduct,ImageGallery
 from wishlist.models import WshList
 from django.conf import settings
 
@@ -16,7 +16,9 @@ class ShowProductsView(View):
         category_obj = get_object_or_404(Category, title=category_name)
 
         # Get products for this category
-        products_for_this_category = Products.objects.filter(category=category_obj, stock__gt=0)
+        products_for_this_category = Products.objects.filter(
+            category=category_obj
+        ).prefetch_related('simple_products')
 
         return render(request, self.template, {
             'products_for_this_category': products_for_this_category,
@@ -34,7 +36,10 @@ class ProductDetailsSmipleView(View):
         product_obj = get_object_or_404(Products, id=p_id)
         wishlist_items = []        
         similar_product_list = Products.objects.filter(category=product_obj.category).exclude(id=product_obj.id)[:5]
-
+        simple_product = SimpleProduct.objects.filter(product_sku_no=product_obj).first()
+        image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first() if simple_product else None
+        
+        
         if user.is_authenticated:
             wishlist = WshList.objects.filter(user=user).first()
             wishlist_items = wishlist.products.all() if wishlist else []
@@ -43,6 +48,8 @@ class ProductDetailsSmipleView(View):
             'user': user,
             'category_obj': category_obj,
             'product_obj': product_obj,
+            'simple_product': simple_product,
+            'image_gallery': image_gallery,
             'similar_product_list': similar_product_list,  # Corrected key name
             'wishlist_items': wishlist_items,
             'MEDIA_URL': settings.MEDIA_URL,
