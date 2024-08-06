@@ -123,19 +123,19 @@ Product Details - {{ product_obj.name }}
 
     <div class="gallery-container">
         {% if image_gallery %}
-            {% for image in image_gallery.images.all %}
+            {% for image in image_gallery.images %}
                 <div class="gallery-item">
                     <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image">
                 </div>
             {% endfor %}
-            {% if image_gallery.video %}
+            {% for video in image_gallery.video %}
                 <div class="gallery-item">
                     <video controls>
-                        <source src="{{ MEDIA_URL }}{{ image_gallery.video }}" type="video/mp4">
+                        <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
-            {% endif %}
+            {% endfor %}
         {% else %}
             <p>No media available.</p>
         {% endif %}
@@ -144,24 +144,24 @@ Product Details - {{ product_obj.name }}
     <div class="similar-products">
         <h3>Similar Products</h3>
         <div class="d-flex flex-wrap">
-            {% for similar_product in similar_product_list %}
+            {% for item in similar_simple_products %}
             <div class="product-card card">
-                <a href="{% url 'product:product_detail' similar_product.id %}" style="text-decoration: none;">
-                    {% if similar_product.image %}
-                        <img src="{{ MEDIA_URL }}{{ similar_product.image }}" class="card-img-top" alt="{{ similar_product.name }}">
+                <a href="{% url 'product:product_detail' item.product.id %}" style="text-decoration: none;">
+                    {% if item.product.image %}
+                        <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
                     {% else %}
                         <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Default Image">
                     {% endif %}
                 </a>
                 <div class="card-body">
-                    <h5 class="card-title">{{ similar_product.name }}</h5>
+                    <h5 class="card-title">{{ item.product.name }}</h5>
                     <p class="card-text">
-                        <span class="price">₹{{ similar_product.product_discount_price }}</span>
-                        {% if similar_product.product_max_price %}
-                        <span class="original-price">₹{{ similar_product.product_max_price }}</span>
+                        <span class="price">₹{{ item.simple_product.product_discount_price }}</span>
+                        {% if item.simple_product.product_max_price %}
+                        <span class="original-price">₹{{ item.simple_product.product_max_price }}</span>
                         {% endif %}
                     </p>
-                    <a href="{% url 'product:product_detail' similar_product.id %}" class="btn btn-success product-btn w-100">Product Details</a>
+                    <a href="{% url 'product:product_detail' item.product.id %}" class="btn btn-success product-btn w-100">Product Details</a>
                 </div>
             </div>
             {% endfor %}
