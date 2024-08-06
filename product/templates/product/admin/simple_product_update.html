@@ -75,7 +75,25 @@
                     </div>
                     
 
-                    
+                    <div id="videofileInputs" class="row mt-3">
+                        {% for video in product.videos %}
+                            <div class="col-md-4 col-6 col-sm-4 mb-3">
+                                <label class="fw-bold text-sm mb-2"      for="existingVideo{{ forloop.counter }}">Existing Video {{ forloop.counter }}:</label>
+                                <div>
+                                    <video src="{{ MEDIA_URL }}{{ video }}" controls class="img-thumbnail" style="max-width: 200px; height: 200px;"></video>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="removeVideo{{ forloop.counter }}" name="remove_videos" value="{{ video }}">
+                                    <label class="form-check-label" for="removeVideo{{ forloop.counter }}">Remove Video</label>
+                                </div>
+                                <input type="hidden" name="existing_videos" value="{{ video }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6 col-6 col-sm-6 form-group" id="field_videos">
+                        <label  class="fw-bold text-sm mb-2" for="id_videos">Videos:</label>
+                        <input type="file" name="new_videos" id="id_videos" class="form-control" multiple>
+                    </div>
                     <br>
                     <center><button type="submit" class="btn px-12 BtM btn-success">Update Product</button></center>
                 </form>
@@ -85,22 +103,3 @@
 </main>
 {% endblock content %}
 
-{% block js %}
-<script>
-    // Handle remove image checkbox
-    const removeImageCheckboxes = document.querySelectorAll('input[name="remove_images"]');
-    removeImageCheckboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            const imgDiv = this.parentElement.parentElement;
-            const img = imgDiv.querySelector('img');
-            if (this.checked) {
-                img.style.opacity = '0.5'; // Optionally change opacity to indicate removal
-            } else {
-                img.style.opacity = '1'; // Restore opacity if unchecked
-            }
-        });
-    });
-
-   
-</script>
-{% endblock js %}

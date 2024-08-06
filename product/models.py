@@ -15,16 +15,11 @@ def document_path(self, filename):
     myuuid = uuid.uuid4()
     return 'files/{basename}{randomstring}{ext}'.format(basename= basefilename, randomstring= str(myuuid), ext= file_extension)
 class Category(models.Model):
-    YESNO = (
-        ("yes","yes"),
-        ("no","no")
-    )
     title=models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, null=True, blank=True, unique=True)
 
     description=models.TextField()
     image = models.ImageField(upload_to='category/', blank=True, null=True)
-    hide = models.CharField(max_length= 255, choices= YESNO ,default="no")
 
     def __str__(self):
         return self.title
@@ -65,7 +60,7 @@ class Products(models.Model):
 
 
 class SimpleProduct(models.Model):
-    product_sku_no = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='simple_products', to_field='sku_no')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)
     product_max_price = models.FloatField(default=0.0, null=True, blank=True)
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)
     stock = models.IntegerField(default=1, blank=True, null=True)
@@ -77,17 +72,17 @@ class SimpleProduct(models.Model):
             return int(percentage)
 
     def __str__(self):
-        return f"{self.product_sq_no.name} - Simple Product"
+        return f"{self.product.name} - Simple Product"
 
 
 
 class ImageGallery(models.Model):
     simple_product = models.ForeignKey(SimpleProduct, on_delete=models.CASCADE, related_name='image_gallery')
-    images = models.ImageField(upload_to='product_images/', null=True, blank=True)
-    video = models.FileField(upload_to='product_videos/', null=True, blank=True)
+    images = models.JSONField(default=list, null=True, blank=True)
+    video = models.JSONField(default=list, null=True, blank=True)
 
     def __str__(self):
-        return f"Gallery for {self.simple_product.product_sku_no.name}"
+        return f"Gallery for {self.simple_product.product}"
 
 
 

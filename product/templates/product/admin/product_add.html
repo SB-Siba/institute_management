@@ -3,28 +3,6 @@
 {% block title %} Add Product {% endblock title %}
 {% block content %}
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Function to toggle the visibility of product forms based on product type selection
-        function toggleProductForms() {
-            var productType = document.getElementById('id_product_type').value;
-            var simpleProductFormset = document.getElementById('simple-product-formset');
-            
-            if (productType === 'simple') {
-                simpleProductFormset.style.display = 'block'; // Show simple product formset
-            } else {
-                simpleProductFormset.style.display = 'none'; // Hide simple product formset
-            }
-        }
-
-        // Bind the change event of product type selector to the toggle function
-        var productTypeSelector = document.getElementById('id_product_type');
-        productTypeSelector.addEventListener('change', toggleProductForms);
-
-        // Initial call to ensure correct form visibility on page load
-        toggleProductForms();
-    });
-</script>
 
 <style>
     .product-form-container {
@@ -101,28 +79,6 @@
         <!-- Main product form always visible -->
         <div class="form-group">
             {{ form.as_p }}
-        </div>
-
-        <!-- Simple product formset, initially hidden -->
-        <div id="simple-product-formset" style="display: none;">
-            <h2 class="form-header">Simple Product Details</h2>
-            {{ simple_product_formset.management_form }}
-            {% for form in simple_product_formset %}
-                <div class="form-group">
-                    {{ form.as_p }}
-                </div>
-            {% endfor %}
-        </div>
-
-        <!-- Image gallery formset -->
-        <div id="image-gallery-formset">
-            <h2 class="form-header">Image Gallery</h2>
-            {{ image_gallery_formset.management_form }}
-            {% for form in image_gallery_formset %}
-            <div class="form-group">
-                {{ form.as_p }}
-            </div>
-            {% endfor %}
         </div>
 
         <button type="submit" class="submit-button">Save Product</button>

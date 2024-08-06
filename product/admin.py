@@ -24,8 +24,4 @@ class ProductsAdmin(admin.ModelAdmin):
     list_display = ("name", "sku_no", "category", "product_type", "trending", "show_as_new")
     inlines = [SimpleProductInline]  # Inline for SimpleProduct
 
-@admin.register(models.SimpleProduct)
-class SimpleProductAdmin(admin.ModelAdmin):
-    search_fields = ("product_sku_no", "product_max_price")
-    list_display = ("product_sku_no", "product_max_price", "product_discount_price", "stock")
-    inlines = [ImageGalleryInline] 
+admin.site.register(models.SimpleProduct)

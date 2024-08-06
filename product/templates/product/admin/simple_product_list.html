@@ -116,33 +116,45 @@
                                 <th class="px-5" id="tb-head" scope="col">Name</th>
                                 <th class="px-5" id="tb-head" scope="col">Image</th>
                                 <th class="px-5" id="tb-head" scope="col">Brand</th>
+                                <th class="px-5" id="tb-head" scope="col">Max Price</th>
+                                <th class="px-5" id="tb-head" scope="col">Discounted Price</th>
+                                <th class="px-5" id="tb-head" scope="col">Stock</th>
+                                <th class="px-5" id="tb-head" scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody id="test_table_tbody">
                             {% for product in products %}
-                            <tr>
+                            <tr {% if product.simple_products.first.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
                                 <td class="px-5">
-                                    
+                                   
                                         {{ product.pk }}
                                 </td>
-                                <td class="px-5">{{ product.name|truncatewords:5 }}</td>
+                                <td class="px-5">{{ product.product.name|truncatewords:5 }}</td>
                                 <td class="px-5">
-                                    {% if product.image %}
-                                        <img class="cat-img2" src="{{ product.image.url }}" alt="Image">
+                                    {% if product.product.image %}
+                                        <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
                                     {% endif %}
                                 </td>
-                                <td class="px-5">{{ product.brand }}</td>
+                                <td class="px-5">{{ product.product.brand }}</td>
                                 <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.product_discount_price }}
-                                    {% endif %}
+                                    {{ product.product_max_price }}
+                            </td>
+                                <td class="px-5">
+                                        {{ product.product_discount_price }}
                                 </td>
                                 <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.stock }}
-                                    {% endif %}
+                                        {{ product.stock }}
                                 </td>
-                        
+                                <td class="px-5">
+                                    <a href="{% url 'product:simple_product_update' product.pk %}"
+                                        class="btn btn-sm btn-square btn-neutral BtM">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'product:simple_product_delete' product.pk %}"
+                                        class="btn btn-sm btn-square btn-neutral BtM">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -154,3 +166,7 @@
 </main>
 
 {% endblock content %}
+
+
+
+
