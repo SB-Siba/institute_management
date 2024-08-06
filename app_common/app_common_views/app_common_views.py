@@ -2,15 +2,30 @@ from django.shortcuts import render, redirect
 from django.views import View
 from app_common import forms
 from users.forms import LoginForm
+from product.models import Category,Products
+from django.conf import settings
 app = "app_common/"
 
 
 # static pages 
 
+
 class HomeView(View):
     template = app + "landing_page.html"
+
     def get(self, request):
-        return render(request, self.template)
+        categories = Category.objects.all()
+        trending_products = Products.objects.filter(trending="yes").prefetch_related('simple_products__image_gallery')
+        new_products = Products.objects.filter(show_as_new="yes").prefetch_related('simple_products__image_gallery')
+
+        
+        context = {
+            'categories': categories,
+            'trending_products': trending_products,
+            'new_products': new_products,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+        return render(request, self.template, context)
 
 
 class AboutUs(View):

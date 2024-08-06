@@ -6,7 +6,8 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
-from product import models
+from product.models import Category,Products,SimpleProduct,ImageGallery
+
 from product import forms
 import os
 from django.core.files.storage import default_storage
@@ -19,7 +20,7 @@ app = "product/"
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CategoryList(View):
-    model = models.Category
+    model = Category
     template = app + "admin/category_list.html"
     form_class = forms.CategoryEntryForm
     def get(self, request):
@@ -46,7 +47,7 @@ class CategoryList(View):
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CatagoryAdd(View):
-    model = models.Category
+    model = Category
     form_class = forms.CategoryEntryForm
     template = app + "admin/category_add.html"
 
@@ -73,7 +74,7 @@ class CatagoryAdd(View):
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CategoryUpdate(View):
-    model = models.Category
+    model = Category
     form_class = forms.CategoryEntryForm
     template = app + "admin/category_update.html"  # Adjust template path as needed
 
@@ -96,7 +97,7 @@ class CategoryUpdate(View):
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CatagotyDelete(View):
-    model = models.Category
+    model = Category
     form_class = forms.CategoryEntryForm
     template = app + "admin/category_update.html"
 
@@ -108,149 +109,154 @@ class CatagotyDelete(View):
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductAdd(View):
-    model = models.Products
     form_class = forms.ProductForm
-    template = app + "admin/product_add.html"
+    template_name = app + 'admin/product_add.html'  # Ensure this path is correct
 
     def get(self, request):
         form = self.form_class()
-        product_list = self.model.objects.all().order_by('-id')
+        
+
         context = {
-            "product_list": product_list,
             "form": form,
         }
-        return render(request, self.template, context)
+        return render(request, self.template_name, context)
 
     def post(self, request):
         form = self.form_class(request.POST, request.FILES)
+
         if form.is_valid():
             try:
+                # Save the product
                 product = form.save(commit=False)
-                images = request.FILES.getlist('images')
-
-                # Validate that at least one image is uploaded
-                if not images:
-                    messages.error(request, "Please upload at least one image.")
-                    return redirect("product:product_add")
-
-                # Save product to obtain an ID
+                if not product.uid:
+                    product.uid = utils.get_rand_number(5)
                 product.save()
+                simple_product_obj = SimpleProduct(product = product)
+                simple_product_obj.save()  # Make sure to save the SimpleProduct object
 
-                # Save images and update the product's images field
-                image_list = []
-                for file in images:
-                    file_path = default_storage.save(os.path.join('product_images', file.name), file)
-                    image_list.append(file_path.replace("\\", "/"))
-                
-                product.images = image_list
-                product.save()
+                messages.success(request, "Product added successfully.")
+                return redirect("product:product_list")
 
-                messages.success(request, "Product is added successfully.")
             except Exception as e:
                 print("Error saving product:", e)
                 messages.error(request, f"Error saving product: {str(e)}")
         else:
+            # Handle form errors
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
+            
 
-        return redirect("product:product_list")
+        context = {
+            "form": form,
+        }
 
+        return render(request, self.template_name, context)
 
 @method_decorator(utils.super_admin_only, name='dispatch')
-class ProductUpdate(View):
-    model = models.Products
-    form_class = forms.ProductForm
-    template = app + "admin/product_update.html"
+class SimpleProductUpdate(View):
+    form_class = forms.SimpleProductForm
+    template = app + "admin/simple_product_update.html"
 
-    def get(self, request, product_uid):
-        product = self.model.objects.get(uid=product_uid)
+    def get(self, request, pk):
+        product = get_object_or_404(SimpleProduct, pk=pk)
+        form = self.form_class(instance=product)
+        product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
+
+        # Provide empty lists if product_images_videos is None
+        images = product_images_videos.images if product_images_videos.images else []
+        videos = product_images_videos.video if product_images_videos.video else []
+
         context = {
+            "form": form,
             "product": product,
-            "form": self.form_class(instance=product),
-            "MEDIA_URL":settings.MEDIA_URL
+            "images": images,
+            "videos": videos
         }
         return render(request, self.template, context)
 
-    def post(self, request, product_uid):
-        product = self.model.objects.get(uid=product_uid)
+    def post(self, request, pk):
+        product = get_object_or_404(SimpleProduct, pk=pk)
         form = self.form_class(request.POST, request.FILES, instance=product)
+        product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
 
         if form.is_valid():
-            
-            images = request.FILES.getlist('new_images')
-            if not product.images:
-                if not images:
-                    messages.error(request, "Please upload at least one image.")
-                    return redirect("product:product_list")
-            product = form.save(commit=False)
-            # product.save()
+            try:
+                product = form.save(commit=False)
 
-            remove_images = request.POST.getlist('remove_images')
-            current_images = product.images
-            print(f"Remove images {remove_images} \n Current Images {current_images}")
-            # Filter out removed images
-            new_images = [img for img in current_images if img not in remove_images]
+                # Handle images
+                remove_images = request.POST.getlist('remove_images')
+                new_uploaded_images = request.FILES.getlist('new_images')
 
-            # Handle adding new images
-            new_uploaded_images = request.FILES.getlist('new_images')
-            if new_uploaded_images:
-                image_list = []
+                current_images = list(product_images_videos.images) if product_images_videos.images else []
+                updated_images = [img for img in current_images if img not in remove_images]
+
                 for file in new_uploaded_images:
                     file_path = default_storage.save(os.path.join('product_images', file.name), file)
-                    image_list.append(file_path.replace("\\", "/"))
-                new_images.extend(image_list)
-            print(f"\nNew List {new_images}")
-            # Save the updated product
-            
-            product.images = new_images  # Convert list back to JSON string
-            product.save()
+                    updated_images.append(file_path.replace("\\", "/"))
 
-            messages.success(request, 'Product updated successfully.')
-            return redirect('product:product_list')
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
+                product_images_videos.images = updated_images  # Update the images field
 
-        return redirect("product:product_update", product_uid=product_uid)
+                # Handle videos
+                remove_videos = request.POST.getlist('remove_videos')
+                new_uploaded_videos = request.FILES.getlist('new_videos')
+
+                current_videos = list(product_images_videos.video) if product_images_videos.video else []
+                updated_videos = [video for video in current_videos if video not in remove_videos]
+
+                for file in new_uploaded_videos:
+                    file_path = default_storage.save(os.path.join('product_videos', file.name), file)
+                    updated_videos.append(file_path.replace("\\", "/"))
+
+                product_images_videos.video = updated_videos  # Update the videos field
+
+                # Save the product
+                product.save()
+                product_images_videos.save()
+                messages.success(request, "Product updated successfully.")
+                return redirect("product:simple_product_list")
+
+            except Exception as e:
+                print("Error updating product:", e)
+                messages.error(request, f"Error updating product: {str(e)}")
+
+        context = {
+            "form": form,
+            "product": product
+        }
+        return render(request, self.template, context)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
-class ProductDelete(View):
-    model = models.Products
+class SimpleProductDelete(View):
 
-    def get(self,request, product_uid):
-        product = self.model.objects.get(uid = product_uid)
-        product.delete()
-        messages.info(request, 'Product is deleted succesfully......')
+    def get(self, request, pk):
+        product = get_object_or_404(SimpleProduct, pk=pk)
+        try:
+            product.delete()
+            messages.success(request, "Product deleted successfully.")
+        except Exception as e:
+            print("Error deleting product:", e)
+            messages.error(request, f"Error deleting product: {str(e)}")
 
-        return redirect("product:product_list")
-
+        return redirect("product:simple_product_list")
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductList(View):
-    model = models.Products
-    template = app + "admin/product_list.html"
+    template_name = app + "admin/product_list.html"
 
-    def get(self,request):
-        product_list = self.model.objects.order_by('-id')
-        print(product_list)
+    def get(self, request):
+        products = Products.objects.all()
 
-        paginated_data = utils.paginate(
-            request, product_list, 50
-        )
         context = {
-            "product_list":product_list,
-            "data_list":paginated_data,
-            "MEDIA_URL":settings.MEDIA_URL
+            'products': products,
         }
-        return render(request, self.template, context)
+        return render(request, self.template_name, context)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductSearch(View):
-    model = models.Products
+    model = Products
     form_class = forms.ProductForm
     template = app + "admin/product_list.html"
 
@@ -277,7 +283,7 @@ class ProductSearch(View):
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductFilter(View):
-    model = models.Products
+    model = Products
     template = app + "admin/product_list.html"
 
     def get(self,request):
@@ -311,3 +317,16 @@ class ProductFilter(View):
             "MEDIA_URL":settings.MEDIA_URL
         }
         return render(request, self.template, context)
+    
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SimpleProductList(View):
+    template_name = app + "admin/simple_product_list.html"
+
+    def get(self, request):
+        products = SimpleProduct.objects.all()
+
+        context = {
+            'products': products,
+        }
+        return render(request, self.template_name, context)

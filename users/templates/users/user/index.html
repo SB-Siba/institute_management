@@ -24,6 +24,11 @@
 
 <div class="col-sm-3 col-lg-3  px-0    pt-5  dash_body">
 <ul class="list-unstyled mt-4 mx-0  ">
+    <li class="d-grid">
+        <a href="{% url 'users:home' %}" class="prof-btn ps-4 mb-3">
+            <i class="fas fa-home text-white me-2"></i> Go to Home
+        </a>
+    </li>
     <li class="d-grid  ">
         <a href="{% url 'users:account_details' %}" class="prof-btn ps-4 mb-3">
             <i class="fas fa-user text-white me-2"></i> My Profile
@@ -32,21 +37,6 @@
     <li class="d-grid">
         <a href="" class="prof-btn ps-4  mb-3">
             <i class="fas fa-box text-white me-2"></i> My Orders
-        </a>
-    </li>
-    <li class="d-grid">
-        <a href="" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Change Password
-        </a>
-    </li>
-    <li class="d-grid">
-        <a href="{% url 'users:account_deletion' %}" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Delete Account
-        </a>
-    </li>
-    <li class="d-grid">
-        <a href="{% url 'users:logout' %}" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Logout
         </a>
     </li>
     <li class="d-grid">
@@ -60,9 +50,33 @@
         </a>
     </li>
     <li class="d-grid">
-        <a href="{% url 'users:home' %}" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-home text-white me-2"></i> Go to Home
+        <a href="" class="prof-btn ps-4 mb-3">
+            <i class="fas fa-key text-white me-2"></i> Change Password
         </a>
     </li>
+    <li class="d-grid">
+        <a href="{% url 'users:account_deletion' %}" class="prof-btn ps-4 mb-3">
+            <i class="fas fa-key text-white me-2"></i> Delete Account
+        </a>
+    </li>
+    <li class="d-grid">
+        <a href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="prof-btn ps-4 mb-3">
+            <i class="fas fa-key text-white me-2"></i> Logout
+        </a>
+            
+        </a>
+    </li>
+   
+    
 </ul>
 </div>
+<script>
+    function myFunction() {
+        if (confirm("Are you sure you want to logout?")) {
+            return true;  // Proceed with the link's href
+        } else {
+            console.log("Logout canceled");
+            return false;  // Prevent the default action
+        }
+    }
+</script>
