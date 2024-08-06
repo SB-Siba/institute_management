@@ -145,20 +145,23 @@ class ProductAdd(View):
 
                 # Save ImageGallery instances
                 for image_gallery_form in image_gallery_formset:
-                    images = image_gallery_form.cleaned_data.get('images')
-                    video = image_gallery_form.cleaned_data.get('video')
+                    if image_gallery_form.cleaned_data:
+                        images = image_gallery_form.cleaned_data.get('images')
+                        video = image_gallery_form.cleaned_data.get('video')
 
-                    if images:
-                        for image in images:
-                            ImageGallery.objects.create(
-                                simple_product=simple_products[0], 
-                                image=image
-                            )
-                    if video:
-                        ImageGallery.objects.create(
-                            simple_product=simple_products[0], 
-                            video=video
-                        )
+                        # Assuming that the first simple_product should be used
+                        if simple_products:
+                            simple_product = simple_products[0]
+                            if images:
+                                ImageGallery.objects.create(
+                                    simple_product=simple_product, 
+                                    images=images
+                                )
+                            if video:
+                                ImageGallery.objects.create(
+                                    simple_product=simple_product, 
+                                    video=video
+                                )
 
                 messages.success(request, "Product added successfully.")
                 return redirect("product:product_list")
@@ -196,77 +199,74 @@ class ProductUpdate(View):
     def get(self, request, pk):
         product = get_object_or_404(Products, pk=pk)
         form = self.form_class(instance=product)
-        simple_product_formset = forms.SimpleProductFormSet(instance=product)
+        simple_product_formset = forms.SimpleProductFormSet(queryset=SimpleProduct.objects.filter(product_sku_no=product))
         image_gallery_formset = forms.ImageGalleryFormSet(queryset=ImageGallery.objects.filter(simple_product__product_sku_no=product))
 
         context = {
             "form": form,
             "simple_product_formset": simple_product_formset,
             "image_gallery_formset": image_gallery_formset,
+            "product": product
         }
-        return render(request, self.template, context)
+        return render(request, self.template_name, context)
 
     def post(self, request, pk):
-        product = get_object_or_404(Products, pk=pk)
+        product = get_object_or_404(Product, pk=pk)
         form = self.form_class(request.POST, request.FILES, instance=product)
-        simple_product_formset = forms.SimpleProductFormSet(request.POST, request.FILES, instance=product)
+        simple_product_formset = forms.SimpleProductFormSet(request.POST, request.FILES, queryset=SimpleProduct.objects.filter(product_sku_no=product))
         image_gallery_formset = forms.ImageGalleryFormSet(request.POST, request.FILES, queryset=ImageGallery.objects.filter(simple_product__product_sku_no=product))
 
         if form.is_valid() and simple_product_formset.is_valid() and image_gallery_formset.is_valid():
             try:
-                # Save the product
-                product = form.save()
+                product = form.save(commit=False)
+                if not product.uid:
+                    product.uid = utils.get_rand_number(5)
+                product.save()
 
-                # Save SimpleProduct instances
                 simple_products = simple_product_formset.save(commit=False)
                 for simple_product in simple_products:
                     simple_product.product_sku_no = product
                     simple_product.save()
 
-                # Save ImageGallery instances
-                for image_form in image_gallery_formset:
-                    if image_form.cleaned_data:
-                        image = image_form.save(commit=False)
-                        image.simple_product = simple_product  # Link image to the simple product
-                        image.save()
+                for image_gallery_form in image_gallery_formset:
+                    if image_gallery_form.cleaned_data:
+                        images = image_gallery_form.cleaned_data.get('images')
+                        video = image_gallery_form.cleaned_data.get('video')
+                        if simple_products:
+                            simple_product = simple_products[0]
+                            if images:
+                                ImageGallery.objects.create(simple_product=simple_product, images=images)
+                            if video:
+                                ImageGallery.objects.create(simple_product=simple_product, video=video)
 
                 messages.success(request, "Product updated successfully.")
-                return redirect("product:product_detail", pk=product.pk)
+                return redirect("product:product_list")
 
             except Exception as e:
                 print("Error updating product:", e)
                 messages.error(request, f"Error updating product: {str(e)}")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
-            for form_error in simple_product_formset.errors:
-                for field, errors in form_error.items():
-                    for error in errors:
-                        messages.error(request, f'{field}: {error}')
-            for form_error in image_gallery_formset.errors:
-                for field, errors in form_error.items():
-                    for error in errors:
-                        messages.error(request, f'{field}: {error}')
 
         context = {
             "form": form,
             "simple_product_formset": simple_product_formset,
             "image_gallery_formset": image_gallery_formset,
+            "product": product
         }
-
-        return render(request, self.template, context)
+        return render(request, self.template_name, context)
 
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductDelete(View):
-    model = Products
 
-    def get(self,request, product_uid):
-        product = self.model.objects.get(uid = product_uid)
-        product.delete()
-        messages.info(request, 'Product is deleted succesfully......')
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        try:
+            product.delete()
+            messages.success(request, "Product deleted successfully.")
+        except Exception as e:
+            print("Error deleting product:", e)
+            messages.error(request, f"Error deleting product: {str(e)}")
 
         return redirect("product:product_list")
 

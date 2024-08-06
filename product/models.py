@@ -58,13 +58,7 @@ class Products(models.Model):
     trending = models.CharField(max_length= 255, choices= YESNO, default="no") 
     show_as_new = models.CharField(max_length= 255, choices= YESNO ,default="no")
     product_type = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='simple')
-    @property
-    def save(self, *args, **kwargs):
-        if not self.uid:
-            self.uid = utils.get_rand_number(5)
-       
-
-        super().save(*args, **kwargs)
+    
 
     def __str__(self):
         return f"{self.name}"
