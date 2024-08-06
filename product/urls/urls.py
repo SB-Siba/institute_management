@@ -18,13 +18,12 @@ urlpatterns = [
 
     #product web admin
     path("product/product_add", admin_product_views.ProductAdd.as_view(), name="product_add"),
-    path("product/product_update/<str:product_uid>", admin_product_views.ProductUpdate.as_view(), name="product_update"),
+    path("product/product_update/<int:pk>", admin_product_views.ProductUpdate.as_view(), name="product_update"),
     path("product/product_delete/<str:product_uid>", admin_product_views.ProductDelete.as_view(), name="product_delete"),
     path("product/product_list", admin_product_views.ProductList.as_view(), name="product_list"),
     path("product/product_search", admin_product_views.ProductSearch.as_view(), name="product_search"),
     path("product/product_filter", admin_product_views.ProductFilter.as_view(), name="product_filter"),
     
-
     # product web user
     path('category/<str:category_name>/', user_product_views.ShowProductsView.as_view(), name='products_of_category'),
     path('product/<int:p_id>/', user_product_views.ProductDetailsSmipleView.as_view(), name='product_detail'),

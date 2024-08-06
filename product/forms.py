@@ -2,6 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory
 from product.models import Category,Products,SimpleProduct,ImageGallery
 
+
 class CategoryEntryForm(forms.ModelForm):
 
     class Meta:
@@ -28,32 +29,34 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Products
         fields = [
-            'category', 'sku_no', 'name', 'brand', 'image', 
-            'product_short_description', 'product_long_description', 
-            'trending', 'show_as_new', 'product_type'
+            'category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
+            'product_long_description', 'trending', 'show_as_new', 'product_type'
         ]
-        widgets = {
-            'trending': forms.RadioSelect(choices=Products.YESNO),
-            'show_as_new': forms.RadioSelect(choices=Products.YESNO),
-            'product_type': forms.RadioSelect(choices=Products.PRODUCT_TYPE_CHOICES),
-        }
 
 class SimpleProductForm(forms.ModelForm):
     class Meta:
         model = SimpleProduct
-        fields = [
-            'product_sku_no', 'product_max_price', 'product_discount_price', 'stock'
-        ]
+        fields = ['product_max_price', 'product_discount_price', 'stock']
 
 class ImageGalleryForm(forms.ModelForm):
+    video = forms.FileField(required=False)
+
     class Meta:
         model = ImageGallery
-        fields = ['simple_product', 'videos'] 
+        fields = ['video']
 
 SimpleProductFormSet = inlineformset_factory(
-    Products, SimpleProduct, form=SimpleProductForm, extra=1, can_delete=True
+    Products,
+    SimpleProduct,
+    form=SimpleProductForm,
+    extra=1,
+    can_delete=True
 )
 
 ImageGalleryFormSet = inlineformset_factory(
-    SimpleProduct, ImageGallery, form=ImageGalleryForm, extra=1, can_delete=True
+    SimpleProduct,
+    ImageGallery,
+    form=ImageGalleryForm,
+    extra=3,  # Adjust the number of extra forms as needed
+    can_delete=True
 )

@@ -2,47 +2,131 @@
 {% load static %}
 {% block title %} Add Product {% endblock title %}
 {% block content %}
-    
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script>
-        $(document).ready(function() {
-            // Function to toggle the visibility of product forms based on product type selection
-            function toggleProductForms() {
-                const productType = $('#id_product_type').val();
-                if (productType === 'simple') {
-                    $('#simple-product-formset').show(); // Show simple product formset
-                } else {
-                    $('#simple-product-formset').hide(); // Hide simple product formset
-                }
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to toggle the visibility of product forms based on product type selection
+        function toggleProductForms() {
+            var productType = document.getElementById('id_product_type').value;
+            var simpleProductFormset = document.getElementById('simple-product-formset');
+            
+            if (productType === 'simple') {
+                simpleProductFormset.style.display = 'block'; // Show simple product formset
+            } else {
+                simpleProductFormset.style.display = 'none'; // Hide simple product formset
             }
+        }
 
-            // Bind the change event of product type selector to the toggle function
-            $('#id_product_type').change(function() {
-                toggleProductForms();
-            });
+        // Bind the change event of product type selector to the toggle function
+        var productTypeSelector = document.getElementById('id_product_type');
+        productTypeSelector.addEventListener('change', toggleProductForms);
 
-            // Initial call to ensure correct form visibility on page load
-            toggleProductForms();
-        });
-    </script>
+        // Initial call to ensure correct form visibility on page load
+        toggleProductForms();
+    });
+</script>
 
-    <h1>Add Product</h1>
+<style>
+    .product-form-container {
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    #simple-product-formset {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #e9ecef;
+        border-radius: 6px;
+    }
+
+    #image-gallery-formset {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+    }
+
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .submit-button:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="product-form-container">
+    <h1 class="form-header">Add Product</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        
         <!-- Main product form always visible -->
-        {{ form.as_p }}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
 
         <!-- Simple product formset, initially hidden -->
         <div id="simple-product-formset" style="display: none;">
-            <h2>Simple Product Details</h2>
+            <h2 class="form-header">Simple Product Details</h2>
             {{ simple_product_formset.management_form }}
             {% for form in simple_product_formset %}
-                {{ form.as_p }}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
             {% endfor %}
         </div>
 
-        <button type="submit">Save Product</button>
-    </form>
+        <!-- Image gallery formset -->
+        <div id="image-gallery-formset">
+            <h2 class="form-header">Image Gallery</h2>
+            {{ image_gallery_formset.management_form }}
+            {% for form in image_gallery_formset %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            {% endfor %}
+        </div>
 
+        <button type="submit" class="submit-button">Save Product</button>
+    </form>
+</div>
 
 {% endblock content %}

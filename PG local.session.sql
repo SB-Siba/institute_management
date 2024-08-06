@@ -1,4 +1,31 @@
-INSERT INTO users_user (
+INSERT INTO product_products (
+    id,
+    uid,
+    name,
+    brand,
+    product_short_description,
+    product_long_description,
+    trending,
+    show_as_new,
+    category_id,
+    image,
+    product_type,
+    sku_no
+  )
+VALUES (
+    'id:bigint',
+    'uid:character varying',
+    'name:character varying',
+    'brand:character varying',
+    'product_short_description:text',
+    'product_long_description:text',
+    'trending:character varying',
+    'show_as_new:character varying',
+    'category_id:bigint',
+    'image:character varying',
+    'product_type:character varying',
+    'sku_no:character varying'
+  );INSERT INTO users_user (
     id,
     last_login,
     full_name,

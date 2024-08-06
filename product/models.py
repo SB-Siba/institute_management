@@ -89,21 +89,11 @@ class SimpleProduct(models.Model):
 
 class ImageGallery(models.Model):
     simple_product = models.ForeignKey(SimpleProduct, on_delete=models.CASCADE, related_name='image_gallery')
-    images = models.JSONField(null=True, blank=True) 
-    videos = models.FileField(upload_to='product_videos/', null=True, blank=True)
+    images = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    video = models.FileField(upload_to='product_videos/', null=True, blank=True)
 
     def __str__(self):
         return f"Gallery for {self.simple_product.product_sku_no.name}"
 
 
 
-
-
-
-
-
-
-
-
-
-         
