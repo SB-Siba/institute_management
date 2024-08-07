@@ -26,7 +26,8 @@ urlpatterns = [
     path("simple_product/simple_product_list", admin_product_views.SimpleProductList.as_view(), name="simple_product_list"),
     path("simple_product/simple_product_update/<int:pk>", admin_product_views.SimpleProductUpdate.as_view(), name="simple_product_update"),
     path("simple_product/simple_product_delete/<int:pk>", admin_product_views.SimpleProductDelete.as_view(), name="simple_product_delete"),
-    
+    path("simple_product/simple_product_search", admin_product_views.SimpleProductSearch.as_view(), name="simple_product_search"),
+
     # product web user
     path('category/<str:category_name>/', user_product_views.ShowProductsView.as_view(), name='products_of_category'),
     path('product/<int:p_id>/', user_product_views.ProductDetailsSmipleView.as_view(), name='product_detail'),

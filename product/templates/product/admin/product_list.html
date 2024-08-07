@@ -97,6 +97,7 @@
                         </button>
                     </div>
                 </form>
+                
                 <div class="btn-group catagory-btn">
                     <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
                         <i class="fa-solid fa-filter mt-2" style="color: #098cf1;"></i>
@@ -132,16 +133,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="px-5">{{ product.brand }}</td>
-                                <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.product_discount_price }}
-                                    {% endif %}
-                                </td>
-                                <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.stock }}
-                                    {% endif %}
-                                </td>
+                                
                         
                             </tr>
                             {% endfor %}

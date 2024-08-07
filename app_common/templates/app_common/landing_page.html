@@ -5,7 +5,7 @@
 
 <!-- --------------------banner section--------------- -->
 
-<section> 
+<section>
   <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -37,9 +37,9 @@
 
 <!-- --------------------android app--------------- -->
 <section class="AppDownload">
-  <div class="d-flex justify-content-center align-items-center">
+  <div class="d-flex justify-content-center align-items-center p-lg-3 p-2 bg-warning fs-4">
     Download App! &nbsp; 
-    <a href="#" class="text-decoration-none text-white android_button">FOR ANDROID</a>
+    <a href="#" class="text-decoration-none u-button ">FOR ANDROID</a>
   </div>
 </section>
 <!-- --------------------end android app--------------- -->
@@ -48,27 +48,32 @@
 
 <!-- --------------------Shop by collection--------------- -->
 
-<section class="background_bg Shop_by">
-  <div>
-      <h3>Shop By Collection</h3>
-    <!-- Ensure a maximum of 6 cards are displayed -->
-
+<section class="p-lg-4 p-3 Shop_by_Collection">
+  <div class="">
+      <div class="pb-4">
+        <h3 class="text-success">Shop By Collection</h3>
+      </div> 
+   
+        <!-- ----------------max card should be 5 in =----------------- -->
     <div class="row">
 
-        {% for category in categories %}
-      
-        <div class="col col-12 col-md-4 col-lg-2 m-auto content-wrapper text-center">
+       <!-- ---------category 1-------- -->
+
+       {% for category in categories %}
+    
+        <div class="col content-wrapper col-lg-2 col-md-3 col-6">
           <div class="image-wrapper">
-            <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}">
+            <a href="{% url 'product:products_of_category' category.title %}">
+                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="185" height="330">
               </a>
           </div>
-         <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none"> <h4 >{{ category.title }}</h4></a>
+          <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
+          <h4 class="text-center">{{ category.title }}</h4>  </a>
         </div>
-     
+    
         {% endfor %}
-        
-    </div> 
+
+  </div> 
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->
@@ -76,7 +81,7 @@
 
 <!-- --------------------New Arrival Collection--------------- -->
 
-<section class="Shop_by">
+<section class="p-lg-3 p-3">
   <div class="">
     <h3>New Arrivals</h3>
 
@@ -111,7 +116,7 @@
   
     
     <div class="d-flex justify-content-center viewmoreButton">
-      <button class="btn d-flex justify-content-center"><a href="#" class="text-decoration-none text-dark">View More Products</a></button>
+      <a href="#" class=" u-button">View More Products</a>
     </div>
   </div>
 </section>
@@ -124,7 +129,7 @@
 
 
 <!-- ------------------------- why  choose  niwa---------------------- -->
-<section class="whychoose p-lg-5 p-3">
+<section class="whychoose p-lg-5 p-3 " >
   <h4 class="text-center text-success">Why Choose Niwa Agro</h4>
   <div class="row text-center container p-lg-4 p-3 chooseniwa_logo">
     <div class="col-6 col-md-3 mb-2">
@@ -150,29 +155,27 @@
 
 <!-- --------------------------about niwa agro-------------------------------- -->
 
-<section class="container">
-  <div class="aboutniwa">
-      <img src="{% static 'app_common/images/img8.webp' %}" alt="">
-      <h6>About Us</h6>
-  </div>
-  <div class="aboutniwa1 my-3 my-lg-5 text-center">
-      <p>Niwa Agro Innovations, a newly founded woman-led Private Limited Company established on April 24, 2024, is dedicated to <br>
-          revolutionizing global agriculture through sustainable practices. Their mission is to enhance soil productivity while preserving
-          soil microorganisms, producing <br> eco-friendly agricultural inputs, and promoting soilless farming in urban areas.</p>
-      <div>
-          <button class="btn btn-warning fs-5 fs-lg"><a href="#" class="text-white text-decoration-none">Learn More</a></button>
-      </div>
-  </div>
+<section class="aboutniwa_bg">
+ <div class="p-lg-5 p-3 ">
+<div class="aboutniwa1 w-50 ">
+  <h2 class="text-success text-center pb-lg-5">ABOUT US</h2>
+    <p>Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
+    <p>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
+    <div>
+        <a href="{% url 'app_common:about_us' %}" class="text-white text-decoration-none u-button">Know More</a>
+    </div>
+</div>
+ </div>
 </section>
 <!-- --------------------------End about niwa agro-------------------------------- -->
 
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section >
-  <div class="testimonial">
+<section class="whychoose p-lg-3 p-3 " >
+  <div class="testimonial ">
   <div class="row">
-     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
+     <div class="col-12 d-flex align-items-center justify-content-start flex-column">
          <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
       </div>
   </div>
@@ -231,7 +234,7 @@
   
 <!-- --------------------------Start Accordian------------------------------------- -->
 
-<section class=" p-lg-5 p-3 Accordian">
+<section class="Shop_by_Collection p-lg-5 p-3  Accordian">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
         <h2 class="section-heading border-bottom p-lg-3 p-2">Frequently Asked Questions:</h2>
@@ -286,10 +289,7 @@
 
 
 
- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-<script src="{% static 'app_common/js/landing_page.js' %}"></script>
 
 
 
 {% endblock content %}
-

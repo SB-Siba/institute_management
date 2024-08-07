@@ -73,7 +73,7 @@
         <div class="border-bottom pt-6">
             <div class="row align-items-center">
                 <div class="col-sm col-12">
-                    <h1 class="h2 ls-tight headinG">Product List</h1>
+                    <h1 class="h2 ls-tight headinG">Simple Product List</h1>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
     <div class="container-fluid">
         <div class="vstack gap-4">
             <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
-                <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
+                <form class="my-3 mx-2" action="{% url 'product:simple_product_search' %}" method="post">
                     {% csrf_token %}
                     <div class="hstack gap-2">
                         <select style="width: 6rem;" name="filter_by" class="form-select" aria-label="Default select example">
@@ -141,11 +141,10 @@
                                 <td class="px-5">
                                     <a href="{% url 'product:simple_product_update' product.pk %}"
                                         class="btn btn-sm btn-square btn-neutral BtM">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                        <i class="fa-solid fa-pencil"></i>                                    </a>
                                     <a href="{% url 'product:simple_product_delete' product.pk %}"
                                         class="btn btn-sm btn-square btn-neutral BtM">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
