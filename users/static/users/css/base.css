@@ -1,110 +1,205 @@
-@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Rufina:wght@400;700&family=Work+Sans:wght@400;500&display=swap");
-
-
-
-
-
-:root {
-    --heading: rgb(0 10 45);
-    --para: #0f0f0f;
-    --para-tint: #e4e4e4;
-    --third: #fff;
-    --helper: #8490ff;
-    --helper-tint: #f3f4ff;
-    --bg: rgb(249 249 255);
-    --gradient: linear-gradient(0deg, rgb(132 144 255) 0%, rgb(98 189 252) 100%);
-    --shadpw: 0px 0px 20px 0px rgb(132 144 255 / 20%);
-  }
-
-  *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  
+/* Googlefont Poppins CDN Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
- /* spacing 
-desktop = 4.8rem */
-
-html {
-    font-size:100%;
-    font-family: "Work Sans", sans-serif;
-  }
-  body {
-  overflow-x: hidden;
- 
-
+a{
+  text-decoration: none!important;
 }
-
-.container-scroller {
-  overflow: hidden; 
+li{
+list-style: none;
 }
-.navbar {
-  font-family: "nunito-medium", sans-serif;
-  background: #ffffff;
-  transition: background 0.25s ease;
-  font-family: "nunito-medium", sans-serif; 
+h1{
+font-weight:600;
+font-size: 1.5rem;
 }
-.navbar .navbar-brand {
-  width: 110px; 
+.sidebar{
+  position: fixed;
+  height: 100%;
+  width: 240px;
+  background: #0A2558;
+  transition: all 0.5s ease;
 }
-.navbar .navbar-brand-wrapper {
-  padding: 15px;
-  width: 90px;
-  height:70px;
- }
- .navbar .navbar-brand-wrapper .navbar-brand {
-  color: #27367f;
-  font-size: 1.5rem;
-  line-height: 48px;
-  margin-right: 0;
-  padding: .25rem 0;
-  width: 100%; 
+.sidebar.active{
+  width: 60px;
 }
-.navbar .navbar-brand-wrapper .navbar-brand img {
-  width: calc(258px - 120px);
-  max-width: 100%;
-  height: 28px;
-  margin: auto;
-  vertical-align: middle;
- }
- .navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini img {
-  width: calc(70px - 50px);
-  max-width: 100%;
-  height: 28px;
-  margin: auto; 
-}
-
-.page-body-wrapper {
-  min-height:auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
+.sidebar .logo-details{
+  height: 80px;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  padding-left: 0;
-  padding-right: 0;
- }
-  .page-body-wrapper.full-page-wrapper {
-    width: 100%;
-    min-height: 100vh;
-   }
+  align-items: center;
+}
+.sidebar .logo-details i{
+  font-size: 28px;
+  font-weight: 500;
+  color: #fff;
+  min-width: 60px;
+  text-align: center
+}
+.sidebar .logo-details .logo_name{
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+}
 
-.main-panel {
-  transition: width 0.25s ease, margin 0.25s ease;
-  width:100%;
-  min-height:300px;
+.home-section{
+  position: relative;
+  background: #f5f5f5;
+  min-height: 100vh;
+  width: calc(100% - 240px);
+  left: 240px;
+  transition: all 0.5s ease;
+}
+.sidebar.active ~ .home-section{
+  width: calc(100% - 60px);
+  left: 60px;
+}
+.home-section nav{
   display: flex;
-  flex-direction: column;
- }
- 
-.content-wrapper {
-  background: #f0f1f6;
-  padding: 2.875rem 2.875rem 0 2.875rem;
+  justify-content: space-between;
+  height: 80px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  width: calc(100% - 240px);
+  left: 240px;
+  z-index: 100;
+  padding: 0 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease;
+}
+.sidebar.active ~ .home-section nav{
+  left: 60px;
+  width: calc(100% - 60px);
+}
+.home-section nav .sidebar-button{
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 500;
+}
+nav .sidebar-button i{
+  font-size: 35px;
+  margin-right: 10px;
+}
+.home-section nav .search-box{
+  position: relative;
+  height: 50px;
+  max-width: 550px;
   width: 100%;
-  flex-grow: 1; 
+  margin: 0 20px;
 }
-.navbar.fixed-top + .page-body-wrapper {
-  padding-top: 64px; }
+nav .search-box input{
+  height: 100%;
+  width: 100%;
+  outline: none;
+  background: #F5F6FA;
+  border: 2px solid #EFEEF1;
+  border-radius: 6px;
+  font-size: 18px;
+  padding: 0 15px;
+}
+nav .search-box .bx-search{
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  background: #2697FF;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 4px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  font-size: 22px;
+  transition: all 0.4 ease;
+}
+.home-section nav .profile-details{
+  display: flex;
+  align-items: center;
+  background: #F5F6FA;
+  border: 2px solid #EFEEF1;
+  border-radius: 6px;
+  height: 50px;
+  min-width: 190px;
+  padding: 0 15px 0 2px;
+}
+nav .profile-details img{
+  height: 40px;
+  width: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+nav .profile-details .admin_name{
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 10px;
+  white-space: nowrap;
+}
+nav .profile-details i{
+  font-size: 25px;
+  color: #333;
+}
+.home-section .home-content{
+  position: relative;
+  padding-top: 104px;
+}
+.home-content .overview-boxes{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 20px;
+  margin-bottom: 26px;
+}
+.sidebar-nav{
+  padding: 3rem .5rem;
+  flex:1 1 auto;
+}
+a.sidebar-link{
+  padding: .625rem 1.625rem;
+  color: #fff;
+  display: block;
+  font-size: 0.rem;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+}
+.sidebar-link i{
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+}
+a.sidebar-link:hover{
+  background-color: rgba(255,255,255,0.075);
+  border-left: 3px solid #3b7ddd;
+}
+.sidebar-item{
+  position: relative;
+}
+#sidebar:not(.expand) .sidebar-item .sidebar-dropdown{
+  position: absolute;
+  top: 0;
+  left: 70px;
+  background-color: #0e2238;
+  padding: 0;
+  min-width: 15rem;
+  display: none;
+}
+#sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown{
+  display: block;
+  max-width: 15rem;
+  width: 100%;
+  opacity: 1;
+}
+.chevron-icon {
+  transition: transform 0.3s;
+  font-size: 11px !important;
+  margin-left: 5px;
+}
 
+.chevron-icon.rotate {
+  transform: rotate(-90deg);
+}
