@@ -19,13 +19,10 @@
     font-size: 15px;
     font-weight: 100;
    
-    line-height: 2.2;
+    line-height:1.56;
 }
-.side_img img{
-    max-height: 400px;
-    max-width: 600px;
-    height: 100%;
-    width: 100%;
-    border-radius:15px;
+.side_img img{ 
+    
+    border-radius:5px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }

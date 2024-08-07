@@ -132,16 +132,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="px-5">{{ product.brand }}</td>
-                                <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.product_discount_price }}
-                                    {% endif %}
-                                </td>
-                                <td class="px-5">
-                                    {% if product.simple_products.first %}
-                                        {{ product.simple_products.first.stock }}
-                                    {% endif %}
-                                </td>
+                                
                         
                             </tr>
                             {% endfor %}
