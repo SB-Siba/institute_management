@@ -111,7 +111,7 @@ Product Details - {{ product_obj.name }}
                 <p>{{ product_obj.product_long_description }}</p>
             </div>
             <div class="buttons mt-4">
-                <a href="#" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
+                <a href="{% url 'cart:addtocart' product_obj.pk %}" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
                     Add To Cart
                 </a>
                 <a href="#" class="btn btn-success fs-6 fw-bold mt-2 mx-1 buy-btn">

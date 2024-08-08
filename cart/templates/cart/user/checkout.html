@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Checkout</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Products</h4>
+                <ul class="list-group">
+                    {% for key, item in cart.products_data.products.items %}
+                        <li class="list-group-item">
+                            <strong>{{ key }}</strong><br>
+                            Quantity: {{ item.quantity }}<br>
+                            Price per unit: ${{ item.price_per_unit }}<br>
+                            Total Price: ${{ item.total_price }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4>Summary</h4>
+                <p>Total Items: {{ cart.products_data.total_cart_items }}</p>
+                <p>Gross Value: ${{ cart.products_data.gross_cart_value }}</p>
+                <p>Our Price: ${{ cart.products_data.our_price }}</p>
+                <p>Discount Amount: ${{ cart.products_data.discount_amount }}</p>
+                <p>GST: ${{ cart.products_data.charges.GST }}</p>
+                <p>Delivery: ${{ cart.products_data.charges.Delivery }}</p>
+                <h4>Final Value: ${{ cart.products_data.final_cart_value }}</h4>
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="rz_order_id" value="{{ rz_order_id }}">
+                    <input type="hidden" name="amount" value="{{ cart.products_data.final_cart_value }}">
+                    <button type="submit" class="btn btn-primary">Pay Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Uncomment and configure Razorpay integration as needed
+        /*
+        var options = {
+            "key": "{{ api_key }}",
+            "amount": "{{ cart.products_data.final_cart_value }}",
+            "currency": "INR",
+            "name": "Your Company Name",
+            "description": "Test Transaction",
+            "image": "{{ your_logo_url }}",
+            "order_id": "{{ rz_order_id }}",
+            "handler": function (response){
+                alert("Payment successful!");
+                // Handle success
+            },
+            "prefill": {
+                "name": "{{ user.name }}",
+                "email": "{{ user.email }}",
+                "contact": "{{ user.contact }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('pay-button').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        */
+    </script>
+</body>
+</html>

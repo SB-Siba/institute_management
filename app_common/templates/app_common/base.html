@@ -110,7 +110,7 @@
           <a href="">
             <i class="fa-regular fa-heart HeaderIcons text-success"></i>
           </a>
-          <a href="">
+          <a href="{% url 'cart:showcart' %}">
             <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
           </a>
          
@@ -206,7 +206,9 @@
             <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
            
           </button>
-          <button class="btn"><i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></button>
+          <button type="button" class="btn">
+            <a href="{% url 'cart:showcart' %}"> <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i></a>
+          </button>
         </div>
           
          

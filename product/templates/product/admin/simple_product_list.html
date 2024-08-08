@@ -138,9 +138,10 @@
                                 <td class="px-5">
                                         {{ product.stock }}
                                 </td>
-                                <td class="px-5">
+                                <td class="px-5 d-flex">
                                     <a href="{% url 'product:simple_product_update' product.pk %}"
                                         class="btn btn-sm btn-square btn-neutral BtM">
+                                        <i class="fa-solid fa-pencil"></i></a>
                                         <i class="fa-solid fa-pencil"></i>                                    </a>
                                     <a href="{% url 'product:simple_product_delete' product.pk %}"
                                         class="btn btn-sm btn-square btn-neutral BtM">
