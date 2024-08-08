@@ -1,0 +1,64 @@
+
+
+/* -----------------------------all products-------------------- */
+
+.tablecard {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cat-img2 {
+    height: 90px;
+    width: 90px !important;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.catagory-btn {
+    margin: auto 10px;
+    padding: 7.5px 25px;
+    background:var(--third);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+.catagory-btn a {
+    color: var(--para);
+}
+
+.BtM {
+    box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#tb-head {
+    background-color: #a6e2c6;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+}
+
+.BtM2 {
+    border-radius: 4px;
+    background: #e0e0e0;
+    box-shadow: 4px 4px 17px #f0eeee, -4px -4px 17px #ffffff;
+}
+
+.headinG {
+    color: navy;
+    font-weight: 500;
+    font-size: 30px;
+    margin-left: 13px;
+    font-family: 'Poppins', sans-serif;
+}
+
+#test_table_tbody {
+    font-family: 'Poppins', sans-serif;
+}
+
+.px-5 {
+    text-align: center;
+}

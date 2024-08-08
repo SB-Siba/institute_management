@@ -18,7 +18,7 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="{% url 'users:admin_dashboard' %}" class="sidebar-link">
                         <i class="lni lni-home"></i>
                         <span>Home</span>
                     </a>
@@ -44,16 +44,16 @@
                     </a>
                     <ul class="sidebar-dropdown collapse" data-bs-parent="#sidebar" id="auth">
                         <li class="sidebar-item">
-                            <a href="" class="sidebar-link">Login</a>
+                            <a href="{% url 'product:category_add' %}" class="sidebar-link">Category Add</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="" class="sidebar-link">Register</a>
+                            <a href="{% url 'product:category_list' %}" class="sidebar-link">Category List</a>
+                        </li>
+                        <li class="sidebar-item"> 
+                            <a href="{% url 'product:product_list' %}" class="sidebar-link">All Products</a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="" class="sidebar-link">Login</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="" class="sidebar-link">Login</a>
+                            <a href="{% url 'product:simple_product_list' %}" class="sidebar-link">Simple Products</a>
                         </li>
                     </ul>
                 </li>
@@ -87,7 +87,7 @@
                 </li>
             </ul>
             <div class="sidebar-footer">
-                <a href="#" class="sidebar-link">
+                <a href="{% url 'users:logout' %}" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
@@ -151,7 +151,10 @@
                             <a href="" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
                         </li> --
                         <li class="nav-item">
-                            <a href="{% url 'product:product_list' %}" class="nav-link"><i class="fa-solid fa-bars-staggered"></i> Simple Product List</a>
+                            <a href="{% url 'product:product_list' %}" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'product:simple_product_list' %}" class="nav-link"><i class="fa-solid fa-bars-staggered"></i> Simple Product List</a>
                         </li>
                          <li class="nav-item">
                             <a href="" class="nav-link"><i class="fa-solid fa-clipboard-list"></i> Variant Product List</a>

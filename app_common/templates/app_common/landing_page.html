@@ -83,86 +83,46 @@
 
 <section class="p-lg-3 p-3">
   <div class="">
-    <div class="pb-4">
-      <h3 class="text-success text-center">New Arrivals</h3>
-    </div>
+    <h3>New Arrivals</h3>
 
-    <div class="row">
-      {% for product in new_products %}
-      <div class="col col-lg-2 col-md-3 col-6">
-        <div class="card p-2">
-          <img src="{{ MEDIA_URL }}{{ product.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
-          <div class="card-body p-1">
-            <h6>{{ product.name }}</h6>
-            <small>
-              <b>₹{{ product.product_discount_price }}</b>
-              {% if product.product_max_price %}
-              <s>₹{{ product.product_max_price }}</s>
-              {% endif %}
-            </small>
-          </div>
-            <a href="{% url 'product:product_detail' product.id %}" class="vd_button">View Details</a>
-        </div>
-      </div>
+    <swiper-container class="mySwiper d-lg-flex h-100" init="false">
+      {% for item in simple_products %}
+          <swiper-slide>
+              <div class="card">
+                  {% if item.product.image %}
+                      <img src="{{ MEDIA_URL }}{{ item.product.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.product.name }}">
+                  {% elif item.images %}
+                      <img src="{{ MEDIA_URL }}{{ item.images.first }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.product.name }}">
+                  {% else %}
+                      <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
+                  {% endif %}
+                  <div class="card-body p-1">
+                      <h6>{{ item.product.name }}</h6>
+                      <small>
+                          <b>₹{{ item.simple_product.product_discount_price }}</b>
+                          {% if item.simple_product.product_max_price %}
+                              <s>₹{{ item.simple_product.product_max_price }}</s>
+                          {% endif %}
+                      </small>
+                      <a href="{% url 'product:product_detail' item.product.id %}" class="btn btn-warning text-white">View Details</a>
+                      <a href="#" class="btn btn-warning text-white">Add to Cart</a>
+                  </div>
+              </div>
+          </swiper-slide>
       {% endfor %}
-
-    </div>
-
-
-
-
+  </swiper-container>
+  
+  
+  
     
-        
     <div class="d-flex justify-content-center viewmoreButton">
       <a href="#" class=" u-button">View More Products</a>
     </div>
   </div>
 </section>
+
 <!-- --------------------End New Arrival Collection--------------- -->
 
-
-
-
-<!-- --------------------------Trending Products---------------------------- -->
-
-<section class="p-lg-4 p-3 Shop_by_Collection">
-  <div class="">
-    <div class=" pb-4">
-      <h3 class="text-success text-center">Trending Products</h3>
-    </div>
-
-    <div class="row">
-      {% for product in new_products %}
-      <div class="col col-lg-2 col-md-3 col-6">
-        <div class="card p-2">
-          <img src="{{ MEDIA_URL }}{{ product.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ product.name }}">
-          <div class="card-body p-1">
-            <h6>{{ product.name }}</h6>
-            <small>
-              <b>₹{{ product.product_discount_price }}</b>
-              {% if product.product_max_price %}
-              <s>₹{{ product.product_max_price }}</s>
-              {% endif %}
-            </small>
-          </div>
-            <a href="{% url 'product:product_detail' product.id %}" class="vd_button">View Details</a>       
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-
-
-
-
-    
-        
-    <div class="d-flex justify-content-center viewmoreButton">
-      <a href="#" class=" u-button">View More Products</a>
-    </div>
-  </div>
-</section>
-
-<!-- --------------------------End Trending Products---------------------------- -->
 
 
 

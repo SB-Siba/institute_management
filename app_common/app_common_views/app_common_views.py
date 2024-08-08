@@ -14,10 +14,9 @@ class HomeView(View):
     template = app + "landing_page.html"
 
     def get(self, request):
-        # Fetch the first 6 categories to display on the home page
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes")
-        new_products = Products.objects.filter(show_as_new="yes")
+        trending_products = Products.objects.filter(trending="yes").prefetch_related('simple_products__image_gallery')
+        new_products = Products.objects.filter(show_as_new="yes").prefetch_related('simple_products__image_gallery')
 
         
         context = {

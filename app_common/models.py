@@ -1,8 +1,8 @@
 from django.db import models
 from users.models import User
 from helpers import utils
+
 class ContactMessage(models.Model):
-    
     uid=models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null= True, blank= True)
     name = models.CharField(max_length=255, null=True, blank=True)  # Added name field
