@@ -84,6 +84,7 @@ class ProductDetailsSmipleView(View):
         }
 
         return render(request, self.template_name, context)
+    
 
 
 # class AllTrendingProductsView(View):
