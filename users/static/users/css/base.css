@@ -7,9 +7,9 @@
   --third: #fff;
   --helper: #199f36;
   --helper-tint: #f3f4ff;
-  --bg: rgb(235 238 242);
-  --gradient: linear-gradient(0deg, rgb(132 144 255) 0%, rgb(98 189 252) 100%);
-  --shadpw: 0px 0px 20px 0px rgb(132 144 255 / 20%);
+  --bg: rgb(235, 242, 237);
+  --thead: #28B673;
+  ;
 }
 *{
   margin: 0;
@@ -153,6 +153,7 @@ nav .profile-details i{
 }
 .home-section{
   background-color: var(--bg);
+
 }
 
 .home-section .home-content{
@@ -160,7 +161,7 @@ nav .profile-details i{
   padding-top: 104px;
 }
 .main-home-content{
-  background-color: var(--bg);
+  /* background-image: var(--bg); */
   padding: 30px 50px;
 }
 .home-content .overview-boxes{
