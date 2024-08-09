@@ -50,7 +50,7 @@
                             </td>
                             <td>
                                 <div class='mt-3 d-flex'>
-                                    <a href="{% url 'cart:managecart' c_p_uid.uid %}?operation=min" class="mt-1"><i style="color:gray;margin-right:8px;" class="fas fa-minus-square"></i></a>
+                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class="mt-1"><i style="color:gray;margin-right:8px;" class="fas fa-minus-square"></i></a>
                                     <input type="number" style="width: 60px; height: 27px; border-radius: 2px;" class="form-control" value="{{ value.quantity }}" readonly/>
                                     <a href="{% url 'cart:managecart' value.info.uid %}?operation=plus" class="mt-1"><i style="color:gray;margin-left:8px;" class="fas fa-plus-square"></i></a>
                                 </div>
