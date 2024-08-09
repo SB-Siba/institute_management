@@ -1,79 +1,362 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <h2>Checkout</h2>
-        <div class="row">
-            <div class="col-md-8">
-                <h4>Products</h4>
-                <ul class="list-group">
-                    {% for key, item in cart.products_data.products.items %}
-                        <li class="list-group-item">
-                            <strong>{{ key }}</strong><br>
-                            Quantity: {{ item.quantity }}<br>
-                            Price per unit: ${{ item.price_per_unit }}<br>
-                            Total Price: ${{ item.total_price }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h4>Summary</h4>
-                <p>Total Items: {{ cart.products_data.total_cart_items }}</p>
-                <p>Gross Value: ${{ cart.products_data.gross_cart_value }}</p>
-                <p>Our Price: ${{ cart.products_data.our_price }}</p>
-                <p>Discount Amount: ${{ cart.products_data.discount_amount }}</p>
-                <p>GST: ${{ cart.products_data.charges.GST }}</p>
-                <p>Delivery: ${{ cart.products_data.charges.Delivery }}</p>
-                <h4>Final Value: ${{ cart.products_data.final_cart_value }}</h4>
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Checkout 
+{% endblock title %}
 
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="rz_order_id" value="{{ rz_order_id }}">
-                    <input type="hidden" name="amount" value="{{ cart.products_data.final_cart_value }}">
-                    <button type="submit" class="btn btn-primary">Pay Now</button>
-                </form>
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+    <style>
+        .checkout-container {
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .address-card {
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+        }
+        .address-card input[type="radio"] {
+            margin-right: 20px;
+        }
+        .address-details {
+            font-size: 14px;
+        }
+        .btn-wrapper {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .theme-btn-1 {
+            background-color: #F37021;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .theme-btn-1:hover {
+            background-color: #dd661c;
+        }
+        .sectiontitle {
+            color: navy;
+            border-bottom: 5px solid #F37021;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        #updateAddressModal .form-control, #addAddressForm .form-control {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: .5em;
+            border: none;
+            border-bottom: 1px solid #ced4da;
+            border-radius: none !important;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease-in-out;
+            font-size: 14px;
+        }
+        #updateAddressModal .form-control:focus, #addAddressForm .form-control:focus {
+            border-color: #00836C;
+            box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
+            outline: none;
+        }
+        .form-check-input:checked {
+            background-color: #00836C;
+            border-color: #00836C;
+        }
+        .form-check-input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        .modal-header {
+            background-color: #00836C;
+            color: white;
+        }
+    </style>
+</head>
+
+<div class="mt-5" style="min-height: 60vh;">
+    {% include 'snippets/alert.html' %}
+    <div class="row">
+        <div class="col-md-8 col-lg-8 checkout-container">
+            <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
+                <h4 class="text-center">Billing address</h4>
+                <button type="button" class="btn btn-sm btn-success border fw-bold" id="addAddress" data-bs-toggle="modal" data-bs-target="#addAddressModal" style="background-color: #00836C;">
+                    <i class="bi bi-plus">&nbsp;Add Address</i>
+                </button>
+            </div>
+            <input type="hidden" name="cartID" value="{{cart_id}}" />
+            <div class="address-list row mx-0">
+                {% for i in addresses %}
+                <div class="col-md-6 col-lg-6 d-flex flex-row pb-3">
+                    <div class="address-card" style="width: 500px;">
+                        <input class="form-check-input" type="radio" name="addressNoLabel" id="addressNoLabel" value="{{i.id}}" aria-label="..." {% if forloop.first %}checked{% endif %} style="border: 1.5px solid rgb(169, 167, 167);" />
+                        <div class="address-details">
+                            <p>
+                                <li class="mb-1" style="font-size: x-small;">Address 1: {{i.landmark1}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Address 2: {{i.landmark2}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Mob No: {{i.mobile_no}}</li>
+                                <li class="mb-1" style="font-size: x-small;">City: {{i.city}}</li>
+                                <li class="mb-1" style="font-size: x-small;">State: {{i.state}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Country: {{i.country}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Zipcode: {{i.zipcode}}</li>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-between ps-5">
+                            <button type="button" class="btn btn-sm updateAddress btn-square BtM btn-neutral text-success-hover border" data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-mobile_no="{{ i.mobile_no }}" data-zipcode="{{ i.zipcode }}">
+                                <i class="bi bi-pencil"></i>
+                            </button> &nbsp;
+                            <a href="{% url 'shoppingsite:delete_address' i.id %}">
+                                <button type="button" class="btn btn-sm btn-square BtM btn-neutral text-danger-hover border">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Update Address Modal -->
+            <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateAddressModalLabel">Update Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="updateAddressForm" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <input type="text" id="a_id" name="a_id" hidden>
+                                <div class="mb-3">
+                                    <label for="update-landmark1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="update-landmark1" name="landmark1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-landmark2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="update-landmark2" name="landmark2">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-mobile_no" class="form-label">Mobile No.</label>
+                                    <input type="text" class="form-control" id="update-mobile_no" name="mobile_no" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="update-state" name="state" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="update-country" name="country" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="update-city" name="city" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-zipcode" class="form-label">Zipcode</label>
+                                    <input type="text" class="form-control" id="update-zipcode" name="zipcode" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success" style="background-color: #00836C;">Update Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Address Modal -->
+            <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="addAddressForm" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="landmark1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="landmark1" name="landmark1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="landmark2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="landmark2" name="landmark2">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="mobile_no" class="form-label">Mobile No.</label>
+                                    <input type="text" class="form-control" id="mobile_no" name="mobile_no" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="state" name="state" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="country" name="country" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="city" name="city" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="zipcode" class="form-label">Zipcode</label>
+                                    <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success" style="background-color: #00836C;">Add Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 border" style="background-color: whitesmoke;">
+            <h5 class="text-center mt-3">Cart Summary</h5>
+            <div class="mt-2">
+                <p class="fw-bold">Total Original Price: <span class="float-end">&#8377; {{totaloriginalprice}}</span></p>
+                <p class="fw-bold">Total Price: <span class="float-end">&#8377; {{totalPrice}}</span></p>
+                <p class="fw-bold">Discount: <span class="float-end">&#8377; {{discount_price}}</span></p>
+                <p class="fw-bold">GST: <span class="float-end">&#8377; {{GST}}</span></p>
+                <p class="fw-bold">Delivery Charges: <span class="float-end">&#8377; {{Delivery}}</span></p>
+                <p class="fw-bold">Total Cart Value: <span class="float-end">&#8377; {{final_cart_value}}</span></p>
+                <p class="text-center" style="font-size: small;">(Inclusive of all taxes)</p>
+                <div class="d-flex justify-content-center">
+                    <form action="" method="POST">
+                        <input type="hidden" name="addressid" id="addressid">
+                        <input type="hidden" name="cartID" value="{{cart_id}}">
+                        {% csrf_token %}
+                        <button id="rzp-button1" class="theme-btn-1" type="button">Pay Now</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Uncomment and configure Razorpay integration as needed
-        /*
-        var options = {
-            "key": "{{ api_key }}",
-            "amount": "{{ cart.products_data.final_cart_value }}",
-            "currency": "INR",
-            "name": "Your Company Name",
-            "description": "Test Transaction",
-            "image": "{{ your_logo_url }}",
-            "order_id": "{{ rz_order_id }}",
-            "handler": function (response){
-                alert("Payment successful!");
-                // Handle success
-            },
-            "prefill": {
-                "name": "{{ user.name }}",
-                "email": "{{ user.email }}",
-                "contact": "{{ user.contact }}"
-            },
-            "theme": {
-                "color": "#3399cc"
-            }
-        };
-        var rzp1 = new Razorpay(options);
-        document.getElementById('pay-button').onclick = function(e){
-            rzp1.open();
+{% endblock content %}
+
+{% block custom-scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function () {
+        $('input[name="addressNoLabel"]').change(function () {
+            $('#addressid').val($(this).val());
+        });
+
+        $('#rzp-button1').click(function (e) {
             e.preventDefault();
-        }
-        */
-    </script>
-</body>
-</html>
+            var totalAmount = "{{final_cart_value}}";
+            var options = {
+                "key": "{{ razorpay_key_id }}", 
+                "amount": totalAmount * 100,
+                "currency": "INR",
+                "name": "{{ user.username }}",
+                "description": "Test Transaction",
+                "image": "{% static 'path_to_logo/logo.png' %}",
+                "handler": function (response) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'shoppingsite:paymentsuccess' %}",
+                        data: {
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature,
+                            cartID: $('input[name="cartID"]').val(),
+                            addressid: $('#addressid').val(),
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        success: function (response) {
+                            window.location.href = "{% url 'shoppingsite:paymentsuccess' %}";
+                        },
+                        error: function (response) {
+                            alert("Payment Failed");
+                        }
+                    });
+                },
+                "prefill": {
+                    "name": "{{ user.username }}",
+                    "email": "{{ user.email }}",
+                    "contact": "{{ user.profile.mobile }}"
+                },
+                "theme": {
+                    "color": "#F37021"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        });
+
+        $('#updateAddressModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var landmark1 = button.data('landmark1');
+            var landmark2 = button.data('landmark2');
+            var country = button.data('country');
+            var state = button.data('state');
+            var city = button.data('city');
+            var mobile_no = button.data('mobile_no');
+            var zipcode = button.data('zipcode');
+            var modal = $(this);
+            modal.find('#a_id').val(id);
+            modal.find('#update-landmark1').val(landmark1);
+            modal.find('#update-landmark2').val(landmark2);
+            modal.find('#update-country').val(country);
+            modal.find('#update-state').val(state);
+            modal.find('#update-city').val(city);
+            modal.find('#update-mobile_no').val(mobile_no);
+            modal.find('#update-zipcode').val(zipcode);
+        });
+
+        $('#updateAddressForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'shoppingsite:update_address' %}",
+                data: formData,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (response) {
+                    alert('Error updating address.');
+                }
+            });
+        });
+
+        $('#addAddressForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'shoppingsite:addaddress' %}",
+                data: formData,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (response) {
+                    alert('Error adding address.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock custom-scripts %}
