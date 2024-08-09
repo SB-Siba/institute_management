@@ -108,17 +108,7 @@
     margin: 0 auto;
 }
 
-.catagory-btn {
-    color: black;
-    margin: auto 10px;
-    padding: 5px 10px;
-    background-color: #f2f5f7;
-    border: none;
-    border-radius: 5px;
-    box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-}
+
 
 #tb-head {
     background-color: #28B673;
