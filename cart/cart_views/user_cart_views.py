@@ -131,7 +131,7 @@ class AddToCartView(View):
 
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_info = {
-                'product_id': product_obj.id,
+                'product_id': product_obj.product.id,
                 'uid': product_uid,
                 'name': product_obj.product.name,
                 'image': image_url,
@@ -207,10 +207,11 @@ class ManageCart(View):
 
 
 def RemoveFromCart(request, cp_uid):
-    print(cp_uid)
-    
+    print(f"cp_uid: {cp_uid}")
+
     if request.user.is_authenticated:
         cart = get_object_or_404(Cart, user=request.user)
+        print(f"Cart Products: {cart.products}")  # Debugging
         for i, j in cart.products.items():
             if cp_uid == j['info']['uid']:
                 cart.products.pop(i)
@@ -218,6 +219,7 @@ def RemoveFromCart(request, cp_uid):
                 break
     else:
         cart = request.session.get('cart', {})
+        print(f"Session Cart: {cart}")  # Debugging
         for i, j in cart.items():
             if cp_uid == j['info']['uid']:
                 cart.pop(i)
