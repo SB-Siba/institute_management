@@ -29,6 +29,8 @@ from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
+from users.user_views.emails import send_template_email
+
 app = "users/"
 
 # authentications
@@ -56,13 +58,16 @@ class Registration(View):
                 if new_user_login is not None:
                     login(request, new_user_login)
                     
-                    # Send registration success email
-                    send_mail(
-                        'Registration Successful',
-                        f'Hello {full_name},\n\nYour registration was successful! You are now logged in.\n\nThank you for registering with us.',
-                        settings.DEFAULT_FROM_EMAIL,
-                        [email],
-                        fail_silently=False,
+                    context = {
+                        'full_name': full_name,
+                        'email': email,
+                    }
+
+                    send_template_email(
+                        subject='Registration Confirmation',
+                        template_name='users/email/register_email.html',
+                        context=context,
+                        recipient_list=[email]
                     )
                     
                     messages.success(request, "Registration successful! You are now logged in.")

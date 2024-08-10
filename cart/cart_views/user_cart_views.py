@@ -21,26 +21,38 @@ class ShowCart(View):
         if user.is_authenticated:
             try:
                 cartItems = get_object_or_404(Cart, user=user)
-                totaloriginalprice = 0
-                totalPrice = 0
-                GST = 0
-                Delivery = 0
-                final_cart_value = 0
-                
                 products = cartItems.products
-                print(products)
-                for product_key, product_info in products.items():
-                    totaloriginalprice += Decimal(product_info['info']['max_price']) * product_info['quantity']
-                    totalPrice += Decimal(product_info['info']['discount_price']) * product_info['quantity']
+                totaloriginalprice = Decimal('0.00')
+                totalPrice = Decimal('0.00')
+                GST = Decimal('0.00')
+                Delivery = Decimal('0.00')
+                final_cart_value = Decimal('0.00')
+                
+                if products:
+                    for product_key, product_info in products.items():
+                        totaloriginalprice += Decimal(product_info['info']['max_price']) * product_info['quantity']
+                        totalPrice += Decimal(product_info['info']['discount_price']) * product_info['quantity']
 
-                discount_price = totaloriginalprice - totalPrice
-                GST = totalPrice * Decimal(0.18)  # Example GST calculation
-                Delivery = Decimal(50)  # Example Delivery charge
-                final_cart_value = totalPrice + GST + Delivery
-
+                    discount_price = totaloriginalprice - totalPrice
+                    GST = totalPrice * Decimal(settings.GST_CHARGE)
+                    
+                    # Calculate delivery charge based on the total cart value
+                    if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
+                        delivery_charge = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+                    else:
+                        delivery_charge = Decimal('0.00')
+                    
+                    Delivery = delivery_charge
+                    final_cart_value = totalPrice + GST + Delivery
+                else:
+                    # If no products in the cart
+                    delivery_charge = Decimal('0.00')
+                    final_cart_value = Decimal('0.00')
+                    
+                # Update the cart's total price
                 cartItems.total_price = float(totalPrice)
                 cartItems.save()
-                
+
                 context = {
                     'category_obj': category_obj,
                     'cartItems': cartItems,
@@ -50,7 +62,7 @@ class ShowCart(View):
                     'GST': float(GST),
                     'Delivery': float(Delivery),
                     'final_cart_value': float(final_cart_value),
-                    'discount_price': float(discount_price),
+                    'discount_price': float(discount_price) if products else 0,
                     'MEDIA_URL': settings.MEDIA_URL,
                 }
             except Exception as e:
@@ -69,11 +81,11 @@ class ShowCart(View):
                 }
         else:
             cartItems = request.session.get('cart', {})
-            totaloriginalprice = 0
-            totalPrice = 0
-            GST = 0
-            Delivery = 0
-            final_cart_value = 0
+            totaloriginalprice = Decimal('0.00')
+            totalPrice = Decimal('0.00')
+            GST = Decimal('0.00')
+            Delivery = Decimal('0.00')
+            final_cart_value = Decimal('0.00')
             products = cartItems.get('products', {})
             
             if products:
@@ -82,8 +94,15 @@ class ShowCart(View):
                     totalPrice += Decimal(product_info['info']['discount_price']) * product_info['quantity']
 
                 discount_price = totaloriginalprice - totalPrice
-                GST = totalPrice * Decimal(0.18)  # Example GST calculation
-                Delivery = Decimal(50)  # Example Delivery charge
+                GST = totalPrice * Decimal(settings.GST_CHARGE)
+                
+                # Calculate delivery charge based on the total cart value
+                if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
+                    delivery_charge = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+                else:
+                    delivery_charge = Decimal('0.00')
+                
+                Delivery = delivery_charge
                 final_cart_value = totalPrice + GST + Delivery
 
                 context = {
@@ -210,22 +229,30 @@ def RemoveFromCart(request, cp_uid):
     print(f"cp_uid: {cp_uid}")
 
     if request.user.is_authenticated:
+        # Get the cart for the authenticated user
         cart = get_object_or_404(Cart, user=request.user)
-        print(f"Cart Products: {cart.products}")  # Debugging
-        for i, j in cart.products.items():
-            if cp_uid == j['info']['uid']:
-                cart.products.pop(i)
-                cart.save()
-                break
+        
+        # Ensure products is a dictionary
+        if cart.products is None:
+            cart.products = {}
+        
+        # Remove the product from the cart
+        if cp_uid in cart.products:
+            cart.products.pop(cp_uid)
+            
+            # Recalculate total_price
+            cart.total_price = sum(item['total_price'] for item in cart.products.values())
+            
+            # Save the cart
+            cart.save()
     else:
+        # Handle the cart in the session for unauthenticated users
         cart = request.session.get('cart', {})
-        print(f"Session Cart: {cart}")  # Debugging
-        for i, j in cart.items():
-            if cp_uid == j['info']['uid']:
-                cart.pop(i)
-                request.session['cart'] = cart
-                request.session.modified = True
-                break
+        
+        if cp_uid in cart:
+            cart.pop(cp_uid)
+            request.session['cart'] = cart
+            request.session.modified = True
 
     return redirect("cart:showcart")
 

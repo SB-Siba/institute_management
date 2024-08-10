@@ -112,3 +112,5 @@ class ProductDetailsSmipleView(View):
 #             'MEDIA_URL': settings.MEDIA_URL,
 #         }
 #         return render(request, self.template_name, context)
+
+

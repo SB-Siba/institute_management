@@ -55,7 +55,7 @@ class CartSerializer(serializers.ModelSerializer):
         else:
             charges['GST'] = Decimal('0')
         if final_cart_value < settings.DELIVARY_FREE_ORDER_AMOUNT:
-            delivery_charge = total_cart_items * Decimal(str(settings.DELIVARY_CHARGE_PER_BAG))
+            delivery_charge =Decimal(str(settings.DELIVARY_CHARGE_PER_BAG))
             charges['Delivery'] = delivery_charge.quantize(Decimal('0.01'))
         else:
             charges['Delivery'] = Decimal('0')
