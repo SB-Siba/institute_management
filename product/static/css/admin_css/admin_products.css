@@ -43,8 +43,11 @@
     text-align: center;
 }
 .tb-body{
-    padding: 15px 10px;
+    margin-top: 15px;
     text-align: center;
+}
+.text-heading{
+   padding-top: 10px;
 }
 .tb-body img{
    margin: 0 auto;
@@ -93,6 +96,14 @@
     .BtM i{ 
      font-size: 20px;
     }
+    
+    .BtM1{ 
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 20px;
+        margin-top: 10px;
+    }
 /*    ------------------------------Simple product list------------------------- */
 .tablecard {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -100,25 +111,8 @@
     overflow: hidden;
 }
 
-.cat-img2 {
-    height: 90px;
-    width: 90px !important;
-    object-fit: cover;
-    display: block;
-    margin: 0 auto;
-}
 
-.catagory-btn {
-    color: black;
-    margin: auto 10px;
-    padding: 5px 10px;
-    background-color: #f2f5f7;
-    border: none;
-    border-radius: 5px;
-    box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-}
+
 
 #tb-head {
     background-color: #28B673;

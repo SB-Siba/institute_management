@@ -3,14 +3,10 @@
 {% block title %} All Products {% endblock title %}
 {% block content %}
 
-<center>
-    {% include 'snippets/alert.html' %}
-</center>
-
-
  
-<header class="d-flex container">
+<header class="d-flex container p-3 ms-4">
     <h4>All Simple Products</h4>
+    <p> {% include 'snippets/alert.html' %}</p>
 </header>
 <main class="py-6 bg-surface-secondary">
     <div class="container-fluid">
@@ -74,9 +70,12 @@
                                 <td class="tb-body">
                                     <a href="{% url 'product:simple_product_update' product.pk %}"
                                         class="BtM">
-                                        <i class='bx bx-edit text-primary' ></i>                                    </a>
+                                        <i class='bx bx-edit text-primary' ></i>    
+                                    </a>
                                     <a href="{% url 'product:simple_product_delete' product.pk %}" class="BtM">
+                                        <button  type="button" class="BtM1">
                                         <i class='bx bx-trash text-danger'></i>
+                                      </button> 
                                     </a>
                                 </td>
                             </tr>

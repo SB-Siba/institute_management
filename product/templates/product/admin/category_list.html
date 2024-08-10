@@ -37,8 +37,7 @@
                 {% for catagory in catagory_list %}
                 <tr>
                   <td class="tb-body">
-                    <a
-                      class="text-heading text-black font-semibold"
+                    <a class="text-heading text-black font-semibold"
                       
                       >{{catagory.title}}</a
                     >
@@ -54,16 +53,14 @@
   
   
                   <td class="tb-body">
-                    <a
-                      href="{% url 'product:category_update' catagory.id %}"
-                      class="btn btn-sm btn-square btn-neutral text-primary-hover ">
+                    <a href="{% url 'product:category_update' catagory.id %} " class="BtM">
                       <i class='bx bx-edit text-primary' ></i>
                     </a> &nbsp;
                     <a
                       href="{% url 'product:catagory_delete' catagory.id %}">
                       <button
                         type="button"
-                        class="btn btn-sm btn-square btn-neutral text-danger-hover ">
+                        class="BtM1">
                         <i class='bx bx-trash text-danger'></i>
                       </button>
                     </a>

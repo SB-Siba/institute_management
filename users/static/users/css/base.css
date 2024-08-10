@@ -30,19 +30,30 @@ font-size: 1.5rem;
 
 .sidebar{
   position: fixed;
+  top: 0;
+	left: 0;
   height: 100%;
   width: 240px;
   background: #0A2558;
   transition: all 0.5s ease;
+  overflow-x: hidden;
+	scrollbar-width: none;
 }
+
 .sidebar.active{
   width: 70px;
 }
-.sidebar .logo-details{
+ .logo-details{
   height: 80px;
   display: flex;
   align-items: center;
+  position: fixed;
+  z-index: 10000;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+
 }
+
 .sidebar .logo-details i{
   font-size: 28px;
   font-weight: 500;
@@ -336,8 +347,14 @@ nav .profile-details i{
   color: #333;
 }
 .sidebar-nav{
-  padding: 3rem 0;
+  padding: 8rem 0;
   flex:1 1 auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow-x: hidden;
+  
 }
 a.sidebar-link{
   padding: .625rem 1.625rem;
