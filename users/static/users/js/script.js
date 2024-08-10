@@ -54,6 +54,10 @@ searchButton.addEventListener('click', function (e) {
 
 
 
+
+
+
+
 function toggleChevron(element) {
     const chevronIcon = element.querySelector('.chevron-icon');
     chevronIcon.classList.toggle('rotate');
