@@ -130,30 +130,35 @@ class Logout(View):
 
 class ForgotPasswordView(View):
     template_name = app + 'authtemp/forgot_password.html' 
+
     def get(self, request):
         form = forms.ForgotPasswordForm()
         return render(request, self.template_name, {'form': form})
+
     def post(self, request):
         form = forms.ForgotPasswordForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             try:
                 user = models.User.objects.get(email=email)
-                user.send_reset_password_email()
+                user.send_reset_password_email()  # Ensure this method generates the correct reset URL with the token
                 return HttpResponse("Password reset email sent successfully.")
             except models.User.DoesNotExist:
                 return HttpResponse("No user found with this email address.")
             except Exception as e:
                 return HttpResponse(f"An error occurred: {e}")
         return render(request, self.template_name, {'form': form})
+
  
 
 
 class ResetPasswordView(View):
     template_name = app + 'authtemp/reset_password.html'
+
     def get(self, request, token):
         form = forms.ResetPasswordForm()
         return render(request, self.template_name, {'form': form})
+
     def post(self, request, token):
         form = forms.ResetPasswordForm(request.POST)
         if form.is_valid():
@@ -164,18 +169,16 @@ class ResetPasswordView(View):
             try:
                 user = models.User.objects.get(token=token)
                 if user:
-                    # Reset the password
                     user.set_password(new_password)
                     user.token = None  # Clear the token after password reset
                     user.save()
-                    messages.success("Password reset successfully.")
+                    messages.success(request, "Password reset successfully.")
                     return redirect('users:login')
                 else:
                     return HttpResponse("Invalid token.")
             except models.User.DoesNotExist:
                 return HttpResponse("Invalid token.")
         return render(request, self.template_name, {'form': form})
-    
 
 
 class AccountDeletionView(LoginRequiredMixin, View):
