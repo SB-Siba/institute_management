@@ -22,6 +22,8 @@ urlpatterns = [
     
     
     path("", include("users.urls.urls")),
+    path("", include("users.urls.api_urls")),
+
     path("niwa_agro", include("app_common.urls.urls")),
     path("product", include("product.urls.urls")),
     path("cart", include("cart.urls.urls")), 
@@ -42,7 +44,6 @@ urlpatterns = [
         schema_view.with_ui("redoc", cache_timeout=0),
         name="schema-redoc",
     ),
-    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

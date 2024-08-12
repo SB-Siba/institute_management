@@ -129,7 +129,7 @@ class Logout(View):
 
 
 class ForgotPasswordView(View):
-    template_name = app + 'authtemp/forgot_password.html' 
+    template_name = app + 'authtemp/forgot_password.html'
 
     def get(self, request):
         form = forms.ForgotPasswordForm()
@@ -141,7 +141,18 @@ class ForgotPasswordView(View):
             email = form.cleaned_data['email']
             try:
                 user = models.User.objects.get(email=email)
-                user.send_reset_password_email()  # Ensure this method generates the correct reset URL with the token
+                token = user.generate_reset_password_token()
+                reset_link = f"{settings.SITE_URL}/reset-password/{token}/"
+                context = {
+                    'full_name': user.full_name,
+                    'reset_link': reset_link,
+                }
+                send_template_email(
+                    subject='Reset Your Password',
+                    template_name='users/email/reset_password_email.html',
+                    context=context,
+                    recipient_list=[email]
+                )
                 return HttpResponse("Password reset email sent successfully.")
             except models.User.DoesNotExist:
                 return HttpResponse("No user found with this email address.")
