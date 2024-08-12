@@ -31,18 +31,21 @@ class SignupSerializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         return user
+from django.contrib.auth import authenticate
     
-class LoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = [
-            'email',
-            'password',
-        ]
-        extra_kwargs = {
-            'email': {'required': True},
-            'password': {'required': True},
-        }
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        user = authenticate(email=email, password=password)
+        if user and user.is_active:
+            data['user'] = user
+        else:
+            raise serializers.ValidationError('Invalid credentials or inactive account')
+        return data
         
 
 class UserSerializer(serializers.ModelSerializer):

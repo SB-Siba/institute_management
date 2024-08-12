@@ -12,7 +12,7 @@ signup_post = [
 
 login_post = [
     openapi.Parameter(
-        "username",
+        "email",
         openapi.IN_FORM,
         description="Email",
         required=True,

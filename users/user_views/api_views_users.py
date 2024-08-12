@@ -51,47 +51,37 @@ class SignupApi(APIView):
                 "error": error_list,
                }
             )
+from drf_yasg import openapi
+from django.contrib.auth import authenticate, login, logout
+from rest_framework import status
         
 class LoginApi(APIView):
     parser_classes = [FormParser, MultiPartParser]
-    model= models.User
-    serializer_class = serializers.LoginSerializer
 
     @swagger_auto_schema(
         tags=["authentication"],
         operation_description="Login API",
         manual_parameters=swagger_documentation.login_post,
+        responses={
+            200: openapi.Response('Login successful'),
+            400: openapi.Response('Validation error'),
+            401: openapi.Response('Login failed / You are not approved yet'),
+        }
     )
     def post(self, request):
-        resp = {}
-        contact= request.data['email']
-        password= request.data['password']
-        try:
-            user = models.User.objects.get(email=email)
-        except models.User.DoesNotExist:
-            user = None
-            return Response({
-                "status":400,
-                "error":[
-                    "Login Failed..",
-                ]
-            })
+        serializer = serializers.LoginSerializer(data=request.data)
 
-        if user.check_password(password):
-            pass  # Credentials are valid
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            if user.is_superuser:
+                login(request, user)
+                return Response({'message': 'Login successful Admin'}, status=status.HTTP_200_OK)
+            else:
+                login(request, user)
+                token, _ = Token.objects.get_or_create(user=user)
+                return Response({'message': 'Login successful, Hi User', 'token': token.key}, status=status.HTTP_200_OK)
         else:
-            user = None  # Incorrect password
-    
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            resp['token']= str(token.key)
-            resp['status']= 200
-            resp['user']= serializers.UserSerializer(user).data
-        else:
-            resp['status']= 400
-            resp['message']= "Invalid email or password"
-        
-        return Response(resp)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogOut(APIView):
