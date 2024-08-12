@@ -71,14 +71,13 @@
   border-radius: 4px;
   box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
   font-size: 14px;
-  padding:10px;
+  
   text-align: center;
   font-weight: 500;
-  color: #0F1111;
   
 }
 .vd_button:hover{
-  box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+  box-shadow: 0 4px 5px 0 rgba(73, 74, 74, 0.5);
 }
 
 
@@ -90,10 +89,11 @@
     --secondary:rgb(252, 209, 54);
     --secondary2:rgb(255, 212, 46);
     --third: rgb(255, 255, 255);
-    --third2:#399918;
+    --third2:rgb(33, 182, 108);
     --pagebg:rgb(245, 245, 245);
     --h6:rgb(122, 135, 122);
-   
+    
+    --discount:rgb(19, 146, 83);
     --para: rgb(15, 15, 15);
     --footer:rgb(33, 33, 33);
     --header:#FFF7F1;
@@ -214,20 +214,20 @@ font-weight: 400;
 text-transform: uppercase;
 }
 
-.row div p{
+.footer_div_ul div p{
   text-decoration: none;
   color: var(--third);
   font-size:12px;
   font-weight: 400;
-line-height: 25px;
-font-family:"Inter", sans-serif;
+  line-height: 25px;
+  font-family:"Inter", sans-serif;
 }
 
-.row div p i{
+.footer_div_uldiv p i{
   padding: 5px;
 }
 
-.row div li {
+.footer_div_ul div li {
   list-style: none;
 }
 

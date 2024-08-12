@@ -62,13 +62,13 @@
        {% for category in categories %}
     
         <div class="col content-wrapper col-lg-2 col-md-3 col-6">
-          <div class="image-wrapper">
+          <div class="image-wrapper align-self-center">
             <a href="{% url 'product:products_of_category' category.title %}">
                 <img src="{{ category.image.url }}" alt="{{ category.title }}" width="185" height="330">
               </a>
           </div>
           <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
-          <h4 class="text-center">{{ category.title }}</h4>  </a>
+          <h4 class="text-center text-capitalize">{{ category.title }}</h4>  </a>
         </div>
     
         {% endfor %}
