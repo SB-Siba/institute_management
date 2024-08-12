@@ -1,3 +1,8 @@
+from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+
 from django.views import View
 from orders.models import Order
 from product.models import Products
@@ -13,12 +18,27 @@ class UserOrder(View):
     
         return render(request, self.template, {'orders':orders})
 
+class PlaceOrder(View):
+    def post(self, request, *args, **kwargs):
+        # Assuming order creation logic is here
+        order = Order.objects.create(
+            user=request.user,
+            products=request.session.get('cart_products', {}),
+            order_meta_data={'final_cart_value': request.session.get('final_cart_value', 0)}
+        )
+        # Save the order and clear the session cart
+        order.save()
+        request.session.pop('cart_products', None)
+        request.session.pop('final_cart_value', None)
+        
+        # Redirect to the OrderDetail page
+        return redirect(reverse('orders:order_detail', kwargs={'order_uid': order.uid}))
 
 class OrderDetail(View):
-    template = app + "order_details.html"
+    template = app + 'order_details.html'  # Update 'app' with the correct path
 
     def get(self, request, order_uid):
-        order = Order.objects.get(uid=order_uid)
+        order = get_object_or_404(Order, uid=order_uid)
 
         product_list = []
         product_quantity = []
@@ -27,14 +47,20 @@ class OrderDetail(View):
 
         try:
             grand_total = order.order_meta_data['final_cart_value']
-        except Exception:
-            grand_total = order.order_meta_data['final_value']
+        except KeyError:
+            grand_total = order.order_meta_data.get('final_value', 0)  # Provide a default value if needed
 
-        for i, j in order.products.items():
-            p_obj = Products.objects.get(name=j['info']['name'])
-            product_list.append(p_obj)
-            product_quantity.append(j['quantity'])
-            total_quantity += int(j['quantity'])
+        # Debugging: Check the content of `order.products`
+        print(order.products)
+
+        for product_info in order.products.values():
+            try:
+                p_obj = Products.objects.get(name=product_info['info']['name'])
+                product_list.append(p_obj)
+                product_quantity.append(product_info['quantity'])
+                total_quantity += int(product_info['quantity'])
+            except Products.DoesNotExist:
+                print(f"Product with name '{product_info['info']['name']}' does not exist.")
 
         zipproduct = zip(product_list, product_quantity)
 

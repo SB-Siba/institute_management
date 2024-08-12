@@ -14,7 +14,7 @@ urlpatterns = [
     path('signup', authentication_views.Registration.as_view(), name = "signup"),
     path('login', authentication_views.Login.as_view(), name = "login"),
     path('forgot_password/', authentication_views.ForgotPasswordView.as_view(), name = "forgot_password"),
-    path('reset_password/<str:token>/', authentication_views.ResetPasswordView.as_view(), name = "reset_password"),
+    path('reset-password/<uuid:token>/', authentication_views.ResetPasswordView.as_view(), name='reset_password'),  # Ensure this matches
     path('logout/', authentication_views.Logout.as_view(), name = "logout"),
     path('account-deletion/', authentication_views.AccountDeletionView.as_view(), name='account_deletion'),
 
