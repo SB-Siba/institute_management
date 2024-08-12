@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from app_common import forms
+from app_common.models import ContactMessage
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm
@@ -21,13 +22,13 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        new_products = Products.objects.filter(show_as_new="yes").prefetch_related(
-            Prefetch('simpleproduct_set', queryset=SimpleProduct.objects.prefetch_related('image_gallery'))
-        )
+        trending_products = Products.objects.filter(trending="yes")
+        new_products = Products.objects.filter(show_as_new="yes")
 
         
         context = {
             'categories': categories,
+            'trending_products': trending_products,
             'new_products': new_products,
             'MEDIA_URL': settings.MEDIA_URL,
         }
@@ -62,11 +63,11 @@ class ContactSupport(View):
             }
             template = self.contact_template
 
-        form = ContactMessageForm(initial=initial_data)
+        form = forms.ContactMessageForm(initial=initial_data)
         return render(request, template, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = ContactMessageForm(request.POST)
+        form = forms.ContactMessageForm(request.POST)
         if form.is_valid():
             # Create a new ContactMessage instance
             contact_message = ContactMessage(

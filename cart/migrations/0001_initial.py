@@ -1,5 +1,4 @@
 
-
 import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
@@ -15,15 +14,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ContactMessage',
+            name='Cart',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uid', models.CharField(blank=True, max_length=255, null=True)),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('email', models.EmailField(blank=True, max_length=254, null=True, unique=True)),
-                ('contact', models.CharField(blank=True, max_length=10, null=True, unique=True)),
-                ('message', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
+                ('products', models.JSONField(blank=True, default=dict, null=True)),
+                ('quantity', models.IntegerField(default=1)),
+                ('total_price', models.IntegerField(default=0)),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

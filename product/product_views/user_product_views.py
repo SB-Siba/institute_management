@@ -21,7 +21,6 @@ class ShowProductsView(View):
             category=category_obj
         )
 
-        # Collect simple products and their image galleries
         simple_products = []
         for product in products_for_this_category:
             simple_products_for_product = SimpleProduct.objects.filter(product=product)
@@ -88,18 +87,17 @@ class ProductDetailsSmipleView(View):
     
 
 
-# class AllTrendingProductsView(View):
-#     template = app + 'user/trending_products.html'
+class AllTrendingProductsView(View):
+    template_name = app + 'user/trending_products.html'
 
-#     def get(self, request):
-#         trending_products = Products.objects.filter(trending="yes")
-#         trending_list = [(product, product.discount_percentage) for product in trending_products]
-#         context = {
-#             'trending_products': trending_list,
-#             'MEDIA_URL': settings.MEDIA_URL,
-#         }
-
-#         return render(request, self.template, context)
+    def get(self, request):
+        trending_products = Products.objects.filter(trending="yes")
+        
+        context = {
+            'trending_products': trending_products,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+        return render(request, self.template_name, context)
 
 
 
@@ -107,8 +105,8 @@ class AllNewProductsView(View):
     template_name = app + "user/new_product.html"
 
     def get(self, request):
-        new_products = Products.objects.filter(show_as_new="yes").prefetch_related(
-            Prefetch('simpleproduct_set', queryset=SimpleProduct.objects.prefetch_related('image_gallery')))
+        new_products = Products.objects.filter(show_as_new="yes")
+        
         context = {
             'new_products': new_products,
             'MEDIA_URL': settings.MEDIA_URL,

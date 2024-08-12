@@ -114,7 +114,7 @@
     </swiper-container>
   
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="{% url 'product:all_new_products' %}" class="u-button">View More Products</a>
+      <a href="{% url 'product:all_trending_products' %}" class="u-button">View More Products</a>
     </div>
   </div>
 </section>
@@ -122,7 +122,48 @@
 
 <!-- --------------------End New Arrival Collection--------------- -->
 
+<!-- --------------------Trending Arrival Collection--------------- -->
 
+<section class="p-lg-3 p-3">
+  <div>
+    <h3>Trending</h3>
+
+    <swiper-container class="mySwiper d-lg-flex h-100" init="false">
+      {% for item in trending_products %}
+    <swiper-slide>
+        <div class="card">
+            {% if item.image %}
+                <img src="{{ MEDIA_URL }}{{ item.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+            {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
+                <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+            {% else %}
+                <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
+            {% endif %}
+            <div class="card-body p-1">
+                <h6>{{ item.name }}</h6>
+                <small>
+                    <b>₹{{ item.simpleproduct_set.first.product_discount_price }}</b>
+                    {% if item.simpleproduct_set.first.product_max_price %}
+                        <s>₹{{ item.simpleproduct_set.first.product_max_price }}</s>
+                    {% endif %}
+                </small>
+                <a href="{% url 'product:product_detail' item.id %}" class="btn btn-warning text-white">View Details</a>
+                <a href="#" class="btn btn-warning text-white">Add to Cart</a>
+            </div>
+        </div>
+    </swiper-slide>
+{% endfor %}
+
+    </swiper-container>
+  
+    <div class="d-flex justify-content-center viewmoreButton">
+      <a href="{% url 'product:all_new_products' %}" class="u-button">View More Products</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- --------------------End Trending Arrival Collection--------------- -->
 
 
 
