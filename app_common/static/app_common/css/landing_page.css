@@ -35,12 +35,13 @@ margin-top: -10px;
   background-color: var(--pagebg);
 }
 .image-wrapper{
-height: 200px;
-width: 200px;
-/* border: 2px solid var(--Carouselbutton); */
-border-radius: 50%;
-overflow: hidden;
-transition:transform 0.5s ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: contain;
+  transition:transform 0.5s ;
 }
 .image-wrapper:hover{
 transform: scale(1.07);
@@ -59,7 +60,7 @@ transform: scale(1.03);
 .content-wrapper h4{
   font-family: 'poppins', sans-serif;
   color: #0f6d3e;
-  font-size: 1rem;
+  font-size: 1.3rem;
   line-height:2rem;
   font-weight: 500;
   margin: 10px 0;
