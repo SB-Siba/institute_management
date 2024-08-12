@@ -1,3 +1,19 @@
+:root {
+  --primary:rgb(6, 151, 83);
+  --primary2:rgb(54, 139, 104);
+  --secondary:rgb(252, 209, 54);
+  --secondary2:rgb(255, 212, 46);
+  --third: rgb(255, 255, 255);
+  --third2:#399918;
+  --pagebg:rgb(245, 245, 245);
+  --h6:rgb(122, 135, 122);
+ 
+  --para: rgb(15, 15, 15);
+  --footer:rgb(33, 33, 33);
+  --header:#FFF7F1;
+}
+
+
 .carousel-item img{
   height: 33rem;
   width: 100%;
@@ -554,10 +570,15 @@ font-size: 14px;
     width: 80px;
     height: 80px;
   }
-
   .testimonial-name {
-    font-size: 16px;
+    font-size: 5px;
+    font-weight: 200;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    color: var(--para);
   }
+
+ 
 
   .carousel-caption p {
     font-size: 12px;

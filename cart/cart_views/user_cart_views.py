@@ -36,16 +36,18 @@ class ShowCart(View):
                     discount_price = totaloriginalprice - totalPrice
                     GST = totalPrice * Decimal(settings.GST_CHARGE)
                     
-                    # Calculate delivery charge based on the total cart value
-                    if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
-                        delivery_charge = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
-                    else:
-                        delivery_charge = Decimal('0.00')
+                    # Calculate final cart value before adding delivery charge
+                    final_cart_value = totalPrice + GST
                     
-                    Delivery = delivery_charge
-                    final_cart_value = totalPrice + GST + Delivery
+                    # Calculate delivery charge based on the final cart value
+                    if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
+                        Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+                    else:
+                        Delivery = Decimal('0.00')
+                    
+                    final_cart_value += Delivery
+                    
                 else:
-                    # If no products in the cart
                     delivery_charge = Decimal('0.00')
                     final_cart_value = Decimal('0.00')
                     
@@ -96,14 +98,16 @@ class ShowCart(View):
                 discount_price = totaloriginalprice - totalPrice
                 GST = totalPrice * Decimal(settings.GST_CHARGE)
                 
-                # Calculate delivery charge based on the total cart value
-                if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
-                    delivery_charge = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
-                else:
-                    delivery_charge = Decimal('0.00')
+                # Calculate final cart value before adding delivery charge
+                final_cart_value = totalPrice + GST
                 
-                Delivery = delivery_charge
-                final_cart_value = totalPrice + GST + Delivery
+                # Calculate delivery charge based on the final cart value
+                if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
+                    Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+                else:
+                    Delivery = Decimal('0.00')
+                
+                final_cart_value += Delivery
 
                 context = {
                     'category_obj': category_obj,
@@ -132,7 +136,6 @@ class ShowCart(View):
                 }
 
         return render(request, "cart/user/cartpage.html", context)
-
 
 class AddToCartView(View):
     def get(self, request, product_id):

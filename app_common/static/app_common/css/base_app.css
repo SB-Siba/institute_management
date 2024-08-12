@@ -214,7 +214,8 @@ font-weight: 400;
 text-transform: uppercase;
 }
 
-.row div p{
+.footer_div_ul
+div p{
   text-decoration: none;
   color: var(--third);
   font-size:12px;
@@ -223,11 +224,13 @@ line-height: 25px;
 font-family:"Inter", sans-serif;
 }
 
-.row div p i{
+.footer_div_ul
+div p i{
   padding: 5px;
 }
 
-.row div li {
+.footer_div_ul
+div li {
   list-style: none;
 }
 
