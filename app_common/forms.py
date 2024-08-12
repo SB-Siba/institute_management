@@ -15,3 +15,17 @@ class ContactMessageForm(forms.Form):
     
     message = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Your Message'}),required=True,label='Message')
+
+
+class ContactMessageForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'contact', 'message']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ContactMessageForm, self).__init__(*args, **kwargs)
+        if user and user.is_authenticated:
+            self.fields['name'].initial = user.get_full_name()
+            self.fields['email'].initial = user.email
+            self.fields['contact'].initial = getattr(user, 'contact', '')

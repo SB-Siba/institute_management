@@ -143,7 +143,7 @@ class AddToCartView(View):
                 cart, created = Cart.objects.get_or_create(user=request.user)
                 is_user_authenticated = True
             else:
-                cart = request.session.get('cart', {})
+                cart = request.session.get('cart', {'products': {}, 'total_price': 0.0})
                 is_user_authenticated = False
 
             product_obj = get_object_or_404(SimpleProduct, id=product_id)
@@ -164,7 +164,7 @@ class AddToCartView(View):
             if is_user_authenticated:
                 products = cart.products or {}
             else:
-                products = cart or {}
+                products = cart.get('products', {})
 
             if product_key in products:
                 products[product_key]['quantity'] += 1
@@ -192,6 +192,7 @@ class AddToCartView(View):
             print(e)
             return HttpResponse(f"An error occurred: {e}", status=500)
 
+
 class ManageCart(View):
     model = Cart
 
@@ -200,30 +201,41 @@ class ManageCart(View):
 
         if request.user.is_authenticated:
             cart = self.model.objects.get(user=request.user)
-            old_product_dict = cart.products
+            old_product_dict = cart.products or {}
         else:
-            cart = request.session.get('cart', {})
-            old_product_dict = cart
+            cart = request.session.get('cart', {'products': {}, 'total_price': 0.0})
+            old_product_dict = cart.get('products', {})
 
+        product_found = False
         for i, j in old_product_dict.items():
             if c_p_uid == j['info']['uid']:
+                product_found = True
                 if operation_type == 'plus':
                     j['quantity'] += 1
+                    j['total_price'] += j['info']['discount_price']
                 elif operation_type == "min":
                     if j['quantity'] > 1:
-                        j['quantity'] -= 1    
+                        j['quantity'] -= 1
+                        j['total_price'] -= j['info']['discount_price']
                     else:
                         old_product_dict.pop(i)
                         break
 
+        if not product_found:
+            return HttpResponse(f"Product with UID {c_p_uid} not found in cart.", status=404)
+
         if request.user.is_authenticated:
             cart.products = old_product_dict
+            cart.total_price = sum(item['total_price'] for item in old_product_dict.values())
             cart.save()
         else:
-            request.session['cart'] = old_product_dict
+            cart['products'] = old_product_dict
+            cart['total_price'] = sum(item['total_price'] for item in old_product_dict.values())
+            request.session['cart'] = cart
             request.session.modified = True
 
         return redirect('cart:showcart')
+
 
 
 
@@ -247,14 +259,22 @@ def RemoveFromCart(request, cp_uid):
             cart.save()
     else:
         # Handle the cart in the session for unauthenticated users
-        cart = request.session.get('cart', {})
-        
-        if cp_uid in cart:
-            cart.pop(cp_uid)
+        cart = request.session.get('cart', {'products': {}, 'total_price': 0.0})
+        products = cart.get('products', {})
+
+        if cp_uid in products:
+            products.pop(cp_uid)
+            
+            # Recalculate total_price
+            cart['total_price'] = sum(item['total_price'] for item in products.values())
+            
+            # Update the session cart
+            cart['products'] = products
             request.session['cart'] = cart
             request.session.modified = True
 
     return redirect("cart:showcart")
+
 
 
 

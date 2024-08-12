@@ -3,6 +3,7 @@ from django.views import View
 from product.models import Products, Category,SimpleProduct,ImageGallery
 from wishlist.models import WshList
 from django.conf import settings
+from django.db.models import Prefetch
 
 app = 'product/'
 
@@ -102,13 +103,14 @@ class ProductDetailsSmipleView(View):
 
 
 
-# class AllNewProductsView(View):
-#     template_name = app + "new_products.html"
+class AllNewProductsView(View):
+    template_name = app + "user/new_product.html"
 
-#     def get(self, request):
-#         new_products = Products.objects.filter(show_as_new=True)
-#         context = {
-#             'new_products': new_products,
-#             'MEDIA_URL': settings.MEDIA_URL,
-#         }
-#         return render(request, self.template_name, context)
+    def get(self, request):
+        new_products = Products.objects.filter(show_as_new="yes").prefetch_related(
+            Prefetch('simpleproduct_set', queryset=SimpleProduct.objects.prefetch_related('image_gallery')))
+        context = {
+            'new_products': new_products,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+        return render(request, self.template_name, context)
