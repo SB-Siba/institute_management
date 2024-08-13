@@ -115,6 +115,9 @@
     overflow-x: hidden;
     width: 100%;
   }
+  li{
+    list-style-type: none !important;
+  }
   a{
   text-decoration: none!important;
   }
@@ -215,11 +218,15 @@ text-transform: uppercase;
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .footer_div_ul div p{
 =======
 .footer_div_ul
 div p{
 >>>>>>> 8e4ef0c9d563a00ee86a280ee32ca2a4aff1d0b3
+=======
+.footer_div_ul div p{
+>>>>>>> d244f6fe9c3b7e4c7d0847d23fc439ed416cc26e
   text-decoration: none;
   color: var(--third);
   font-size:12px;
@@ -229,11 +236,15 @@ div p{
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d244f6fe9c3b7e4c7d0847d23fc439ed416cc26e
 .footer_div_uldiv p i{
   padding: 5px;
 }
 
 .footer_div_ul div li {
+<<<<<<< HEAD
 =======
 .footer_div_ul
 div p i{
@@ -243,6 +254,8 @@ div p i{
 .footer_div_ul
 div li {
 >>>>>>> 8e4ef0c9d563a00ee86a280ee32ca2a4aff1d0b3
+=======
+>>>>>>> d244f6fe9c3b7e4c7d0847d23fc439ed416cc26e
   list-style: none;
 }
 

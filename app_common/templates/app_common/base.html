@@ -335,7 +335,11 @@
                 <h6>About Us</h6>
                 <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
                 <li><a href="">Careers</a></li>
-                <li><a href="{% url 'app_common:contact_us' %}">Contact Us</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'app_common:contact_support' %}">Support</a></li>
+                {% elif not user.is_authenticated %}
+                <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
+                {% endif %}
                 <li><a href="">Locate Us</a></li>
               </ul>
             </div>
