@@ -152,7 +152,7 @@ if PRODUCTION == 'True':
 else:
     pass
 
-
+SITE_URL = 'http://127.0.0.1:8000'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

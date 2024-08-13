@@ -56,9 +56,6 @@
    
         <!-- ----------------max card should be 5 in =----------------- -->
     <div class="row">
-
-       <!-- ---------category 1-------- -->
-
        {% for category in categories %}
     
         <div class="col content-wrapper col-lg-2 col-md-3 col-6">
@@ -83,47 +80,95 @@
 
 <section class="p-lg-3 p-3">
   <div class="">
-    <h3>New Arrivals</h3>
+    <div class="pb-4">
+      <h3 class="text-success text-center">New Arrivals</h3>
+    </div>
 
-    <swiper-container class="mySwiper d-lg-flex h-100" init="false">
-      {% for item in simple_products %}
-          <swiper-slide>
-              <div class="card">
-                  {% if item.product.image %}
-                      <img src="{{ MEDIA_URL }}{{ item.product.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.product.name }}">
-                  {% elif item.images %}
-                      <img src="{{ MEDIA_URL }}{{ item.images.first }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.product.name }}">
-                  {% else %}
-                      <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
-                  {% endif %}
-                  <div class="card-body p-1">
-                      <h6>{{ item.product.name }}</h6>
-                      <small>
-                          <b>₹{{ item.simple_product.product_discount_price }}</b>
-                          {% if item.simple_product.product_max_price %}
-                              <s>₹{{ item.simple_product.product_max_price }}</s>
-                          {% endif %}
-                      </small>
-                      <a href="{% url 'product:product_detail' item.product.id %}" class="btn btn-warning text-white">View Details</a>
-                      <a href="#" class="btn btn-warning text-white">Add to Cart</a>
-                  </div>
-              </div>
-          </swiper-slide>
+    <div class="row">
+      {% for item in new_products %}
+      <div class="col col-lg-2 col-md-3 col-6">
+        <a href="{% url 'product:product_detail' item.id %}">
+          <div class="card">
+            {% if item.image %}
+              <img src="{{ MEDIA_URL }}{{ item.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+          {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
+              <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+          {% else %}
+              <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
+          {% endif %}
+          <div class="card-body p-1">
+            <h6>{{ item.name }}</h6>
+            <small>
+                <b>₹{{ item.simpleproduct_set.first.product_discount_price }}</b>
+                {% if item.simpleproduct_set.first.product_max_price %}
+                    <s>₹{{ item.simpleproduct_set.first.product_max_price }}</s>
+                {% endif %}
+            </small>
+            </a>
+            <a href="" class="btn btn-warning text-white">Add to Cart</a>
+        </div>
+          </div>
+        </a>
+      </div>
       {% endfor %}
-  </swiper-container>
-  
-  
-  
-    
+
+    </div>
+ 
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="#" class=" u-button">View More Products</a>
+      <a href="{% url 'product:all_new_products' %}" class=" u-button">View More Products</a>
     </div>
   </div>
 </section>
 
+
 <!-- --------------------End New Arrival Collection--------------- -->
 
+<!-- --------------------Trending Arrival Collection--------------- -->
 
+<section class="p-lg-3 p-3">
+  <div class="">
+    <div class="pb-4">
+      <h3 class="text-success text-center">Trending Products</h3>
+    </div>
+
+    <div class="row">
+      {% for item in trending_products %}
+      <div class="col col-lg-2 col-md-3 col-6">
+        <a href="{% url 'product:product_detail' item.id %}">
+          <div class="card">
+            {% if item.image %}
+              <img src="{{ MEDIA_URL }}{{ item.image }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+          {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
+              <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="{{ item.name }}">
+          {% else %}
+              <img src="{% static 'default-image.jpg' %}" style="height: 12rem;" class="card-img-top object-fit-cover" alt="No image available">
+          {% endif %}
+          <div class="card-body p-1">
+            <h6>{{ item.name }}</h6>
+            <small>
+                <b>₹{{ item.simpleproduct_set.first.product_discount_price }}</b>
+                {% if item.simpleproduct_set.first.product_max_price %}
+                    <s>₹{{ item.simpleproduct_set.first.product_max_price }}</s>
+                {% endif %}
+            </small>
+            </a>
+            <a href="" class="btn btn-warning text-white">Add to Cart</a>
+        </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+
+    </div>
+ 
+    <div class="d-flex justify-content-center viewmoreButton">
+      <a href="{% url 'product:all_trending_products' %}" class=" u-button">View More Products</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- --------------------End Trending Arrival Collection--------------- -->
 
 
 

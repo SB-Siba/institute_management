@@ -214,7 +214,12 @@ font-weight: 400;
 text-transform: uppercase;
 }
 
+<<<<<<< HEAD
 .footer_div_ul div p{
+=======
+.footer_div_ul
+div p{
+>>>>>>> 8e4ef0c9d563a00ee86a280ee32ca2a4aff1d0b3
   text-decoration: none;
   color: var(--third);
   font-size:12px;
@@ -223,11 +228,21 @@ text-transform: uppercase;
   font-family:"Inter", sans-serif;
 }
 
+<<<<<<< HEAD
 .footer_div_uldiv p i{
   padding: 5px;
 }
 
 .footer_div_ul div li {
+=======
+.footer_div_ul
+div p i{
+  padding: 5px;
+}
+
+.footer_div_ul
+div li {
+>>>>>>> 8e4ef0c9d563a00ee86a280ee32ca2a4aff1d0b3
   list-style: none;
 }
 

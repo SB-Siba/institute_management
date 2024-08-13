@@ -6,11 +6,11 @@ class ContactMessage(models.Model):
     uid=models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null= True, blank= True)
     name = models.CharField(max_length=255, null=True, blank=True)  # Added name field
-    email = models.EmailField(null=True, blank=True,unique=True)
-    contact = models.CharField(max_length= 10, null=True, blank=True, unique=True)
+    email = models.EmailField(null=True, blank=True)
+    contact = models.CharField(max_length= 10, null=True, blank=True)
     message = models.TextField(null= True, blank= True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-
+    reply = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.uid:
