@@ -3,6 +3,7 @@ from django.views import View
 from product.models import Products, Category,SimpleProduct,ImageGallery
 from wishlist.models import WshList
 from django.conf import settings
+from django.db.models import Prefetch
 
 app = 'product/'
 
@@ -20,7 +21,6 @@ class ShowProductsView(View):
             category=category_obj
         )
 
-        # Collect simple products and their image galleries
         simple_products = []
         for product in products_for_this_category:
             simple_products_for_product = SimpleProduct.objects.filter(product=product)
@@ -84,30 +84,31 @@ class ProductDetailsSmipleView(View):
         }
 
         return render(request, self.template_name, context)
+    
 
 
-# class AllTrendingProductsView(View):
-#     template = app + 'user/trending_products.html'
+class AllTrendingProductsView(View):
+    template_name = app + 'user/trending_products.html'
 
-#     def get(self, request):
-#         trending_products = Products.objects.filter(trending="yes")
-#         trending_list = [(product, product.discount_percentage) for product in trending_products]
-#         context = {
-#             'trending_products': trending_list,
-#             'MEDIA_URL': settings.MEDIA_URL,
-#         }
-
-#         return render(request, self.template, context)
-
+    def get(self, request):
+        trending_products = Products.objects.filter(trending="yes")
+        
+        context = {
+            'trending_products': trending_products,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+        return render(request, self.template_name, context)
 
 
-# class AllNewProductsView(View):
-#     template_name = app + "new_products.html"
 
-#     def get(self, request):
-#         new_products = Products.objects.filter(show_as_new=True)
-#         context = {
-#             'new_products': new_products,
-#             'MEDIA_URL': settings.MEDIA_URL,
-#         }
-#         return render(request, self.template_name, context)
+class AllNewProductsView(View):
+    template_name = app + "user/new_product.html"
+
+    def get(self, request):
+        new_products = Products.objects.filter(show_as_new="yes")
+        
+        context = {
+            'new_products': new_products,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+        return render(request, self.template_name, context)

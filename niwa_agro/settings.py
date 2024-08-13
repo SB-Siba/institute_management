@@ -152,7 +152,7 @@ if PRODUCTION == 'True':
 else:
     pass
 
-
+SITE_URL = 'http://127.0.0.1:8000'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -170,7 +170,9 @@ MESSAGE_TAGS = {
 
 
 
-
+GST_CHARGE = 0.015
+DELIVARY_CHARGE_PER_BAG = 50
+DELIVARY_FREE_ORDER_AMOUNT = 750
 
 
 

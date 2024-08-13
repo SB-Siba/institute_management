@@ -1,127 +1,67 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} category list {% endblock title %}
+{% block title %} Category List {% endblock title %}
 {% block content%}
+<header class="d-flex container">
+  <h4>All Category</h4>
+  <p>{% include 'snippets/alert.html' %}</p>
+</header>
 
-<center>{% include 'snippets/alert.html' %}</center>
-<head>
-  <style>
-    .tablecard{
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    }
-    .cat-img{
-      width: 100px;
-      height: 80px;
-      object-fit: contain ;
-    }
-    .catagory-btn {
-      color: black;
-      margin: auto 10px;
-      padding: 5px 10px ;
-      background-color: #f2f5f7;
-      border: none;
-      border-radius: 5px;
-      box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-      cursor: pointer;  
-      font-family: 'Poppins', sans-serif;
-    }
-    .BtM{
-      box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-    .headinG{
-      color: navy;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 500;
-      font-size: 30px;
-      margin-left:13px;
-    }
-    #tb-head{
-      background-color:#28B673;
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-size: 12px;
-    }
-    #test_table_tbody , .modal-content{
-      font-family: 'Poppins', sans-serif;
-    }
-    .px-5{
-      text-align: center;
-    }
-  .modal-header{
-    background-color:#28B673;
-    color: #fff;
-  }
 
-  </style>
-</head>
 
-<body > 
-  <header>
-    <div class="container-fluid px-3">
-      <div class="border-bottom pt-6">
-        <div class="row align-items-center">
-          <div class="col-sm col-12">
-            <h1 class="h2 ls-tight headinG">CATEGORY LIST</h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+
   
-  <main class="py-6 bg-surface-secondary px-2">
+  <main class="py-6 bg-surface-secondary">
     <div class="container-fluid">
       <div class="vstack gap-4">
         <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
           <div class="hstack gap-2">
-            <div class="input-group input-group-sm input-group-inline"></div>
+            <div class="input-group input-group-sm input-group-inline">
+              
+            </div>
           </div>
           
         </div>
   
-        <div class="  tablecard">
+        <div class="  tablecard w-75 align-self-center">
           <div class="table-responsive">
             <table class="table table-hover table-nowrap">
-              <thead class="" >
+              <thead class="table-light" >
                 <tr >
                   <th class="px-5" id="tb-head" scope="col"><b>Name</b></th>
                   <th class="px-5" id="tb-head"scope="col"><b>Image</b></th>
-                  <th class="px-5" id="tb-head"scope="col"><b>Hide</b></th>
                   <th class="px-5" id="tb-head"scope="col"><b>Action</b></th>
                 </tr>
               </thead>
               <tbody id="test_table_tbody">
                 {% for catagory in catagory_list %}
                 <tr>
-                  <td class="px-5">
-                    <a
-                      class="text-heading text-black font-semibold"
+                  <td class="tb-body">
+                    <a class="text-heading text-black font-semibold"
                       
                       >{{catagory.title}}</a
                     >
                   </td>
   
-                  <td class="px-5">
-                    <img class="cat-img"
+                  <td class="tb-body">
+                    <img class="cat-img2"
                       src="{{ catagory.image.url }}"
                       alt="Passbook Image"
                        />
                   </td>
   
   
-                  <td class="px-5">{{catagory.hide}}</td>
   
-                  <td class="px-5">
-                    <a
-                      href="{% url 'product:category_update' catagory.id %}"
-                      class="btn btn-sm btn-square btn-neutral text-primary-hover BtM">
-                      <i class="bi bi-pencil"></i>
+                  <td class="tb-body">
+                    <a href="{% url 'product:category_update' catagory.id %} " class="BtM">
+                      <i class='bx bx-edit text-primary' ></i>
                     </a> &nbsp;
                     <a
                       href="{% url 'product:catagory_delete' catagory.id %}">
                       <button
                         type="button"
-                        class="btn btn-sm btn-square btn-neutral text-danger-hover BtM">
-                        <i class="bi bi-trash"></i>
+                        class="BtM1">
+                        <i class='bx bx-trash text-danger'></i>
                       </button>
                     </a>
                   </td>
@@ -138,5 +78,5 @@
   
   <!-- test create modal -->
   
-</body>
+
 {% endblock content %}

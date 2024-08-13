@@ -152,6 +152,18 @@ class ProductAdd(View):
         }
 
         return render(request, self.template_name, context)
+    
+@method_decorator(utils.super_admin_only, name='dispatch')
+class ProductList(View):
+    template_name = app + "admin/product_list.html"
+
+    def get(self, request):
+        products = Products.objects.all()
+
+        context = {
+            'products': products,
+        }
+        return render(request, self.template_name, context)
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class SimpleProductUpdate(View):
@@ -231,55 +243,88 @@ class SimpleProductUpdate(View):
 class SimpleProductDelete(View):
 
     def get(self, request, pk):
-        product = get_object_or_404(SimpleProduct, pk=pk)
+        simple_product = get_object_or_404(SimpleProduct, pk=pk)
+        product = simple_product.product  # Get the parent product
+
         try:
-            product.delete()
-            messages.success(request, "Product deleted successfully.")
+            simple_product.delete()
+            messages.success(request, "Simple product deleted successfully.")
+            
+            remaining_simple_products = SimpleProduct.objects.filter(product=product).exists()
+            if not remaining_simple_products:
+                product.delete()
+                messages.success(request, "Parent product deleted successfully.")
+                
         except Exception as e:
             print("Error deleting product:", e)
             messages.error(request, f"Error deleting product: {str(e)}")
 
         return redirect("product:simple_product_list")
 
+
 @method_decorator(utils.super_admin_only, name='dispatch')
-class ProductList(View):
-    template_name = app + "admin/product_list.html"
+class SimpleProductList(View):
+    template_name = app + "admin/simple_product_list.html"
 
     def get(self, request):
-        products = Products.objects.all()
+        products = SimpleProduct.objects.all()
 
         context = {
             'products': products,
         }
         return render(request, self.template_name, context)
 
-
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductSearch(View):
     model = Products
     form_class = forms.ProductForm
-    template = app + "admin/product_list.html"
+    template = app + "admin/product_list.html"  
 
-    def post(self,request):
+    def post(self, request):
         filter_by = request.POST.get("filter_by")
         query = request.POST.get("query")
-        product_list = []
-        if filter_by == "uid":
-            product_list = self.model.objects.filter(uid = query)
+        
+        if filter_by == "pk":
+            product_list = self.model.objects.filter(pk=query)
         else:
-            product_list = self.model.objects.filter(name__icontains = query)
+            product_list = self.model.objects.filter(name__icontains=query)
 
-        paginated_data = utils.paginate(
-            request, product_list, 50
-        )
+        paginated_data = utils.paginate(request, product_list, 10)
+
         context = {
             "form": self.form_class,
-            "product_list":product_list,
-            "data_list":paginated_data,
-            "MEDIA_URL":settings.MEDIA_URL
+            "products": product_list,
+            "data_list": paginated_data,
+            "MEDIA_URL": settings.MEDIA_URL
         }
         return render(request, self.template, context)
 
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SimpleProductSearch(View):
+    model = SimpleProduct
+    form_class = forms.SimpleProductForm
+    template = app + "admin/simple_product_list.html"  
+
+    def post(self, request):
+        filter_by = request.POST.get("filter_by")
+        query = request.POST.get("query")
+        
+        if filter_by == "pk":
+            simple_product_list = self.model.objects.filter(pk=query)
+        else:
+            product_list = Products.objects.filter(name__icontains=query)
+            simple_product_list = self.model.objects.filter(product__in=product_list)
+
+
+        paginated_data = utils.paginate(request, simple_product_list, 10)
+
+        context = {
+            "form": self.form_class,
+            "products": simple_product_list,
+            "data_list": paginated_data,
+            "MEDIA_URL": settings.MEDIA_URL
+        }
+        return render(request, self.template, context)
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductFilter(View):
@@ -287,7 +332,6 @@ class ProductFilter(View):
     template = app + "admin/product_list.html"
 
     def get(self,request):
-        print("HIIIIII")
         filter_by = request.GET.get("filter_by")
         print(filter_by)
         if filter_by == "trending":
@@ -318,15 +362,3 @@ class ProductFilter(View):
         }
         return render(request, self.template, context)
     
-
-@method_decorator(utils.super_admin_only, name='dispatch')
-class SimpleProductList(View):
-    template_name = app + "admin/simple_product_list.html"
-
-    def get(self, request):
-        products = SimpleProduct.objects.all()
-
-        context = {
-            'products': products,
-        }
-        return render(request, self.template_name, context)

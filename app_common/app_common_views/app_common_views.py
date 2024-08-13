@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib import messages
 from app_common import forms
+from app_common.models import ContactMessage
 from users.forms import LoginForm
-from product.models import Category,Products
+from app_common.models import ContactMessage
+from app_common.forms import ContactMessageForm
+from product.models import Category,Products,SimpleProduct,ImageGallery
 from django.conf import settings
+from django.db.models import Prefetch
+
+
 app = "app_common/"
 
 
@@ -15,8 +22,8 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes").prefetch_related('simple_products__image_gallery')
-        new_products = Products.objects.filter(show_as_new="yes").prefetch_related('simple_products__image_gallery')
+        trending_products = Products.objects.filter(trending="yes")
+        new_products = Products.objects.filter(show_as_new="yes")
 
         
         context = {
@@ -36,32 +43,55 @@ class AboutUs(View):
         return render(request, self.template)
 
 
-class ContactUs(View):
-    template = 'shoppingsite/contact_us.html'  # Adjust the template path as needed
+class ContactSupport(View):
+    contact_template = app + 'contact_us.html'
+    support_template = app + 'support.html'
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             initial_data = {
-                'full_name': request.user.full_name if request.user.full_name else '',
+                'name': request.user.full_name if request.user.full_name else '',
                 'email': request.user.email if request.user.email else '',
-                'mobile_no': request.user.contact if request.user.contact else '',
+                'contact': request.user.contact if request.user.contact else '',
             }
+            template = self.support_template
         else:
             initial_data = {
-                'full_name': '',
+                'name': '',
                 'email': '',
-                'mobile_no': '',
+                'contact': '',
             }
-        form = forms.ContactMessageForm(initial=initial_data)
-        return render(request, self.template, {'form': form})
+            template = self.contact_template
 
-    def post(self, request):
+        form = forms.ContactMessageForm(initial=initial_data)
+        return render(request, template, {'form': form})
+
+    def post(self, request, *args, **kwargs):
         form = forms.ContactMessageForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Your message has been sent successfully.')
-            return redirect('shoppingsite:contact_us')  
-        return render(request, self.template, {'form': form})
+            # Create a new ContactMessage instance
+            contact_message = ContactMessage(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                contact=form.cleaned_data['contact'],
+                message=form.cleaned_data['message']
+            )
+            
+            # Associate the message with the authenticated user if available
+            if request.user.is_authenticated:
+                contact_message.user = request.user
+            
+            contact_message.save()
+
+            if request.user.is_authenticated:
+                messages.success(request, 'Your support request has been sent successfully.')
+                return redirect('app_common:contact_support')
+            else:
+                messages.success(request, 'Your message has been sent successfully.')
+                return redirect('app_common:contact_support')
+
+        template = self.support_template if request.user.is_authenticated else self.contact_template
+        return render(request, template, {'form': form})
 
 class TermsConditions(View):
     template = app + "terms_conditions.html"

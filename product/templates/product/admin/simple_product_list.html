@@ -3,149 +3,80 @@
 {% block title %} All Products {% endblock title %}
 {% block content %}
 
-<center>
-    {% include 'snippets/alert.html' %}
-</center>
-
-<style>
-    .tablecard {
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .cat-img2 {
-        height: 90px;
-        width: 90px !important;
-        object-fit: cover;
-        display: block;
-        margin: 0 auto;
-    }
-
-    .catagory-btn {
-        color: black;
-        margin: auto 10px;
-        padding: 5px 10px;
-        background-color: #f2f5f7;
-        border: none;
-        border-radius: 5px;
-        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .BtM {
-        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    #tb-head {
-        background-color: #28B673;
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
-        font-size: 12px;
-    }
-
-    .BtM2 {
-        border-radius: 4px;
-        background: #e0e0e0;
-        box-shadow: 4px 4px 17px #f0eeee, -4px -4px 17px #ffffff;
-    }
-
-    .headinG {
-        color: navy;
-        font-weight: 500;
-        font-size: 30px;
-        margin-left: 13px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    #test_table_tbody {
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .px-5 {
-        text-align: center;
-    }
-</style>
-
-<header>
-    <div class="container-fluid px-3">
-        <div class="border-bottom pt-6">
-            <div class="row align-items-center">
-                <div class="col-sm col-12">
-                    <h1 class="h2 ls-tight headinG">Product List</h1>
-                </div>
-            </div>
-        </div>
-    </div>
+ 
+<header class="d-flex container p-3 ms-4">
+    <h4>All Simple Products</h4>
+   
 </header>
-
 <main class="py-6 bg-surface-secondary">
     <div class="container-fluid">
         <div class="vstack gap-4">
             <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
-                <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
+                <form class="my-3 mx-2" action="{% url 'product:simple_product_search' %}" method="post">
                     {% csrf_token %}
                     <div class="hstack gap-2">
-                        <select style="width: 6rem;" name="filter_by" class="form-select" aria-label="Default select example">
-                            <option selected value="pk">ID</option>
+                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                            <option selected value="pk">All</option>
+                            <option value="id">ID</option>
                             <option value="name">Name</option>
                         </select>
-                        <input type="text" name="query" placeholder="Search Here" class="form-control" required />
-                        <button type="submit" class="btn btn-sm BtM2 btn-neutral">
-                            <i class="fa-solid fa-magnifying-glass" style="color: #8c00ff;"></i>
-                        </button>
+                        <span  class="input-group ">
+                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                            <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                        </span>
+                        <p class="w-100"> {% include 'snippets/alert.html' %}</p>
                     </div>
                 </form>
                 
             </div>
-
             <div class="tablecard">
+
                 <div class="table-responsive">
                     <table class="table table-hover table-nowrap">
                         <thead class="table-light">
                             <tr>
-                                <th class="px-5" id="tb-head" scope="col">Product ID</th>
-                                <th class="px-5" id="tb-head" scope="col">Name</th>
-                                <th class="px-5" id="tb-head" scope="col">Image</th>
-                                <th class="px-5" id="tb-head" scope="col">Brand</th>
-                                <th class="px-5" id="tb-head" scope="col">Max Price</th>
-                                <th class="px-5" id="tb-head" scope="col">Discounted Price</th>
-                                <th class="px-5" id="tb-head" scope="col">Stock</th>
-                                <th class="px-5" id="tb-head" scope="col">Action</th>
+                                <th  id="tb-head" scope="col">Name</th>
+                                <th id="tb-head" scope="col">Product ID</th>
+                                <th  id="tb-head" scope="col">Image</th>
+                                <th  id="tb-head" scope="col">Brand</th>
+                                <th id="tb-head" scope="col">Max Price</th>
+                                <th  id="tb-head" scope="col">Discounted Price</th>
+                                <th  id="tb-head" scope="col">Stock</th>
+                                <th  id="tb-head" scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody id="test_table_tbody">
                             {% for product in products %}
                             <tr {% if product.simple_products.first.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
-                                <td class="px-5">
+                                <td class="tb-body">
                                    
                                         {{ product.pk }}
                                 </td>
-                                <td class="px-5">{{ product.product.name|truncatewords:5 }}</td>
-                                <td class="px-5">
+                                <td class="tb-body">{{ product.product.name|truncatewords:5 }}</td>
+                                <td class="tb-body">
                                     {% if product.product.image %}
                                         <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
                                     {% endif %}
                                 </td>
-                                <td class="px-5">{{ product.product.brand }}</td>
-                                <td class="px-5">
+                                <td class="tb-body">{{ product.product.brand }}</td>
+                                <td class="tb-body">
                                     {{ product.product_max_price }}
                             </td>
-                                <td class="px-5">
+                                <td class="tb-body">
                                         {{ product.product_discount_price }}
                                 </td>
-                                <td class="px-5">
+                                <td class="tb-body">
                                         {{ product.stock }}
                                 </td>
-                                <td class="px-5">
+                                <td class="tb-body">
                                     <a href="{% url 'product:simple_product_update' product.pk %}"
-                                        class="btn btn-sm btn-square btn-neutral BtM">
-                                        <i class="bi bi-pencil"></i>
+                                        class="BtM">
+                                        <i class='bx bx-edit text-primary' ></i>    
                                     </a>
-                                    <a href="{% url 'product:simple_product_delete' product.pk %}"
-                                        class="btn btn-sm btn-square btn-neutral BtM">
-                                        <i class="bi bi-trash"></i>
+                                    <a href="{% url 'product:simple_product_delete' product.pk %}" class="BtM">
+                                        <button  type="button" class="BtM1">
+                                        <i class='bx bx-trash text-danger'></i>
+                                      </button> 
                                     </a>
                                 </td>
                             </tr>

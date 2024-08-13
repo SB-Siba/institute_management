@@ -1,106 +1,124 @@
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        #dropdown-menu {
-            left: 20px !important;
-            width: 70%;
-        }
-        .navbar-collapse {
-            background-color: black;
-            height: 100%;
-            margin: 0;
-        }
-        #nav-link {
-            background-color: black;
-            color: white;
-            margin-bottom: 2px;
-            margin: 0 .7px;
-            font-family: 'Poppins', sans-serif;
-        }
-        #nav-link:hover {
-            color: rgb(255, 255, 255);
-            background-color: rgba(240, 248, 255, 0.277);
-            border-radius: 25px;
-            margin: 0 .7px;
-        }
-        .profile-box {
-            display: flex;
-            align-items: center;
-            border-radius: 10px;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-        }
-        .profile-box img {
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-        }
-        .profile-box .profile-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .profile-box .profile-info .name {
-            font-weight: bold;
-        }
-        .profile-box .profile-info .role {
-            font-size: 0.9em;
-        }
-        .h6 {
-            color: #fff;
-            font-size: 14px;
-        }
-        .dropdown-item {
-            font-family: 'Poppins', sans-serif;
-        }
-        .nav-link {
-            color: white;
-            font-family: 'Poppins', sans-serif;
-        }
-        .nav-link:hover {
-            color: rgb(255, 255, 255);
-            background-color: rgba(240, 248, 255, 0.277);
-            border-radius: 25px;
-            margin: 0 .7px;
-        }
-        .navbar-vertical .navbar-nav .nav-link[data-bs-toggle="collapse"]:after {
-            background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox="0 0 16 16" fill="%23FFFFFF" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/%3E%3C/svg%3E');
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            content: "";
-            vertical-align: middle;
-            margin-left: 0.5em;
-        }
-        #master {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-#master.show {
-    max-height: 1000px; /* A high enough value to show all items */
-}
-
-    </style>
-</head>
 <body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="">
+                  <img src="{% static 'app_common/images/logo1.png' %}" alt="logo" width="50px"/>
+                </a>
+              </div>
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-menu"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#" style="color: wheat;">Niwa Agro</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="{% url 'users:admin_dashboard' %}" class="sidebar-link">
+                        <i class="lni lni-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-cart-full"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                    data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
+                        <i class="lni lni-briefcase"></i>
+                        <span>Products <i class="lni lni-chevron-left chevron-icon"></i></span>
+                    </a>
+                    <ul class="sidebar-dropdown collapse" data-bs-parent="#sidebar" id="auth">
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:category_add' %}" class="sidebar-link">Category Add</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:category_list' %}" class="sidebar-link">Category List</a>
+                        </li>
+                        <li class="sidebar-item"> 
+                            <a href="{% url 'product:product_list' %}" class="sidebar-link">All Products</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:simple_product_list' %}" class="sidebar-link">Simple Products</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-library"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-stats-down"></i>
+                        <span>Reports</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-gift"></i>
+                        <span>Gift Crads</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-cogs"></i>
+                        <span>Settngs</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="{% url 'users:logout' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div>
+               
+        </div>
+        
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="{% static 'users\js\script.js' %}"></script>
+</body>
+
+</html>
+{% comment %}
+<!-- <body>
+ 
     <div class="collapse navbar-collapse p-0 m-0" id="sidebarCollapse">
         <h5 class=" px-3 py-3 mb-4" style=" color: white; background-color: rgba(240, 248, 255, 0.277);font-family: 'Poppins', sans-serif;">NIWA AGRO</h5>
         <ul class="navbar-nav">
@@ -129,20 +147,23 @@
                             <a href="{% url 'product:category_list' %}" class="nav-link"><i class="fa-solid fa-list"></i> Category List</a>
                         </li>
                         
+                         <li class="nav-item">
+                            <a href="" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
+                        </li> --
                         <li class="nav-item">
                             <a href="{% url 'product:product_list' %}" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'product:simple_product_list' %}" class="nav-link"><i class="fa-solid fa-bars-staggered"></i> Simple Product List</a>
                         </li>
-                        <!-- <li class="nav-item">
+                         <li class="nav-item">
                             <a href="" class="nav-link"><i class="fa-solid fa-clipboard-list"></i> Variant Product List</a>
-                        </li> -->
+                        </li> 
                     </ul>
                 </div>
             </li>
         </ul>
-        <!-- <ul class="navbar-nav">
+         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link active px-3" id="nav-link" href="" role="button" aria-expanded="true" aria-controls="sidebar-projects">
                     <i class="bi bi-tag"></i> Coupon
@@ -170,7 +191,7 @@
                 <i class="bi bi-images mb-1"></i> Banners 
                 </a>
             </li>
-        </ul> -->
+        </ul> 
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link active px-3" id="nav-link" href="{% url 'users:logout' %}" role="button" aria-expanded="true" aria-controls="sidebar-projects">
@@ -178,28 +199,7 @@
                 </a>
             </li>
         </ul>
-        <div class="my-4 px-lg-6 position-relative">
-            <div class="dropup w-full">
-                <div class="dropdown-menu dropdown-menu-end w-full">
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">
-                        <i class="bi bi-box-arrow-left me-3"></i>Logout 
-                    </a>
-                </div>
-            </div>
-            <div class="d-flex gap-3 justify-content-center align-items-center mt-6 d-none">
-                <div>
-                    <i class="bi bi-moon-stars me-2 text-warning me-2"></i>
-                    <span class="text-heading text-sm font-bold">Dark mode</span>
-                </div>
-                <div class="ms-auto">
-                    <div class="form-check form-switch me-n2">
-                        <input class="form-check-input" type="checkbox" id="switch-dark-mode">
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
     <div class="hstack text-white gap-3 ms-4">
         <div class="profile-box">
@@ -209,9 +209,8 @@
             </div>
         </div>
     </div>
-    <!-- Bootstrap JavaScript and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta3/js/bootstrap.min.js"></script>
+    ----------Bootstrap JavaScript and dependencies -
+    
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var collapseElement = document.getElementById('master');
@@ -239,7 +238,8 @@
         });
     });
 </script>
+ 
 
-    
-</body>
-</html>
+</body> -->
+{% endcomment %}
+
