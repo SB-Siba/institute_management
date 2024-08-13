@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
+    'ckeditor',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -207,15 +208,10 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-CKEDITOR_5 = {
-    'basic': {
-        'config': {
-            'toolbar': [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'link', 'bulletedList', 'numberedList'
-            ],
-            'height': 300,
-            'width': '100%',
-        }
-    }
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 300,
+    },
 }

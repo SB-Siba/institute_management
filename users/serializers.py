@@ -56,20 +56,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
 
-    contact = serializers.CharField(max_length = 10, required =True)
-    
-class NewPasswordSerializer(serializers.Serializer):
-
-    password1 = serializers.CharField(max_length = 255, required =True)
-    password2 = serializers.CharField(max_length = 255, required =True)
-
-    def validate(self, data):
-        # Check if the passwords match
-        if data['password1'] != data['password2']:
-            raise serializers.ValidationError("The passwords do not match.")
-        
-        if len(data['password1']) < 6:
-            raise serializers.ValidationError("Your Password is very weak")
-        
-        return data
+    def validate_email(self, value):
+        if not models.User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user found with this email address.")
+        return value

@@ -1,4 +1,5 @@
 import email
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -20,6 +21,7 @@ from users import models
 
 from users import serializers
 from users import tasks
+from users.user_views.emails import send_template_email
 
 class SignupApi(APIView):
 
@@ -100,4 +102,35 @@ class LogOut(APIView):
             "status":200,
             "message":"Logout Successful",
         })
+
+class ForgotPasswordAPIView(APIView):
+    parser_classes = [FormParser, MultiPartParser]
+
+    @swagger_auto_schema(
+        tags=["authentication"],
+        operation_description="forgotpassword API",
+        manual_parameters=swagger_documentation.forgot_password,
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = serializers.ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user = models.User.objects.get(email=email)
+                token = user.generate_reset_password_token()
+                reset_link = f"{settings.SITE_URL}/reset-password/{token}/"
+                context = {
+                    'full_name': user.full_name,
+                    'reset_link': reset_link,
+                }
+                send_template_email(
+                    subject='Reset Your Password',
+                    template_name='users/email/reset_password_email.html',
+                    context=context,
+                    recipient_list=[email]
+                )
+                return Response({"message": "Password reset email sent successfully."}, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({"error": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
