@@ -12,7 +12,7 @@ from orders.models import Order
 from cart.models import Cart
 from cart.serializer import CartSerializer,DirectBuySerializer
 from decimal import Decimal, InvalidOperation
-
+from uuid import uuid4
 class ShowCart(View):
     def get(self, request):
         category_obj = Category.objects.all()
@@ -228,7 +228,7 @@ class Checkout(View):
         except (KeyError, InvalidOperation, TypeError) as e:
             return redirect("cart:showcart")
 
-        addresses = user.address if user.address else []
+        addresses = user.address or []
 
         context = {
             "cart": cart.products,
@@ -295,6 +295,111 @@ class DirectBuyCheckout(View):
 
     def post(self, request):
         p_id = request.POST['product_id']
-        url = reverse('shoppingsite:directbuycheckout', args=[p_id])
+        url = reverse('cart:directbuycheckout', args=[p_id])
 
         return HttpResponseRedirect(url)
+
+
+
+
+
+
+# checkout address
+
+class AddAddress(View):
+    def post(self, request):
+        if request.method == 'POST':
+            landmark1 = request.POST["landmark1"]
+            landmark2 = request.POST["landmark2"]
+            country = request.POST["country"]
+            state = request.POST["state"]
+            city = request.POST["city"]
+            mobile_no = request.POST["mobile_no"]
+            zipcode = request.POST["zipcode"]
+
+            address_id = str(uuid4())
+
+            address_data = {
+                "id": address_id,
+                "landmark1": landmark1,
+                "landmark2": landmark2,
+                "country": country,
+                "state": state,
+                "city": city,
+                "mobile_no": mobile_no,
+                "zipcode": zipcode,
+            }
+            user = request.user
+            addresses = user.address or []
+            addresses.append(address_data)
+            user.address = addresses
+            user.save()
+
+            return redirect('cart:checkout')
+        else:
+            return redirect('app_coomo:home')
+
+
+
+
+def update_address_view(request):
+    if request.method == 'POST':
+        user = request.user
+        user_obj = get_object_or_404(User, id=user.id)
+        a_id = request.POST.get('a_id')
+        landmark1 = request.POST.get('landmark1')
+        landmark2 = request.POST.get('landmark2')
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        mobile_no = request.POST.get('mobile_no')
+        zipcode = request.POST.get('zipcode')
+
+        addresses = user_obj.address or []
+
+        try:
+            # Find and update the address with the specified id
+            for address in addresses:
+                if address['id'] == a_id:
+                    address.update({
+                        'landmark1': landmark1,
+                        'landmark2': landmark2,
+                        'country': country,
+                        'state': state,
+                        'city': city,
+                        'mobile_no': mobile_no,
+                        'zipcode': zipcode,
+                    })
+                    break
+
+            # Save the updated addresses back to the user model
+            user_obj.address = addresses
+            user_obj.save()
+            messages.success(request, 'Address updated successfully.')
+
+            # Redirect to the checkout page
+            return redirect('cart:checkout')
+
+        except Exception as e:
+            messages.error(request, f'Failed to update address: {str(e)}')
+            return redirect('app_commo:home')
+    else:
+        return redirect('app_common:home')
+
+
+
+
+class DeleteAddress(View):
+    def get(self, request, address_id):
+        user = request.user
+        addresses = user.address or []
+
+        # Remove the address with the specified ID
+        addresses = [address for address in addresses if address.get('id') != address_id]
+
+        # Save the updated list of addresses back to the user model
+        user.address = addresses
+        user.save()
+
+        # Redirect to the checkout page
+        return redirect('cart:checkout')

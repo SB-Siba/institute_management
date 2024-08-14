@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import User
+from helpers import utils
 class Order(models.Model):
     ORDER_STATUS = (
         ("Placed","Placed"),

@@ -1,3 +1,4 @@
+import logging
 from rest_framework import serializers
 
 
@@ -32,7 +33,8 @@ class SignupSerializer(serializers.ModelSerializer):
         user.save()
         return user
 from django.contrib.auth import authenticate
-    
+from django.contrib.auth import get_user_model
+  
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -40,14 +42,23 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-        user = authenticate(email=email, password=password)
-        if user and user.is_active:
-            data['user'] = user
-        else:
-            raise serializers.ValidationError('Invalid credentials or inactive account')
-        return data
         
+        if not email or not password:
+            raise serializers.ValidationError("Must include 'email' and 'password'.")
 
+        User = get_user_model()
+        
+        # Authenticate using email as username
+        user = authenticate(username=email, password=password)
+
+        if user:
+            if not user.is_active:
+                raise serializers.ValidationError("Account is inactive.", code='authorization')
+        else:
+            raise serializers.ValidationError("Invalid credentials.", code='authorization')
+
+        data['user'] = user
+        return data
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
@@ -62,3 +73,12 @@ class ForgotPasswordSerializer(serializers.Serializer):
         if not models.User.objects.filter(email=value).exists():
             raise serializers.ValidationError("No user found with this email address.")
         return value
+    
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True, required=True)
+    confirm_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data

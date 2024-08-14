@@ -1,6 +1,6 @@
 import email
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 
 from rest_framework.views import APIView
@@ -71,7 +71,9 @@ class LoginApi(APIView):
         }
     )
     def post(self, request):
+        print("sghkjsdaj")
         serializer = serializers.LoginSerializer(data=request.data)
+        print("sghkjsthydthtdaj")
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
@@ -79,12 +81,12 @@ class LoginApi(APIView):
                 login(request, user)
                 return Response({'message': 'Login successful Admin'}, status=status.HTTP_200_OK)
             else:
+                print("elseee")
                 login(request, user)
                 token, _ = Token.objects.get_or_create(user=user)
                 return Response({'message': 'Login successful, Hi User', 'token': token.key}, status=status.HTTP_200_OK)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class LogOut(APIView):
 
@@ -134,3 +136,22 @@ class ForgotPasswordAPIView(APIView):
                 return Response({"error": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class ResetPasswordAPIView(APIView):
+    parser_classes = [FormParser, MultiPartParser]
+
+    @swagger_auto_schema(
+            tags=["authentication"],
+            operation_description="resetpassword API",
+            manual_parameters=swagger_documentation.reset_password,
+        )
+    def post(self, request, token):
+        serializer = serializers.ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            new_password = serializer.validated_data['new_password']
+            user = get_object_or_404(models.User, token=token)
+            user.password = make_password(new_password)
+            user.token = None  # Clear the token after password reset
+            user.save()
+            return Response({"detail": "Password reset successfully."}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

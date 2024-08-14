@@ -1,0 +1,54 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+    Order Information
+{% endblock title %}
+
+{% block content %}
+<main class="py-6 bg-surface-secondary" style="min-height: 60vh;">
+    <div class="container">
+        <div class="vstack gap-4" style="margin-top: 50px;">
+
+            <div class="card order_details">
+                <div class="row">
+                    <div class="col-md-12 col-12 col-sm-12">
+                        <table class="table w-100">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product, quantity in zipproduct %}
+                                    <tr>
+                                        <th scope="row">{{ product.id }}</th>
+                                        <td>
+                                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ quantity }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4">No products found</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td></td>
+                                    <td>Total Quantity</td>
+                                    <td>{{ total_quantity }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</main>
+{% endblock content %}

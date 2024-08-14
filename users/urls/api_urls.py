@@ -9,6 +9,7 @@ urlpatterns = [
 path('api/register/', api_views_users.SignupApi.as_view(), name='api_register'),
 path('api/login/', api_views_users.LoginApi.as_view(), name='api_login'),
 path('api/forgot-password/', api_views_users.ForgotPasswordAPIView.as_view(), name='forgot-password-api'),
+path('api/reset-password/<str:token>/', api_views_users.ResetPasswordAPIView.as_view(), name='reset_password_api'),
 
 
 

@@ -54,7 +54,7 @@ forgot_password = [
 
 reset_password = [
     openapi.Parameter(
-        "password",
+        "new_password",
         openapi.IN_FORM,
         description="Password",
         type=openapi.TYPE_STRING,
