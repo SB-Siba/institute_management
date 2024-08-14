@@ -11,7 +11,7 @@ from product.models import Products, SimpleProduct, Category
 from orders.models import Order
 from cart.models import Cart
 from cart.serializer import CartSerializer,DirectBuySerializer
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation,ROUND_HALF_UP
 from uuid import uuid4
 class ShowCart(View):
     def get(self, request):
@@ -44,7 +44,7 @@ class ShowCart(View):
 
         if totalPrice > 0:
             discount_price = totaloriginalprice - totalPrice
-            GST = totalPrice * Decimal(settings.GST_CHARGE)
+            GST =(totalPrice*Decimal(settings.GST_CHARGE)).quantize(Decimal('0.00'), rounding =ROUND_HALF_UP)            
             final_cart_value = totalPrice + GST
 
             if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):

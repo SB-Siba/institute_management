@@ -1,19 +1,10 @@
 :root {
-  --primary:rgb(6, 151, 83);
-  --primary2:rgb(54, 139, 104);
-  --secondary:rgb(252, 209, 54);
-  --secondary2:rgb(255, 212, 46);
-  --third: rgb(255, 255, 255);
-  --third2:#399918;
-  --pagebg:rgb(245, 245, 245);
-  --h6:rgb(122, 135, 122);
- 
-  --para: rgb(15, 15, 15);
-  --footer:rgb(33, 33, 33);
-  --header:#FFF7F1;
+  
 }
 
-
+#carouselExampleFade .carousel-inner{
+  margin-top: -10px;
+}
 .carousel-item img{
   height: 33rem;
   width: 100%;

@@ -1,0 +1,86 @@
+.product-price-details{
+    position: -webkit-sticky;
+    position: sticky;
+    top:15%;
+    height: auto; 
+    z-index: 1000;
+   
+}
+
+#continue-shop{
+    background-color: var(--third2);
+    padding: 15px 30px;
+}
+.cart-product-image a img{
+    height:80px;
+    width: 150px;
+}
+.checkout-check{
+    border-bottom: 1px dotted rgb(188, 188, 188);
+}
+.price-details span{
+    font-family:"Inter",sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--h6);
+    font-style: normal;
+    word-spacing: 2px;
+}
+.amount-details div span{
+    font-family:"Inter",sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--para2);
+    font-style: normal;
+    word-spacing: 2px;
+}
+.total-amount{
+    font-family:"Inter",sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    color: var(--para);
+    font-style: normal;
+    word-spacing: 3px;
+}
+#t-Head{
+    font-family:"Inter",sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--h6);
+    font-style: normal;
+    word-spacing: 2px;
+}
+#t-Head i{
+    font-size: 30px;
+    text-shadow: rgba(7, 7, 7, 0.15) 3px 2px 2.6px;;
+}
+.proceed-to{
+    width: 100%;
+    background-color: var(--third);
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    position: sticky;
+    bottom: 0;
+}
+.proceed-to-checkout{
+    display: flex;
+    justify-content: end;
+}
+.proceed-to-checkout a{
+    background-color: var(--place-order);
+    color: var(--third);
+    text-transform: uppercase;
+    padding: 15px 80px;
+    word-spacing: 5px;
+}
+.proceed-to-checkout a:hover{
+    color: var(--third);
+    transform: scale(1);
+}
+.proceed-to-checkout a:hover::before {
+    animation:none;
+  }
