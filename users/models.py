@@ -25,33 +25,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     deletion_requested = models.BooleanField(default=False)
     deletion_date = models.DateTimeField(null=True, blank=True)
     wallet = models.FloatField(default=0.0)
-   
     token = models.CharField(max_length=100, null=True, blank=True)
- 
     meta_data = models.JSONField(default=dict)
-   
-    # Define the field to be used as the username for authentication
+
     USERNAME_FIELD = "email"
-    
-    # Define the required fields for creating a user via the command line
     REQUIRED_FIELDS = ["full_name", "contact"]
 
     objects = MyAccountManager()
 
     def __str__(self):
         return self.email
-
-    def send_reset_password_email(self):
-        token = self.generate_reset_password_token()
-        reset_link = f"{settings.SITE_URL}/reset-password/{token}/"
-        subject = 'Reset your password'
-        message = (
-            f'Hi {self.full_name},\n\n'
-            f'To reset your password, please click the link below:\n\n'
-            f'{reset_link}\n\n'
-            'If you did not request this, please ignore this email.'
-        )
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [self.email])
 
     def generate_reset_password_token(self):
         token = str(uuid.uuid4())
@@ -66,7 +49,3 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.save()
             return True
         return False
-
-# Assuming you have request_deletion and cancel_deletion functions defined somewhere
-User.request_deletion = request_deletion
-User.cancel_deletion = cancel_deletion

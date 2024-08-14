@@ -84,10 +84,52 @@ transform: scale(1.03);
   background-color: var(--primary2);
   color: var(--third)!important;
 }
-.card-body{
-  line-height: 1.9;
+
+
+/*------------------- new arrivals & Trending Products-------------- */
+ .new-head{
+  height: 407px;
+  width:  225px;
+  overflow: hidden;
+ }
+#new-products{
+  height: 407px;
+  width:  225px;
+  overflow: hidden;
+}
+#new-products a img{
+  height: 220px;
+  width: 220px;
+}
+#new-products .card-body{
+  text-align: start;
+}
+#new-products .card-body h5{
+  font-family: "inter",sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 21px;
+  margin-top: 10px;
+}
+#new-products .card-body .rating{
+  color:
+  rgb(245, 191, 18);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+}
+#new-products .card-body .rating span{
+  color: var(--para);
+    font-weight: 500;
+}
+#new-products .card-body div a{
+  background-color: var(--discount);
+  padding: 10px;
+  width: 80%;
+  margin: auto;
 }
 
+/* -------------------------------Why choose niwa----------------------- */
 
 .chooseniwa_logo div img{
   height: 50px;

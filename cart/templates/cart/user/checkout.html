@@ -246,16 +246,12 @@ Checkout
                 <p class="fw-bold text-dark">GST: <span class="float-end">&#8377; {{GST}}</span></p>
                 <p class="fw-bold text-dark">Delivery Charges: <span class="float-end">&#8377; {{Delivery}}</span></p>
                 <p class="fw-bold text-dark">Total Cart Value: <span class="float-end">&#8377; {{final_cart_value}}</span></p>
-                <p class="text-center text-dark" style="font-size: small;">(Inclusive of all taxes)</p>
                 <div class="d-flex justify-content-center">
-                    <form action="{% url 'orders:place_order' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="addressid" id="addressid">
-                        <input type="hidden" name="cartID" value="{{cart_id}}">
-                        <button type="submit" class="theme-btn-1" id="placeOrderButton">Place Order</button>
-                    </form>
+                    <button class="theme-btn-1 mt-5 w-100 mt-2" id="rzp-button1">Proceed To Payment</button>
                 </div>
             </div>
+            <span class="d-flex "><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">  Safe and Secure Payments.Easy returns.100% Authentic products.</p></span>
+
         </div>
     </div>
 </div>
@@ -263,7 +259,67 @@ Checkout
 {% endblock content %}
 
 {% block script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#rzp-button1').click(function (e) {
+            e.preventDefault();
+            var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+
+            if (!selectedAddress) {
+                alert("Please select an address before proceeding with the payment.");
+                return;
+            }
+            
+            console.log(selectedAddress);
+
+            var options = {
+                "key": "{{ api_key }}",
+                "amount": "{{ amount }}",
+                "currency": "INR",
+                "name": "Treeranga",
+                "description": "Payment Transaction",
+                "image": "{% static 'app_common/img/logos/logo5.jpeg' %}",
+                "order_id": "{{ rz_order_id }}",
+                "prefill": {
+                    "contact": "{{ request.user.contact }}"
+                },
+                "notes": {
+                    "address": "Demo Address"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                },
+                "handler": function (response) {
+                    console.log(response);
+                    var data = {
+                        "razorpay_payment_id": response.razorpay_payment_id,
+                        "razorpay_order_id": response.razorpay_order_id,
+                        "razorpay_signature": response.razorpay_signature,
+                        "address_id": selectedAddress
+                    };
+                    $.ajax({
+                        url: '{% url "payment:paymentsuccess" %}',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            console.log(response);
+                            window.location.href = '{% url "payment:paymentsuccess" %}';
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("error")
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            };
+
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         // Show update address modal on button click
@@ -276,9 +332,9 @@ Checkout
             var city = $(this).data('city');
             var mobile_no = $(this).data('mobile_no');
             var zipcode = $(this).data('zipcode');
-
+            console.log(addressId)
             // Set values in the modal form fields
-            $('#updateAddressForm').attr('action', '{% url "cart:update_address" %}');
+            $('#updateAddressForm').attr('action', '{% url "shoppingsite:update_address" %}');
             $('#updateAddressForm #a_id').val(addressId);
             $('#updateAddressForm #update-landmark1').val(landmark1);
             $('#updateAddressForm #update-landmark2').val(landmark2);
@@ -291,21 +347,9 @@ Checkout
             // Show the modal
             $('#updateAddressModal').modal('show');
         });
-
         $('#addAddress').on('click', function() {
             // Show the modal
             $('#addAddressModal').modal('show');
-        });
-
-        // Handle Place Order button click
-        $('#placeOrderButton').on('click', function() {
-            var selectedAddressId = $('input[name="addressNoLabel"]:checked').val();
-            if (selectedAddressId) {
-                $('#addressid').val(selectedAddressId);
-                $(this).closest('form').submit(); // Submit the form
-            } else {
-                alert("Please select an address before placing the order.");
-            }
         });
 
         // Handle form submission for address update
@@ -321,6 +365,7 @@ Checkout
                     // Handle success response, maybe update the UI or close the modal
                     $('#updateAddressModal').modal('hide');
                     window.location.reload();
+                    // Reload the address list or update the UI as needed
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);

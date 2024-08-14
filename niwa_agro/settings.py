@@ -20,6 +20,11 @@ AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -29,7 +34,6 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
-
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,11 +49,8 @@ INSTALLED_APPS = [
     'app_common',
     'wishlist',
 
-
-
-
-    
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -142,7 +143,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+SITE_URL = 'http://127.0.0.1:8000'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
 if PRODUCTION == 'True':
@@ -152,7 +153,7 @@ if PRODUCTION == 'True':
 else:
     pass
 
-SITE_URL = 'http://127.0.0.1:8000'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -190,6 +191,10 @@ DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
 
+RAZORPAY_API_KEY = 'rzp_test_kugvSxFkbuJKAI'
+RAZORPAY_API_SECRET = 'kI8OEz5kKfMRBcnTmQ14GDHy'
+
+
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
@@ -204,4 +209,17 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'users.tasks.delete_expired_accounts',
         'schedule': 86400.0,  # every 24 hours
     },
+}
+
+CKEDITOR_5 = {
+    'basic': {
+        'config': {
+            'toolbar': [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'link', 'bulletedList', 'numberedList'
+            ],
+            'height': 300,
+            'width': '100%',
+        }
+    }
 }

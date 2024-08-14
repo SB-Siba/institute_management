@@ -22,8 +22,8 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes")
-        new_products = Products.objects.filter(show_as_new="yes")
+        trending_products = Products.objects.filter(trending="yes").order_by('-id')[:6]
+        new_products = Products.objects.filter(show_as_new="yes").order_by('-id')[:6]
 
         
         context = {

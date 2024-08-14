@@ -201,7 +201,7 @@
             <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
           </button> -->
           <button type="button" class="btn" id="form_open">
-            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i>
+            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i>
           </button>
           <button type="button" class="btn">
             <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
@@ -234,7 +234,7 @@
 
 
 <!-- --------------------loginmodal------------- -->
-
+{% comment %}
 <div class="home">
   <div class="form_container position-fixed">
     <div class="p-lg-3">
@@ -264,9 +264,11 @@
               New Here? <a href="#" id="SignUp"> Create an account</a>
           </div>
       </form>
-  </div>
+  </div> {% endcomment %}
 
       <!-- regitstration -->
+       
+{% comment %}
  <div class="form signup_form text-dark">
     <h6 class="text-center">Create an account with</h6>
         <form class=" text-dark" >
@@ -283,8 +285,7 @@
       </div>
   </div>
 </div>
-
-
+{% endcomment %}
 <!-- -----------------------------endloginmodal---------------------------- -->
 
 
