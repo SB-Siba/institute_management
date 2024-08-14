@@ -69,7 +69,6 @@
 }
 
 .gallery-container {
-    /* position: relative; */
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -81,7 +80,7 @@
 .gallery-container::-webkit-scrollbar{
     display: none;
 }
-
+ 
 
 .gallery-items {
     display: flex;
@@ -191,3 +190,8 @@
   height:180px;
   object-fit: cover;
 }
+
+/*---------------------------- new products------------------------------- */
+                        /* nocss */
+/*---------------------------- new products------------------------------- */
+                     /* nocss */
