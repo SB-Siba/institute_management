@@ -128,7 +128,7 @@
     top: 0;
     left: 0;
     z-index: 1000000;
-    max-height: 90px;
+    max-height: 130px;
   }
 #header_rows{
   display: flex;

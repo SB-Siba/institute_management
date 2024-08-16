@@ -1,7 +1,7 @@
 .product-price-details{
     position: -webkit-sticky;
     position: sticky;
-    top:15%;
+    top:16.5%;
     height: auto; 
     z-index: 1000;
    
@@ -18,6 +18,14 @@
 .checkout-check{
     border-bottom: 1px dotted rgb(188, 188, 188);
 }
+
+.quantity_add input{
+    width:50px ;
+}
+.quantity_add i{
+    color: var(--h6);
+}
+
 .price-details span{
     font-family:"Inter",sans-serif;
     font-weight: 500;
@@ -41,7 +49,7 @@
     font-weight: 600;
     font-size: 18px;
     line-height: 25px;
-    color: var(--para);
+    color: var(--para2);
     font-style: normal;
     word-spacing: 3px;
 }

@@ -33,13 +33,15 @@ margin-top: -10px;
   overflow: hidden;
   object-fit: contain;
   transition:transform 0.5s ;
+  height: 200px;
+  width: 200px;
 }
 .image-wrapper:hover{
 transform: scale(1.07);
 
 }
 .image-wrapper a img{
-height: auto;
+height: 100%;
 width:100%;
 object-fit: cover;
 transition: transform 0.5s;

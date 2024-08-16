@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404, redirect,render
 from django.urls import reverse
 from django.views import View
@@ -13,6 +14,7 @@ from cart.models import Cart
 from cart.serializer import CartSerializer,DirectBuySerializer
 from decimal import Decimal, InvalidOperation,ROUND_HALF_UP
 from uuid import uuid4
+from payment import razorpay
 class ShowCart(View):
     def get(self, request):
         category_obj = Category.objects.all()
@@ -44,7 +46,7 @@ class ShowCart(View):
 
         if totalPrice > 0:
             discount_price = totaloriginalprice - totalPrice
-            GST =(totalPrice*Decimal(settings.GST_CHARGE)).quantize(Decimal('0.00'), rounding =ROUND_HALF_UP)            
+            GST = (totalPrice * Decimal(settings.GST_CHARGE)).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
             final_cart_value = totalPrice + GST
 
             if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
@@ -217,21 +219,32 @@ class Checkout(View):
         except Cart.DoesNotExist:
             return redirect("cart:showcart")
 
-        try:
-            order_details = CartSerializer(cart).data
-            totaloriginalprice = Decimal(order_details['products_data']['gross_cart_value'])
-            totalPrice = Decimal(order_details['products_data']['our_price'])
-            GST = Decimal(order_details['products_data']['charges']['GST'])
-            Delivery = Decimal(order_details['products_data']['charges']['Delivery'])
-            final_cart_value = Decimal(order_details['products_data']['final_cart_value'])
-            discount_price = totaloriginalprice - totalPrice
-        except (KeyError, InvalidOperation, TypeError) as e:
-            return redirect("cart:showcart")
-
+        order_details = CartSerializer(cart).data
+        totaloriginalprice = 0
+        totalPrice = 0
+        GST = 0
+        Delivery = 0
+        final_cart_value = 0
         addresses = user.address or []
+
+        # Razorpay order creation
+        status, rz_order_id = razorpay.create_order_in_razPay(
+            amount=int(float(order_details['products_data']['final_cart_value']) * 100)  # Amount in paise
+        )
+
+        for i, j in order_details.items():
+            totaloriginalprice = Decimal(j['gross_cart_value'])
+            totalPrice = Decimal(j['our_price'])
+            GST = Decimal(j['charges']['GST'])
+            Delivery = Decimal(j['charges']['Delivery'])
+            final_cart_value = j['final_cart_value']
+
+        discount_price = totaloriginalprice - totalPrice
 
         context = {
             "cart": cart.products,
+            "rz_order_id": rz_order_id,
+            "api_key": settings.RAZORPAY_API_KEY,
             "addresses": addresses,
             'totaloriginalprice': totaloriginalprice,
             'totalPrice': totalPrice,

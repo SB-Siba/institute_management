@@ -1,6 +1,6 @@
 {% extends 'app_common/base.html' %}
  {% load static %}
- {% block title%} Home{% endblock title %} 
+ {% block title%} Home | Niwa Agro.com{% endblock title %} 
  {% block content %}
 
 <!-- --------------------banner section--------------- -->
@@ -54,14 +54,13 @@
         <h3 class="text-success text-center">Shop By Collection</h3>
       </div> 
    
-        <!-- ----------------max card should be 5 in =----------------- -->
     <div class="row">
        {% for category in categories %}
     
         <div class="col content-wrapper col-lg-2 col-md-3 col-6">
           <div class="image-wrapper align-self-center">
             <a href="{% url 'product:products_of_category' category.title %}">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="185" height="330">
+                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="200" height="200">
               </a>
           </div>
           <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">

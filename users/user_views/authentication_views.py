@@ -89,6 +89,7 @@ class Login(View):
 
     def get(self, request):
         form = LoginForm()
+        form2 = ForgotPasswordForm()
         return render(request, self.template, {'form': form})
     
     def post(self, request):
@@ -132,12 +133,12 @@ class ForgotPasswordView(View):
     template_name = app + 'authtemp/forgot_password.html' 
 
     def get(self, request):
-        form = forms.ForgotPasswordForm()
-        return render(request, self.template_name, {'form': form})
+        form2 = forms.ForgotPasswordForm()
+        return render(request, self.template_name, {'form2': form2})
 
     def post(self, request):
-        form = forms.ForgotPasswordForm(request.POST)
-        if form.is_valid():
+        form2 = forms.ForgotPasswordForm(request.POST)
+        if form2.is_valid():
             email = form.cleaned_data['email']
             try:
                 user = models.User.objects.get(email=email)
@@ -147,7 +148,7 @@ class ForgotPasswordView(View):
                 return HttpResponse("No user found with this email address.")
             except Exception as e:
                 return HttpResponse(f"An error occurred: {e}")
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form2': form2})
 
  
 
