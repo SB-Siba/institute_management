@@ -36,7 +36,8 @@
     
   <!------------ ADDITIONAL FILES------ -->
 
-
+  <script src="
+  https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
 </head>
@@ -419,36 +420,7 @@
 
   {% endblock js %}
   
-  <script> 
-document.addEventListener("DOMContentLoaded", function() {
-    const formOpenBtn = document.querySelector("#form_open"),
-          home = document.querySelector(".home"),
-          formContainer = document.querySelector(".form_container"),
-          formCloseBtn = document.querySelector(".form_close"),
-          signupBtn = document.querySelector("#SignUp"),
-          loginBtn = document.querySelector("#SignIn");
-
-    formOpenBtn.addEventListener("click", () => {
-        home.classList.add("show");
-    });
-
-    formCloseBtn.addEventListener("click", () => {
-        home.classList.remove("show");
-        formContainer.classList.remove("active");
-    });
-
-    signupBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        formContainer.classList.add("active");
-    });
-
-    loginBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        formContainer.classList.remove("active");
-    });
-});
-
-  </script>
+  
   <script>
 
 

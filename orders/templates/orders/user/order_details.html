@@ -24,16 +24,12 @@
                             <tbody>
                                 {% for product, quantity in zipproduct %}
                                     <tr>
-                                        <th scope="row">{{ product.id }}</th>
+                                        <th scope="row">{{ product.uid }}</th>
                                         <td>
-                                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
+                                            <img src="{{ product.image.url }}" style="height: 50px; width: 50px;"/>
                                         </td>
                                         <td>{{ product.name }}</td>
                                         <td>{{ quantity }}</td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="4">No products found</td>
                                     </tr>
                                 {% endfor %}
                                 <tr>

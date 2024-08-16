@@ -1,5 +1,5 @@
 from django.views import View
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404,render
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -7,13 +7,15 @@ from django.conf import settings
 from cart.models import Cart
 from orders.models import Order
 from users.models import User
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from cart.serializer import CartSerializer
 from payment import razorpay  # Assuming you have a utility function for Razorpay verification
 import json
 
+app = 'payment/'
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class PaymentSuccess(View):
 
     model = Order
@@ -42,6 +44,7 @@ class PaymentSuccess(View):
             razorpay_payment_id = data.get('razorpay_payment_id')
             razorpay_order_id = data.get('razorpay_order_id')
             razorpay_signature = data.get('razorpay_signature')
+            print(razorpay_order_id, razorpay_payment_id, razorpay_signature)
 
             if razorpay.verify_signature(data):
                 try:
@@ -79,3 +82,10 @@ class PaymentSuccess(View):
             print(f"Exception caught: {e}")
             messages.error(request, "An error occurred.")
             return redirect("cart:checkout")
+
+
+
+class SuccessPage(View):
+    template = app + "payment_success.html"
+    def get(self, request):
+        return render(request, self.template)

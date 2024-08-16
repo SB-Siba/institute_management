@@ -1,6 +1,5 @@
 from rest_framework import serializers
-
-
+from django.contrib.auth import authenticate
 from users import models
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -31,7 +30,6 @@ class SignupSerializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         return user
-from django.contrib.auth import authenticate
     
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
