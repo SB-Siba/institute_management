@@ -1,5 +1,4 @@
 .product-price-details{
-    position: -webkit-sticky;
     position: sticky;
     top:16.5%;
     height: auto; 
@@ -92,3 +91,91 @@
 .proceed-to-checkout a:hover::before {
     animation:none;
   }
+
+
+/* ---------------------Proceed to Payment With Address? */
+
+  .proceed-to-payment button{
+    background-color: var(--place-order);
+    color: var(--third);
+    text-transform: uppercase;
+    padding: 15px 80px;
+    word-spacing: 5px;
+  }
+  #addAddress{
+    background-color: var(--discount);
+    color: var(--third);
+  }
+  .u-button.trash{
+    color: var(--third);
+    background-color:var(--danger) ;
+    font-size: 12px;
+    padding: 7px;
+    
+  }
+  .u-button.pencil{
+    color: var(--third);
+    background-color:var(--info) ;
+    font-size: 12px;
+    padding: 7px;
+  }
+
+
+
+
+.address-details li {
+    font-family:"Inter",sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--para);
+    font-style: normal;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+}
+.address-detailss li {
+    font-family:"Inter",sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--para);
+    font-style: normal;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+}
+#addAddressModal .modal-header,#addAddressModal .modal-footer{
+    background-color: var(--third2);
+    color: var(--third);
+}
+#addAddressModal .modal-footer{
+    display: flex;
+    justify-content:space-around;
+}
+
+
+#updateAddressModal .form-control {
+    border: 1px solid rgba(209, 203, 203, 0.45);
+    border-radius:2px;
+}
+
+ 
+#addAddressForm .form-control {
+    border: 1px solid rgba(209, 203, 203, 0.45);
+    border-radius:2px;
+}
+.u-button.add{
+    color: var(--third);
+    background-color:var(--info) ;
+    font-size: 15px;
+    padding: 10px;
+  }
+  .u-button.close{
+    color: var(--third);
+    background-color:var(--h6) ;
+    font-size: 15px;
+    padding: 10px 45px;
+  }
+
+
+  /* -----------------------------------payment success--------------------------------- */
+  

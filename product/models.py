@@ -17,8 +17,6 @@ def document_path(self, filename):
 class Category(models.Model):
     title=models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, null=True, blank=True, unique=True)
-
-    description=models.TextField()
     image = models.ImageField(upload_to='category/', blank=True, null=True)
 
     def __str__(self):

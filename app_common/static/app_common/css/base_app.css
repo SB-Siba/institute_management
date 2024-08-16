@@ -71,7 +71,6 @@
   border-radius: 3px;
   box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
   font-size: 14px;
-  
   text-align: center;
   font-weight: 500;
   
@@ -98,6 +97,8 @@
     --footer:rgb(33, 33, 33);
     --header:#D6EFD8;
     --place-order:rgb(251, 100, 27);
+    --danger:rgb(236, 6, 6);
+    --info:#269f54;
    }
 
  
