@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 import io
 from PIL import Image
@@ -17,8 +18,6 @@ def document_path(self, filename):
 class Category(models.Model):
     title=models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, null=True, blank=True, unique=True)
-
-    description=models.TextField()
     image = models.ImageField(upload_to='category/', blank=True, null=True)
 
     def __str__(self):
@@ -64,6 +63,18 @@ class SimpleProduct(models.Model):
     product_max_price = models.FloatField(default=0.0, null=True, blank=True)
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)
     stock = models.IntegerField(default=1, blank=True, null=True)
+    sgst_rate = models.DecimalField(max_digits=5, decimal_places=3, default=Decimal('0.015'))  # Default SGST rate
+    cgst_rate = models.DecimalField(max_digits=5, decimal_places=3, default=Decimal('0.015'))  # Default CGST rate
+    delivery_charge_per_bag = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('50.00'))  # Default delivery fee
+    delivery_free_order_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('750.00'))  # Free delivery above this amount
+
+    def gst_amount(self):
+        """Calculate the total GST amount for the product."""
+        return Decimal(self.product_max_price) * (self.sgst_rate + self.cgst_rate)
+
+    def price_with_gst(self):
+        """Calculate the price including GST."""
+        return Decimal(self.product_max_price) + self.gst_amount()
 
     def discount_percentage(self):
         if self.product_max_price and self.product_discount_price:

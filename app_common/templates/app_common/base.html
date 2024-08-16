@@ -36,7 +36,8 @@
     
   <!------------ ADDITIONAL FILES------ -->
 
-
+  <script src="
+  https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
 </head>
@@ -234,8 +235,8 @@
 
 
 <!-- --------------------loginmodal------------- -->
-
-{% comment %} <div class="home">
+{% comment %}
+<div class="home">
   <div class="form_container position-fixed">
     <div class="p-lg-3">
       <img src="{% static 'app_common/images/logo1.png' %}" class="mx-auto log_reg_logo" style="width: 40px;" alt="logo">
@@ -267,6 +268,8 @@
   </div> {% endcomment %}
 
       <!-- regitstration -->
+       
+{% comment %}
  <div class="form signup_form text-dark">
     <h6 class="text-center">Create an account with</h6>
         <form class=" text-dark" >
@@ -283,8 +286,7 @@
       </div>
   </div>
 </div>
-
-
+{% endcomment %}
 <!-- -----------------------------endloginmodal---------------------------- -->
 
 
@@ -418,36 +420,7 @@
 
   {% endblock js %}
   
-  <script> 
-document.addEventListener("DOMContentLoaded", function() {
-    const formOpenBtn = document.querySelector("#form_open"),
-          home = document.querySelector(".home"),
-          formContainer = document.querySelector(".form_container"),
-          formCloseBtn = document.querySelector(".form_close"),
-          signupBtn = document.querySelector("#SignUp"),
-          loginBtn = document.querySelector("#SignIn");
-
-    formOpenBtn.addEventListener("click", () => {
-        home.classList.add("show");
-    });
-
-    formCloseBtn.addEventListener("click", () => {
-        home.classList.remove("show");
-        formContainer.classList.remove("active");
-    });
-
-    signupBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        formContainer.classList.add("active");
-    });
-
-    loginBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        formContainer.classList.remove("active");
-    });
-});
-
-  </script>
+  
   <script>
 
 

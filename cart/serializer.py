@@ -9,11 +9,15 @@ class CartSerializer(serializers.ModelSerializer):
     products_data = serializers.SerializerMethodField()
 
     def get_products_data(self, obj):
+        # Your existing logic to calculate the cart data
         total_cart_items = 0
         gross_cart_value = Decimal('0')
         our_price = Decimal('0')
         charges = {}
         products = {}
+        total_gst = Decimal('0')
+        delivery_charge = Decimal('0')
+        free_delivery_threshold = Decimal('0')
 
         for key, value in obj.products.items():
             product_key_parts = key.split('_')
@@ -26,6 +30,13 @@ class CartSerializer(serializers.ModelSerializer):
                 gross_cart_value += Decimal(simple_product.product_max_price) * quantity
                 our_price += Decimal(simple_product.product_discount_price) * quantity
                 total_cart_items += quantity
+
+                # Calculate GST for this product
+                gst_rate = simple_product.sgst_rate + simple_product.cgst_rate
+                total_gst += (Decimal(simple_product.product_discount_price) * gst_rate * quantity)
+
+                # Prepare delivery charge and threshold
+                delivery_charge = simple_product.delivery_charge_per_bag
 
                 product_data = {
                     'id': product.id,
@@ -49,13 +60,11 @@ class CartSerializer(serializers.ModelSerializer):
         discount_amount = gross_cart_value - our_price
         final_cart_value = our_price
 
-        if settings.GST_CHARGE > 0:
-            gst_value = final_cart_value * Decimal(str(settings.GST_CHARGE))
-            charges['GST'] = gst_value.quantize(Decimal('0.01'))
-        else:
-            charges['GST'] = Decimal('0')
-        if final_cart_value < settings.DELIVARY_FREE_ORDER_AMOUNT:
-            delivery_charge = Decimal(str(settings.DELIVARY_CHARGE_PER_BAG))
+        # Apply GST
+        charges['GST'] = total_gst.quantize(Decimal('0.01'))
+
+        # Apply Delivery Charges
+        if final_cart_value < free_delivery_threshold:
             charges['Delivery'] = delivery_charge.quantize(Decimal('0.01'))
         else:
             charges['Delivery'] = Decimal('0')
@@ -78,7 +87,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ["products_data"]
+        fields = ["products", "products_data"]  # Include 'products_data' in the fields list
+
 
 
 

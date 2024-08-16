@@ -5,26 +5,13 @@
 {% endblock title %}
 
 {% block content %}
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
-    <style>
-        #t-Head {
-            color: #888888;
-            font-size: 14px;
-        }
-        .my-table {
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-        }
-    </style>
-</head>
-
 <section class="my-5" style="font-size: 14px; min-height: 60vh;">
     <div class="row">
         <div class="col-md-8">
             <div class="d-flex justify-content-end my-3">
                 <a href="{% url 'users:home' %}" class="btn btn-success" style="background-color: #00836C;">Continue Shopping</a>
             </div>
-            <!-- Cart Items List -->  
+            <!-- Cart Items List -->
             <table class="table table-hover my-table table-striped border">
                 <thead class="thead-light">
                     <tr>
@@ -44,18 +31,25 @@
                                 </a>
                             </td>
                             <td id="t-Body">
-                                <p><b>{{ value.info.name }} </b></p>
+                                <p><b>{{ value.info.name }}</b></p>
                                 <p class="mt-1 mb-2"><i class="bi bi-currency-rupee"></i>&nbsp;{{ value.info.discount_price }}</p>
-                                
                             </td>
                             <td>
-                                <div class='mt-3 d-flex'>
-                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class="mt-1"><i style="color:gray;margin-right:8px;" class="fas fa-minus-square"></i></a>
-                                    <input type="number" style="width: 60px; height: 27px; border-radius: 2px;" class="form-control" value="{{ value.quantity }}" readonly/>
-                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=plus" class="mt-1"><i style="color:gray;margin-left:8px;" class="fas fa-plus-square"></i></a>
+                                <div class="mt-3 d-flex">
+                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class="mt-1">
+                                        <i style="color:gray; margin-right:8px;" class="fas fa-minus-square"></i>
+                                    </a>
+                                    <input type="number" style="width: 60px; height: 27px; border-radius: 2px;" class="form-control" value="{{ value.quantity }}" readonly />
+                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=plus" class="mt-1">
+                                        <i style="color:gray; margin-left:8px;" class="fas fa-plus-square"></i>
+                                    </a>
                                 </div>
                             </td>
-                            <td><a href="{% url 'cart:removefromcart' key %}" style="margin: 20% 15%; text-decoration: none;"><i class="fa fa-trash mt-3 text-secondary" style="font-size: 15px;" aria-hidden="true"></i></a></td>
+                            <td>
+                                <a href="{% url 'cart:removefromcart' key %}" style="margin: 20% 15%; text-decoration: none;">
+                                    <i class="fa fa-trash mt-3 text-secondary" style="font-size: 15px;" aria-hidden="true"></i>
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     {% else %}
@@ -70,30 +64,30 @@
         <div class="col-md-4 mt-3">
             <!-- Cart Summary -->
             <div class="border px-3 py-2 mb-3 bg-white rounded">
-                <h6 class="mb-3 text-muted"> PRICE DETAILS</h6>
+                <h6 class="mb-3 text-muted">PRICE DETAILS</h6>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>MRP : </span>
+                    <span>MRP:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ totaloriginalprice }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>Our Price : </span>
+                    <span>Our Price:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ totalPrice }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>Discount : </span>
+                    <span>Discount:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ discount_price }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>GST : </span>
+                    <span>GST:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ GST }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                    <span>Delivery Charge : </span>
+                    <span>Delivery Charge:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ Delivery }}</span>
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between">
-                    <span>Total : </span>
+                    <span>Total:</span>
                     <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ final_cart_value }}</span>
                 </div>
                 {% if products %}
@@ -102,7 +96,10 @@
                     <a href="#" class="btn w-100 mt-3 text-white" style="background-color: #F37021;">Proceed to Checkout</a>
                 {% endif %}
             </div>
-            <span class="d-flex"><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">Safe and Secure Payments. Easy returns. 100% Authentic products.</p></span>
+            <span class="d-flex">
+                <i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i>
+                <p class="ms-2" id="t-Head" style="font-size: 13px;">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
+            </span>
         </div>
     </div>
 </section>

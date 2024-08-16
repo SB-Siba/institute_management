@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from helpers import utils
 import uuid
 from django.conf import settings
-from helpers.methods import request_deletion , cancel_deletion
+from helpers.methods import request_deletion, cancel_deletion
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -28,13 +28,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     token = models.CharField(max_length=100, null=True, blank=True)
     meta_data = models.JSONField(default=dict)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["full_name", "contact"]
+    USERNAME_FIELD = "email"	
+    REQUIRED_FIELDS = ["password"]
 
     objects = MyAccountManager()
 
+    def request_deletion(self):
+        request_deletion(self)
+
+    def cancel_deletion(self):
+        cancel_deletion(self)
+
     def __str__(self):
         return self.email
+
+    
 
     def generate_reset_password_token(self):
         token = str(uuid.uuid4())

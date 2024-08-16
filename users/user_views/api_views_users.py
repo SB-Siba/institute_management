@@ -13,98 +13,169 @@ from drf_yasg.utils import swagger_auto_schema
 from django.contrib import messages
 from rest_framework.parsers import FormParser, MultiPartParser
 
-
+from drf_yasg import openapi
+from django.contrib.auth import authenticate, login, logout
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated        
 # -------------------------------------------- custom import
 from helpers import swagger_documentation
 from helpers import utils, api_permission
+from product.models import Category
+from product.serializers import CategorySerializer
 from users import models
 
 from users import serializers
 from users import tasks
+from users.forms import UpdateProfileForm
 from users.user_views.emails import send_template_email
 
-class SignupApi(APIView):
-
-    serializer_class= serializers.SignupSerializer
-    model=models.User
-
+class RegistrationApi(APIView):
+    serializer_class = serializers.SignupSerializer
+    parser_classes = [FormParser, MultiPartParser]
     @swagger_auto_schema(
         tags=["authentication"],
         operation_description="signup API",
         manual_parameters=swagger_documentation.signup_post,
     )
     def post(self, request):
-        serializer = self.serializer_class(data = request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save(
-                password = make_password(request.data.get("password"))
-            )
-            return Response(
-               {
-                "status":200,
-                "message":"Your account is created, Please login..",
-               }
-            )
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
+            contact = serializer.validated_data.get('contact')
+            full_name = serializer.validated_data.get('full_name')
+
+            try:
+                # Create a new user
+                new_user = models.User(email=email, full_name=full_name, contact=contact)
+                new_user.set_password(password)
+                new_user.save()
+
+                # Authenticate the new user
+                user_login = authenticate(email=email, password=password)
+                if user_login is not None:
+                    login(request, user_login)
+
+                    # Send confirmation email (you might need to adjust this part)
+                    context = {
+                        'full_name': full_name,
+                        'email': email,
+                    }
+                    send_template_email(
+                        subject='Registration Confirmation',
+                        template_name='users/email/register_email.html',
+                        context=context,
+                        recipient_list=[email]
+                    )
+
+                    return Response(
+                        {"message": "Registration successful! You are now logged in."},
+                        status=status.HTTP_201_CREATED
+                    )
+                else:
+                    return Response(
+                        {"error": "Authentication failed. Please try again."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            except Exception as e:
+                print(e)
+                return Response(
+                    {"error": "Something went wrong while registering your account. Please try again later."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
         else:
-            error_list = utils.serilalizer_error_list(serializer.errors)
-            return Response(
-               {
-                "status":200,
-                "error": error_list,
-               }
-            )
-from drf_yasg import openapi
-from django.contrib.auth import authenticate, login, logout
-from rest_framework import status
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
+
 class LoginApi(APIView):
+    serializer_class = serializers.LoginSerializer
+    parser_classes = [FormParser, MultiPartParser]
+    @swagger_auto_schema(
+            tags=["authentication"],
+            operation_description="Login API",
+            manual_parameters=swagger_documentation.login_post,
+            responses={
+                200: openapi.Response('Login successful'),
+                400: openapi.Response('Validation error'),
+                401: openapi.Response('Login failed / You are not approved yet'),
+            }
+        )
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
+
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                login(request, user)
+                token, _ = Token.objects.get_or_create(user=user)
+                return Response(
+                    {
+                        "message": "Login successful",
+                        "token": token.key
+                    },
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {"error": "Invalid credentials"},
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        else:
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+class LogoutApi(APIView):
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can access this view
     parser_classes = [FormParser, MultiPartParser]
 
     @swagger_auto_schema(
         tags=["authentication"],
-        operation_description="Login API",
-        manual_parameters=swagger_documentation.login_post,
+        operation_description="Logout API",
+        manual_parameters=swagger_documentation.logout_get,
         responses={
-            200: openapi.Response('Login successful'),
-            400: openapi.Response('Validation error'),
-            401: openapi.Response('Login failed / You are not approved yet'),
+            200: openapi.Response('Logout successful'),
+            400: openapi.Response('Logout cancelled'),
+            401: openapi.Response('Unauthorized'),
         }
     )
-    def post(self, request):
-        print("sghkjsdaj")
-        serializer = serializers.LoginSerializer(data=request.data)
-        print("sghkjsthydthtdaj")
+    def get(self, request, *args, **kwargs):
+        # The IsAuthenticated permission class should prevent this,
+        # but we add an extra check to be safe.
+        if not request.user.is_authenticated:  
+            return Response({
+                "status": 401,
+                "message": "Unauthorized"
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            if user.is_superuser:
-                login(request, user)
-                return Response({'message': 'Login successful Admin'}, status=status.HTTP_200_OK)
-            else:
-                print("elseee")
-                login(request, user)
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({'message': 'Login successful, Hi User', 'token': token.key}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        confirm = request.query_params.get('confirm')
+        cancel = request.query_params.get('cancel')
 
-class LogOut(APIView):
+        if confirm:
+            # Log out the user and delete their token
+            logout(request)
+            Token.objects.filter(user=request.user).delete()
+            return Response({
+                "status": 200,
+                "message": "Logout Successful",
+            }, status=status.HTTP_200_OK)
 
-    permission_classes = [api_permission.is_authenticated]
-    model= models.User
+        if cancel:
+            if request.user.is_superuser:
+                return Response({
+                    "status": 200,
+                    "message": "Logout Cancelled",
+                }, status=status.HTTP_200_OK)
+            return Response({
+                "status": 200,
+                "message": "Logout Cancelled",
+            }, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(
-        tags=["authentication"],
-        operation_description="Logout Api",
-    )
-
-    def get(self, request):
-        Token.objects.get_or_create(user= request.user).delete()
         return Response({
-            "status":200,
-            "message":"Logout Successful",
-        })
-
+            "status": 200,
+            "message": "Logout Confirmation Required"
+        }, status=status.HTTP_200_OK)
+    
 class ForgotPasswordAPIView(APIView):
     parser_classes = [FormParser, MultiPartParser]
 
@@ -155,3 +226,64 @@ class ResetPasswordAPIView(APIView):
             return Response({"detail": "Password reset successfully."}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileApiView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+            tags=["user"],
+            operation_description="Retrieve user profile information.",
+            responses={
+                200: openapi.Response(
+                    description="Profile information retrieved successfully.",
+                    schema=serializers.UserProfileSerializer()
+                ),
+                401: openapi.Response(
+                    description="Unauthorized. User must be authenticated."
+                )
+            }
+        )
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        # Create response data
+        response_data = {
+            'user': serializers.UserProfileSerializer(user).data,  # You need to create this serializer
+        }
+        
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+class UpdateProfileApiView(APIView):
+    parser_classes = [FormParser, MultiPartParser]
+
+    @swagger_auto_schema(
+        tags=["user"],
+        operation_description="Update user profile",
+        manual_parameters=swagger_documentation.update_profile,
+        responses={
+            200: openapi.Response('Profile updated successfully'),
+            400: openapi.Response('Invalid input'),
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        form = UpdateProfileForm(request.data, request.FILES)
+
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            full_name = form.cleaned_data["full_name"]
+            contact = form.cleaned_data["contact"]
+            user = request.user
+
+            try:
+                user.email = email
+                user.full_name = full_name
+                user.contact = contact
+
+                user.save()
+
+                return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                return Response({"error": f"Error in updating profile: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)
