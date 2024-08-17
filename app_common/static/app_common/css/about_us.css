@@ -102,13 +102,13 @@
 #conatct_us{
     font-family: "Poppins",sans-serif;
     
-    margin:20px  auto 80px;
+    margin:20px auto 80px;
 }
 .contactus-page{
     background-color: var(--pagebg);
 }
 .contact_us_image{
-    height:530px;
+    height:400px;
     width: 100%;
     overflow: hidden;
    
