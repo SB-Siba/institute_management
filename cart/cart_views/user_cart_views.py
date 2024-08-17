@@ -30,72 +30,77 @@ class ShowCart(View):
             cartItems = None
             products = request.session.get('cart', {}).get('products', {})
 
-        totaloriginalprice = Decimal('0.00')
-        totalPrice = Decimal('0.00')
-        GST = Decimal('0.00')
+        total_original_price = Decimal('0.00')
+        total_discounted_price = Decimal('0.00')
+        total_sgst = Decimal('0.00')
+        total_cgst = Decimal('0.00')
         Delivery = Decimal('0.00')
         final_cart_value = Decimal('0.00')
-        free_delivery_threshold = Decimal('0.00')
 
         for product_key, product_info in products.items():
-            product_key_parts = product_key.split('_')
-            product_id = product_key_parts[0]
-
-            # Retrieve the SimpleProduct instance
-            simple_product = SimpleProduct.objects.get(id=product_id)
-
+            product_id = product_key.split('_')[0]
+            simple_product = get_object_or_404(SimpleProduct, id=product_id)
             max_price = Decimal(simple_product.product_max_price)
-            discount_price = Decimal(simple_product.product_discount_price)
-            quantity = product_info.get('quantity', 0)
+            original_discount_price = Decimal(simple_product.product_discount_price)
+            quantity = int(product_info.get('quantity', 0))
 
-            # Calculate the GST for each product
-            gst_rate = simple_product.sgst_rate + simple_product.cgst_rate
-            gst_for_product = (discount_price * gst_rate) * quantity
-            GST += gst_for_product
+            # Calculate adjusted discount price
+            sgst_rate = Decimal(simple_product.sgst_rate)
+            cgst_rate = Decimal(simple_product.cgst_rate)
+            total_gst_rate = sgst_rate + cgst_rate
 
-            # Calculate total prices
-            totaloriginalprice += max_price * quantity
-            totalPrice += discount_price * quantity
+            adjusted_discount_price = original_discount_price / (1 + total_gst_rate)
+            
+            # Calculate SGST and CGST based on adjusted discount price
+            sgst_amount = adjusted_discount_price * sgst_rate * quantity
+            cgst_amount = adjusted_discount_price * cgst_rate * quantity
 
-            # Set Delivery charge and free delivery threshold
-            Delivery = simple_product.delivery_charge_per_bag
-            free_delivery_threshold = simple_product.delivery_free_order_amount
+            total_sgst += sgst_amount
+            total_cgst += cgst_amount
 
-        # Calculate discount price
-        discount_price = totaloriginalprice - totalPrice
+            # Add to total prices
+            total_original_price += max_price * quantity
+            total_discounted_price += adjusted_discount_price * quantity
 
-        # Calculate final cart value
-        final_cart_value = totalPrice + GST
+        # GST and final cart value calculation
+        GST = total_sgst + total_cgst
+        final_cart_value = total_discounted_price + GST
 
-        # Apply delivery charges if applicable
-        if final_cart_value < free_delivery_threshold:
+        # Delivery charge handling
+        if final_cart_value > 0:
+            if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
+                Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+
             final_cart_value += Delivery
+        else:
+            adjusted_discount_price = Decimal('0.00')
 
+        # Update cart total price if authenticated
         if user.is_authenticated and cartItems:
-            cartItems.total_price = float(totalPrice)
+            cartItems.total_price = float(total_discounted_price)
             cartItems.save()
 
+        # Prepare context for the template
         context = {
             'category_obj': category_obj,
             'cartItems': cartItems,
             'products': products,
-            'totaloriginalprice': float(totaloriginalprice),
-            'totalPrice': float(totalPrice),
-            'GST': float(GST),
+            'total_original_price': float(total_original_price),
+            'total_discounted_price': float(total_discounted_price),
+            'total_sgst': float(total_sgst.quantize(Decimal('0.01'))),
+            'total_cgst': float(total_cgst.quantize(Decimal('0.01'))),
+            'GST': float(GST.quantize(Decimal('0.01'))),
             'Delivery': float(Delivery),
-            'final_cart_value': float(final_cart_value),
-            'discount_price': float(discount_price),
+            'final_cart_value': float(final_cart_value.quantize(Decimal('0.01'))),
+            'discount_price': float(total_original_price - total_discounted_price),
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
         return render(request, "cart/user/cartpage.html", context)
 
-
-
 class AddToCartView(View):
     def get(self, request, product_id):
         try:
-            # Check if the user is authenticated
             if request.user.is_authenticated:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
                 is_user_authenticated = True
@@ -103,33 +108,36 @@ class AddToCartView(View):
                 cart = request.session.get('cart', {'products': {}})
                 is_user_authenticated = False
 
-            # Get the product
             product_obj = get_object_or_404(SimpleProduct, id=product_id)
+            product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
-
-            # Prepare product info
             product_info = {
-                'quantity': 1,
-                'total_price': float(product_obj.product_discount_price),
+                'product_id': product_obj.product.id,
+                'uid': product_uid,
+                'name': product_obj.product.name,
+                'image': product_obj.product.image.url if product_obj.product.image else None,
+                'max_price': product_obj.product_max_price,
+                'discount_price': product_obj.product_discount_price,
             }
 
-            # Retrieve existing products from the cart
             products = cart.products if is_user_authenticated else cart.get('products', {})
-            
             if product_key in products:
-                # If the product is already in the cart, increase quantity and update total price
                 products[product_key]['quantity'] += 1
-                products[product_key]['total_price'] = float(products[product_key]['quantity'] * product_obj.product_discount_price)
+                products[product_key]['total_price'] += product_obj.product_discount_price
             else:
-                # Add new product to the cart
-                products[product_key] = product_info
+                products[product_key] = {
+                    'info': product_info,
+                    'quantity': 1,
+                    'total_price': product_obj.product_discount_price
+                }
 
-            # Save the cart
             if is_user_authenticated:
                 cart.products = products
+                cart.total_price = sum(item['total_price'] for item in products.values())
                 cart.save()
             else:
                 cart['products'] = products
+                cart['total_price'] = sum(item['total_price'] for item in products.values())
                 request.session['cart'] = cart
                 request.session.modified = True
 
@@ -139,11 +147,11 @@ class AddToCartView(View):
             print(f"Add to cart error: {e}")
             return HttpResponse(f"An error occurred: {e}", status=500)
 
+
 class ManageCart(View):
     def get(self, request, c_p_uid):
         operation_type = request.GET.get('operation')
 
-        # Determine the cart based on user authentication
         if request.user.is_authenticated:
             cart = Cart.objects.get(user=request.user)
             products = cart.products or {}
@@ -151,40 +159,31 @@ class ManageCart(View):
             cart = request.session.get('cart', {'products': {}})
             products = cart.get('products', {})
 
-        # Initialize variables
         product_found = False
-
         for product_key, product_info in products.items():
-            # Match the product based on UID
-            product_id = product_key.split('_')[0]
-            simple_product = SimpleProduct.objects.get(id=product_id)
-            uid = simple_product.product.uid or f"{simple_product.product.name}_{simple_product.id}"
-
-            if c_p_uid == uid:
+            if c_p_uid == product_info['info']['uid']:
                 product_found = True
                 if operation_type == 'plus':
-                    # Increase quantity and total price
                     product_info['quantity'] += 1
-                    product_info['total_price'] = float(product_info['quantity'] * simple_product.product_discount_price)
+                    product_info['total_price'] += product_info['info']['discount_price']
                 elif operation_type == 'min':
                     if product_info['quantity'] > 1:
-                        # Decrease quantity and total price
                         product_info['quantity'] -= 1
-                        product_info['total_price'] = float(product_info['quantity'] * simple_product.product_discount_price)
+                        product_info['total_price'] -= product_info['info']['discount_price']
                     else:
-                        # Remove the product if quantity becomes zero
                         products.pop(product_key)
                 break
 
         if not product_found:
             return HttpResponse(f"Product with UID {c_p_uid} not found in cart.", status=404)
 
-        # Save the updated cart
         if request.user.is_authenticated:
             cart.products = products
+            cart.total_price = sum(item['total_price'] for item in products.values())
             cart.save()
         else:
             cart['products'] = products
+            cart['total_price'] = sum(item['total_price'] for item in products.values())
             request.session['cart'] = cart
             request.session.modified = True
 
@@ -197,12 +196,14 @@ def RemoveFromCart(request, cp_uid):
         cart = get_object_or_404(Cart, user=request.user)
         if cp_uid in cart.products:
             cart.products.pop(cp_uid)
+            cart.total_price = sum(item['total_price'] for item in cart.products.values())
             cart.save()
     else:
         cart = request.session.get('cart', {'products': {}})
         products = cart.get('products', {})
         if cp_uid in products:
             products.pop(cp_uid)
+            cart['total_price'] = sum(item['total_price'] for item in products.values())
             cart['products'] = products
             request.session['cart'] = cart
             request.session.modified = True
@@ -227,7 +228,7 @@ class Checkout(View):
                 user_cart, created = Cart.objects.get_or_create(user=user)
                 user_cart_products = user_cart.products or {}
 
-                for key, value in session_cart.get('products', {}).items():
+                for key, value in session_cart.items():
                     if key in user_cart_products:
                         user_cart_products[key]['quantity'] += value['quantity']
                     else:
@@ -242,19 +243,26 @@ class Checkout(View):
             return redirect("cart:showcart")
 
         order_details = CartSerializer(cart).data
-        totaloriginalprice = Decimal(order_details['products_data']['gross_cart_value'])
-        totalPrice = Decimal(order_details['products_data']['our_price'])
-        GST = Decimal(order_details['products_data']['charges']['GST'])
-        Delivery = Decimal(order_details['products_data']['charges']['Delivery'])
-        final_cart_value = Decimal(order_details['products_data']['final_cart_value'])
-
-        discount_price = totaloriginalprice - totalPrice
+        totaloriginalprice = 0
+        totalPrice = 0
+        GST = 0
+        Delivery = 0
+        final_cart_value = 0
         addresses = user.address or []
 
         # Razorpay order creation
         status, rz_order_id = razorpay.create_order_in_razPay(
-            amount=int(final_cart_value * 100)  # Amount in paise
+            amount=int(float(order_details['products_data']['final_cart_value']) * 100)  # Amount in paise
         )
+
+        for i, j in order_details.items():
+            totaloriginalprice = Decimal(j['gross_cart_value'])
+            totalPrice = Decimal(j['our_price'])
+            GST = Decimal(j['charges']['GST'])
+            Delivery = Decimal(j['charges']['Delivery'])
+            final_cart_value = j['final_cart_value']
+
+        discount_price = totaloriginalprice - totalPrice
 
         context = {
             "cart": cart.products,
@@ -267,7 +275,7 @@ class Checkout(View):
             'Delivery': Delivery,
             'final_cart_value': final_cart_value,
             'discount_price': discount_price,
-            "MEDIA_URL": settings.MEDIA_URL,
+            "MEDIA_URL": settings.MEDIA_URL
         }
 
         return render(request, self.template, context)

@@ -76,15 +76,11 @@ class SimpleProductForm(forms.ModelForm):
     cgst_rate = forms.DecimalField(max_digits=5, decimal_places=3)
     cgst_rate.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.001', 'required': 'required'})
 
-    delivery_charge_per_bag = forms.DecimalField(max_digits=6, decimal_places=2)
-    delivery_charge_per_bag.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.01', 'required': 'required'})
-
-    delivery_free_order_amount = forms.DecimalField(max_digits=10, decimal_places=2)
-    delivery_free_order_amount.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.01', 'required': 'required'})
+    
 
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock','sgst_rate', 'cgst_rate', 'delivery_charge_per_bag', 'delivery_free_order_amount']
+        fields = ['product_max_price', 'product_discount_price', 'stock','sgst_rate', 'cgst_rate']
 
 
 

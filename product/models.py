@@ -65,8 +65,6 @@ class SimpleProduct(models.Model):
     stock = models.IntegerField(default=1, blank=True, null=True)
     sgst_rate = models.DecimalField(max_digits=5, decimal_places=3, default=Decimal('0.015'))  # Default SGST rate
     cgst_rate = models.DecimalField(max_digits=5, decimal_places=3, default=Decimal('0.015'))  # Default CGST rate
-    delivery_charge_per_bag = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('50.00'))  # Default delivery fee
-    delivery_free_order_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('750.00'))  # Free delivery above this amount
 
     def gst_amount(self):
         """Calculate the total GST amount for the product."""
@@ -81,6 +79,12 @@ class SimpleProduct(models.Model):
             discount = self.product_max_price - self.product_discount_price
             percentage = discount / self.product_max_price * 100
             return int(percentage)
+    
+    def discounted_price_with_gst(self):
+        """Calculate the discounted price including GST."""
+        discount_price = Decimal(self.product_discount_price)
+        total_gst = discount_price * (self.sgst_rate + self.cgst_rate)
+        return discount_price + total_gst
 
     def __str__(self):
         return f"{self.product.name} - Simple Product"
