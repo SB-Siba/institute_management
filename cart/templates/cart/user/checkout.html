@@ -291,9 +291,22 @@ Checkout
                         <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ final_cart_value }}</span>
                     </div>
                 
-                <div class="d-flex justify-content-center">
-                    <button class="theme-btn-1 mt-5 w-100 mt-2" id="rzp-button1">Proceed To Payment</button>
-                </div>
+                <div class="payment-method">
+            <h4>Select Payment Method</h4>
+            <label>
+                <input type="radio" name="payment_method" value="razorpay" checked>
+                Online Payment (Razorpay)
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="payment_method" value="cod">
+                Cash on Delivery (COD)
+            </label>
+        </div>
+
+        <div class="d-flex justify-content-center">
+        <button id="proceed-button" class="btn btn-primary">Proceed to Payment</button>
+        </div>
             </div>
             <span class="d-flex "><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">  Safe and Secure Payments.Easy returns.100% Authentic products.</p></span>
         </div>
@@ -303,46 +316,27 @@ Checkout
 
 {% block js %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#rzp-button1').click(function (e) {
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#proceed-button').click(function (e) {
+                e.preventDefault();
+                
+                var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+                var paymentMethod = $('input[name="payment_method"]:checked').val(); // Get selected payment method
 
-            console.log("yurturtiriyyryi")
-            e.preventDefault();
-            var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+                if (!selectedAddress) {
+                    alert("Please select an address before proceeding.");
+                    return;
+                }
 
-            if (!selectedAddress) {
-                alert("Please select an address before proceeding with the payment.");
-                return;
-            }
-            
-            console.log(selectedAddress);
-
-            var options = {
-                "key": "{{ api_key }}",
-                "amount": "{{ amount }}",
-                "currency": "INR",
-                "name": "Treeranga",
-                "description": "Payment Transaction",
-                "image": "",
-                "order_id": "{{ rz_order_id }}",
-                "prefill": {
-                    "contact": "{{ request.user.contact }}"
-                },
-                "notes": {
-                    "address": "Demo Address"
-                },
-                "theme": {
-                    "color": "#3399cc"
-                },
-                "handler": function (response) {
-                    console.log(response);
+                if (paymentMethod === 'cod') {
+                    // Handle Cash on Delivery (COD)
                     var data = {
-                        "razorpay_payment_id": response.razorpay_payment_id,
-                        "razorpay_order_id": response.razorpay_order_id,
-                        "razorpay_signature": response.razorpay_signature,
+                        "payment_method": "cod",
                         "address_id": selectedAddress
                     };
+
                     $.ajax({
                         url: '{% url "payment:paymentsuccess" %}',
                         type: 'POST',
@@ -353,18 +347,60 @@ Checkout
                             window.location.href = '{% url "payment:success_payment" %}';
                         },
                         error: function (xhr, status, error) {
-                            console.log("error")
                             console.error(xhr.responseText);
                         }
                     });
-                }
-            };
+                } else if (paymentMethod === 'razorpay') {
+                    // Handle Razorpay Payment Integration
+                    var options = {
+                        "key": "{{ api_key }}",
+                        "amount": "{{ amount }}",
+                        "currency": "INR",
+                        "name": "Treeranga",
+                        "description": "Payment Transaction",
+                        "image": "",
+                        "order_id": "{{ rz_order_id }}",
+                        "prefill": {
+                            "contact": "{{ request.user.contact }}"
+                        },
+                        "notes": {
+                            "address": "Demo Address"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        },
+                        "handler": function (response) {
+                            console.log(response);
+                            var data = {
+                                "razorpay_payment_id": response.razorpay_payment_id,
+                                "razorpay_order_id": response.razorpay_order_id,
+                                "razorpay_signature": response.razorpay_signature,
+                                "address_id": selectedAddress
+                            };
+                            $.ajax({
+                                url: '{% url "payment:paymentsuccess" %}',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(data),
+                                success: function (response) {
+                                    console.log(response);
+                                    window.location.href = '{% url "payment:success_payment" %}';
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        }
+                    };
 
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
+                    alert("Please select a valid payment method.");
+                }
+            });
         });
-    });
-</script>
+    </script>
 <script>
     $(document).ready(function () {
         // Show update address modal on button click

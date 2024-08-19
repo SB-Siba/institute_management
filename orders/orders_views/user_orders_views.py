@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponseRedirect, HttpRespons
 from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-
+from orders.serializer import OrderSerializer
 from django.views import View
 from orders.models import Order
 from product.models import Products
@@ -68,3 +68,40 @@ class DeleteAllDataView(View):
             message = f"Failed to delete data: {str(e)}"
             status_code = 500
         return HttpResponse(message, status=status_code)
+
+
+class UserDownloadInvoice(View):
+    model = Order
+    template= 'orders/admin/invoice.html'
+
+    def get(self,request, order_uid):
+        order = self.model.objects.get(uid = order_uid)
+        data = OrderSerializer(order).data
+        products = []
+        quantities = []
+        price_per_unit = []
+        total_prices = []
+        for product,p_overview in data['order_meta_data']['products'].items():
+            products.append(product)
+            quantities.append(p_overview['quantity'])
+            price_per_unit.append(p_overview['product_discount_price'])
+            total_prices.append(p_overview['total_price'])
+            # product['product']['quantity']=product['quantity']
+        prod_quant = zip(products, quantities,price_per_unit,total_prices)
+        try:
+            final_total = data['order_meta_data']['final_cart_value']
+        except Exception:
+            final_total = data['order_meta_data']['final_value']
+        context ={
+            'order':data,
+            'address':data['address'],
+            'user':order.user,
+            'productandquantity':prod_quant,
+            'GST':data['order_meta_data']['charges']['GST'],
+            'delevery_charge':data['order_meta_data']['charges']['Delivery'],
+            'gross_amt':data['order_meta_data']['our_price'],
+            'discount': data['order_meta_data'].get('coupon_validation_result', {}).get('discount', 0),
+            'final_total':final_total
+        }
+
+        return render(request, self.template, context) 
