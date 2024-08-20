@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
+    'ckeditor',
     
     'django.contrib.admin',
     'django.contrib.auth',

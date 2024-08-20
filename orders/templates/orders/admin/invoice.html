@@ -117,7 +117,7 @@
                                                                     style="border-bottom: 1px solid #dddddd; background-color: #0000000f;">
                                                                 </th>
                                                             </tr>
-
+ 
                                                             <tr>
                                                                 <th
                                                                     style=" border-bottom: 1px solid #dddddd;text-align: left; padding:11px">
@@ -136,7 +136,7 @@
                                                                     Amount
                                                                 </th>
                                                             </tr>
-
+ 
                                                             {% for product,quantity,price_per_unit,total_price in productandquantity %}
                                                                 <tr>
                                                                     <td
@@ -157,7 +157,7 @@
                                                                     </td>
                                                                 </tr>
                                                             {% endfor %}
-
+ 
                                                             {% for tax in invoice.tax.tax_list %}
                                                                 <tr>
                                                                     <td
@@ -207,7 +207,7 @@
                                                                     {{discount}}
                                                                 </td>
                                                             </tr>
-
+ 
                                                             <tr>
                                                                 <td
                                                                     style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
@@ -217,11 +217,27 @@
                                                                 </td>
                                                                 <th
                                                                     style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
-                                                                    GST:
+                                                                    CGST:
                                                                 </th>
                                                                 <td
                                                                     style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
-                                                                    {{GST}}
+                                                                    {{cgst_amount}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    SGST:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{sgst_amount}}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -237,7 +253,7 @@
                                                                 </th>
                                                                 <td
                                                                     style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
-                                                                    {{delevery_charge}}
+                                                                    {{delivery_charge}}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -256,7 +272,7 @@
                                                                     {{final_total}}
                                                                 </td>
                                                             </tr>
-
+ 
                                                         </table>
                                                     </td>
                                                 </tr>

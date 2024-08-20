@@ -50,16 +50,16 @@
 				</a>
                 <ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
                     <li class="sidebar-item">
-                        <a href="{% url 'product:product_list' %}" class="sidebar-links">
-                          <i class="lni lni-list"></i><span class="ms-4">All Products</span></a>
+                        <a href="{% url 'product:category_list' %}" class="sidebar-links">
+                          <i class="lni lni-list"></i><span class="ms-4">All Category List</span></a>
                     </li>
-                      <li class="sidebar-item">
+                      <!-- <li class="sidebar-item">
                           <a href="{% url 'product:category_add' %}" class="sidebar-links">
                             <i class="lni lni-files"></i> <span class="ms-4">Add Category</span> </a>
-                      </li>
+                      </li> -->
                       <li class="sidebar-item">
-                          <a href="{% url 'product:category_list' %}" class="sidebar-links">
-                            <i class="lni lni-line-double"></i><span class="ms-4">All Category List</span></a>
+                          <a href="{% url 'product:product_list' %}" class="sidebar-links">
+                            <i class="lni lni-line-double"></i><span class="ms-4">All Products</span></a>
                       </li>
                       <li class="sidebar-item">
                         <a href="{% url 'product:simple_product_list' %}" class="sidebar-links">

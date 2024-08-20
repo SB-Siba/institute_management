@@ -23,20 +23,30 @@ class CartSerializer(serializers.ModelSerializer):
                 product = simple_product.product
                 quantity = int(value['quantity'])
 
+                # Calculate product prices and totals
                 gross_cart_value += Decimal(simple_product.product_max_price) * quantity
                 our_price += Decimal(simple_product.product_discount_price) * quantity
                 total_cart_items += quantity
+
+                # Calculate SGST and CGST for the product
+                sgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
+                cgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
+                total_price = Decimal(simple_product.product_discount_price) * quantity 
 
                 product_data = {
                     'id': product.id,
                     'name': product.name,
                     'brand': product.brand,
                     'image': product.image.url if product.image else None,
-                    'product_max_price': str(simple_product.product_max_price),
-                    'product_discount_price': str(simple_product.product_discount_price),
-                    'discount_percentage': simple_product.discount_percentage(),
+                    'product_max_price': str(simple_product.product_max_price * quantity),
+                    'product_discount_price': str(simple_product.product_discount_price * quantity),
+                    'taxable_value': str(simple_product.taxable_value * quantity),
+
+                    # 'discount_percentage': simple_product.discount_percentage(),
                     'quantity': quantity,
-                    'total_price': str(Decimal(simple_product.product_discount_price) * quantity),
+                    'sgst_amount': str(sgst_amount.quantize(Decimal('0.01'))),
+                    'cgst_amount': str(cgst_amount.quantize(Decimal('0.01'))),
+                    'total_price': str(total_price.quantize(Decimal('0.01'))),
                     'images': simple_product.image_gallery.first().images if simple_product.image_gallery.exists() else [],
                     'video': simple_product.image_gallery.first().video if simple_product.image_gallery.exists() else [],
                 }
@@ -49,11 +59,6 @@ class CartSerializer(serializers.ModelSerializer):
         discount_amount = gross_cart_value - our_price
         final_cart_value = our_price
 
-        if settings.GST_CHARGE > 0:
-            gst_value = final_cart_value * Decimal(str(settings.GST_CHARGE))
-            charges['GST'] = gst_value.quantize(Decimal('0.01'))
-        else:
-            charges['GST'] = Decimal('0')
         if final_cart_value < settings.DELIVARY_FREE_ORDER_AMOUNT:
             delivery_charge = Decimal(str(settings.DELIVARY_CHARGE_PER_BAG))
             charges['Delivery'] = delivery_charge.quantize(Decimal('0.01'))

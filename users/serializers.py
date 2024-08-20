@@ -1,6 +1,8 @@
+import logging
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from users import models
+from django.contrib.auth import get_user_model
 
 class SignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -30,7 +32,7 @@ class SignupSerializer(serializers.ModelSerializer):
         user.is_active = True
         user.save()
         return user
-    
+   
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -38,36 +40,53 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-        user = authenticate(email=email, password=password)
-        if user and user.is_active:
-            data['user'] = user
-        else:
-            raise serializers.ValidationError('Invalid credentials or inactive account')
-        return data
         
+        if not email or not password:
+            raise serializers.ValidationError("Must include 'email' and 'password'.")
+
+        User = get_user_model()
+        
+        # Authenticate using email as username
+        user = authenticate(username=email, password=password)
+
+        if user:
+            if not user.is_active:
+                raise serializers.ValidationError("Account is inactive.", code='authorization')
+        else:
+            raise serializers.ValidationError("Invalid credentials.", code='authorization')
+
+        data['user'] = user
+        return data
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        exclude = ["password"]
+        exclude = ["password"] 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['full_name', 'email', 'contact']
 
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['full_name', 'email', 'contact', 'profile_pic']
 
 class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
 
-    contact = serializers.CharField(max_length = 10, required =True)
+    def validate_email(self, value):
+        if not models.User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user found with this email address.")
+        return value
     
-class NewPasswordSerializer(serializers.Serializer):
-
-    password1 = serializers.CharField(max_length = 255, required =True)
-    password2 = serializers.CharField(max_length = 255, required =True)
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True, required=True)
+    confirm_password = serializers.CharField(write_only=True, required=True)
 
     def validate(self, data):
-        # Check if the passwords match
-        if data['password1'] != data['password2']:
-            raise serializers.ValidationError("The passwords do not match.")
-        
-        if len(data['password1']) < 6:
-            raise serializers.ValidationError("Your Password is very weak")
-        
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
         return data

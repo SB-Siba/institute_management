@@ -19,7 +19,6 @@ urlpatterns = [
     #user/order
     path('your/oders/',user_orders_views.UserOrder.as_view(),name='orders'),
     path('order/order_detail/<str:order_uid>', user_orders_views.OrderDetail.as_view(), name='order_detail'),
-    path('delete_all_data/', user_orders_views.DeleteAllDataView.as_view(), name='delete_all_data'),
     path('order/user_download_invoice/<str:order_uid>', user_orders_views.UserDownloadInvoice.as_view(), name='user_download_invoice'),
 
 ]

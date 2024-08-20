@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 import io
 from PIL import Image
@@ -56,23 +57,34 @@ class Products(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-
 class SimpleProduct(models.Model):
+    GST_CHOICES = [
+        (Decimal('0.00'), '0%'),
+        (Decimal('5.00'), '5%'),
+        (Decimal('12.00'), '12%'),
+        (Decimal('18.00'), '18%'),
+        (Decimal('28.00'), '28%'),
+    ]
     product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)
     product_max_price = models.FloatField(default=0.0, null=True, blank=True)
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)
     stock = models.IntegerField(default=1, blank=True, null=True)
+    gst_rate = models.DecimalField(max_digits=5, decimal_places=2, choices=GST_CHOICES, default=Decimal('3.00'))  # Combined GST rate
+    taxable_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)  # Field to store taxable value
 
-    def discount_percentage(self):
-        if self.product_max_price and self.product_discount_price:
-            discount = self.product_max_price - self.product_discount_price
-            percentage = discount / self.product_max_price * 100
-            return int(percentage)
+    def save(self, *args, **kwargs):
+        if self.gst_rate is not None:
+            
+
+            # Calculate taxable value
+            discount_price = Decimal(self.product_discount_price)
+            total_gst = discount_price * ((self.gst_rate/100) * 2)
+            self.taxable_value = discount_price - total_gst
+            # Call the parent class's save method
+            super(SimpleProduct, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.product.name} - Simple Product"
-
-
 
 class ImageGallery(models.Model):
     simple_product = models.ForeignKey(SimpleProduct, on_delete=models.CASCADE, related_name='image_gallery')

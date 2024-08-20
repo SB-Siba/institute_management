@@ -134,20 +134,20 @@ Checkout
                         <input class="form-check-input" type="radio" name="addressNoLabel" id="addressNoLabel" value="{{i.id}}" aria-label="..." {% if forloop.first %}checked{% endif %} style="border: 1.5px solid rgb(169, 167, 167);"  />
                         <div class="address-details" >
                             <p>
-                                <li class="mb-1" style="font-size: x-small;">Address 1: {{i.landmark1}}</li>
-                                <li class="mb-1" style="font-size: x-small;">Address 2: {{i.landmark2}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Address 1: {{i.Address1}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Address 2: {{i.Address2}}</li>
                                 <li class="mb-1" style="font-size: x-small;">Mob No: {{i.mobile_no}}</li>
                                 <li class="mb-1" style="font-size: x-small;">City: {{i.city}}</li>
                                 <li class="mb-1" style="font-size: x-small;">State: {{i.state}}</li>
                                 <li class="mb-1" style="font-size: x-small;">Country: {{i.country}}</li>
-                                <li class="mb-1" style="font-size: x-small;">Zipcode: {{i.zipcode}}</li>
+                                <li class="mb-1" style="font-size: x-small;">pincode: {{i.pincode}}</li>
                             </p>
                         </div>
                         <div class="d-flex justify-content-between ps-5">
-                            <button type="button" class="btn btn-sm updateAddress btn-square BtM btn-neutral text-success-hover border" data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
+                            <button type="button" class="btn btn-sm updateAddress btn-square BtM btn-neutral text-success-hover border" data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-Address1="{{ i.Address1 }}" data-Address2="{{ i.Address2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-pincode="{{ i.pincode }}">
                                 <i class="bi bi-pencil"></i>
                             </button> &nbsp;
-                            <a href="{% url 'cart:delete_address' i.id %}">
+                            <a href="{% url 'cart:delete_address' i.id %}">Address1
                                 <button type="button"
                                     class="btn btn-sm btn-square BtM btn-neutral text-danger-hover border">
                                     <i class="bi bi-trash"></i>
@@ -173,12 +173,12 @@ Checkout
                                 <input type="text" id="a_id" name="a_id" hidden>
 
                                 <div class="mb-3">
-                                    <label for="update-landmark1" class="form-label">Address 1</label>
-                                    <input type="text" class="form-control" id="update-landmark1" name="landmark1" required>
+                                    <label for="update-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="update-Address1" name="Address1" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="update-landmark2" class="form-label">Address 2</label>
-                                    <input type="text" class="form-control" id="update-landmark2" name="landmark2">
+                                    <label for="update-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="update-Address2" name="Address2">
                                 </div>
                                 <div class="mb-3">
                                     <label for="update-mobile_no" class="form-label">Mobile No.</label>
@@ -199,8 +199,8 @@ Checkout
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="update-zipcode" class="form-label">Zipcode</label>
-                                    <input type="text" class="form-control" id="update-zipcode" name="zipcode" required>
+                                    <label for="update-pincode" class="form-label">pincode</label>
+                                    <input type="text" class="form-control" id="update-pincode" name="pincode" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -224,12 +224,12 @@ Checkout
                             <div class="modal-body">
                                 <!-- Address form fields -->
                                 <div class="mb-3">
-                                    <label for="add-landmark1" class="form-label">Address 1</label>
-                                    <input type="text" class="form-control" id="add-landmark1" name="landmark1" required>
+                                    <label for="add-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="add-Address1" name="Address1" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-landmark2" class="form-label">Address 2</label>
-                                    <input type="text" class="form-control" id="add-landmark2" name="landmark2">
+                                    <label for="add-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="add-Address2" name="Address2">
                                 </div>
                                 <div class="mb-3">
                                     <label for="add-mobile_no" class="form-label">Mobile No.</label>
@@ -248,8 +248,8 @@ Checkout
                                     <input type="text" class="form-control" id="add-country" name="country" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-zipcode" class="form-label">Zipcode</label>
-                                    <input type="text" class="form-control" id="add-zipcode" name="zipcode" required>
+                                    <label for="add-pincode" class="form-label">pincode</label>
+                                    <input type="text" class="form-control" id="add-pincode" name="pincode" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -277,10 +277,7 @@ Checkout
                         <span>Discount : </span>
                         <span class=""><i class="bi bi-currency-rupee"></i>&nbsp;{{ discount_price }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>GST : </span>
-                        <span class=" "><i class="bi bi-currency-rupee"></i></i>&nbsp;{{ GST }}</span>
-                    </div>
+                    
                     <div class="d-flex justify-content-between mb-2">
                         <span>Delivery Charge : </span>
                         <span class=" "><i class="bi bi-currency-rupee"></i>&nbsp;{{ Delivery }}</span>
@@ -406,24 +403,24 @@ Checkout
         // Show update address modal on button click
         $('.updateAddress').on('click', function() {
             var addressId = $(this).data('id');
-            var landmark1 = $(this).data('landmark1');
-            var landmark2 = $(this).data('landmark2');
+            var Address1 = $(this).data('Address1');
+            var Address2 = $(this).data('Address2');
             var country = $(this).data('country');
             var state = $(this).data('state');
             var city = $(this).data('city');
             var mobile_no = $(this).data('mobile_no');
-            var zipcode = $(this).data('zipcode');
+            var pincode = $(this).data('pincode');
             console.log(addressId)
             // Set values in the modal form fields
             $('#updateAddressForm').attr('action', '{% url "cart:update_address" %}');
             $('#updateAddressForm #a_id').val(addressId);
-            $('#updateAddressForm #update-landmark1').val(landmark1);
-            $('#updateAddressForm #update-landmark2').val(landmark2);
+            $('#updateAddressForm #update-Address1').val(Address1);Address1
+            $('#updateAddressForm #update-Address2').val(Address2);
             $('#updateAddressForm #update-country').val(country);
             $('#updateAddressForm #update-state').val(state);
             $('#updateAddressForm #update-city').val(city);
             $('#updateAddressForm #update-mobile_no').val(mobile_no);
-            $('#updateAddressForm #update-zipcode').val(zipcode);
+            $('#updateAddressForm #update-pincode').val(pincode);
 
             // Show the modal
             $('#updateAddressModal').modal('show');

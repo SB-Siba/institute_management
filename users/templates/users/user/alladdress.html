@@ -32,13 +32,13 @@
                 Address {{forloop.counter}}
               </h6>
               <p class="card-text" >
-                <li id="card-text">Landmark 1: {{i.landmark1}}</li>
-                <li id="card-text">Landmark 2: {{i.landmark2}}</li>
+                <li id="card-text">Address 1: {{i.Address1}}</li>
+                <li id="card-text">Address 2: {{i.Address2}}</li>
                 <li id="card-text">Country: {{i.country}}</li>
                 <li id="card-text">Mobile No: {{i.mobile_no}}</li>
                 <li id="card-text">State: {{i.state}}</li>
                 <li id="card-text">City: {{i.city}}</li>
-                <li id="card-text">Zipcode: {{i.zipcode}}</li>
+                <li id="card-text">pincode: {{i.pincode}}</li>
               </p>
               <a
                 href="{% url 'users:profile_delete_address' i.id %}"
