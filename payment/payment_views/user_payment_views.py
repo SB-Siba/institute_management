@@ -13,6 +13,8 @@ from cart.serializer import CartSerializer
 from payment import razorpay  # Assuming you have a utility function for Razorpay verification
 import json
 
+from users.user_views.emails import send_template_email
+
 app = 'payment/'
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -60,12 +62,20 @@ class PaymentSuccess(View):
                         razorpay_order_id=razorpay_order_id,
                         razorpay_signature=razorpay_signature,
                     )
-                    subject = "Order Successful !!!"
-                    message = (
-                        f"Hi {user.full_name},\n\nYour order has been successfully placed with a total of {t_price}."
+                    # Send confirmation email
+                    context = {
+                        'full_name': user.full_name,
+                        'email': user.email,
+                        'order_value': t_price,
+                        'order_details': ord_meta_data,
+                        'address': selected_address,
+                    }
+                    send_template_email(
+                        subject='Order Confirmation',
+                        template_name='users/email/order_confirmation.html',
+                        context=context,
+                        recipient_list=[user.email]
                     )
-                    from_email = "noreplyf577@gmail.com"
-                    send_mail(subject, message, from_email, [user.email], fail_silently=False)
                     order.save()
                     messages.success(request, "Order Successful!")
                     cart.delete()

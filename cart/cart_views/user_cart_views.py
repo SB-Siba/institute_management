@@ -30,69 +30,43 @@ class ShowCart(View):
             cartItems = None
             products = request.session.get('cart', {}).get('products', {})
 
-        total_original_price = Decimal('0.00')
-        total_discounted_price = Decimal('0.00')
-        total_sgst = Decimal('0.00')
-        total_cgst = Decimal('0.00')
+        totaloriginalprice = Decimal('0.00')
+        totalPrice = Decimal('0.00')
         Delivery = Decimal('0.00')
         final_cart_value = Decimal('0.00')
 
         for product_key, product_info in products.items():
-            product_id = product_key.split('_')[0]
-            simple_product = get_object_or_404(SimpleProduct, id=product_id)
-            max_price = Decimal(simple_product.product_max_price)
-            original_discount_price = Decimal(simple_product.product_discount_price)
-            quantity = int(product_info.get('quantity', 0))
-
-            # Calculate adjusted discount price
-            sgst_rate = Decimal(simple_product.sgst_rate)
-            cgst_rate = Decimal(simple_product.cgst_rate)
-            total_gst_rate = sgst_rate + cgst_rate
-
-            adjusted_discount_price = original_discount_price / (1 + total_gst_rate)
+            max_price = Decimal(product_info['info'].get('max_price', '0.00'))
+            discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
+            quantity = product_info.get('quantity', 0)
             
-            # Calculate SGST and CGST based on adjusted discount price
-            sgst_amount = adjusted_discount_price * sgst_rate * quantity
-            cgst_amount = adjusted_discount_price * cgst_rate * quantity
+            totaloriginalprice += max_price * quantity
+            totalPrice += discount_price * quantity
 
-            total_sgst += sgst_amount
-            total_cgst += cgst_amount
+        if totalPrice > 0:
+            discount_price = totaloriginalprice - totalPrice
+            final_cart_value += totalPrice 
 
-            # Add to total prices
-            total_original_price += max_price * quantity
-            total_discounted_price += adjusted_discount_price * quantity
-
-        # GST and final cart value calculation
-        GST = total_sgst + total_cgst
-        final_cart_value = total_discounted_price + GST
-
-        # Delivery charge handling
-        if final_cart_value > 0:
             if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
                 Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
 
             final_cart_value += Delivery
         else:
-            adjusted_discount_price = Decimal('0.00')
+            discount_price = Decimal('0.00')
 
-        # Update cart total price if authenticated
         if user.is_authenticated and cartItems:
-            cartItems.total_price = float(total_discounted_price)
+            cartItems.total_price = float(totalPrice)
             cartItems.save()
 
-        # Prepare context for the template
         context = {
             'category_obj': category_obj,
             'cartItems': cartItems,
             'products': products,
-            'total_original_price': float(total_original_price),
-            'total_discounted_price': float(total_discounted_price),
-            'total_sgst': float(total_sgst.quantize(Decimal('0.01'))),
-            'total_cgst': float(total_cgst.quantize(Decimal('0.01'))),
-            'GST': float(GST.quantize(Decimal('0.01'))),
+            'totaloriginalprice': float(totaloriginalprice),
+            'totalPrice': float(totalPrice),
             'Delivery': float(Delivery),
-            'final_cart_value': float(final_cart_value.quantize(Decimal('0.01'))),
-            'discount_price': float(total_original_price - total_discounted_price),
+            'final_cart_value': float(final_cart_value),
+            'discount_price': float(discount_price),
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
@@ -258,7 +232,6 @@ class Checkout(View):
         for i, j in order_details.items():
             totaloriginalprice = Decimal(j['gross_cart_value'])
             totalPrice = Decimal(j['our_price'])
-            GST = Decimal(j['charges']['GST'])
             Delivery = Decimal(j['charges']['Delivery'])
             final_cart_value = j['final_cart_value']
 
@@ -271,7 +244,6 @@ class Checkout(View):
             "addresses": addresses,
             'totaloriginalprice': totaloriginalprice,
             'totalPrice': totalPrice,
-            'GST': GST,
             'Delivery': Delivery,
             'final_cart_value': final_cart_value,
             'discount_price': discount_price,

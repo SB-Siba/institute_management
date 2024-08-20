@@ -29,25 +29,24 @@ class CartSerializer(serializers.ModelSerializer):
                 total_cart_items += quantity
 
                 # Calculate SGST and CGST for the product
-                sgst_amount = Decimal(simple_product.product_discount_price) * simple_product.sgst_rate * quantity
-                cgst_amount = Decimal(simple_product.product_discount_price) * simple_product.cgst_rate * quantity
-                total_gst = sgst_amount + cgst_amount
-                price_with_gst = Decimal(simple_product.product_discount_price) * quantity + total_gst
+                sgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
+                cgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
+                total_price = Decimal(simple_product.product_discount_price) * quantity 
 
                 product_data = {
                     'id': product.id,
                     'name': product.name,
                     'brand': product.brand,
                     'image': product.image.url if product.image else None,
-                    'product_max_price': str(simple_product.product_max_price),
-                    'product_discount_price': str(simple_product.product_discount_price),
-                    'discount_percentage': simple_product.discount_percentage(),
+                    'product_max_price': str(simple_product.product_max_price * quantity),
+                    'product_discount_price': str(simple_product.product_discount_price * quantity),
+                    'taxable_value': str(simple_product.taxable_value * quantity),
+
+                    # 'discount_percentage': simple_product.discount_percentage(),
                     'quantity': quantity,
                     'sgst_amount': str(sgst_amount.quantize(Decimal('0.01'))),
                     'cgst_amount': str(cgst_amount.quantize(Decimal('0.01'))),
-                    'total_gst': str(total_gst.quantize(Decimal('0.01'))),
-                    'price_with_gst': str(price_with_gst.quantize(Decimal('0.01'))),
-                    'total_price': str(price_with_gst.quantize(Decimal('0.01'))),
+                    'total_price': str(total_price.quantize(Decimal('0.01'))),
                     'images': simple_product.image_gallery.first().images if simple_product.image_gallery.exists() else [],
                     'video': simple_product.image_gallery.first().video if simple_product.image_gallery.exists() else [],
                 }
