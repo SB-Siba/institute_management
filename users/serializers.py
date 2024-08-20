@@ -84,3 +84,9 @@ class ResetPasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("Passwords do not match.")
         return data
+    
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        exclude = ["password"]

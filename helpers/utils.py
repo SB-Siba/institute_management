@@ -1,5 +1,5 @@
 from .decorators import *
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 from rest_framework.pagination import PageNumberPagination
 import uuid
 import base64
@@ -47,12 +47,18 @@ def serilalizer_error_list(serilaizer_error):
 
 
 
-def paginate(request,data_list,number):
-    
-    paginator = Paginator(data_list, 25) # Show 25 contacts per page.
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return page_obj
+def paginate(request, data_list, items_per_page):
+    paginator = Paginator(data_list, items_per_page)
+    page = request.GET.get('page')
+
+    try:
+        paginated_data = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_data = paginator.page(1)
+    except EmptyPage:
+        paginated_data = paginator.page(paginator.num_pages)
+
+    return paginated_data
 
 
 def dict_filter(data_dict, filters):

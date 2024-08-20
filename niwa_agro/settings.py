@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'payment',
     'app_common',
     'wishlist',
+    'blog',
 
 ]
 
@@ -198,10 +199,3 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': 300,
-    },
-}
