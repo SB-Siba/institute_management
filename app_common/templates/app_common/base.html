@@ -15,6 +15,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/about_us.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/user_css/product.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/cartpage.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'users/css/account_details.css' %}">
   
 
   <!------------ ICONS FILE------ -->
@@ -117,13 +118,13 @@
           <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search  text-success" aria-hidden="true"></i>
           </button>
-          <a href="{% url 'users:account_details' %}" class="text-decoration-none">
-            <i class="fa-regular fa-circle-user HeaderIcons text-success"></i> <b class="text-dark">{{request.user.full_name |truncatechars:10}}</b>
+          <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
+            <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
-          <a href="">
+          <a href="" class="btn">
             <i class="fa-regular fa-heart HeaderIcons text-success"></i>
           </a>
-          <a href="{% url 'cart:showcart' %}">
+          <a href="{% url 'cart:showcart' %}" class="btn">
             <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
           </a>
          
@@ -214,7 +215,7 @@
             <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
           </button> -->
           <button type="button" class="btn" id="form_open">
-            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a>
+            <a href="{% url 'users:login' %}"><i class="fa-regular fa-user HeaderIcons text-success"></i></a>
           </button>
           <button type="button" class="btn">
             <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
@@ -439,13 +440,12 @@
               <ul class="p-0">
                 <h6>About Us</h6>
                 <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
-                <li><a href="">Careers</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'app_common:contact_support' %}">Support</a></li>
                 {% elif not user.is_authenticated %}
                 <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
                 {% endif %}
-                <li><a href="">Locate Us</a></li>
+                <li><a href="{% url 'app_common:locate_us' %}">Locate Us</a></li>
               </ul>
             </div>
             <div class="text-start">
@@ -453,8 +453,6 @@
                 <h6>Customer Care</h6>
                 <li><a href="">Track Order</a></li>
                 <li><a href="">Shipping Policy</a></li>
-                <li><a href="">Payments</a></li>
-                <li><a href=""></a></li>
               </ul>
             </div>
           </div>
@@ -465,7 +463,6 @@
             <div class="d-none d-md-block d-lg-block">
               <ul>
               <h6>Help</h6>
-                <li><a href="">Locate Stores</a></li>
                 <li><a href="">Own Grown</a></li>
                 <li><a href="">Garden Services</a></li>
                 <li><a href="">Maintenance</a></li>
