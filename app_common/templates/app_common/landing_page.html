@@ -1,6 +1,6 @@
 {% extends 'app_common/base.html' %}
  {% load static %}
- {% block title%} Home{% endblock title %} 
+ {% block title%} Home | NiwaAgro.com{% endblock title %} 
  {% block content %}
 
 <!-- --------------------banner section--------------- -->
@@ -54,14 +54,13 @@
         <h3 class="text-success text-center">Shop By Collection</h3>
       </div> 
    
-        <!-- ----------------max card should be 5 in =----------------- -->
     <div class="row">
        {% for category in categories %}
     
         <div class="col content-wrapper col-lg-2 col-md-3 col-6">
           <div class="image-wrapper align-self-center">
             <a href="{% url 'product:products_of_category' category.title %}">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="185" height="330">
+                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="200" height="200">
               </a>
           </div>
           <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
@@ -240,64 +239,121 @@
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section class="whychoose p-lg-3 p-3 " >
-  <div class="testimonial ">
+<section class= "  section mx-5 pt-5 pb-5 testimonial-section">
   <div class="row">
-     <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-         <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
-      </div>
-  </div>
-  <div class="container">
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
-           </button>
-       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2">
-       </button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3">
-      </button>
-     </div>               
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <div class="carousel-img1">
-         <img src="{% static 'app_common\images\person4.jpg'%}">
-        </div>
-        <div class="carousel-caption">
-         <h5 class="testimonial-name">Priyanka Choudhary</h5>
-         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet  consectetur,adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos  voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <div class="carousel-img1">
-         <img src="{% static 'app_common\images\person2.jpg'%}">
-        </div>
-        <div class="carousel-caption">
-         <h5 class="testimonial-name">Smruti Rekha Nayak</h5>
-         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet  consectetur,adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos         voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <div class="carousel-img1">
-         <img src="{% static 'app_common\images\person3.jpg'%}">
-        </div>
-        <div class="carousel-caption">
-         <h5 class="testimonial-name">Tapas Kumar Nanda</h5>
-         <p><i class="bi bi-quote testimonial-icon"></i>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio odit nemo necessitatibus. Eligendi fugit sed itaque quas! Natus cumque, laudantium rerum vel quos voluptatem! Nisi fugiat enim cupiditate ducimus quaerat?</p>
-        </div>
-      </div>
+    <div class="col-12 d-flex align-items-center justify-content-start flex-column">
+        <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
      </div>
-     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-     <span class="visually-hidden">Previous</span>
-   </button>
-   <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-   </button>
+ </div>
+  <div class=" ">
+      <div class="testimonial-slider ">
+          <div class="testimonial-slide">
+              <div class="testimonial-box ">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                     
+                      <p>
+                          Wonderful stay! Modern facilities, great value, and hassle-free booking. Definitely coming back!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4> Mahesh Sethi</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Amazing stay! Comfortable rooms, great service, and perfect location. Highly recommend!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Rahul Jen</h4>
+                  </div>
+                
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Excellent experience! Clean rooms, friendly staff, and seamless booking process. Will return.</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Madhab Reddy</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Fantastic place! Cozy rooms, wonderful amenities, and superb customer service. Loved it!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Nitin Sah</h4>
+                  </div>
+                </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Loved our stay! Beautiful property, convenient booking, and outstanding hospitality. Five stars!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Hritik Kamal</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Perfect getaway! Spacious rooms, exceptional service, and easy booking. Highly satisfied!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://img.freepik.com/free-photo/smiling-businessman-face-portrait-wearing-suit_53876-148138.jpg?w=740&t=st=1723114258~exp=1723114858~hmac=8bd75b9a333f28e5fd8b9e3e667ccb5e29893b0022a88deefb0e66ccc5c3daa5" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Suraj Sen</h4>
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
   </div>
-</div>
-</div>
 </section>
+
 <!-- --------------------------End Testimonial------------------------------- -->
   
 <!-- --------------------------Start Accordian------------------------------------- -->

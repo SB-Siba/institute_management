@@ -15,6 +15,7 @@ urlpatterns = [
     path('privacy_policy/',app_common_views.PrivacyPolicy.as_view(),name="privacy_policy"),
     path('retrun_policy/',app_common_views.ReturnPolicy.as_view(),name="retrun_policy"),
     path('our_services/',app_common_views.OurServices.as_view(),name="our_services"),
+     path('locate_us/',app_common_views.LocateUs.as_view(),name="locate_us"),
 
 
 ]

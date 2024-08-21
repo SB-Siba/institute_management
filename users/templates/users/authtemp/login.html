@@ -43,9 +43,47 @@
                         <button class="btn btn-primary w-full mt-5" type="submit">Log in</button>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="{% url 'users:forgot_password' %}"
+                      <button type="button" class="text-sm text-white mt-5 mb-5 text-primary-hover text-underline" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                        Forgot
+                        password?
+                      </button>
+
+
+                      <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <p>Please enter your email address to receive a password reset link.</p>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Display form -->
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form2.as_p }}
+
+                                  <button type="submit">Submit</button>
+                                </form>
+
+                                        <!-- Display messages -->
+                                        {% if messages %}
+                                            <ul class="messages">
+                                                {% for message in messages %}
+                                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                        
+                                        <a href="{% url 'users:login' %}">Back to Login</a>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+                        <!-- <a href="{% url 'users:forgot_password' %}"
                             class="text-sm text-white mt-5 mb-5 text-primary-hover text-underline" style="font-weight: bold;">Forgot
-                            password?</a>
+                            password?
+                          </a> -->
                     </div>
                     <div class="form-group mt-2">
                         {% include 'snippets/alert.html' %}
