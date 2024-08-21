@@ -61,7 +61,7 @@
                 <td>{{order.order_status}}</td>
                 <td>
                   <a
-                    href=""
+                    href="{% url 'orders:user_download_invoice' order.uid %}"
                     >Invoice</a
                   >
                 </td>

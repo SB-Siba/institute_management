@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
+    'ckeditor',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'payment',
     'app_common',
     'wishlist',
+    'blog',
 
 ]
 
@@ -197,15 +199,3 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 
-CKEDITOR_5 = {
-    'basic': {
-        'config': {
-            'toolbar': [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'link', 'bulletedList', 'numberedList'
-            ],
-            'height': 300,
-            'width': '100%',
-        }
-    }
-}

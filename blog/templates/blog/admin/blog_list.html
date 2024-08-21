@@ -1,0 +1,161 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="py-6">
+    <div class=container>
+    <h4>All Blogs</h4>
+        <div class="vstack gap-4">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <form class="my-3 mx-2" action="{% url 'blog:blog_search' %}" method="post">
+                    {% csrf_token %}
+                    <div class="hstack gap-2">
+                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                            <option selected value="pk">All</option>
+                            <option value="id">ID</option>
+                            <option value="name">Name</option>
+                        </select>
+                        <span  class="input-group ">
+                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                            <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                        </span>
+                    </div>
+                </form>
+                <p class="snippets"> {% include 'snippets/alert.html' %}</p>
+                <div class="btn-group catagory-btn">
+                    <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
+                        <i class='bx bx-filter-alt' ></i>
+                    </button> -->
+                    <a href="{% url 'blog:blog_add' %}">
+                        <i class='bx bxs-plus-square'></i> Create a New Blog
+                    </a>
+                </div>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="" id="tb-head" scope="col">Blog ID</th>
+                                <th class="" id="tb-head" scope="col">Blog Title</th>
+                                <th class="" id="tb-head" scope="col">Blog Author</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                        <tbody id="test_table_tbody">
+                            {% for blog in blog_list %}
+                            <tr>
+                                <td class="tb-body">
+                                    <a class="text-heading text-primary-hover font-semibold"
+                                            href="{% url 'blog:blog_update' blog.id %}">
+                                            {{ blog.id }}
+                                        </a>
+                                </td>
+                                <td class="tb-body">{{ blog.title |truncatewords:8 }}</td>
+                                <td class="tb-body">{{ blog.author }}</td>
+                                <td class="tb-body">
+                                    <a href="{% url 'blog:blog_update' blog.id %}"
+                                        class="btn btn-sm btn-square btn-neutral text-info">
+                                        <i class="fa-solid fa-pen-to-square"></i>                                        
+                                    </a>
+                                    <a href="{% url 'blog:blog_delete' blog.id %}"
+                                        class="btn btn-sm btn-square btn-neutral text-danger">
+                                        <i class="fa-solid fa-trash"></i>                                           
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    {% comment %} {% include 'snippets/pagination.html' %} {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+
+
+
+
+
+
+
+<!-- ---------------------------Blog Delete Modal--------- -->
+{% comment %} 
+
+<div class="modal fade" id="blog_delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="blog_delete_title">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="confirm_delete_btn" href="">
+                    <button type="button" class="btn btn-primary">Confirm Delete</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter modal -->
+
+
+
+<div class="modal fade" id="select_filter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Filter blog</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;" class="blog_filter">
+                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=trending">Trending</a>
+                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=show_as_new">New Rooms</a>
+                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=display_as_bestseller">Best-Seller</a>
+                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=hide">Hidden</a>
+                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=all">All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+{% endcomment %}
+
+{% endblock content %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    function delete_blog(element){
+        var blog_title = element.getAttribute('p_title');
+        var blog_id = element.getAttribute('p_id');
+        
+        var target = document.getElementById('blog_delete_title');
+        target.innerHTML = "<p>Blog Title : <b>"+blog_title+"</b> ("+blog_id+")</p>";
+
+        var delete_url = '/blog/blog_delete/'+blog_id+'';
+        document.getElementById('confirm_delete_btn').setAttribute('href', delete_url);
+
+        var myModal = new bootstrap.Modal(document.getElementById('blog_delete'));
+        myModal.show();
+    }
+</script>
+{% endblock js %}

@@ -7,7 +7,7 @@ Products Of {{ category_obj.title }} Category
 
 {% block content %}
 <div class="container py-4 d-flex flex-column align-items-center lh-lg ">
-    <h1 class="text-capitalize">{{category_obj.title }}</h1>
+    <h2 class="text-uppercase">{{category_obj.title }}</h2>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>

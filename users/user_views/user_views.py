@@ -93,25 +93,25 @@ class ProfileAddAddress(View):
     def post(self, request):
         form = self.form(request.POST)
         if form.is_valid():
-            landmark1 = form.cleaned_data["landmark1"]
-            landmark2 = form.cleaned_data["landmark2"]
+            Address1 = form.cleaned_data["Address1"]
+            Address2 = form.cleaned_data["Address2"]
             country = form.cleaned_data["country"]
             state = form.cleaned_data["state"]
             city = form.cleaned_data["city"]
             mobile_no = form.cleaned_data["contact"]
-            zipcode = form.cleaned_data["zipcode"]
+            pincode = form.cleaned_data["pincode"]
 
             address_id = str(uuid4())
 
             address_data = {
                 "id": address_id,
-                "landmark1": landmark1,
-                "landmark2": landmark2,
+                "Address1": Address1,
+                "Address2": Address2,
                 "country": country,
                 "state": state,
                 "city": city,
                 'mobile_no':mobile_no,
-                "zipcode": zipcode,
+                "pincode": pincode,
             }
 
             user = request.user
@@ -159,13 +159,13 @@ class ProfileUpdateAddress(View):
 
             address_data = {
                 "id": address_id,
-                "landmark1": form.cleaned_data["landmark1"],
-                "landmark2": form.cleaned_data["landmark2"],
+                "Address1": form.cleaned_data["Address1"],
+                "Address2": form.cleaned_data["Address2"],
                 "country": form.cleaned_data["country"],
                 "state": form.cleaned_data["state"],
                 "city": form.cleaned_data["city"],
                 "mobile_no": form.cleaned_data["contact"],
-                "zipcode": form.cleaned_data["zipcode"],
+                "pincode": form.cleaned_data["pincode"],
             }
 
             # Update the address in the list

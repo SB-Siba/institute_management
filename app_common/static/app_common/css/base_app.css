@@ -89,6 +89,7 @@
     --secondary2:rgb(255, 212, 46);
     --third: rgb(255, 255, 255);
     --third2:rgb(57, 153, 24);
+    --third3:#f1f1f1;
     --pagebg:rgb(245, 245, 245);
     --h6:rgb(135, 135, 135);
     --discount:rgb(19, 146, 83);
@@ -99,6 +100,7 @@
     --place-order:rgb(251, 100, 27);
     --danger:rgb(236, 6, 6);
     --info:#269f54;
+
    }
 
  
