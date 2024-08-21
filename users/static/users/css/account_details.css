@@ -29,4 +29,9 @@ iframe {
     padding: 20px 0px;
     height: 550px;
     width: 100%;
+    border:2px solid var(--third);
+}
+.locateuss{
+    font-family:"Inter",sans-serif;
+    line-height: 30px;
 }
