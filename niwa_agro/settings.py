@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'payment',
     'app_common',
     'wishlist',
+    'blog',
 
 ]
 
@@ -198,35 +199,3 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 
-CKEDITOR_5 = {
-    'basic': {
-        'config': {
-            'toolbar': [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'link', 'bulletedList', 'numberedList'
-            ],
-            'height': 300,
-            'width': '100%',
-        }
-    }
-}
-
-
-
-
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}

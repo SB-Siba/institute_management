@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/return.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/privacy.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/about_us.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'css\user_css\product.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/user_css/product.css' %}">
 
   <!------------ ICONS FILE------ -->
   <link rel="icon" href="{% static 'app_common/images/logo1.png' %}">
@@ -66,7 +66,7 @@
                 <li><a class="nav-link" href="{% url 'app_common:about_us' %}">about us</a></li>
                 <li><a class="nav-link" href="#">Plants</a></li>
                 <li><a class="nav-link" href="#">Seeds</a></li>
-                <li><a class="nav-link" href="#">Pots & Planters</a></li>
+                <li><a class="nav-link" href="#">Blogs</a></li>
                 <li><a class="nav-link" href="{% url 'users:logout' %}">Log out</a></li>
               </ul>
             </div>
@@ -92,7 +92,7 @@
               <a class="nav-link" href="#">Seeds</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Pots & Planters</a>
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
             </li>
             <li class="nav-item">
               <a class="nav-link">Plant Care</a>
@@ -156,7 +156,7 @@
                 <li><a class="nav-link" href="{% url 'app_common:about_us' %}">about us</a></li>
                 <li><a class="nav-link" href="#">Plants</a></li>
                 <li><a class="nav-link" href="#">Seeds</a></li>
-                <li><a class="nav-link" href="#">Pots & Planters</a></li>
+                <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
                 <li><a class="nav-link" href="#">Plant Care</a></li>
               </ul>
             </div>
@@ -184,7 +184,7 @@
               <a class="nav-link" href="#">Seeds</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Pots & Planters</a>
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
             </li>
             <li class="nav-item">
               <a class="nav-link">Plant Care</a>

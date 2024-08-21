@@ -78,6 +78,7 @@ class UserDownloadInvoice(View):
         order = self.model.objects.get(uid=order_uid)
         data = OrderSerializer(order).data
         
+        
         products = []
         quantities = []
         price_per_unit = []
@@ -102,6 +103,7 @@ class UserDownloadInvoice(View):
         try:
             final_total = data['order_meta_data']['final_cart_value']
         except KeyError:
+        
             final_total = data['order_meta_data']['final_value']
  
         # Prepare context data for rendering the invoice

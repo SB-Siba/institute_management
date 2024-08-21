@@ -1,0 +1,74 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Blog List
+{% endblock title %}
+{% block content %}
+<div class="blog_section">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                {% for blog in blogs %}
+                <div class="lest_news_box_wrapper sc_toppadder60">
+                    <div class="hs_blog_box1_img_wrapper lest_news_img_wrapper">
+                        <div class="">
+                            <div class="item">
+                                <img src="{{ blog.image.url }}" alt="blog_img">
+                            </div>
+                        </div>
+                        <div class="lest_news_date_wrapper">
+                            <ul>
+                                <li>{{ blog.date }}</li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="lest_news_cont_wrapper">
+                        <h5><a href="{% url 'blog:user_blog_details' slug=blog.slug %}">{{ blog.title }}</a></h5>
+                        <p>{{ blog.content|truncatechars:200| safe }}</p>
+                        <h4><a href="{% url 'blog:user_blog_details' slug=blog.slug %}">Read More <i
+                                    class="fa fa-long-arrow-right"></i></a></h4>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+               
+                <div class="sidebar_widget">
+                    {% comment %} <form class="search_form" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search here">
+                        </div>
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form> {% endcomment %}
+                    <h4>Highlight</h4>
+                    {% for blog in highlighted_blogs %}
+                    <div class="latest_post_wrapper">
+                        <div class="blog_wrapper1">
+                            <div class="sc_blog_image">
+                                <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">
+                                    <img src="{{ blog.image.url }}" alt="blog_img">
+                                </a>
+                            </div>
+                            <div class="sc_blog_text">
+                                <h5><a
+                                        href="{% url 'blog:user_blog_details' slug=blog.slug %}">{{ blog.title|truncatechars:30|safe }}</a>
+                                </h5>
+                                <div class="sc_blog_date">{{ blog.date }}</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
