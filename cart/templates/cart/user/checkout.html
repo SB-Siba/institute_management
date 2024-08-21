@@ -6,10 +6,10 @@ Checkout
 
 {% block content %}
 <head>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
     <style>
         .checkout-container {
+            
             border-radius: 10px;
             padding: 20px;
             font-size: 14px;
@@ -29,10 +29,16 @@ Checkout
         }
         .address-card input[type="radio"] {
             margin-right: 20px;
+            
         }
+       
         .address-details {
             font-size: 14px;
         }
+        /* .address-details li {
+           
+            margin-bottom: 5px;
+        } */
         .btn-wrapper {
             text-align: right;
             margin-top: 20px;
@@ -55,45 +61,64 @@ Checkout
             padding-bottom: 5px;
             margin-bottom: 20px;
         }
-        #updateAddressModal .form-control,
+        #updateAddressModal .form-control {
+            width: 100%;
+        padding: 5px;
+        margin-top: 5px;
+        margin-bottom: .5em;
+        border: none;
+        border-bottom: 1px solid #ced4da;
+        border-radius: none !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease-in-out;
+        font-size: 14px;
+        }
+    
+    #updateAddressModal .form-control:focus,
+    #updateAddressModal .form-control textarea:focus{  
+        border-color: #00836C;
+        box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
+        outline: none;
+    } 
         #addAddressForm .form-control {
             width: 100%;
-            padding: 5px;
-            margin-top: 5px;
-            margin-bottom: .5em;
-            border: none;
-            border-bottom: 1px solid #ced4da;
-            border-radius: none !important;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease-in-out;
-            font-size: 14px;
+        padding: 5px;
+        margin-top: 5px;
+        margin-bottom: .5em;
+        border: none;
+        border-bottom: 1px solid #ced4da;
+        border-radius: none !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease-in-out;
+        font-size: 14px;
         }
-        #updateAddressModal .form-control:focus,
-        #updateAddressModal .form-control textarea:focus,
-        #addAddressForm .form-control:focus,
-        #addAddressForm .form-control textarea:focus {  
-            border-color: #00836C;
-            box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
-            outline: none;
-        }
+    
+    #addAddressForm .form-control:focus,
+    #addAddressForm .form-control textarea:focus{  
+        border-color: #00836C;
+        box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
+        outline: none;
+    } 
+
         .form-check-input:checked {
-            background-color: #00836C;
-            border-color: #00836C;
-        }
-        .form-check-input:focus {
-            outline: none;
-            box-shadow: none;
-        }
-        .modal-header {
-            background-color: #00836C;
-            color: white;
-        }
+        background-color: #00836C;
+        border-color: #00836C;
+}
+.form-check-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+.modal-header{
+    background-color: #00836C;
+    color: white;
+}
     </style>
 </head>
 
+
 <div class="mt-5" style="min-height: 60vh;">
     {% include 'snippets/alert.html' %}
-    <div class="row">
+    <div class="row ">
         <div class="col-md-8 col-lg-8 checkout-container">
             <div class="d-flex justify-content-between align-items-center mt-2 mb-4 ">
                 <h4 class="text-center" >Billing address</h4>
@@ -109,20 +134,20 @@ Checkout
                         <input class="form-check-input" type="radio" name="addressNoLabel" id="addressNoLabel" value="{{i.id}}" aria-label="..." {% if forloop.first %}checked{% endif %} style="border: 1.5px solid rgb(169, 167, 167);"  />
                         <div class="address-details" >
                             <p>
-                                <li class="mb-1" style="font-size: x-small;">Address 1: {{i.landmark1}}</li>
-                                <li class="mb-1" style="font-size: x-small;">Address 2: {{i.landmark2}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Address 1: {{i.Address1}}</li>
+                                <li class="mb-1" style="font-size: x-small;">Address 2: {{i.Address2}}</li>
                                 <li class="mb-1" style="font-size: x-small;">Mob No: {{i.mobile_no}}</li>
                                 <li class="mb-1" style="font-size: x-small;">City: {{i.city}}</li>
                                 <li class="mb-1" style="font-size: x-small;">State: {{i.state}}</li>
                                 <li class="mb-1" style="font-size: x-small;">Country: {{i.country}}</li>
-                                <li class="mb-1" style="font-size: x-small;">Zipcode: {{i.zipcode}}</li>
+                                <li class="mb-1" style="font-size: x-small;">pincode: {{i.pincode}}</li>
                             </p>
                         </div>
                         <div class="d-flex justify-content-between ps-5">
-                            <button type="button" class="btn btn-sm updateAddress btn-square BtM btn-neutral text-success-hover border" data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
+                            <button type="button" class="btn btn-sm updateAddress btn-square BtM btn-neutral text-success-hover border" data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-Address1="{{ i.Address1 }}" data-Address2="{{ i.Address2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-pincode="{{ i.pincode }}">
                                 <i class="bi bi-pencil"></i>
                             </button> &nbsp;
-                            <a href="{% url 'cart:delete_address' i.id %}">
+                            <a href="{% url 'cart:delete_address' i.id %}">Address1
                                 <button type="button"
                                     class="btn btn-sm btn-square BtM btn-neutral text-danger-hover border">
                                     <i class="bi bi-trash"></i>
@@ -148,12 +173,12 @@ Checkout
                                 <input type="text" id="a_id" name="a_id" hidden>
 
                                 <div class="mb-3">
-                                    <label for="update-landmark1" class="form-label">Address 1</label>
-                                    <input type="text" class="form-control" id="update-landmark1" name="landmark1" required>
+                                    <label for="update-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="update-Address1" name="Address1" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="update-landmark2" class="form-label">Address 2</label>
-                                    <input type="text" class="form-control" id="update-landmark2" name="landmark2">
+                                    <label for="update-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="update-Address2" name="Address2">
                                 </div>
                                 <div class="mb-3">
                                     <label for="update-mobile_no" class="form-label">Mobile No.</label>
@@ -174,8 +199,8 @@ Checkout
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="update-zipcode" class="form-label">Zipcode</label>
-                                    <input type="text" class="form-control" id="update-zipcode" name="zipcode" required>
+                                    <label for="update-pincode" class="form-label">pincode</label>
+                                    <input type="text" class="form-control" id="update-pincode" name="pincode" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -199,12 +224,12 @@ Checkout
                             <div class="modal-body">
                                 <!-- Address form fields -->
                                 <div class="mb-3">
-                                    <label for="add-landmark1" class="form-label">Address 1</label>
-                                    <input type="text" class="form-control" id="add-landmark1" name="landmark1" required>
+                                    <label for="add-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="add-Address1" name="Address1" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-landmark2" class="form-label">Address 2</label>
-                                    <input type="text" class="form-control" id="add-landmark2" name="landmark2">
+                                    <label for="add-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="add-Address2" name="Address2">
                                 </div>
                                 <div class="mb-3">
                                     <label for="add-mobile_no" class="form-label">Mobile No.</label>
@@ -223,8 +248,8 @@ Checkout
                                     <input type="text" class="form-control" id="add-country" name="country" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-zipcode" class="form-label">Zipcode</label>
-                                    <input type="text" class="form-control" id="add-zipcode" name="zipcode" required>
+                                    <label for="add-pincode" class="form-label">pincode</label>
+                                    <input type="text" class="form-control" id="add-pincode" name="pincode" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -236,68 +261,79 @@ Checkout
                 </div>
             </div>
         </div>
-        <!-- Order Summary -->
-        <div class="col-md-4 col-lg-4 checkout-container">
-            <h4 class="sectiontitle text-center">Order Summary</h4>
-            <div class="mt-2 text-dark">
-                <p class="fw-bold text-dark">Total Original Price: <span class="float-end">&#8377; {{totaloriginalprice}}</span></p>
-                <p class="fw-bold text-dark">Total Price: <span class="float-end">&#8377; {{totalPrice}}</span></p>
-                <p class="fw-bold text-dark">Discount: <span class="float-end">&#8377; {{discount_price}}</span></p>
-                <p class="fw-bold text-dark">GST: <span class="float-end">&#8377; {{GST}}</span></p>
-                <p class="fw-bold text-dark">Delivery Charges: <span class="float-end">&#8377; {{Delivery}}</span></p>
-                <p class="fw-bold text-dark">Total Cart Value: <span class="float-end">&#8377; {{final_cart_value}}</span></p>
-                <div class="d-flex justify-content-center">
-                    <button class="theme-btn-1 mt-5 w-100 mt-2" id="rzp-button1">Proceed To Payment</button>
-                </div>
+        <div class="col-md-4 col-lg-4 mt-4" style="font-size: 14px;">
+            <!-- Cart Summary -->
+            <div class="border px-3 py-3 mb-3  rounded bg-white"  >
+              <h6 class="mb-3 text-muted"> PRICE DETAILS</h6>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>MRP : </span>
+                        <span class=""><i class="bi bi-currency-rupee"></i>&nbsp;{{ totaloriginalprice }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Our Price : </span>
+                        <span class=""><i class="bi bi-currency-rupee "></i>&nbsp;{{ totalPrice }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Discount : </span>
+                        <span class=""><i class="bi bi-currency-rupee"></i>&nbsp;{{ discount_price }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery Charge : </span>
+                        <span class=" "><i class="bi bi-currency-rupee"></i>&nbsp;{{ Delivery }}</span>
+                    </div>
+                                <hr>
+                    <div class="d-flex justify-content-between  ">
+                        <span>Total : </span>
+                        <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ final_cart_value }}</span>
+                    </div>
+                
+                <div class="payment-method">
+            <h4>Select Payment Method</h4>
+            <label>
+                <input type="radio" name="payment_method" value="razorpay" checked>
+                Online Payment (Razorpay)
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="payment_method" value="cod">
+                Cash on Delivery (COD)
+            </label>
+        </div>
+
+        <div class="d-flex justify-content-center">
+        <button id="proceed-button" class="btn btn-primary">Proceed to Payment</button>
+        </div>
             </div>
             <span class="d-flex "><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">  Safe and Secure Payments.Easy returns.100% Authentic products.</p></span>
-
         </div>
     </div>
 </div>
-
 {% endblock content %}
 
-{% block script %}
+{% block js %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#rzp-button1').click(function (e) {
-            e.preventDefault();
-            var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#proceed-button').click(function (e) {
+                e.preventDefault();
+                
+                var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+                var paymentMethod = $('input[name="payment_method"]:checked').val(); // Get selected payment method
 
-            if (!selectedAddress) {
-                alert("Please select an address before proceeding with the payment.");
-                return;
-            }
-            
-            console.log(selectedAddress);
+                if (!selectedAddress) {
+                    alert("Please select an address before proceeding.");
+                    return;
+                }
 
-            var options = {
-                "key": "{{ api_key }}",
-                "amount": "{{ amount }}",
-                "currency": "INR",
-                "name": "Treeranga",
-                "description": "Payment Transaction",
-                "image": "{% static 'app_common/img/logos/logo5.jpeg' %}",
-                "order_id": "{{ rz_order_id }}",
-                "prefill": {
-                    "contact": "{{ request.user.contact }}"
-                },
-                "notes": {
-                    "address": "Demo Address"
-                },
-                "theme": {
-                    "color": "#3399cc"
-                },
-                "handler": function (response) {
-                    console.log(response);
+                if (paymentMethod === 'cod') {
+                    // Handle Cash on Delivery (COD)
                     var data = {
-                        "razorpay_payment_id": response.razorpay_payment_id,
-                        "razorpay_order_id": response.razorpay_order_id,
-                        "razorpay_signature": response.razorpay_signature,
+                        "payment_method": "cod",
                         "address_id": selectedAddress
                     };
+
                     $.ajax({
                         url: '{% url "payment:paymentsuccess" %}',
                         type: 'POST',
@@ -305,44 +341,86 @@ Checkout
                         data: JSON.stringify(data),
                         success: function (response) {
                             console.log(response);
-                            window.location.href = '{% url "payment:paymentsuccess" %}';
+                            window.location.href = '{% url "payment:success_payment" %}';
                         },
                         error: function (xhr, status, error) {
-                            console.log("error")
                             console.error(xhr.responseText);
                         }
                     });
-                }
-            };
+                } else if (paymentMethod === 'razorpay') {
+                    // Handle Razorpay Payment Integration
+                    var options = {
+                        "key": "{{ api_key }}",
+                        "amount": "{{ amount }}",
+                        "currency": "INR",
+                        "name": "Treeranga",
+                        "description": "Payment Transaction",
+                        "image": "",
+                        "order_id": "{{ rz_order_id }}",
+                        "prefill": {
+                            "contact": "{{ request.user.contact }}"
+                        },
+                        "notes": {
+                            "address": "Demo Address"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        },
+                        "handler": function (response) {
+                            console.log(response);
+                            var data = {
+                                "razorpay_payment_id": response.razorpay_payment_id,
+                                "razorpay_order_id": response.razorpay_order_id,
+                                "razorpay_signature": response.razorpay_signature,
+                                "address_id": selectedAddress
+                            };
+                            $.ajax({
+                                url: '{% url "payment:paymentsuccess" %}',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(data),
+                                success: function (response) {
+                                    console.log(response);
+                                    window.location.href = '{% url "payment:success_payment" %}';
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        }
+                    };
 
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
+                    alert("Please select a valid payment method.");
+                }
+            });
         });
-    });
-</script>
+    </script>
 <script>
     $(document).ready(function () {
         // Show update address modal on button click
         $('.updateAddress').on('click', function() {
             var addressId = $(this).data('id');
-            var landmark1 = $(this).data('landmark1');
-            var landmark2 = $(this).data('landmark2');
+            var Address1 = $(this).data('Address1');
+            var Address2 = $(this).data('Address2');
             var country = $(this).data('country');
             var state = $(this).data('state');
             var city = $(this).data('city');
             var mobile_no = $(this).data('mobile_no');
-            var zipcode = $(this).data('zipcode');
+            var pincode = $(this).data('pincode');
             console.log(addressId)
             // Set values in the modal form fields
-            $('#updateAddressForm').attr('action', '{% url "shoppingsite:update_address" %}');
+            $('#updateAddressForm').attr('action', '{% url "cart:update_address" %}');
             $('#updateAddressForm #a_id').val(addressId);
-            $('#updateAddressForm #update-landmark1').val(landmark1);
-            $('#updateAddressForm #update-landmark2').val(landmark2);
+            $('#updateAddressForm #update-Address1').val(Address1);Address1
+            $('#updateAddressForm #update-Address2').val(Address2);
             $('#updateAddressForm #update-country').val(country);
             $('#updateAddressForm #update-state').val(state);
             $('#updateAddressForm #update-city').val(city);
             $('#updateAddressForm #update-mobile_no').val(mobile_no);
-            $('#updateAddressForm #update-zipcode').val(zipcode);
+            $('#updateAddressForm #update-pincode').val(pincode);
 
             // Show the modal
             $('#updateAddressModal').modal('show');
@@ -375,4 +453,4 @@ Checkout
         });
     });
 </script>
-{% endblock script %}
+{% endblock js %}

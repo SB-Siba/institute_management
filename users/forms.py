@@ -5,9 +5,7 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 import re
-# def validate_contact(value):
-#     if not value.isdigit() or len(value) != 10:
-#         raise ValidationError('Contact number must be exactly 10 digits.')
+
 
 class SignUpForm(forms.Form):
 
@@ -103,11 +101,11 @@ class UpdateProfileForm(forms.Form):
 
 
 class AddressForm(forms.Form):
-    landmark1 = forms.CharField(max_length=255)
-    landmark1.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
+    Address1 = forms.CharField(max_length=255)
+    Address1.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
 
-    landmark2 = forms.CharField(max_length=255)
-    landmark2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
+    Address2 = forms.CharField(max_length=255)
+    Address2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
 
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -121,8 +119,8 @@ class AddressForm(forms.Form):
     city = forms.CharField(max_length=255)
     city.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
     
-    zipcode = forms.IntegerField()
-    zipcode.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Pincode',"required":"required"})
+    pincode = forms.IntegerField()
+    pincode.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Pincode',"required":"required"})
 
 
 

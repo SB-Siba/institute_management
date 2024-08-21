@@ -11,9 +11,10 @@ from product.models import Products, SimpleProduct, Category
 from orders.models import Order
 from cart.models import Cart
 from cart.serializer import CartSerializer,DirectBuySerializer
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation,ROUND_HALF_UP
 from uuid import uuid4
 from payment import razorpay
+
 class ShowCart(View):
     def get(self, request):
         category_obj = Category.objects.all()
@@ -31,7 +32,6 @@ class ShowCart(View):
 
         totaloriginalprice = Decimal('0.00')
         totalPrice = Decimal('0.00')
-        GST = Decimal('0.00')
         Delivery = Decimal('0.00')
         final_cart_value = Decimal('0.00')
 
@@ -45,8 +45,7 @@ class ShowCart(View):
 
         if totalPrice > 0:
             discount_price = totaloriginalprice - totalPrice
-            GST = totalPrice * Decimal(settings.GST_CHARGE)
-            final_cart_value = totalPrice + GST
+            final_cart_value += totalPrice 
 
             if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
                 Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
@@ -65,7 +64,6 @@ class ShowCart(View):
             'products': products,
             'totaloriginalprice': float(totaloriginalprice),
             'totalPrice': float(totalPrice),
-            'GST': float(GST),
             'Delivery': float(Delivery),
             'final_cart_value': float(final_cart_value),
             'discount_price': float(discount_price),
@@ -234,7 +232,6 @@ class Checkout(View):
         for i, j in order_details.items():
             totaloriginalprice = Decimal(j['gross_cart_value'])
             totalPrice = Decimal(j['our_price'])
-            GST = Decimal(j['charges']['GST'])
             Delivery = Decimal(j['charges']['Delivery'])
             final_cart_value = j['final_cart_value']
 
@@ -247,7 +244,6 @@ class Checkout(View):
             "addresses": addresses,
             'totaloriginalprice': totaloriginalprice,
             'totalPrice': totalPrice,
-            'GST': GST,
             'Delivery': Delivery,
             'final_cart_value': final_cart_value,
             'discount_price': discount_price,
@@ -321,25 +317,25 @@ class DirectBuyCheckout(View):
 class AddAddress(View):
     def post(self, request):
         if request.method == 'POST':
-            landmark1 = request.POST["landmark1"]
-            landmark2 = request.POST["landmark2"]
+            Address1 = request.POST["Address1"]
+            Address2 = request.POST["Address2"]
             country = request.POST["country"]
             state = request.POST["state"]
             city = request.POST["city"]
             mobile_no = request.POST["mobile_no"]
-            zipcode = request.POST["zipcode"]
+            pincode = request.POST["pincode"]
 
             address_id = str(uuid4())
 
             address_data = {
                 "id": address_id,
                 "landmark1": landmark1,
-                "landmark2": landmark2,
+                "Address2": Address2,
                 "country": country,
                 "state": state,
                 "city": city,
                 "mobile_no": mobile_no,
-                "zipcode": zipcode,
+                "pincode": pincode,
             }
             user = request.user
             addresses = user.address or []
@@ -349,7 +345,7 @@ class AddAddress(View):
 
             return redirect('cart:checkout')
         else:
-            return redirect('app_coomo:home')
+            return redirect('users:home')
 
 
 
@@ -359,13 +355,13 @@ def update_address_view(request):
         user = request.user
         user_obj = get_object_or_404(User, id=user.id)
         a_id = request.POST.get('a_id')
-        landmark1 = request.POST.get('landmark1')
-        landmark2 = request.POST.get('landmark2')
+        Address1 = request.POST.get('Address1')
+        Address2 = request.POST.get('Address2')
         country = request.POST.get('country')
         state = request.POST.get('state')
         city = request.POST.get('city')
         mobile_no = request.POST.get('mobile_no')
-        zipcode = request.POST.get('zipcode')
+        pincode = request.POST.get('pincode')
 
         addresses = user_obj.address or []
 
@@ -374,13 +370,13 @@ def update_address_view(request):
             for address in addresses:
                 if address['id'] == a_id:
                     address.update({
-                        'landmark1': landmark1,
-                        'landmark2': landmark2,
+                        'Address1': Address1,
+                        'Address2': Address2,
                         'country': country,
                         'state': state,
                         'city': city,
                         'mobile_no': mobile_no,
-                        'zipcode': zipcode,
+                        'pincode': pincode,
                     })
                     break
 

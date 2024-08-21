@@ -70,9 +70,13 @@ class SimpleProductForm(forms.ModelForm):
     stock = forms.IntegerField()
     stock.widget.attrs.update({'class': 'form-control', 'type': 'number', 'required': 'required'})
 
+    gst_rate = forms.ChoiceField(choices=SimpleProduct.GST_CHOICES,widget=forms.Select(attrs={'class': 'form-control','required': 'required'}))
+
+    
+
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock']
+        fields = ['product_max_price', 'product_discount_price', 'stock','gst_rate']
 
 
 

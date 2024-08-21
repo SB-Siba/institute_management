@@ -208,12 +208,12 @@ class AccountDeletionView(LoginRequiredMixin, View):
             action = data.get('action')
 
             if action == 'cancel_deletion' and user.deletion_requested:
-                user.cancel_deletion()  # Call the cancel_deletion method
+                user.cancel_deletion()
                 messages.success(request, "Account deletion canceled.")
                 return JsonResponse({'success': True, 'message': 'Account deletion canceled.'})
 
             elif action == 'request_deletion' and not user.deletion_requested:
-                user.request_deletion()  # Call the request_deletion method
+                user.request_deletion()
                 messages.success(request, "Your account will be deleted in 30 days.")
                 return JsonResponse({'success': True, 'message': 'Your account will be deleted in 30 days.'})
 

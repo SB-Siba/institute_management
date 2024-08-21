@@ -28,6 +28,24 @@ login_post = [
         type=openapi.TYPE_STRING,
     ),
 ]
+
+logout_get = [
+    openapi.Parameter(
+        "confirm",
+        openapi.IN_QUERY,
+        description="Set to 'true' to confirm logout",
+        required=False,
+        type=openapi.TYPE_STRING,
+    ),
+    openapi.Parameter(
+        "cancel",
+        openapi.IN_QUERY,
+        description="Set to 'true' to cancel logout",
+        required=False,
+        type=openapi.TYPE_STRING,
+    ),
+]
+
 send_otp_parameters = [
         openapi.Parameter("contact", openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING),
 
@@ -54,7 +72,7 @@ forgot_password = [
 
 reset_password = [
     openapi.Parameter(
-        "password",
+        "new_password",
         openapi.IN_FORM,
         description="Password",
         type=openapi.TYPE_STRING,
@@ -68,3 +86,29 @@ reset_password = [
         required=True,
     ),
 ]
+
+
+update_profile = [
+            openapi.Parameter(
+                "full_name",
+                openapi.IN_FORM,
+                description="Full Name",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+            openapi.Parameter(
+                "email",
+                openapi.IN_FORM,
+                description="Email",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+            openapi.Parameter(
+                "contact",
+                openapi.IN_FORM,
+                description="Contact Number",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+            
+        ]

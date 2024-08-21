@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from app_common import models
 from product.models import Products, Category,SimpleProduct,ImageGallery
 from wishlist.models import WshList
 from django.conf import settings
-from django.db.models import Prefetch
 
 app = 'product/'
 
@@ -112,3 +112,4 @@ class AllNewProductsView(View):
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
+

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
+    'ckeditor',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'payment',
     'app_common',
     'wishlist',
+    'blog',
 
 ]
 
@@ -193,33 +195,7 @@ DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 RAZORPAY_API_KEY = 'rzp_test_kugvSxFkbuJKAI'
 RAZORPAY_API_SECRET = 'kI8OEz5kKfMRBcnTmQ14GDHy'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-
-
-CELERY_BEAT_SCHEDULE = {
-    'delete_expired_accounts': {
-        'task': 'users.tasks.delete_expired_accounts',
-        'schedule': 86400.0,  # every 24 hours
-    },
-}
-
-CKEDITOR_5 = {
-    'basic': {
-        'config': {
-            'toolbar': [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'link', 'bulletedList', 'numberedList'
-            ],
-            'height': 300,
-            'width': '100%',
-        }
-    }
-}
