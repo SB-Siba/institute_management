@@ -24,7 +24,6 @@ class CategoryEntryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-
     product_type = forms.ChoiceField(choices=Products.PRODUCT_TYPE_CHOICES, required=False)
     product_type.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
@@ -61,6 +60,16 @@ class ProductForm(forms.ModelForm):
             'product_type', 'category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
             'product_long_description', 'trending', 'show_as_new'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # This is an edit form, disable the sku_no and category fields
+            self.fields['sku_no'].widget.attrs['readonly'] = True
+            self.fields['category'].widget.attrs['disabled'] = True
+
+
+
 class SimpleProductForm(forms.ModelForm):
     product_max_price = forms.DecimalField(max_digits=10, decimal_places=2)
     product_max_price.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.01', 'required': 'required'})
