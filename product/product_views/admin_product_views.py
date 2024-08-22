@@ -6,7 +6,7 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
-from product.models import Category,Products,SimpleProduct,ImageGallery
+from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery
 
 from product import forms
 import os
@@ -362,3 +362,41 @@ class ProductFilter(View):
         }
         return render(request, self.template, context)
     
+class DeliverySettingsUpdateView(View):
+    form_class = forms.DeliverySettingsForm
+    template_name = app + "admin/delivery_setting.html"  
+
+    def get(self, request):
+        delivery_settings = DeliverySettings.objects.first()
+        
+        form = self.form_class(instance=delivery_settings)
+        
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        delivery_settings = DeliverySettings.objects.first()
+        
+        form = self.form_class(request.POST, instance=delivery_settings)
+        
+        if form.is_valid():
+            try:
+                form.save()
+                
+                messages.success(request, "Delivery settings updated successfully.")
+                return redirect('users:admin_dashboard')  # Redirect to a success page
+            except Exception as e:
+                print("Error updating delivery settings:", e)
+                messages.error(request, f"Error updating delivery settings: {str(e)}")
+        else:
+            # Handle form errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+        
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context)

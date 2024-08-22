@@ -34,6 +34,8 @@ urlpatterns = [
     path('new-products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('trndong-products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
 
+    path('update-delivery-settings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),
+
 
 ]   
 

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.conf import settings
@@ -83,8 +84,8 @@ class UserDownloadInvoice(View):
         price_per_unit = []
         total_prices = []
 
-        total_cgst = 0.0
-        total_sgst = 0.0
+        total_cgst = Decimal('0.00')
+        total_sgst = Decimal('0.00')
 
         # Loop through each product to extract and calculate required information
         for product_id, p_overview in data['order_meta_data']['products'].items():
@@ -94,8 +95,8 @@ class UserDownloadInvoice(View):
             total_prices.append(p_overview['total_price'])
 
             # Calculate the total CGST and SGST
-            total_cgst += float(p_overview.get('cgst_amount', 0))
-            total_sgst += float(p_overview.get('sgst_amount', 0))
+            total_cgst += Decimal(p_overview.get('cgst_amount', '0.00'))
+            total_sgst += Decimal(p_overview.get('sgst_amount', '0.00'))
 
         prod_quant = zip(products, quantities, price_per_unit, total_prices)
 
@@ -111,10 +112,10 @@ class UserDownloadInvoice(View):
             'user': order.user,
             'productandquantity': prod_quant,
             'delivery_charge': data['order_meta_data']['charges']['Delivery'],
-            'cgst_amount': total_cgst,
-            'sgst_amount': total_sgst,
+            'cgst_amount': "{:.2f}".format(total_cgst),
+            'sgst_amount': "{:.2f}".format(total_sgst),
             'gross_amt': data['order_meta_data']['our_price'],
-            'discount': data['order_meta_data'].get('discount_amount', 0),
+            'discount': data['order_meta_data'].get('discount_amount', '0.00'),
             'final_total': final_total
         }
 
