@@ -82,10 +82,12 @@ class SimpleProductForm(forms.ModelForm):
     stock = forms.IntegerField()
     stock.widget.attrs.update({'class': 'form-control', 'type': 'number', 'required': 'required'})
 
+    flat_delivery_fee = forms.BooleanField(required=False)
+    flat_delivery_fee.widget.attrs.update({'class': 'form-check-input'})
 
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock']
+        fields = ['product_max_price', 'product_discount_price', 'stock','flat_delivery_fee']
 
 
 
