@@ -84,6 +84,16 @@ class AddToCartView(View):
                 is_user_authenticated = False
 
             product_obj = get_object_or_404(SimpleProduct, id=product_id)
+            quantity = int(request.GET.get('quantity', 1))
+            
+            # Ensure quantity is within valid range
+            if quantity <= 0:
+                messages.error(request, "Quantity must be at least 1.")
+                return redirect(request.META.get('HTTP_REFERER'))
+            elif quantity > 6:
+                quantity = 6
+                messages.warning(request, "Maximum quantity allowed is 6. Adjusting quantity to 6.")
+            
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
             product_info = {
@@ -96,14 +106,19 @@ class AddToCartView(View):
             }
 
             products = cart.products if is_user_authenticated else cart.get('products', {})
+            
             if product_key in products:
-                products[product_key]['quantity'] += 1
-                products[product_key]['total_price'] += product_obj.product_discount_price
+                new_quantity = products[product_key]['quantity'] + quantity
+                if new_quantity > 6:
+                    quantity = 6 - products[product_key]['quantity']
+                    messages.warning(request, "Adding more items would exceed the maximum limit. Adjusting quantity accordingly.")
+                products[product_key]['quantity'] += quantity
+                products[product_key]['total_price'] = products[product_key]['quantity'] * product_obj.product_discount_price
             else:
                 products[product_key] = {
                     'info': product_info,
-                    'quantity': 1,
-                    'total_price': product_obj.product_discount_price
+                    'quantity': quantity,
+                    'total_price': quantity * product_obj.product_discount_price
                 }
 
             if is_user_authenticated:
@@ -121,6 +136,8 @@ class AddToCartView(View):
         except Exception as e:
             print(f"Add to cart error: {e}")
             return HttpResponse(f"An error occurred: {e}", status=500)
+
+
 
 
 class ManageCart(View):
@@ -330,7 +347,7 @@ class AddAddress(View):
 
             address_data = {
                 "id": address_id,
-                "landmark1": landmark1,
+                "Address1": Address1,
                 "Address2": Address2,
                 "country": country,
                 "state": state,
