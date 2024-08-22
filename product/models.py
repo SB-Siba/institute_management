@@ -86,7 +86,7 @@ class SimpleProduct(models.Model):
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)
     stock = models.IntegerField(default=1, blank=True, null=True)
     taxable_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
-
+    flat_delivery_fee = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         # Ensure the related product exists and has a gst_rate
         if self.product and self.product.gst_rate is not None:

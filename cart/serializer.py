@@ -10,23 +10,24 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_products_data(self, obj):
         total_cart_items = 0
-        gross_cart_value = Decimal('0')
-        our_price = Decimal('0')
+        gross_cart_value = Decimal('0.00')
+        our_price = Decimal('0.00')
         charges = {}
         products = {}
 
         # Fetch delivery settings from the database
-        delivery_settings = get_object_or_404(DeliverySettings)
+        delivery_settings = DeliverySettings.objects.first()
+        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+        delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
-        # Use delivery settings values
-        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag 
-        delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
+        flat_delivery_charge = Decimal('0.00')  # Initialize to zero
 
         for key, value in obj.products.items():
             product_key_parts = key.split('_')
             product_id = product_key_parts[0]
+
             try:
-                simple_product = get_object_or_404(SimpleProduct, id=product_id)
+                simple_product = SimpleProduct.objects.get(id=product_id)
                 product = simple_product.product
                 quantity = int(value['quantity'])
 
@@ -36,18 +37,22 @@ class CartSerializer(serializers.ModelSerializer):
                 total_cart_items += quantity
 
                 # Retrieve SGST and CGST from the related Products model
-                sgst_amount = product.sgst * Decimal(simple_product.product_discount_price) * quantity / 100
-                cgst_amount = product.cgst * Decimal(simple_product.product_discount_price) * quantity / 100
-                total_price = Decimal(simple_product.product_discount_price) * quantity 
+                total_price = Decimal(simple_product.product_discount_price) * quantity
+                sgst_amount = product.sgst * total_price / 100
+                cgst_amount = product.cgst * total_price / 100
+
+                # Check for flat delivery fee at the product level
+                if simple_product.flat_delivery_fee and Decimal(simple_product.flat_delivery_fee) > Decimal('0.00'):
+                    flat_delivery_charge += Decimal(simple_product.flat_delivery_fee) * quantity
 
                 product_data = {
                     'id': product.id,
                     'name': product.name,
                     'brand': product.brand,
                     'image': product.image.url if product.image else None,
-                    'product_max_price': str(simple_product.product_max_price * quantity),
-                    'product_discount_price': str(simple_product.product_discount_price * quantity),
-                    'taxable_value': str(simple_product.taxable_value * quantity),
+                    'product_max_price': str(Decimal(simple_product.product_max_price) * quantity),
+                    'product_discount_price': str(Decimal(simple_product.product_discount_price) * quantity),
+                    'taxable_value': str(Decimal(simple_product.taxable_value) * quantity),
                     'quantity': quantity,
                     'sgst_amount': str(sgst_amount.quantize(Decimal('0.01'))),
                     'cgst_amount': str(cgst_amount.quantize(Decimal('0.01'))),
@@ -58,30 +63,33 @@ class CartSerializer(serializers.ModelSerializer):
 
                 products[key] = product_data
 
+            except SimpleProduct.DoesNotExist:
+                print(f"Error processing product {product_id}: Product does not exist")
             except Exception as e:
-                print(e)
+                print(f"Error processing product {product_id}: {e}")
 
         discount_amount = gross_cart_value - our_price
         final_cart_value = our_price
 
-        if final_cart_value < delivery_free_order_amount:
-            delivery_charge = delivery_charge_per_bag
-            charges['Delivery'] = delivery_charge.quantize(Decimal('0.01'))
+        # Apply delivery charges
+        if flat_delivery_charge > Decimal('0.00'):
+            charges['Delivery'] = Decimal('0.00')  # Flat delivery fee applicable, set delivery charge to zero
+        elif final_cart_value < delivery_free_order_amount:
+            charges['Delivery'] = delivery_charge_per_bag
         else:
-            charges['Delivery'] = Decimal('0')
+            charges['Delivery'] = Decimal('0.00')
 
-        for key, value in charges.items():
-            final_cart_value += value
+        final_cart_value += charges.get('Delivery', Decimal('0.00'))
 
         result = {
             'products': products,
             'total_cart_items': total_cart_items,
-            'gross_cart_value': "{:.2f}".format(float(gross_cart_value.quantize(Decimal('0.01')))),
-            'our_price': "{:.2f}".format(float(our_price.quantize(Decimal('0.01')))),
-            'discount_amount': "{:.2f}".format(float(discount_amount.quantize(Decimal('0.01')))),
-            'discount_percentage': "{:.1f}".format(float((discount_amount / gross_cart_value) * 100)) if gross_cart_value > 0 else "0.0",
-            'charges': {k: "{:.2f}".format(float(v.quantize(Decimal('0.01')))) for k, v in charges.items()},
-            'final_cart_value': "{:.2f}".format(float(final_cart_value.quantize(Decimal('0.01')))),
+            'gross_cart_value': "{:.2f}".format(gross_cart_value.quantize(Decimal('0.01'))),
+            'our_price': "{:.2f}".format(our_price.quantize(Decimal('0.01'))),
+            'discount_amount': "{:.2f}".format(discount_amount.quantize(Decimal('0.01'))),
+            'discount_percentage': "{:.1f}".format((discount_amount / gross_cart_value * 100)) if gross_cart_value > 0 else "0.0",
+            'charges': {k: "{:.2f}".format(v.quantize(Decimal('0.01'))) for k, v in charges.items()},
+            'final_cart_value': "{:.2f}".format(final_cart_value.quantize(Decimal('0.01'))),
         }
 
         return result
@@ -89,6 +97,8 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ["products_data"]
+
+
 
 
 

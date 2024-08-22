@@ -17,65 +17,79 @@ from payment import razorpay
 
 class ShowCart(View):
     def get(self, request):
+        # Get categories for the view
         category_obj = Category.objects.all()
-        user = request.user
 
+        # Get user and cart items
+        user = request.user
         if user.is_authenticated:
-            cartItems = Cart.objects.filter(user=user).first()
-            if not cartItems or not cartItems.products:
-                products = {}
-            else:
-                products = cartItems.products or {}
+            cart_items = Cart.objects.filter(user=user).first()
+            products = cart_items.products if cart_items and cart_items.products else {}
         else:
-            cartItems = None
+            cart_items = None
             products = request.session.get('cart', {}).get('products', {})
 
-        # Fetch delivery settings from the database
+        # Fetch delivery settings
         delivery_settings = DeliverySettings.objects.first()
         delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag 
         delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
 
-        totaloriginalprice = Decimal('0.00')
-        totalPrice = Decimal('0.00')
-        Delivery = Decimal('0.00')
+        total_original_price = Decimal('0.00')
+        total_price = Decimal('0.00')
+        delivery = Decimal('0.00')
         final_cart_value = Decimal('0.00')
+        flat_delivery_fee_applicable = False
 
         for product_key, product_info in products.items():
             max_price = Decimal(product_info['info'].get('max_price', '0.00'))
             discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
             quantity = product_info.get('quantity', 0)
-            
-            totaloriginalprice += max_price * quantity
-            totalPrice += discount_price * quantity
 
-        if totalPrice > 0:
-            discount_price = totaloriginalprice - totalPrice
-            final_cart_value += totalPrice 
+            total_original_price += max_price * quantity
+            total_price += discount_price * quantity
 
-            if final_cart_value < delivery_free_order_amount:
-                Delivery = delivery_charge_per_bag
+            product_id = product_info['info'].get('product_id')
+            if product_id:
+                try:
+                    simple_product = SimpleProduct.objects.get(product=product_id)
+                    if simple_product.flat_delivery_fee:
+                        flat_delivery_fee_applicable = True
+                except SimpleProduct.DoesNotExist:
+                    pass
 
-            final_cart_value += Delivery
+        if total_price > 0:
+            final_cart_value = total_price
+            discount_price = total_original_price - total_price
+            if flat_delivery_fee_applicable:
+                delivery = 0
+            elif final_cart_value < delivery_free_order_amount:
+                delivery = delivery_charge_per_bag
+            final_cart_value += delivery
         else:
             discount_price = Decimal('0.00')
 
-        if user.is_authenticated and cartItems:
-            cartItems.total_price = float(totalPrice)
-            cartItems.save()
+        if user.is_authenticated and cart_items:
+            cart_items.total_price = float(total_price)
+            cart_items.save()
 
         context = {
             'category_obj': category_obj,
-            'cartItems': cartItems,
+            'cartItems': cart_items,
             'products': products,
-            'totaloriginalprice': float(totaloriginalprice),
-            'totalPrice': float(totalPrice),
-            'Delivery': float(Delivery),
+            'totaloriginalprice': float(total_original_price),
+            'totalPrice': float(total_price),
+            'Delivery': float(delivery),
             'final_cart_value': float(final_cart_value),
             'discount_price': float(discount_price),
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
         return render(request, "cart/user/cartpage.html", context)
+
+
+
+
+
 
 class AddToCartView(View):
     def get(self, request, product_id):
