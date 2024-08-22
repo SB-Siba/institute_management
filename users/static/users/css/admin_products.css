@@ -138,3 +138,8 @@
 .px-5 {
     text-align: center;
 }
+/*---------------------------- Order List CSS------------------------------- */
+#Filetr_button{
+    width: 120px;
+    height: 40px;
+   }
