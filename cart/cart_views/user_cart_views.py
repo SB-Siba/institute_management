@@ -31,7 +31,7 @@ class ShowCart(View):
 
         # Fetch delivery settings
         delivery_settings = DeliverySettings.objects.first()
-        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag 
+        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
         delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
 
         total_original_price = Decimal('0.00')
@@ -52,7 +52,7 @@ class ShowCart(View):
             if product_id:
                 try:
                     simple_product = SimpleProduct.objects.get(product=product_id)
-                    if simple_product.flat_delivery_fee:
+                    if simple_product.virtual_product or simple_product.flat_delivery_fee:
                         flat_delivery_fee_applicable = True
                 except SimpleProduct.DoesNotExist:
                     pass
@@ -61,7 +61,7 @@ class ShowCart(View):
             final_cart_value = total_price
             discount_price = total_original_price - total_price
             if flat_delivery_fee_applicable:
-                delivery = 0
+                delivery = Decimal('0.00')  # No delivery fee for virtual or flat delivery fee products
             elif final_cart_value < delivery_free_order_amount:
                 delivery = delivery_charge_per_bag
             final_cart_value += delivery
@@ -85,8 +85,6 @@ class ShowCart(View):
         }
 
         return render(request, "cart/user/cartpage.html", context)
-
-
 
 
 

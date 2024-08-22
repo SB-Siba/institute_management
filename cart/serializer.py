@@ -21,6 +21,7 @@ class CartSerializer(serializers.ModelSerializer):
         delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
         flat_delivery_charge = Decimal('0.00')  # Initialize to zero
+        flat_delivery_fee_applicable = False  # Track if flat delivery fee is applicable
 
         for key, value in obj.products.items():
             product_key_parts = key.split('_')
@@ -41,8 +42,10 @@ class CartSerializer(serializers.ModelSerializer):
                 sgst_amount = product.sgst * total_price / 100
                 cgst_amount = product.cgst * total_price / 100
 
-                # Check for flat delivery fee at the product level
-                if simple_product.flat_delivery_fee and Decimal(simple_product.flat_delivery_fee) > Decimal('0.00'):
+                # Check for virtual product and delivery fee applicability
+                if simple_product.virtual_product:
+                    flat_delivery_fee_applicable = True  # Virtual products are delivery-free
+                elif simple_product.flat_delivery_fee and Decimal(simple_product.flat_delivery_fee) > Decimal('0.00'):
                     flat_delivery_charge += Decimal(simple_product.flat_delivery_fee) * quantity
 
                 product_data = {
@@ -72,8 +75,10 @@ class CartSerializer(serializers.ModelSerializer):
         final_cart_value = our_price
 
         # Apply delivery charges
-        if flat_delivery_charge > Decimal('0.00'):
-            charges['Delivery'] = Decimal('0.00')  # Flat delivery fee applicable, set delivery charge to zero
+        if flat_delivery_fee_applicable:
+            charges['Delivery'] = Decimal('0.00')  # No delivery fee for virtual products
+        elif flat_delivery_charge > Decimal('0.00'):
+            charges['Delivery'] = Decimal('0.00')  # Flat delivery fee if applicable
         elif final_cart_value < delivery_free_order_amount:
             charges['Delivery'] = delivery_charge_per_bag
         else:
@@ -97,8 +102,6 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ["products_data"]
-
-
 
 
 

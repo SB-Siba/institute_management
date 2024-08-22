@@ -78,9 +78,12 @@ class SimpleProductForm(forms.ModelForm):
     flat_delivery_fee = forms.BooleanField(required=False)
     flat_delivery_fee.widget.attrs.update({'class': 'form-check-input'})
 
+    virtual_product = forms.BooleanField(required=False)
+    virtual_product.widget.attrs.update({'class': 'form-check-input'})
+
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock','flat_delivery_fee']
+        fields = ['product_max_price', 'product_discount_price', 'stock','flat_delivery_fee','virtual_product']
 
 
 
