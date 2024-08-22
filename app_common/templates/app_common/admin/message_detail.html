@@ -1,0 +1,18 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Order Details {% endblock title %}
+{% block content %}
+<h1>Message Detail</h1>
+<p><strong>Name:</strong> {{ message.name }}</p>
+<p><strong>Email:</strong> {{ message.email }}</p>
+<p><strong>Contact:</strong> {{ message.contact }}</p>
+<p><strong>Message:</strong> {{ message.message }}</p>
+<p><strong>Created At:</strong> {{ message.created_at }}</p>
+
+<h2>Reply</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Send Reply</button>
+</form>
+{% endblock content %}

@@ -3,7 +3,7 @@ from .models import Cart
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from product.models import Products,SimpleProduct,ImageGallery
+from product.models import DeliverySettings, Products,SimpleProduct,ImageGallery
 
 class CartSerializer(serializers.ModelSerializer):
     products_data = serializers.SerializerMethodField()
@@ -14,6 +14,13 @@ class CartSerializer(serializers.ModelSerializer):
         our_price = Decimal('0')
         charges = {}
         products = {}
+
+        # Fetch delivery settings from the database
+        delivery_settings = get_object_or_404(DeliverySettings)
+
+        # Use delivery settings values
+        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag 
+        delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
 
         for key, value in obj.products.items():
             product_key_parts = key.split('_')
@@ -28,9 +35,9 @@ class CartSerializer(serializers.ModelSerializer):
                 our_price += Decimal(simple_product.product_discount_price) * quantity
                 total_cart_items += quantity
 
-                # Calculate SGST and CGST for the product
-                sgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
-                cgst_amount = Decimal(simple_product.product_discount_price) * (simple_product.gst_rate/100) * quantity
+                # Retrieve SGST and CGST from the related Products model
+                sgst_amount = product.sgst * Decimal(simple_product.product_discount_price) * quantity / 100
+                cgst_amount = product.cgst * Decimal(simple_product.product_discount_price) * quantity / 100
                 total_price = Decimal(simple_product.product_discount_price) * quantity 
 
                 product_data = {
@@ -41,8 +48,6 @@ class CartSerializer(serializers.ModelSerializer):
                     'product_max_price': str(simple_product.product_max_price * quantity),
                     'product_discount_price': str(simple_product.product_discount_price * quantity),
                     'taxable_value': str(simple_product.taxable_value * quantity),
-
-                    # 'discount_percentage': simple_product.discount_percentage(),
                     'quantity': quantity,
                     'sgst_amount': str(sgst_amount.quantize(Decimal('0.01'))),
                     'cgst_amount': str(cgst_amount.quantize(Decimal('0.01'))),
@@ -59,8 +64,8 @@ class CartSerializer(serializers.ModelSerializer):
         discount_amount = gross_cart_value - our_price
         final_cart_value = our_price
 
-        if final_cart_value < settings.DELIVARY_FREE_ORDER_AMOUNT:
-            delivery_charge = Decimal(str(settings.DELIVARY_CHARGE_PER_BAG))
+        if final_cart_value < delivery_free_order_amount:
+            delivery_charge = delivery_charge_per_bag
             charges['Delivery'] = delivery_charge.quantize(Decimal('0.01'))
         else:
             charges['Delivery'] = Decimal('0')
@@ -84,7 +89,6 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ["products_data"]
-
 
 
 

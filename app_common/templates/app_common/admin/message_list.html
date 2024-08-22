@@ -1,0 +1,38 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Order Details {% endblock title %}
+{% block content %}
+<h1>Contact Messages</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Message</th>
+        <th>Created At</th>
+        <th>User Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for message in messages %}
+        <tr>
+          <td>{{ message.name }}</td>
+          <td>{{ message.email }}</td>
+          <td>{{ message.contact }}</td>
+          <td>{{ message.message|truncatechars:50 }}</td>
+          <td>{{ message.created_at }}</td>
+          <td>
+            {% if message.user %}
+              Authenticated
+            {% else %}
+              Unauthenticated
+            {% endif %}
+          </td>
+          <td><a href="{% url 'app_common:admin_message_detail' message.id %}">View Details</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

@@ -79,9 +79,8 @@
                                         <a href="{% url 'blog:blog_update' blog.id %}"
                                             class="btn btn-sm btn-square btn-neutral">
                                             <i class="fa-solid fa-pen-to-square"></i>                                        </a>
-                                        <a onclick="delete_blog(this)" p_name="{{ blog.title }}" p_id="{{ blog.id }}">
-                                            <button type="button"
-                                                class="btn btn-sm btn-square btn-neutral text-danger-hover">
+                                            <a href="{% url 'blog:blog_delete' blog.id %}"
+                                            class="btn btn-sm btn-square btn-neutral">
                                                 <i class="fa-solid fa-trash"></i>                                           
                                              </button>
                                         </a>
@@ -154,18 +153,18 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-    function delete_blog(element){
-        var blog_title = element.getAttribute('p_title');
-        var blog_id = element.getAttribute('p_id');
-        
-        var target = document.getElementById('blog_delete_title');
-        target.innerHTML = "<p>Blog Title : <b>"+blog_title+"</b> ("+blog_id+")</p>";
+   function delete_blog(element) {
+    var blog_title = element.getAttribute('p_title');
+    var blog_id = element.getAttribute('p_id');
 
-        var delete_url = '/blog/blog_delete/'+blog_id+'';
-        document.getElementById('confirm_delete_btn').setAttribute('href', delete_url);
+    var target = document.getElementById('blog_delete_title');
+    target.innerHTML = "<p>Blog Title: <b>" + blog_title + "</b> (" + blog_id + ")</p>";
 
-        var myModal = new bootstrap.Modal(document.getElementById('blog_delete'));
-        myModal.show();
-    }
+    var delete_url = '/blog_delete/' + blog_id;  // Update the URL to match your routing
+    document.getElementById('confirm_delete_btn').setAttribute('href', delete_url);
+
+    var myModal = new bootstrap.Modal(document.getElementById('blog_delete'));
+    myModal.show();
+}
 </script>
 {% endblock js %}

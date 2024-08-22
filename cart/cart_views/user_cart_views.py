@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from product.models import Products, SimpleProduct, Category
+from product.models import DeliverySettings, Products, SimpleProduct, Category
 from orders.models import Order
 from cart.models import Cart
 from cart.serializer import CartSerializer,DirectBuySerializer
@@ -31,6 +31,11 @@ class ShowCart(View):
             cartItems = None
             products = request.session.get('cart', {}).get('products', {})
 
+        # Fetch delivery settings from the database
+        delivery_settings = DeliverySettings.objects.first()
+        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag 
+        delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
+
         totaloriginalprice = Decimal('0.00')
         totalPrice = Decimal('0.00')
         Delivery = Decimal('0.00')
@@ -48,8 +53,8 @@ class ShowCart(View):
             discount_price = totaloriginalprice - totalPrice
             final_cart_value += totalPrice 
 
-            if final_cart_value < Decimal(settings.DELIVARY_FREE_ORDER_AMOUNT):
-                Delivery = Decimal(settings.DELIVARY_CHARGE_PER_BAG)
+            if final_cart_value < delivery_free_order_amount:
+                Delivery = delivery_charge_per_bag
 
             final_cart_value += Delivery
         else:
@@ -272,7 +277,7 @@ class Checkout(View):
 
 
 
-@method_decorator(login_required(login_url='shoppingsite:login'), name='dispatch')
+@method_decorator(login_required(login_url='users:login'), name='dispatch')
 class DirectBuyCheckout(View):
     template = "cart/user/directbuycheckout.html"  # Update with your actual template path
 
