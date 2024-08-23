@@ -75,6 +75,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -84,6 +85,9 @@
                 <tbody>
                     {% for key, product in order_details.products.items %}
                     <tr>
+                        <td class="ps-4">
+                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
+                        </td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.product_discount_price }}</td>
@@ -98,12 +102,12 @@
             <h2>Shipping Address:</h2>
             <p>
                 {{ address.full_name }}<br>
-                {{ address.address_line_1 }}<br>
-                {% if address.address_line_2 %}
-                {{ address.address_line_2 }}<br>
+                {{ address.Address1 }}<br>
+                {% if address.Address2 %}
+                {{ address.Address2 }}<br>
                 {% endif %}
                 {{ address.city }}, {{ address.state }}<br>
-                {{ address.zip_code }}<br>
+                {{ address.pincode }}<br>
                 {{ address.country }}
             </p>
 

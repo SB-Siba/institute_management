@@ -18,6 +18,7 @@ urlpatterns = [
 
     #product web admin
     path("product/product_add", admin_product_views.ProductAdd.as_view(), name="product_add"),
+    path('product/edit/<int:pk>/', admin_product_views.ProductEdit.as_view(), name='product_edit'),
     path("product/product_list", admin_product_views.ProductList.as_view(), name="product_list"),
     path("product/product_search", admin_product_views.ProductSearch.as_view(), name="product_search"),
     path("product/product_filter", admin_product_views.ProductFilter.as_view(), name="product_filter"),
@@ -33,6 +34,8 @@ urlpatterns = [
     path('product/<int:p_id>/', user_product_views.ProductDetailsSmipleView.as_view(), name='product_detail'),
     path('new-products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('trndong-products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
+
+    path('update-delivery-settings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),
 
 
 ]   

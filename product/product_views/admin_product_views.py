@@ -6,7 +6,7 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
-from product.models import Category,Products,SimpleProduct,ImageGallery
+from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery
 
 from product import forms
 import os
@@ -152,6 +152,56 @@ class ProductAdd(View):
         }
 
         return render(request, self.template_name, context)
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class ProductEdit(View):
+    form_class = forms.ProductForm
+    template = app + 'admin/product_edit.html'  # Ensure this path is correct
+
+    def get(self, request, pk):
+        product = get_object_or_404(Products, pk=pk)
+        form = self.form_class(instance=product)
+
+        context = {
+            "form": form,
+            "product": product,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request, pk):
+        product = get_object_or_404(Products, pk=pk)
+        form = self.form_class(request.POST, request.FILES, instance=product)
+
+        if form.is_valid():
+            try:
+                # Save the updated product
+                product = form.save(commit=False)
+                if not product.uid:
+                    product.uid = utils.get_rand_number(5)
+                product.save()
+
+                # Update the related SimpleProduct object
+                simple_product_obj, created = SimpleProduct.objects.get_or_create(product=product)
+                simple_product_obj.save()  # Save or update the SimpleProduct object
+
+                messages.success(request, "Product updated successfully.")
+                return redirect("product:product_list")
+
+            except Exception as e:
+                print("Error updating product:", e)
+                messages.error(request, f"Error updating product: {str(e)}")
+        else:
+            # Handle form errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+
+        context = {
+            "form": form,
+            "product": product,
+        }
+
+        return render(request, self.template, context)
     
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductList(View):
@@ -362,3 +412,41 @@ class ProductFilter(View):
         }
         return render(request, self.template, context)
     
+class DeliverySettingsUpdateView(View):
+    form_class = forms.DeliverySettingsForm
+    template_name = app + "admin/delivery_setting.html"  
+
+    def get(self, request):
+        delivery_settings = DeliverySettings.objects.first()
+        
+        form = self.form_class(instance=delivery_settings)
+        
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        delivery_settings = DeliverySettings.objects.first()
+        
+        form = self.form_class(request.POST, instance=delivery_settings)
+        
+        if form.is_valid():
+            try:
+                form.save()
+                
+                messages.success(request, "Delivery settings updated successfully.")
+                return redirect('users:admin_dashboard')  # Redirect to a success page
+            except Exception as e:
+                print("Error updating delivery settings:", e)
+                messages.error(request, f"Error updating delivery settings: {str(e)}")
+        else:
+            # Handle form errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+        
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context)

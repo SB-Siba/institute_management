@@ -101,6 +101,19 @@ class PaymentSuccess(View):
                     payment_status='Pending'  # Set payment status to Pending for COD
                 )
                 order.save()
+                context = {
+                        'full_name': user.full_name,
+                        'email': user.email,
+                        'order_value': t_price,
+                        'order_details': ord_meta_data,
+                        'address': selected_address,
+                    }
+                send_template_email(
+                        subject='Order Confirmation',
+                        template_name='users/email/order_confirmation.html',
+                        context=context,
+                        recipient_list=[user.email]
+                    )
                 messages.success(request, "Order placed successfully. Cash on Delivery selected.")
                 cart.delete()
                 return redirect("users:home")
