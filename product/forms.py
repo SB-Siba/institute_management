@@ -24,6 +24,10 @@ class CategoryEntryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
+
+    product_type = forms.ChoiceField(choices=Products.PRODUCT_TYPE_CHOICES, required=False)
+    product_type.widget.attrs.update({'class': 'form-control', 'required': 'required'})
+
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
     category.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
@@ -51,14 +55,11 @@ class ProductForm(forms.ModelForm):
     show_as_new = forms.ChoiceField(choices=Products.YESNO, required=False)
     show_as_new.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
-    product_type = forms.ChoiceField(choices=Products.PRODUCT_TYPE_CHOICES, required=False)
-    product_type.widget.attrs.update({'class': 'form-control', 'required': 'required'})
-
     class Meta:
         model = Products
         fields = [
-            'category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
-            'product_long_description', 'trending', 'show_as_new', 'product_type'
+            'product_type', 'category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
+            'product_long_description', 'trending', 'show_as_new'
         ]
 class SimpleProductForm(forms.ModelForm):
     product_max_price = forms.DecimalField(max_digits=10, decimal_places=2)

@@ -175,7 +175,16 @@
     font-size: 15px;
     padding: 10px 45px;
   }
-
+  .payment-method label{
+    font-family:"Inter",sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 30px;
+    color: var(--para);
+    font-style: normal;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+}
 
   /* -----------------------------------payment success--------------------------------- */
   

@@ -114,8 +114,7 @@
     line-height: 42px;
 }
 .product-details .rating{
-    color:
-    rgb(245, 191, 18);
+    color:var(--secondary);
     font-weight: 700;
     font-size: 14px;
     line-height: 20px;
@@ -140,15 +139,44 @@
     line-height: 17px;
     color: var(--h6);
 }
-
-.increase_decrease{
-    border: 1px solid black;
+.quantity-selector label{
+    font-family:"inter",sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+    margin: 10px 0;
+    font-size: 17px;
+}
+.quantity-selector .input-group{
     width: 25%;
-    padding: 10px 0;
+    border: 1px solid var(--h6);
 }
-.increase_decrease button{
-    border: none;
+.stock-Details span{
+    font-family:"inter",sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+    margin: 10px 0;
+    font-size: 17px;
 }
+.product-deatils-Buttons #addToCartButton{
+    font-family:"inter",sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    width: 30%;
+    background-color: var(--secondary);
+    color: var(--para);
+    
+}
+.product-deatils-Buttons #Buynow-Button{
+    font-family:"inter",sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    width: 30%;
+    background-color: var(--third2);
+    color: var(--third);
+}
+
 
 .wishlist-btn {
     border-radius: 50%;

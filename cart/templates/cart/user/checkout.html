@@ -38,13 +38,13 @@ Checkout | NiwaAgro.com
                            </div>
                            <div>
                             <ul class="p-0 address-detailss">
-                                <li>{{i.landmark1}}</li>
-                                <li>{{i.landmark2}}</li>
+                                <li>{{i.Address1}}</li>
+                                <li>{{i.Address2}}</li>
                                 <li>{{i.mobile_no}}</li>
                                 <li>{{i.city}}</li>
                                 <li>{{i.state}}</li>
                                 <li>{{i.country}}</li>
-                                <li>{{i.zipcode}}</li>
+                                <li>{{i.pincode}}</li>
                             </ul>
                            </div>
                            
@@ -178,12 +178,13 @@ Checkout | NiwaAgro.com
 
         <div class="col-md-4 col-lg-4">
             <!-- Cart Summary -->
+
             <div class="product-price-details">
                 <div class="border" >
                     <div class="border-bottom p-lg-3 price-details">
                      <span class=""> PRICE DETAILS</span>
                     </div>
-     
+        
                     <div class="p-lg-3 amount-details">
                          <div class="d-flex justify-content-between mb-2">
                              <span>MRP </span>
@@ -195,39 +196,79 @@ Checkout | NiwaAgro.com
                          </div>
                          <div class="d-flex justify-content-between mb-2">
                              <span  style="color:green!important;">Discount  </span>
-                             <span  style="color:green!important;">-  <i class="bi bi-currency-rupee"></i>{{ discount_price }}</span>
+                             <span  style="color:green!important;"> -  <i class="bi bi-currency-rupee"></i>{{ discount_price }}</span>
                          </div>
+                         
                          <div class="d-flex justify-content-between mb-2">
-                            <span>Delivery Charge : </span>
-                            <span class=" "><i class="bi bi-currency-rupee"></i>&nbsp;{{ Delivery }}</span>
+                             <span>Delivery Charges  </span>
+                             <span><i class="bi bi-currency-rupee"></i>{{ Delivery }}</span>
+                         </div>
+                         <div class="checkout-check p-lg-2">
+        
+                         </div>
+                    </div>
+                     <div class="d-flex justify-content-between p-lg-3 total-amount">
+                         <span>Total Amount </span>
+                         <span><i class="bi bi-currency-rupee"></i>{{ final_cart_value }}</span>
+                     </div>
+                     <div class="payment-method p-lg-3">
+                        <h6>Select Payment Method</h6>
+                        <label>
+                            <input type="radio" name="payment_method" value="razorpay" checked>
+                            Online Payment (Razorpay)
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="payment_method" value="cod">
+                            Cash on Delivery (COD)
+                        </label>
                         </div>
-                                    <hr>
-                        <div class="d-flex justify-content-between  ">
-                            <span>Total : </span>
-                            <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ final_cart_value }}</span>
-                        </div>
-                    
-                    <div class="payment-method">
-                <h4>Select Payment Method</h4>
-                <label>
-                    <input type="radio" name="payment_method" value="razorpay" checked>
-                    Online Payment (Razorpay)
-                </label>
-                <br>
-                <label>
-                    <input type="radio" name="payment_method" value="cod">
-                    Cash on Delivery (COD)
-                </label>
+
+                     <div class="p-lg-3 proceed-to-payment">
+                        <button class="u-button w-100" id="proceed-button">Proceed To Payment</button>
+                    </div>
+                 </div>
+                 <span class="d-flex mt-lg-3 p-lg-2"  id="t-Head">
+                     <i class="bi bi-shield-fill-check"></i>
+                     <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
+                 </span>
             </div>
-    
-            <div class="d-flex justify-content-center">
-            <button id="proceed-button" class="btn btn-primary">Proceed to Payment</button>
-            </div>
-                </div>
-                <span class="d-flex "><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">  Safe and Secure Payments.Easy returns.100% Authentic products.</p></span>
-            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
         </div>
+
     </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
     {% endblock content %}
     
     {% block js %}
