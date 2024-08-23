@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from product.models import Category,Products,SimpleProduct,ImageGallery
+from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery
 
 
 class CategoryEntryForm(forms.ModelForm):
@@ -24,6 +24,9 @@ class CategoryEntryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
+    product_type = forms.ChoiceField(choices=Products.PRODUCT_TYPE_CHOICES, required=False)
+    product_type.widget.attrs.update({'class': 'form-control', 'required': 'required'})
+
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
     category.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
@@ -51,15 +54,24 @@ class ProductForm(forms.ModelForm):
     show_as_new = forms.ChoiceField(choices=Products.YESNO, required=False)
     show_as_new.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
-    product_type = forms.ChoiceField(choices=Products.PRODUCT_TYPE_CHOICES, required=False)
-    product_type.widget.attrs.update({'class': 'form-control', 'required': 'required'})
+    
+    gst_rate = forms.ChoiceField(choices=Products.GST_CHOICES)
+    gst_rate.widget.attrs.update({'class': 'form-control', 'required': 'required'})
+
 
     class Meta:
         model = Products
         fields = [
-            'category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
-            'product_long_description', 'trending', 'show_as_new', 'product_type'
+            'product_type','category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
+            'product_long_description', 'trending', 'show_as_new', 'gst_rate'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # This is an edit form, disable the sku_no and category fields
+            self.fields['sku_no'].widget.attrs['readonly'] = True
+            self.fields['category'].widget.attrs['disabled'] = True
 class SimpleProductForm(forms.ModelForm):
     product_max_price = forms.DecimalField(max_digits=10, decimal_places=2)
     product_max_price.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.01', 'required': 'required'})
@@ -70,13 +82,43 @@ class SimpleProductForm(forms.ModelForm):
     stock = forms.IntegerField()
     stock.widget.attrs.update({'class': 'form-control', 'type': 'number', 'required': 'required'})
 
-    gst_rate = forms.ChoiceField(choices=SimpleProduct.GST_CHOICES,widget=forms.Select(attrs={'class': 'form-control','required': 'required'}))
+    flat_delivery_fee = forms.BooleanField(required=False)
+    flat_delivery_fee.widget.attrs.update({'class': 'form-check-input'})
 
-    
+    virtual_product = forms.BooleanField(required=False)
+    virtual_product.widget.attrs.update({'class': 'form-check-input'})
 
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock','gst_rate']
+        fields = ['product_max_price', 'product_discount_price', 'stock','flat_delivery_fee','virtual_product']
 
 
 
+class DeliverySettingsForm(forms.ModelForm):
+    delivery_charge_per_bag = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2
+    )
+    delivery_charge_per_bag.widget.attrs.update({
+        'class': 'form-control', 
+        'type': 'number', 
+        'step': '0.01', 
+        'required': 'required',
+        'placeholder': 'Enter delivery charge per bag'
+    })
+
+    delivery_free_order_amount = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2
+    )
+    delivery_free_order_amount.widget.attrs.update({
+        'class': 'form-control', 
+        'type': 'number', 
+        'step': '0.01', 
+        'required': 'required',
+        'placeholder': 'Enter free delivery order amount'
+    })
+
+    class Meta:
+        model = DeliverySettings
+        fields = ['delivery_charge_per_bag', 'delivery_free_order_amount']

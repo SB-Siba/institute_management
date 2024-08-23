@@ -5,7 +5,7 @@
 <style>
   .active {
       color: #ffffff;
-      background-color: #00836C;
+      /* background-color: #00836C; */
       border-radius: 5px;
       outline: none;
     }
@@ -24,34 +24,44 @@
       <div class="row px-0 mx-0 mt-3">
         {% for i in addresses %}
         <div class="col-md-6">
-          <div
-            class="card mx-2 mb-2 text-black"
-            style="background-color: #9fe2bf">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 m text-muted">
-                Address {{forloop.counter}}
-              </h6>
-              <p class="card-text" >
-                <li id="card-text">Address 1: {{i.Address1}}</li>
-                <li id="card-text">Address 2: {{i.Address2}}</li>
-                <li id="card-text">Country: {{i.country}}</li>
-                <li id="card-text">Mobile No: {{i.mobile_no}}</li>
-                <li id="card-text">State: {{i.state}}</li>
-                <li id="card-text">City: {{i.city}}</li>
-                <li id="card-text">pincode: {{i.pincode}}</li>
-              </p>
-              <a
-                href="{% url 'users:profile_delete_address' i.id %}"
-                class="card-link btn btn-danger"
-                ><i class="fas fa-trash"></i></a
-              >
-              <a
-                href="{% url 'users:profile_update_address' i.id %}"
-                class="card-link btn hover  " style="background-color: #00836C;"
-                ><i class="fas fa-pencil text-white"></i></a
-              >
+          <div class="card w-75 my-3">
+                        
+            <div class=" d-flex justify-content-around pt-lg-3" >
+               <div>
+                <ul class="p-0 address-details ">
+                    <li>Address 1: </li>
+                    <li>Address 2: </li>
+                    <li>Mobile:</li>
+                    <li>City:</li>
+                    <li>State:</li>
+                    <li>Country: </li>
+                    <li>pincode: </li>
+                </ul>
+               </div>
+               <div>
+                <ul class="p-0 address-detailss">
+                    <li>{{i.Address1}}</li>
+                    <li>{{i.Address2}}</li>
+                    <li>{{i.mobile_no}}</li>
+                    <li>{{i.city}}</li>
+                    <li>{{i.state}}</li>
+                    <li>{{i.country}}</li>
+                    <li>{{i.pincode}}</li>
+                </ul>
+               </div>
+               
             </div>
-          </div>
+            <div class="d-flex justify-content-center pb-lg-3 adress_button">
+                <button type="button" class="u-button pencil " data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
+                    <i class="bi bi-pencil"> Edit </i>
+                </button>
+                <a href="{% url 'cart:delete_address' i.id %}">
+                    <button type="button"class="u-button trash ms-lg-3">
+                        <i class="bi bi-trash"> Delete</i>
+                    </button>
+                </a>
+            </div>
+        </div>
         </div>
         {% endfor %}
       </div>

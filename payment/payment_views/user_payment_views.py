@@ -19,7 +19,6 @@ app = 'payment/'
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PaymentSuccess(View):
-
     model = Order
 
     def post(self, request):
@@ -27,7 +26,7 @@ class PaymentSuccess(View):
         cart = Cart.objects.get(user=user)
         data = json.loads(request.body)
         address_id = data.get('address_id')
-        payment_method = data.get('payment_method')  # Get payment method from request
+        payment_method = data.get('payment_method')
 
         # Fetch order details
         order_details = CartSerializer(cart).data
@@ -37,12 +36,16 @@ class PaymentSuccess(View):
         user_addresses = user.address
         selected_address = next((addr for addr in user_addresses if addr['id'] == address_id), None)
 
+        if not selected_address:
+            messages.error(request, "Address not found.")
+            return redirect("cart:checkout")
+
         if payment_method == 'razorpay':
             razorpay_payment_id = data.get('razorpay_payment_id')
             razorpay_order_id = data.get('razorpay_order_id')
             razorpay_signature = data.get('razorpay_signature')
             
-            if razorpay.verify_signature(data):
+            if verify_signature(data):
                 try:
                     order = self.model(
                         user=user,
@@ -56,6 +59,8 @@ class PaymentSuccess(View):
                         razorpay_order_id=razorpay_order_id,
                         razorpay_signature=razorpay_signature,
                     )
+                    order.save()
+
                     # Send confirmation email
                     context = {
                         'full_name': user.full_name,
@@ -70,11 +75,12 @@ class PaymentSuccess(View):
                         context=context,
                         recipient_list=[user.email]
                     )
-                    order.save()
+
                     messages.success(request, "Order Successful!")
                     cart.delete()
                     return redirect("users:home")
                 except Exception as e:
+                    print(f"Error while placing Order: {e}")
                     messages.error(request, "Error while placing Order.")
                     return redirect("cart:checkout")
             else:
@@ -95,10 +101,24 @@ class PaymentSuccess(View):
                     payment_status='Pending'  # Set payment status to Pending for COD
                 )
                 order.save()
+                context = {
+                        'full_name': user.full_name,
+                        'email': user.email,
+                        'order_value': t_price,
+                        'order_details': ord_meta_data,
+                        'address': selected_address,
+                    }
+                send_template_email(
+                        subject='Order Confirmation',
+                        template_name='users/email/order_confirmation.html',
+                        context=context,
+                        recipient_list=[user.email]
+                    )
                 messages.success(request, "Order placed successfully. Cash on Delivery selected.")
                 cart.delete()
                 return redirect("users:home")
             except Exception as e:
+                print(f"Error while placing Order: {e}")
                 messages.error(request, "Error while placing Order.")
                 return redirect("cart:checkout")
         

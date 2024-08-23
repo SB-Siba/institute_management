@@ -45,6 +45,7 @@
                                 <th class="" id="tb-head" scope="col">Product Name</th>
                                 <th class="" id="tb-head" scope="col">Product Image</th>
                                 <th class="" id="tb-head" scope="col">Product Brand</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody id="test_table_tbody">
@@ -61,7 +62,12 @@
                                     {% endif %}
                                 </td>
                                 <td class="tb-body">{{ product.brand }}</td>
-                                
+                                <td class="tb-body">
+                                    <a href="{% url 'product:product_edit' product.pk %}"
+                                        class="BtM">
+                                        <i class='bx bx-edit text-primary' ></i>    
+                                    </a>
+                                </td>
                         
                             </tr>
                             {% endfor %}

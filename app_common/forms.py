@@ -26,3 +26,12 @@ class ContactMessageForm(forms.Form):
         required=True,
       
     )
+
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['reply']
+        widgets = {
+            'reply': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Type your reply here...'}),
+        }

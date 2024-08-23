@@ -30,8 +30,6 @@ urlpatterns = [
 
     # admin 
     path("user/userslist", admin_views.UserList.as_view(), name="userslist"),
-    path("user/deleteuser/<int:user_id>", admin_views.DeleteUser.as_view(), name="deleteuser"),
     path('user/user_detail/<int:user_id>', admin_views.UserDetailView.as_view(), name='user_detail'),
-    path('edit_user/<int:user_id>',admin_views.Edit_User.as_view(),name="edit_userrr"),
-    path('add_user/', admin_views.AddUserView.as_view(), name='add_user'),
+    
 ]

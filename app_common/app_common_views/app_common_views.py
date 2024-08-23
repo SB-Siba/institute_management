@@ -120,3 +120,9 @@ class OurServices(View):
     def get(self, request):
        
         return render(request, self.template)
+class LocateUs(View):
+    template = app + "locate_us.html"
+
+    def get(self, request):
+       
+        return render(request, self.template)

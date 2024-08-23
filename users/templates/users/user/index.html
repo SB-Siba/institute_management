@@ -22,7 +22,7 @@
 </style>
 </head>
 
-<div class="col-sm-3 col-lg-3  px-0    pt-5  dash_body">
+<div class=" col-lg-3  px-0    pt-5  dash_body">
 <ul class="list-unstyled mt-4 mx-0  ">
     <li class="d-grid">
         <a href="{% url 'users:home' %}" class="prof-btn ps-4 mb-3">
@@ -36,7 +36,7 @@
     </li>
     <li class="d-grid">
         <a href="{% url 'orders:orders' %}" class="prof-btn ps-4  mb-3">
-            <i class="fas fa-box text-white me-2"></i> My Orders
+            <i class="fa-solid fa-list me-lg-2"></i> My Orders
         </a>
     </li>
     <li class="d-grid">
@@ -49,26 +49,21 @@
             <i class="fas fa-address-book text-white me-2"></i> My Addresses
         </a>
     </li>
-    <li class="d-grid">
-        <a href="" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Change Password
-        </a>
-    </li>
+   
     <li class="d-grid">
         <a href="{% url 'users:account_deletion' %}" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Delete Account
+           <i class="fa-solid fa-trash-can me-lg-2"></i> Delete Account
         </a>
     </li>
     <li class="d-grid">
         <a href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="prof-btn ps-4 mb-3">
-            <i class="fas fa-key text-white me-2"></i> Logout
+            <i class="fa-solid fa-arrow-right-from-bracket me-lg-2"></i> Logout
         </a>
             
         </a>
     </li>
-   
-    
 </ul>
+
 </div>
 <script>
     function myFunction() {
