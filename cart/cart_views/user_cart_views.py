@@ -38,7 +38,8 @@ class ShowCart(View):
         total_price = Decimal('0.00')
         delivery = Decimal('0.00')
         final_cart_value = Decimal('0.00')
-        flat_delivery_fee_applicable = False
+        has_flat_delivery_product = False
+        has_non_flat_delivery_product = False
 
         for product_key, product_info in products.items():
             max_price = Decimal(product_info['info'].get('max_price', '0.00'))
@@ -52,17 +53,27 @@ class ShowCart(View):
             if product_id:
                 try:
                     simple_product = SimpleProduct.objects.get(product=product_id)
-                    if simple_product.virtual_product or simple_product.flat_delivery_fee:
-                        flat_delivery_fee_applicable = True
+                    if simple_product.virtual_product:
+                        # Product is virtual; no delivery fee
+                        has_flat_delivery_product = True
+                    elif simple_product.flat_delivery_fee:
+                        # Product has a flat delivery fee; set flag
+                        has_flat_delivery_product = True
+                    else:
+                        # Product is a normal product; requires delivery fee
+                        has_non_flat_delivery_product = True
                 except SimpleProduct.DoesNotExist:
                     pass
 
         if total_price > 0:
             final_cart_value = total_price
             discount_price = total_original_price - total_price
-            if flat_delivery_fee_applicable:
-                delivery = Decimal('0.00')  # No delivery fee for virtual or flat delivery fee products
+
+            if has_flat_delivery_product and not has_non_flat_delivery_product:
+                # All products are virtual or have flat delivery fee, so no delivery charge
+                delivery = Decimal('0.00')
             elif final_cart_value < delivery_free_order_amount:
+                # Normal delivery charge applies
                 delivery = delivery_charge_per_bag
             final_cart_value += delivery
         else:
@@ -85,8 +96,6 @@ class ShowCart(View):
         }
 
         return render(request, "cart/user/cartpage.html", context)
-
-
 
 
 class AddToCartView(View):
