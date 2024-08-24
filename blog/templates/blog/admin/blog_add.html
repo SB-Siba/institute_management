@@ -1,8 +1,11 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
 {% block content %}
+
+{% comment %}
 <main class="py-6 bg-surface-secondary">
     <div class="container-fluid">
+        
         <div class="vstack gap-4">
             <div class="card create_test">
                 <form action="" method="post" enctype="multipart/form-data">
@@ -20,10 +23,39 @@
                         {% endfor %}
                     </div>
                     <br>
-                    <center><button type="submit" class="btn btn-success">Add Blog</button></center>
+                    <center><button type="submit" class="btn btn-success">Add Blogss</button></center>
                 </form>
             </div>
         </div>
     </div>
 </main>
+{% endcomment %}
+<section class="py-6 bg-surface-secondary">
+   <div class="container">
+   <div class="text-center my-lg-4 text-secondary">
+    <h4>Add Your Blogs</h4>
+   </div>
+    <div class="card border-0" >
+        <div class=" create_test ">
+            <form action="" method="post" enctype="multipart/form-data" class="card p-lg-4 lh-lg">
+                {% include 'snippets/alert.html' %}
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <div class="row">
+                        {% for field in form %}
+                            <div class="col-12">
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                <button type="submit" class="btn btn-success w-100">Add Your Blog</button>
+            </form>
+        </div>
+    </div>
+   </div>
+</section>
 {% endblock content %}

@@ -1,0 +1,164 @@
+
+
+/* -----------------------------all products-------------------- */
+
+.tablecard {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cat-img2 {
+    height: 50px;
+    width: 90px !important;
+    object-fit: cover;
+    display: block;
+}
+
+.catagory-btn {
+    margin: auto 10px;
+    padding: 7.5px 25px;
+    background:var(--third);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.form-select1{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.catagory-btn a {
+    color: var(--para);
+}
+
+
+#tb-head {
+    background:var(--thead);
+    color:var(--heading);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 18px 10px;
+    text-align: center;
+}
+.tb-body{
+    margin-top: 15px;
+    text-align: center;
+}
+.text-heading{
+   padding-top: 10px;
+}
+.tb-body img{
+   margin: 0 auto;
+}
+.alert-success{
+    color: green !important;
+    margin-top: 10px;
+}
+
+
+/* ---------------------Add Category----------------------- */
+.create_test{
+    width: 50%;
+    align-self: center;
+}
+#save-btn{
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+#save-btn:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  transform: translateY(-2px);
+}
+
+
+/* ---------------------Category List----------------------------- */
+
+    .BtM i{ 
+     font-size: 20px;
+    }
+    
+    .BtM1{ 
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 20px;
+        margin-top: 10px;
+    }
+/*    ------------------------------Simple product list------------------------- */
+.tablecard {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+
+
+#tb-head {
+    background-color: #28B673;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+}
+
+
+
+.headinG {
+    color: navy;
+    font-weight: 500;
+    font-size: 30px;
+    margin-left: 13px;
+    font-family: 'Poppins', sans-serif;
+}
+
+#test_table_tbody {
+    font-family: 'Poppins', sans-serif;
+}
+
+.px-5 {
+    text-align: center;
+}
+/*---------------------------- Admin Order List CSS------------------------------- */
+#Filetr_button{
+    width: 120px;
+    height: 40px;
+   }
+/*---------------------------- admin  Order Deatils CSS------------------------------- */
+   .User-Details p{
+    /* color: rgb(255, 255, 255); */
+      font-weight: 500;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      line-height: 30px;
+  }
+  .User-Details p span{
+    font-weight: 300;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      line-height: 30px;
+  }
+  .box_shadow{
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+  }
+
+/*---------------------------- admin Invoice CSS------------------------------- */

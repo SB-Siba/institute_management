@@ -6,8 +6,27 @@ Product Details - {{ product_obj.name }}
 {% endblock title %}
 
 {% block content %}
-
-
+<style>
+    .review-rating {
+        display: flex;
+        direction: ltr; /* Ensure left-to-right direction */
+    }
+    
+    .review-rating input[type="radio"] {
+        display: none; /* Hide the radio buttons */
+    }
+    
+    .review-rating label {
+        font-size: 30px;
+        color: #ddd; /* Gray color for unselected stars */
+        cursor: pointer;
+    }
+    
+    .review-rating label.gold {
+        color: #ffcc00; /* Gold color for selected stars */
+    }
+</style>
+    
 <section class="" id="products_of_category">
     <div class="container py-lg-5">
         <div class="row">
@@ -57,14 +76,16 @@ Product Details - {{ product_obj.name }}
                     <h1 class="text-capitalize">{{ product_obj.name }}</h1>
                     
                    </div>
-                    <span class="rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                        <span>20 reviews</span>
-                    </span>
+                   <div class="product-rating">
+                    {% for i in star_range %}
+                        {% if i <= average_rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                    ({{ reviews.count }})
+                </div>
                     <div class="discount-price mt-lg-3">
                         ₹{{ simple_product.product_discount_price }}
                         {% if simple_product.product_max_price %}
@@ -111,7 +132,6 @@ Product Details - {{ product_obj.name }}
             <p>{{ product_obj.product_long_description }}</p>
         </div>
         </div>
-    
         <div class="similar-products container py-3">
             <h3>Similar Products</h3>
             <div class="row">
@@ -141,6 +161,57 @@ Product Details - {{ product_obj.name }}
                 {% endfor %}
             </div>
         </div>
+        <div class="product-reviews">
+            <h2>Customer Reviews</h2>
+            <div class="review-summary">
+                <span>Average Rating: {{ average_rating }}/5</span>
+                <span>{{ reviews.count }} Reviews</span>
+            </div>
+            
+
+            {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <div class="review-rating">
+                        {% for i in star_range %}
+                            <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
+                            <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="review">Review:</label>
+                    {{ form.review }}
+                </div>
+                <button type="submit">Submit Review</button>
+            </form>
+            
+            
+            {% else %}
+                <p>Please <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
+            {% endif %}
+           
+            <div class="review-list">
+                {% for review in reviews %}
+                    <div class="review-item">
+                        <p><strong>{{ review.user.full_name }}</strong></p>
+                        <div class="review-rating">
+                            {% for star in star_range %}
+                                {% if star <= review.rating %}
+                                    <span class="filled-star">★</span>
+                                {% else %}
+                                    <span class="empty-star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p>{{ review.review }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
     </div>
 </section>
 
@@ -186,11 +257,30 @@ Product Details - {{ product_obj.name }}
     document.getElementById('addToCartButton').addEventListener('click', function(event) {
         event.preventDefault();
         let quantity = document.getElementById('quantity').value;
-        let url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity;
+        let productId = "{{ product.id }}"; // Get product ID from Django template context
+        let url = "{% url 'cart:addtocart' 0 %}".replace('0', productId) + "?quantity=" + quantity;
         window.location.href = url;
     });
 </script>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.review-rating label');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-value');
+    
+                stars.forEach(s => {
+                    s.classList.remove('gold');
+                    if (s.getAttribute('data-value') <= rating) {
+                        s.classList.add('gold');
+                    }
+                });
+            });
+        });
+    });
+</script>
+    
 
 
 

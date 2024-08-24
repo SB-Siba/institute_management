@@ -8,9 +8,9 @@ class BlogForm(forms.ModelForm):
     date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
     content = forms.CharField(widget=CKEditorWidget(attrs={'class': 'form-control', 'placeholder': 'Enter content'}))
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control-file'}))
-    is_highlight = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    # is_highlight = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
     class Meta:
         model = Blogs
-        fields = ['title', 'author', 'date', 'content', 'image', 'is_highlight']
+        fields = ['title', 'author', 'date', 'content', 'image']
     

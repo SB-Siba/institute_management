@@ -2,66 +2,49 @@
 {% load static %}
 {% block content %}
 
-<center>
-    {% include 'snippets/alert.html' %}
-</center>
-<header>
-    <div class="container-fluid">
-        <div class="border-bottom pt-6">
-            <div class="row align-items-center">
-                <div class="col-sm col-12">
-                    <h1 class="h2 ls-tight">All Users</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-   
-</header>
 
-<main class="py-6 bg-surface-secondary">
-    
-    
+<main class="py-4">
     <div class="container-fluid">
-        <div class="vstack gap-4  ">
-            <div class="card">
+      <h4 class="">All Users</h4>
+        <div class="vstack gap-4">
+            <div class="d-flex justify-content-center ">
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+               
+            </div>
+  
+            <div class="tablecard">
                 <div class="table-responsive">
                     <table class="table table-hover table-nowrap">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col"><strong>ID</strong></th>
-                                <th scope="col"><strong>Name</strong></th>
-                                <th scope="col"><strong>Contact</strong></th>
-                                <th scope="col"><strong>Email</strong></th>
-                                <th scope="col" style="padding-left: 100px;"><strong>Action</strong></th>
-                                <th></th>
+                                <th class="" id="tb-head" scope="col">User ID</th>
+                                <th class="" id="tb-head" scope="col">User Name</th>
+                                <th class="" id="tb-head" scope="col">Contact</th>
+                                <th class="" id="tb-head" scope="col">E-mail</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
                             </tr>
                         </thead>
-                        
-                        
                         <tbody id="test_table_tbody">
                             {% for user in user_obj %}
-                                <tr>
-                                    <td>{{user.id}}</td>
-                                    <td>{{user.full_name}}</td>
-                                    
-                                    <td>{{user.contact}}</td>
-                                    <td>{{user.email}}</td>
-                                    
-                                    <td>
-                                        <a href="{% url 'users:user_detail' user.id %}" class="btn btn-secondary">View</a> 
-                                    </td>
-                                    
-                                </tr> 
-                            {% endfor %}
-                            
+                          <tr>
+                            <td class="tb-body">{{user.id}} </td>
+                            <td class="tb-body">{{user.full_name}}</td>
+                            <td class="tb-body">{{user.contact}}</td>
+                            <td class="tb-body">{{user.email}}</td>
+                            <td class="tb-body"> 
+                                <a href="{% url 'users:user_detail' user.id %}" class="btn btn-info">View</a>
+                            </td>
+                          </tr>
+                          {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer border-0 py-1       ">
-                </div>
+                
             </div>
         </div>
     </div>
-</main> 
+  </main>
+
+
+
 {% endblock content %}

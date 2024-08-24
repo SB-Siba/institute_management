@@ -2,14 +2,9 @@
 {% load static %}
 {% block title %} All Products {% endblock title %}
 {% block content %}
-
- 
-<header class="d-flex container p-3 ms-4">
-    <h4>All Simple Products</h4>
-   
-</header>
-<main class="py-6 bg-surface-secondary">
+<main class="py-4">
     <div class="container-fluid">
+        <h4>All Simple Products</h4>
         <div class="vstack gap-4">
             <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
                 <form class="my-3 mx-2" action="{% url 'product:simple_product_search' %}" method="post">
@@ -24,25 +19,37 @@
                             <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
                             <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
                         </span>
-                        <p class="w-100"> {% include 'snippets/alert.html' %}</p>
                     </div>
                 </form>
-                
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+                {% comment %}
+                <div class="btn-group catagory-btn">
+                    <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
+                        <i class='bx bx-filter-alt' ></i>
+                    </button> -->
+                  
+                    <a href="{% url 'product:category_add' %}">
+                        <i class='bx bxs-plus-square'></i> Create New Product
+                    </a>
+                    
+                </div>
+                {% endcomment %}
             </div>
+  
             <div class="tablecard">
-
                 <div class="table-responsive">
                     <table class="table table-hover table-nowrap">
                         <thead class="table-light">
                             <tr>
                                 <th  id="tb-head" scope="col">Name</th>
-                                <th id="tb-head" scope="col">Product ID</th>
+                                <th  id="tb-head" scope="col">Product ID</th>
                                 <th  id="tb-head" scope="col">Image</th>
                                 <th  id="tb-head" scope="col">Brand</th>
-                                <th id="tb-head" scope="col">Max Price</th>
+                                <th  id="tb-head" scope="col">Max Price</th>
                                 <th  id="tb-head" scope="col">Discounted Price</th>
                                 <th  id="tb-head" scope="col">Stock</th>
                                 <th  id="tb-head" scope="col">Action</th>
+                                
                             </tr>
                         </thead>
                         <tbody id="test_table_tbody">
@@ -84,10 +91,30 @@
                         </tbody>
                     </table>
                 </div>
+                
             </div>
         </div>
     </div>
-</main>
+  </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% endblock content %}
 

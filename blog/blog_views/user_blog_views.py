@@ -41,10 +41,10 @@ class BlogCategory(View):
     def get(self, request):
 
         blogs = Blogs.objects.all()
-        highlighted_blogs = Blogs.objects.filter(is_highlight=True)
+        # highlighted_blogs = Blogs.objects.filter(is_highlight=True)
         context = {
             'blogs': blogs,
-            'highlighted_blogs': highlighted_blogs,
+            # 'highlighted_blogs': highlighted_blogs,
         }
         return render(request, self.template_name, context)
 

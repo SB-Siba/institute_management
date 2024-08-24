@@ -1,53 +1,38 @@
 {% extends 'app_common/base.html' %}
 {% load static %}
 {% block title %}
-Blog Details
+Blog Details | NiwaAgro.com
 {% endblock title %}
 {% block content %}
-    <!--sc title section start-->
-    <!-- blog_section start -->
-    <div class="blog_section" >
-        <div class="container">
-            <div class="row" style="display: flex; justify-content: center;">
-                <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-                    <div class="lest_news_box_wrapper">
-                        <div class="lest_news_img_wrapper">
-                            <img src="{{ blogdetail.image.url }}" class="img-responsive " alt="Image">                           
-                            </div>
-                            <div class="lest_news_date_wrapper">
-                                <ul>
-                                    <li>{{ blogdetail.date }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="lest_news_cont_wrapper news_blog_btm_bordr">
-                            <h5><a href="#">{{ blogdetail.title }}</a></h5>
-                            {% comment %} <p class="sc_bottompadder20">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore ar et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut pealiquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eiu fugiat nulla pariatur. Excepteur sint occaecat cupidatat </p>
-                            <p class="sc_bottompadder20">non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque thei ipsa ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim meeanss ipsam voluptatem quia voluptas sit aspernatur aut </p> {% endcomment %}
-                            <p>{{ blogdetail.content| safe }}</p>
 
-                            {% comment %} <div class="blog_single_cont1_wrapper">
-                                <div class="blog_single_cont1">
-                                    <div class="quote_wrapper">
-                                        <img src="images/blog_quote.png" alt="quote_img" />
-                                    </div>
-                                    <div class="quote_cont">
-                                        <h3>It is a long established fact that a reader will be distracted by the readable looking content of a page when looking at its layout. The point of using .</h3>
-                                        <p>sandy - <span>(security)</span></p>
-                                    </div>
-                                </div>
-                            </div> {% endcomment %}
 
-                            {% comment %} <div class="lest_news_cont_wrapper blog_news_cnt_wrapper">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore ar et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut pealiquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eiu fugiat nulla pariatur. Excepteur sint occaecat cupidatat</p>
-                                <p class="sc_toppadder20">non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,</p>
-
-                            </div> {% endcomment %}
-                            
-                        </div>
-                    </div>
+    <section>
+        <div class="container my-lg-4 my-2">
+            <div class="Blog_detail_Title">
+                <h3 class="text-center my-lg-1 my-2 p-lg-4 p-2">{{ blogdetail.title }}</h3>
+            </div>
+            <div class="Main_Image">
+                <img src="{{ blogdetail.image.url }}" class="img-responsive " alt="Image">  
+            </div>
+            <div class=" blog_title">
+                <h5  class="mt-lg-3 mt-3">{{ blogdetail.title }}</h5>
+                <p>{{ blogdetail.date }}</p>
+                <p>{{ blogdetail.content| safe }}</p>
+                
             </div>
         </div>
-    </div>
-    <!--blog  section end-->
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+    
     {% endblock content %}
