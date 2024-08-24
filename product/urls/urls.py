@@ -22,6 +22,7 @@ urlpatterns = [
     path("product/product_list", admin_product_views.ProductList.as_view(), name="product_list"),
     path("product/product_search", admin_product_views.ProductSearch.as_view(), name="product_search"),
     path("product/product_filter", admin_product_views.ProductFilter.as_view(), name="product_filter"),
+    path('admin/review_approval/', admin_product_views.AdminReviewApprovalView.as_view(), name='review_approval'),
     
     #simple product
     path("simple_product/simple_product_list", admin_product_views.SimpleProductList.as_view(), name="simple_product_list"),
