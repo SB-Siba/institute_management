@@ -10,8 +10,8 @@
 		<!-- ------------Shrortcut Icon Links------------ -->
     <link rel="icon" href="{% static 'app_common/images/logo1.png' %}">
 			<!-- ---------- CSS Links Files------------- -->
-    <link rel="stylesheet" href="{% static 'users/css/base1.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/Admin_Responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/Admin_Side_All.css' %}">
     <link rel="stylesheet" href="{% static 'users/css/admin_products.css' %}">
 
 	<!-- ------------------Icons Files Link------------- -->
@@ -78,7 +78,7 @@
 			</li>
 			<li>
 				<a href="{% url 'blog:blog_list' %}" class="">
-					<i class='bx bxs-group' ></i>
+					<i class='bx bxl-blogger' ></i>
 					<span class="text">Blogs</span>
 				</a>
 			</li>
@@ -96,25 +96,19 @@
 			</li>
             <li>
 				<a href="#" class="">
-					<i class='bx bxs-group' ></i>
+					<i class='bx bxs-coupon'></i>
 					<span class="text">Coupons</span>
-				</a>
-			</li>
-      <li>
-				<a href="{% url 'blog:blog_list' %}" class="">
-					<i class='bx bxs-group' ></i>
-					<span class="text">Blogs</span>
 				</a>
 			</li>
 			<li>
 				<a href="{% url 'product:update_delivery_settings' %}" class="">
-					<i class='bx bxs-group' ></i>
-					<span class="text">Delivery settings</span>
+					<i class='bx bx-package' ></i>
+					<span class="text">Delivery Settings</span>
 				</a>
 			</li>
 			<li>
 				<a href="{% url 'app_common:admin_message_list' %}" class="">
-					<i class='bx bxs-group' ></i>
+					<i class='bx bxs-contact'></i>
 					<span class="text">Contact Message</span>
 				</a>
 			</li>
@@ -164,7 +158,7 @@
 		<!-- NAVBAR -->
      
     <!-- MAIN -->
-		<div>
+		<div class="background_color_page" style="min-height: 92vh;">
       {% block content %}
 
       {% endblock content %}

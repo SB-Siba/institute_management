@@ -3,7 +3,7 @@
 {% block content %}
 
 {% comment %}
-<main class="py-6 bg-surface-secondary">
+<main class="py-2">
     <div class="container-fluid">
         
         <div class="vstack gap-4">
@@ -30,13 +30,16 @@
     </div>
 </main>
 {% endcomment %}
-<section class="py-6 bg-surface-secondary">
+
+
+
+
+<section class="py-2">
    <div class="container">
-   <div class="text-center my-lg-4 text-secondary">
-    <h4>Add Your Blogs</h4>
-   </div>
-    <div class="card border-0" >
-        <div class=" create_test ">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Add Your Blogs</h4>
+ 
+    <div class="d-flex justify-content-center" >
+        <div class=" create_test tablecard ">
             <form action="" method="post" enctype="multipart/form-data" class="card p-lg-4 lh-lg">
                 {% include 'snippets/alert.html' %}
                     {% csrf_token %}

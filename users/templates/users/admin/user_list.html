@@ -3,13 +3,12 @@
 {% block content %}
 
 
-<main class="py-4">
-    <div class="container-fluid">
-      <h4 class="">All Users</h4>
-        <div class="vstack gap-4">
+<main class="p-0">
+    <div class="container">
+      <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Users</h4>
+        <div class="vstack ">
             <div class="d-flex justify-content-center ">
                 <p class="snippets">{% include 'snippets/alert.html' %}</p>
-               
             </div>
   
             <div class="tablecard">
@@ -42,6 +41,19 @@
                 
             </div>
         </div>
+        <div class="py-lg-2">
+            <div class="pagination">
+              <a href="#">&laquo;</a>
+              <a href="#">1</a>
+              <a href="#" class="active">2</a>
+              <a href="#">3</a>
+              <a href="#">4</a>
+              <a href="#">5</a>
+              <a href="#">6</a>
+              <a href="#">...</a>
+              <a href="#">&raquo;</a>
+            </div>
+          </div>
     </div>
   </main>
 
