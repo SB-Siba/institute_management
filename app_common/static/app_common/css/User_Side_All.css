@@ -1,6 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Rufina:wght@400;700&family=Work+Sans:wght@400;500&display=swap");
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* From Uiverse.io by cssbuttons-io */ 
 
@@ -80,7 +82,13 @@
 
 
 /* ======================================================================= */
+/* ===================Root Fonts========================================== */
+ :root{
+  --p-fontfamily:"Nunito", sans-serif;
+  --headings-fontfamily:"Poppins", sans-serif;
+ }
 
+/* ===================Root Colors======================================== */
 :root {
     --primary:rgb(6, 151, 83);
     --primary2:rgb(54, 139, 104);
@@ -210,18 +218,17 @@
 .carousel-item img{
   height: 33rem;
   width: 100%;
-  margin-left: -10px;
 }
 
 /* ---------------App Download Section----------------------------------*/
 
 .AppDownload{
-margin-top: -10px;
+margin-top: -0px;
 }
 .AppDownload div a{
   background-color:var(--primary);
   color: var(--third)!important;
-  opacity: 0.9;
+  
 }
 .AppDownload div a:hover{
   opacity: 1;
@@ -1120,15 +1127,18 @@ color: #fff;
   font-size: 26px;
   line-height: 42px;
 }
-.product-details .rating{
+.product-ratings{
+  font-family:"inter",sans-serif;
   color:var(--secondary);
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 20px;
-}
-.product-details .rating span{
-  color: var(--para);
   font-weight: 500;
+  font-size: 22px;
+  line-height: 10px;
+}
+.product-ratings span{
+  font-family:"inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  font-size: 14px;
 }
 .discount-price{
   font-family:"inter",sans-serif;
@@ -1207,8 +1217,29 @@ color: #fff;
   background-color: #fdffff;
   color: rgb(249, 0, 0);
 }
+.Stock{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 35px;
+  font-size: 18px;
+  padding: 5px 0;
+}
 .description {
-  margin-top: 20px;
+
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 30px;
+  font-size: 14px;
+}
+.description h5 {
+
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height:18px;
+  font-size: 16px;
 }
 
 
@@ -1225,6 +1256,31 @@ color: #fff;
 height:180px;
 object-fit: cover;
 }
+
+.review-item h6{
+  font-family:"Poppins",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height:25px;
+  font-size: 16px;
+  color: var(--para);
+}
+.review-item p{
+  font-family:"Inter",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  line-height:25px;
+  font-size: 15px;
+  color: var(--para);
+}
+.review-item div span{
+  font-family:"inter",sans-serif;
+  color:var(--secondary);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 10px;
+}
+
 
 /*---------------------------- new products------------------------------- */
                       /* nocss */

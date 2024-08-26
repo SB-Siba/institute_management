@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery
+from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery,ProductReview
 
 
 class CategoryEntryForm(forms.ModelForm):
@@ -122,3 +122,29 @@ class DeliverySettingsForm(forms.ModelForm):
     class Meta:
         model = DeliverySettings
         fields = ['delivery_charge_per_bag', 'delivery_free_order_amount']
+
+
+class ProductReviewForm(forms.ModelForm):
+    full_name = forms.CharField(max_length=255, required=False, disabled=True, label="Full Name")
+    email = forms.EmailField(required=False, disabled=True, label="Email")
+ 
+    class Meta:
+        model = ProductReview
+        fields = ['rating', 'review', 'full_name', 'email']
+        widgets = {
+            'rating': forms.RadioSelect(
+                choices=[(i, '★' * i) for i in range(1, 6)],
+                attrs={'class': 'star-rating'}
+            ),
+            'review': forms.Textarea(attrs={'rows': 6,"class":"form-control"}),
+        }
+ 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ProductReviewForm, self).__init__(*args, **kwargs)
+       
+        if user:
+            self.fields['full_name'].initial = user.full_name
+            self.fields['email'].initial = user.email
+       
+        self.fields['rating'].widget.attrs['class'] += ' star-rating'

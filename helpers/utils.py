@@ -52,13 +52,17 @@ def paginate(request, data_list, items_per_page):
     page = request.GET.get('page')
 
     try:
-        paginated_data = paginator.page(page)
+        page_obj = paginator.page(page)
     except PageNotAnInteger:
-        paginated_data = paginator.page(1)
+        page_obj = paginator.page(1)
     except EmptyPage:
-        paginated_data = paginator.page(paginator.num_pages)
+        page_obj = paginator.page(paginator.num_pages)
 
-    return paginated_data
+    return {
+        'items': page_obj,
+        'page_obj': page_obj,
+        'paginator': paginator
+    }
 
 
 def dict_filter(data_dict, filters):

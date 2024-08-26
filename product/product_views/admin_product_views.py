@@ -6,7 +6,7 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
-from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery
+from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery,ProductReview
 
 from product import forms
 import os
@@ -450,3 +450,47 @@ class DeliverySettingsUpdateView(View):
             'form': form,
         }
         return render(request, self.template_name, context)
+
+
+
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class AdminReviewApprovalView(View):
+    template_name = app + 'admin/admin_review_approval.html'
+
+    def get(self, request):
+        filter_by = request.GET.get("filter_by", "pending")
+
+        if filter_by == "pending":
+            reviews = ProductReview.objects.filter(approved=False).select_related('user', 'product').order_by('-id')
+        elif filter_by == "approved":
+            reviews = ProductReview.objects.filter(approved=True).select_related('user', 'product').order_by('-id')
+        else:
+            reviews = ProductReview.objects.all().select_related('user', 'product').order_by('-id')
+
+        paginated_data = utils.paginate(request, reviews, 20)  # Pagination function from utils
+
+        context = {
+            'reviews': paginated_data['items'],
+            'data_list': paginated_data['page_obj'],
+            'filter_by': filter_by,
+            'star_range': range(1, 6),  # Add star range to context for rendering star ratings
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        review_ids = request.POST.getlist('reviews')
+        action = request.POST.get('action')
+
+        if not review_ids:
+            messages.warning(request, "No reviews selected.")
+            return redirect('product:review_approval')
+
+        if action == 'approve':
+            ProductReview.objects.filter(id__in=review_ids).update(approved=True)
+            messages.success(request, "Selected reviews have been approved.")
+        elif action == 'delete':
+            ProductReview.objects.filter(id__in=review_ids).delete()
+            messages.success(request, "Selected reviews have been deleted.")
+
+        return redirect('product:review_approval')

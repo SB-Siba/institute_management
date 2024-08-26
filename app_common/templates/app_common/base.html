@@ -68,11 +68,8 @@
             <div class="offcanvas-body">
               <ul class="list-unstyled">
                 <li><a class="nav-link" href="#">Home</a></li>
-                <li><a class="nav-link" href="#">about us</a></li>
-                <li><a class="nav-link" href="#">Plants</a></li>
-                <li><a class="nav-link" href="#">Seeds</a></li>
-                <li><a class="nav-link" href="#">Pots & Planters</a></li>
-                <li><a class="nav-link" href="#">Plant Care</a></li>
+                <li><a class="nav-link" href="#">About us</a></li>
+                <li><a class="nav-link" href="#">Blogs</a></li>
               </ul>
             </div>
           </div>
@@ -83,25 +80,26 @@
 
         <!-- full screen header -->
         <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
+          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About us</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Plants</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Seeds</a>
-            </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
             </li>
+              
             <li class="nav-item">
-              <a class="nav-link">Plant Care</a>
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Services</a>
             </li>
+              
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Contact</a>
+            </li>
+            
           </ul>
         </div>
         <!-- close full screen header -->
@@ -159,10 +157,10 @@
             <ul class="list-unstyled">
               <li><a class="nav-link" href="#">Home</a></li>
               <li><a class="nav-link" href="#">about us</a></li>
-              <li><a class="nav-link" href="#">Plants</a></li>
-              <li><a class="nav-link" href="#">Seeds</a></li>
-              <li><a class="nav-link" href="#">Pots & Planters</a></li>
-              <li><a class="nav-link" href="#">Plant Care</a></li>
+              <li><a class="nav-link" href="#">Services</a></li>
+              <li><a class="nav-link" href="#">Blogs</a></li>
+              <li><a class="nav-link" href="#">Contact</a></li>
+            
             </ul>
           </div>
         </div>
@@ -176,25 +174,26 @@
 
 
         <div class="col-lg-7 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-between align-items-center list-unstyled text-uppercase HeaderButton">
+          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
             <li class="nav-item" id="Navbarlinks">
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About us</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Plants</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Seeds</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">Services</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link">Plant Care</a>
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Seeds</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Contact</a>
+            </li>
+           
           </ul>
         </div>
         <!-- close full screen header -->
@@ -225,92 +224,9 @@
         </div>
           
 
-<!-- -------------------------------cart page offcanvas-------------------------------------------- -->
 
-        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1"
-          id="offcanvasWithBothOption" aria-labelledby="offcanvasWithBothOptionsLabel">
-          <div class="offcanvas-header">
-            <button type="button" class="btn-close offcanvas-btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <table class="table table-hover my-table table-striped border">
-              <thead class="thead-light">
-                  <tr>
-                      <th class="cart-product-remove" id="t-Head">Product Image</th>
-                      <th class="cart-product-image" id="t-Head">Product & Price</th>
-                      <th class="cart-product-image" id="t-Head">Quantity</th>
-                      <th class="cart-product-remove" id="t-Head">Remove</th>
-                  </tr>
-              </thead>
-              <tbody class="tbody-light">
-                <span class="d-flex"><i class="bi bi-shield-fill-check" style="font-size: 20px; color: gray;"></i><p class="ms-2" id="t-Head" style="font-size: 13px;">Safe and Secure Payments. Easy returns. 100% Authentic products.</p></span>
-                  {% if products %}
-                      {% for key, value in products.items %}
-                      <tr style="background-color: white !important;">
-                          <td class="cart-product-image" style="width: 25%;" id="t-Body">
-                              <a href="{% url 'product:product_detail' key %}">
-                                  <img src="{{ value.info.image }}" class="img-thumbnail" alt="product image" style="height: 100px; width: 100px;">
-                              </a>
-                          </td>
-                          <td id="t-Body">
-                              <p><b>{{ value.info.name }} </b></p>
-                              <p class="mt-1 mb-2"><i class="bi bi-currency-rupee"></i>&nbsp;{{ value.info.discount_price }}</p>
-                              
-                          </td>
-                          <td>
-                              <div class='mt-3 d-flex'>
-                                  <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class="mt-1"><i style="color:gray;margin-right:8px;" class="fas fa-minus-square"></i></a>
-                                  <input type="number" style="width: 60px; height: 27px; border-radius: 2px;" class="form-control" value="{{ value.quantity }}" readonly/>
-                                  <a href="{% url 'cart:managecart' value.info.uid %}?operation=plus" class="mt-1"><i style="color:gray;margin-left:8px;" class="fas fa-plus-square"></i></a>
-                              </div>
-                          </td>
-                          <td><a href="{% url 'cart:removefromcart' key %}" style="margin: 20% 15%; text-decoration: none;"><i class="fa fa-trash mt-3 text-secondary" style="font-size: 15px;" aria-hidden="true"></i></a></td>
-                      </tr>
-                      {% endfor %}
-                  {% else %}
-                      <tr>
-                          <td colspan="4" class="text-center">Your cart is empty !!!</td>
-                      </tr>
-                  {% endif %}
-              </tbody>
-          </table>
-          <div class="border px-3 py-2 mb-3 bg-white rounded">
-            <h6 class="mb-3 text-muted"> PRICE DETAILS</h6>
-            <div class="d-flex justify-content-between mb-2">
-                <span>MRP : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ totaloriginalprice }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Our Price : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ totalPrice }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Discount : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ discount_price }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>GST : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ GST }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Delivery Charge : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ Delivery }}</span>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-                <span>Total : </span>
-                <span><i class="bi bi-currency-rupee"></i>&nbsp;{{ final_cart_value }}</span>
-            </div>
-            {% if products %}
-                <a href="{% url 'cart:checkout' %}" class="btn w-100 mt-3 text-white" style="background-color: #F37021;">Proceed to Checkout</a>
-            {% else %}
-                <a href="#" class="btn w-100 mt-3 text-white" style="background-color: #F37021;">Proceed to Checkout</a>
-            {% endif %}
-        </div>
-          </div>
-        </div>
+    
          
-        <!-- ------------------------------end-cart page offcanvas-------------------------------------------- -->
 
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
@@ -331,60 +247,6 @@
 
 
 
-<!-- --------------------loginmodal------------- -->
-{% comment %}
-<div class="home">
-  <div class="form_container position-fixed">
-    <div class="p-lg-3">
-      <img src="{% static 'app_common/images/logo1.png' %}" class="mx-auto log_reg_logo" style="width: 40px;" alt="logo">
-    <i class="fa-solid fa-xmark form_close"></i>  
-    </div>
-  
-    <!-- login form -->
-    <div class="form login_form text-dark">
-      <h6 class="text-center">Welcome back! Sign in with</h6>
-      <form class="mt-3 text-dark" method="post" action="">
-          {% csrf_token %}
-          {{ login_form.as_p }}
-          <div class="option_field">
-              <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  <label class="form-check-label" for="flexCheckDefault">
-                      Remember me
-                  </label>
-              </div>
-              <a href="" class="d-block text-dark text-start text-decoration-none">Forgot password?</a>
-          </div>
-          <div class="d-grid mt-2">
-              <button type="submit" name="login" class="btn btn-success w-100 p-2">SIGN IN</button>
-          </div>
-          <div class="Login_Signup text-center">
-              New Here? <a href="#" id="SignUp"> Create an account</a>
-          </div>
-      </form>
-  </div> {% endcomment %}
-
-      <!-- regitstration -->
-       
-{% comment %}
- <div class="form signup_form text-dark">
-    <h6 class="text-center">Create an account with</h6>
-        <form class=" text-dark" >
-          {% csrf_token %}
-         {{signup_form.as_p}}
-        
-         <div class="d-grid mt-2">
-           <button type="button" class="btn btn-success w-100 p-2">SIGN UP</button>
-         </div>
-         <div class="Login_Signup text-center">
-           Already have an account?<a href="#" id="SignIn"> SignIn</a>
-         </div>
-       </form>
-      </div>
-  </div>
-</div>
-{% endcomment %}
-<!-- -----------------------------endloginmodal---------------------------- -->
 
 
 
