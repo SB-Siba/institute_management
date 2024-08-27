@@ -33,5 +33,5 @@ class ReplyForm(forms.ModelForm):
         model = ContactMessage
         fields = ['reply']
         widgets = {
-            'reply': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Type your reply here...'}),
+            'reply': forms.Textarea(attrs={'rows': 8,'class':'form-control', 'placeholder': 'Type your Reply here...'}),
         }

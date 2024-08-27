@@ -83,7 +83,7 @@ class ShowCart(View):
         if user.is_authenticated and cart_items:
             cart_items.total_price = float(total_price)
             cart_items.save()
-
+        print(products)
         context = {
             'category_obj': category_obj,
             'cartItems': cart_items,
@@ -178,12 +178,17 @@ class ManageCart(View):
             products = cart.get('products', {})
 
         product_found = False
+        max_quantity = 6  # Define the maximum quantity allowed
+
         for product_key, product_info in products.items():
             if c_p_uid == product_info['info']['uid']:
                 product_found = True
                 if operation_type == 'plus':
-                    product_info['quantity'] += 1
-                    product_info['total_price'] += product_info['info']['discount_price']
+                    if product_info['quantity'] < max_quantity:
+                        product_info['quantity'] += 1
+                        product_info['total_price'] += product_info['info']['discount_price']
+                    else:
+                        return HttpResponse(f"Cannot add more than {max_quantity} of this product.", status=400)
                 elif operation_type == 'min':
                     if product_info['quantity'] > 1:
                         product_info['quantity'] -= 1

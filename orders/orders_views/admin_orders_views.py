@@ -29,9 +29,9 @@ class OrderList(View):
         order_list = self.model.objects.all().order_by('-id')
         paginated_data = utils.paginate(request, order_list, 50)
         order_status_options = Order.ORDER_STATUS
-      
+        print(paginated_data)
         context = {
-            "order_list":paginated_data,
+            "order_list":order_list,
             "order_status_options":order_status_options,
         }
         return render(request, self.template,context)
@@ -79,6 +79,7 @@ class AdminOrderDetail(View):
 
     def get(self, request, order_uid):
         # Fetch the order using the UID
+        print(order_uid)
         order = get_object_or_404(Order, uid=order_uid)
         form = self.form_class(instance=order, initial={'order_status': order.order_status})
         
