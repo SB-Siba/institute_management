@@ -4,9 +4,9 @@
 {% block content%}
 
 
-<main class="py-4">
-  <div class="container-fluid">
-    <h4 class="">All Category</h4>
+<main class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Category</h4>
       <div class="vstack gap-4">
           <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
               <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
@@ -74,6 +74,19 @@
               </div>
               
           </div>
+      </div>
+      <div class="py-lg-2">
+        <div class="pagination">
+          <a href="#">&laquo;</a>
+          <a href="#">1</a>
+          <a href="#" class="active">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#">6</a>
+          <a href="#">...</a>
+          <a href="#">&raquo;</a>
+        </div>
       </div>
   </div>
 </main>

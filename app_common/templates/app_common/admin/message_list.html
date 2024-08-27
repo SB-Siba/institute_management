@@ -1,38 +1,66 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} Order Details {% endblock title %}
 {% block content %}
-<h1>Contact Messages</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Contact</th>
-        <th>Message</th>
-        <th>Created At</th>
-        <th>User Type</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for message in messages %}
-        <tr>
-          <td>{{ message.name }}</td>
-          <td>{{ message.email }}</td>
-          <td>{{ message.contact }}</td>
-          <td>{{ message.message|truncatechars:50 }}</td>
-          <td>{{ message.created_at }}</td>
-          <td>
-            {% if message.user %}
-              Authenticated
-            {% else %}
-              Unauthenticated
-            {% endif %}
-          </td>
-          <td><a href="{% url 'app_common:admin_message_detail' message.id %}">View Details</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+
+<main class="py-2">
+  <div class=container>
+  <h4 class="headings_h5 text-center my-lg-4 p-lg-3">Contact Message</h4>
+      <div class="vstack">
+          <div class="tablecard">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                      <thead class="table-light">
+                          <tr>
+                              <th class="" id="tb-head" scope="col">Name</th>
+                              <th class="" id="tb-head" scope="col">E-Mail</th>
+                              <th class="" id="tb-head" scope="col">Contact</th>
+                              <th class="" id="tb-head" scope="col">Date & Time</th>
+                              <th class="" id="tb-head" scope="col">User Type</th>
+                              <th class="" id="tb-head" scope="col">Action</th>
+                          </tr>
+                      </thead>
+                   
+                      <tbody id="test_table_tbody">
+                        {% for message in messages %}
+                          <tr>
+                              <td class="tb-body">{{ message.name }}</td>
+                              <td class="tb-body">{{ message.email }}</td>
+                              <td class="tb-body">{{ message.contact }}</td>
+                              <td class="tb-body">{{ message.created_at }}</td>
+                              <td class="tb-body">
+                                {% if message.user %}
+                                Authenticated
+                              {% else %}
+                                Unauthenticated
+                              {% endif %}
+                              </td>
+                              <td class="tb-body">
+                                <a href="{% url 'app_common:admin_message_detail' message.id %}">View Details</a>
+                              </td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+              <div class="card-footer">
+                  {% comment %} {% include 'snippets/pagination.html' %} {% endcomment %}
+              </div>
+          </div>
+      </div>
+      <div class="py-lg-2">
+        <div class="pagination">
+          <a href="#">&laquo;</a>
+          <a href="#">1</a>
+          <a href="#" class="active">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#">6</a>
+          <a href="#">...</a>
+          <a href="#">&raquo;</a>
+        </div>
+      </div>
+  </div>
+</main>
+
 {% endblock content %}

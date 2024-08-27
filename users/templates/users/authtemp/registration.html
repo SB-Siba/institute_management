@@ -1,7 +1,71 @@
 {% extends 'users/authtemp/master.html' %}
 {% load static %}
+{% block title %}Signup Page{% endblock title %}
+
 {% block content %}
 
+
+<section class=" login_background">
+    <div class="signup_card">
+      <div class="card " >
+        <div class="row">
+          <div class="col col-lg-6 px-lg-3">
+            <div class="card-body ">
+                <h5 class="text-center fs-3 fw-bold"> Create an Account !</h5>         
+                {% if messages %}
+                        <div class="alert-container">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                <form method="post" >
+                  {% csrf_token %}
+                  <span class="Register_paragraph">{{ form.as_p }}</span>
+                  {% if form.errors %}
+                      <div class="form-errors">
+                          <ul>
+                              {% for field in form %}
+                                  {% for error in field.errors %}
+                                      <li>{{ error }}</li>
+                                  {% endfor %}
+                              {% endfor %}
+                              {% for error in form.non_field_errors %}
+                                  <li>{{ error }}</li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                  {% endif %}
+                  <button type="submit" class="Login_Button">Register</button>
+                </form>
+                <div class=" text-center w-100 sign_up">
+                    <small>Already have an account?</small>
+                    <a href="{% url 'users:login' %}" class="ms-lg-1 text-warning text-decoration-none ">Login</a>
+                  </div>
+              </div>
+              
+          </div>
+          <div class="col col-lg-6 leftside_image">
+            <img src="{% static 'app_common\images\Download130.jpeg'%}" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+{% comment %}
 <!-- Section: Design Block -->
 <div class="card bg-glass">
   <div class="card-body px-4 py-5 px-md-5">
@@ -56,4 +120,5 @@
         {% endif %}
     });
 </script> -->
+{% endcomment %}
 {% endblock content %}

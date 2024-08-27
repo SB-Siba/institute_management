@@ -7,6 +7,37 @@ Product Details - {{ product_obj.name }}
 
 {% block content %}
 <style>
+   .review-summary h4{
+    font-family:"Poppins",sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    line-height:25px;
+    font-size: 22px;
+    color: var(--para);
+   }
+   .Rating_forms label{
+    font-family:"Inter",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height:35px;
+    font-size: 16px;
+    color: var(--para);
+   }
+   .Rating_forms input{
+    width: 100%;
+    padding: 5px;
+    font-family:"Inter",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--para);
+    letter-spacing: 2px;
+    word-spacing: 2px;
+   }
+   .u-button.Review{
+    background-color: var(--third2);
+    color: var(--third);
+   }
     .review-rating {
         display: flex;
         direction: ltr; /* Ensure left-to-right direction */
@@ -76,7 +107,7 @@ Product Details - {{ product_obj.name }}
                     <h1 class="text-capitalize">{{ product_obj.name }}</h1>
                     
                    </div>
-                   <div class="product-rating">
+                   <div class="product-ratings">
                     {% for i in star_range %}
                         {% if i <= average_rating %}
                             ★
@@ -84,7 +115,8 @@ Product Details - {{ product_obj.name }}
                             ☆
                         {% endif %}
                     {% endfor %}
-                    ({{ reviews.count }})
+                   <span> ({{ reviews.count }} Reviews ) </span>
+
                 </div>
                     <div class="discount-price mt-lg-3">
                         ₹{{ simple_product.product_discount_price }}
@@ -92,7 +124,7 @@ Product Details - {{ product_obj.name }}
                         <span class="original-price"><s>₹{{ simple_product.product_max_price }}</s></span>
                         {% endif %}
                     </div>
-                    <p>Stock: {{ simple_product.stock }}</p>
+                    <p class="Stock m-0">Stock: {{ simple_product.stock }}</p>
                     <!-- <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
     
                         {% if product_obj in wishlist_items %}
@@ -102,15 +134,15 @@ Product Details - {{ product_obj.name }}
                         {% endif %}
                     </button> -->
                     <div class="description">
-                        <h5>Description</h5>
-                        <p>{{ product_obj.product_long_description }}</p>
+                        <h5 class="">Description :</h5>
+                        <p>{{ product_obj.product_long_description |truncatechars:300 }}</p>
                     </div>
                     <div class="quantity-selector mt-3">
                         <label for="quantity">Quantity:</label>
                         <div class="input-group">
-                            <button type="button" id="decrement" class="btn ">-</button>
+                            <button type="button" id="decrement" class="w-25 ">-</button>
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="6" class="form-control text-center" readonly>
-                            <button type="button" id="increment" class="btn">+</button>
+                            <button type="button" id="increment" class="w-25">+</button>
                         </div>
                         <small id="quantityHelp" class="form-text text-muted">Maximum 6 units per product.</small>
                     </div>
@@ -127,12 +159,12 @@ Product Details - {{ product_obj.name }}
             </div>
         </div>
         <!--------------------------------- product long description-------------------- -->
-        <div class="py-lg-4">
+        <div class="py-lg-4 description">
             <h5 class="border-bottom text-center p-lg-3">Description</h5>
             <p>{{ product_obj.product_long_description }}</p>
         </div>
-        </div>
-        <div class="similar-products container py-3">
+    </div>
+    <div class="similar-products container my-lg-3">
             <h3>Similar Products</h3>
             <div class="row">
                 {% for item in similar_simple_products %}
@@ -160,55 +192,76 @@ Product Details - {{ product_obj.name }}
                </div>
                 {% endfor %}
             </div>
-        </div>
-        <div class="product-reviews">
-            <h2>Customer Reviews</h2>
-            <div class="review-summary">
+    </div>
+    <div class="container">
+        <div class=" ">
+            <div class="d-flex justify-content-between">
+                <div class="review-summary">
+                    <h4>Customer Ratings & Reviews</h4>
+                    <span class="product-ratings">
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star-half' ></i>
+                    </span>
+                    <span>{{ reviews.count }} Reviews</span>
+                    <span>
+
+                    </span>
+                </div>
+                <div>
+                    <div class="btn btn-primary" id="toggleReviewBtn" onclick="toggleReviewForm()">Write a Review</div>
+                </div>
+
+            </div>
+            <div class="">
                 <span>Average Rating: {{ average_rating }}/5</span>
-                <span>{{ reviews.count }} Reviews</span>
             </div>
             
 
-            {% if user.is_authenticated %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="full_name">Full Name:</label>
-                    <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" class="form-control" disabled>
-                </div>
-            
-                <!-- Display Email -->
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <div class="review-rating">
-                        {% for i in star_range %}
-                            <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
-                            <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
-                        {% endfor %}
+            <div class="py-lg-4" id="Rating_form" style="display: none;">
+                {% if user.is_authenticated %}
+                <form method="post" >
+                    {% csrf_token %}
+                    <div class="form-group Rating_forms">
+                        <label for="full_name" class="">Your Name:</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" readonly>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="review">Review:</label>
-                    {{ form.review }}
-                </div>
-                <button type="submit">Submit Review</button>
-            </form>
-            
-            
-            {% else %}
-                <p>Please <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
-            {% endif %}
-           
-            <div class="review-list">
-                {% for review in reviews %}
-                    <div class="review-item">
-                        <p><strong>{{ review.user.full_name }}</strong></p>
+               
+                    <!-- Display Email -->
+                    <div class="form-group  Rating_forms">
+                        <label for="email" class="">Your Email:</label>
+                        <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+                    </div>
+                    <div class="form-group Rating_forms my-lg-2">
+                        <label for="rating">Rating:</label>
                         <div class="review-rating">
+                            {% for i in star_range %}
+                                <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
+                                <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        {{ form.review }}
+                    </div>
+                    <button type="submit" class="u-button Review my-lg-3">Submit Review</button>
+                </form>
+                {% else %}
+                <p>Please <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
+                {% endif %}
+            </div>
+
+
+
+        
+            <div class="review-list border-top py-lg-2">
+                {% for review in reviews %}
+                    <div class="review-item border-bottom py-lg-3">
+                        <h6 class="m-0">{{ review.user.full_name }}</h6>
+                        <div class="">
                             {% for star in star_range %}
                                 {% if star <= review.rating %}
                                     <span class="filled-star">★</span>
@@ -216,20 +269,36 @@ Product Details - {{ product_obj.name }}
                                     <span class="empty-star">☆</span>
                                 {% endif %}
                             {% endfor %}
+                            <label>{{ review.created_at }}</label>
                         </div>
-                        <p>{{ review.review }}</p>
+                        <p class="m-0 py-lg-2">{{ review.review }}</p>
                     </div>
                 {% endfor %}
             </div>
-        </div>
+    </div>
+    </div>
         
     </div>
 </section>
 
 
-
-
-
+<!---------------------- write a review scripts----------------- -->
+<script>
+    function toggleReviewForm() {
+        const form = document.getElementById('Rating_form');
+        const button = document.getElementById('toggleReviewBtn');
+        
+        // Toggle the display of the form
+        if (form.style.display === 'none' || form.style.display === '') {
+            form.style.display = 'block';  // Show form
+            button.textContent = 'Cancel Review';  // Change button text
+        } else {
+            form.style.display = 'none';  // Hide form
+            button.textContent = 'Write a Review';  // Change button text back
+        }
+    }
+</script>
+<!---------------------end- write a review scripts----------------- -->
 
 
 
