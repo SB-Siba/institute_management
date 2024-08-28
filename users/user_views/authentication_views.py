@@ -103,11 +103,14 @@ class Login(View):
     def get(self, request):
         form = LoginForm()
         next_url = request.GET.get('next', reverse('users:home'))
+        print(f"GET request - next_url: {next_url}")  # Debugging
         return render(request, self.template, {'form': form, 'next': next_url})
     
     def post(self, request):
         form = LoginForm(request.POST)
         next_url = request.POST.get('next', reverse('users:home'))
+        print(f"POST request - next_url: {next_url}")  # Debugging
+
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -125,11 +128,13 @@ class Login(View):
                     if user.is_superuser:
                         return redirect('users:admin_dashboard')
 
-                    # Redirect to checkout if 'next' is checkout or else redirect to home
-                    if 'checkout' in next_url:
+                    # Explicitly check if the next_url is for the checkout page
+                    if next_url == reverse('cart:checkout'):
+                        print(f"Redirecting to checkout: {next_url}")  # Debugging
                         return redirect(next_url)
-                    
-                    return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
+
+                    # If the next_url is something else or not set, redirect to home
+                    return redirect(reverse('users:home'))
                 else:
                     messages.error(request, "Incorrect email or password")
             except Exception as e:

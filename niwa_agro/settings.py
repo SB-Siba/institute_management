@@ -200,3 +200,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 
 
+LOGIN_REDIRECT_URL = 'cart:checkout'  # Redirect to checkout after login
+LOGIN_URL = 'users:login'  # Ensure login URL is set
+
+

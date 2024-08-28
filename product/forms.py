@@ -43,7 +43,7 @@ class ProductForm(forms.ModelForm):
     image.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
     product_short_description = forms.CharField(widget=forms.Textarea, required=False)
-    product_short_description.widget.attrs.update({'class': 'form-control', 'rows': 3})
+    product_short_description.widget.attrs.update({'class': 'form-control', 'rows': 5})
 
     product_long_description = forms.CharField(widget=forms.Textarea, required=False)
     product_long_description.widget.attrs.update({'class': 'form-control', 'rows': 5})
