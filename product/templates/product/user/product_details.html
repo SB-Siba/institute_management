@@ -107,7 +107,7 @@ Product Details - {{ product_obj.name }}
                     <h1 class="text-capitalize">{{ product_obj.name }}</h1>
                     
                    </div>
-                   <div class="product-ratings">
+                   <!-- <div class="product-ratings">
                     {% for i in star_range %}
                         {% if i <= average_rating %}
                             ★
@@ -117,7 +117,7 @@ Product Details - {{ product_obj.name }}
                     {% endfor %}
                    <span> ({{ reviews.count }} Reviews ) </span>
 
-                </div>
+                   </div> -->
                     <div class="discount-price mt-lg-3">
                         ₹{{ simple_product.product_discount_price }}
                         {% if simple_product.product_max_price %}
@@ -135,7 +135,7 @@ Product Details - {{ product_obj.name }}
                     </button> -->
                     <div class="description">
                         <h5 class="">Description :</h5>
-                        <p>{{ product_obj.product_long_description |truncatechars:300 }}</p>
+                        <p>{{ product_obj.product_short_description |truncatechars:300 }}</p>
                     </div>
                     <div class="quantity-selector mt-3">
                         <label for="quantity">Quantity:</label>
@@ -193,6 +193,7 @@ Product Details - {{ product_obj.name }}
                 {% endfor %}
             </div>
     </div>
+    {% comment %}
     <div class="container">
         <div class=" ">
             <div class="d-flex justify-content-between">
@@ -277,7 +278,8 @@ Product Details - {{ product_obj.name }}
             </div>
     </div>
     </div>
-        
+    {% endcomment %}
+      
     </div>
 </section>
 

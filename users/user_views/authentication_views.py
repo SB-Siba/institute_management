@@ -116,10 +116,16 @@ class Login(View):
                 user = authenticate(request, username=email, password=password)
                 if user is not None:
                     login(request, user)
-                    
-                    transfer_session_cart_to_user(request, user)
-                    
-                    # Redirect to checkout if `next` is checkout or else redirect to `home` if user was unauthenticated
+
+                    # Skip cart transfer for superusers
+                    if not user.is_superuser:
+                        transfer_session_cart_to_user(request, user)
+
+                    # If user is a superuser, redirect to the admin dashboard
+                    if user.is_superuser:
+                        return redirect('users:admin_dashboard')
+
+                    # Redirect to checkout if 'next' is checkout or else redirect to home
                     if 'checkout' in next_url:
                         return redirect(next_url)
                     

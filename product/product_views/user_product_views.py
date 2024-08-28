@@ -50,98 +50,43 @@ class ProductDetailsSmipleView(View):
 
     def get(self, request, p_id):
         user = request.user
-        product = get_object_or_404(Products, id=p_id)
-        simple_product = SimpleProduct.objects.get(product=product)
-        image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
-        reviews = ProductReview.objects.filter(product=product, approved=True).order_by('-created_at')
-        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
-        average_rating = round(average_rating, 1)
+        category_obj = Category.objects.all()
+        product_obj = get_object_or_404(Products, id=p_id)
+        similar_product_list = Products.objects.filter(category=product_obj.category).exclude(id=product_obj.id)[:5]
 
-        # Fetch similar products
-        similar_product_list = Products.objects.filter(category=product.category).exclude(id=product.id)[:5]
+        # Fetch the SimpleProduct instances for similar products
         similar_simple_products = []
-        for similar_product in similar_product_list:
-            try:
-                simple = SimpleProduct.objects.get(product=similar_product)
+        for product in similar_product_list:
+            simple_product = SimpleProduct.objects.filter(product=product).first()
+            if simple_product:
                 similar_simple_products.append({
-                    'product': similar_product,
-                    'simple_product': simple
+                    'product': product,
+                    'simple_product': simple_product
                 })
-            except SimpleProduct.DoesNotExist:
-                continue
 
-        # Get wishlist items
+        # Get the first SimpleProduct for the current product
+        simple_product = SimpleProduct.objects.filter(product=product_obj).first()
+        image_gallery = None
+        if simple_product:
+            image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+
         wishlist_items = []
         if user.is_authenticated:
             wishlist = WshList.objects.filter(user=user).first()
             wishlist_items = wishlist.products.all() if wishlist else []
 
-        form = ProductReviewForm()
-
         context = {
             'user': user,
-            'product_obj': product,
+            'category_obj': category_obj,
+            'product_obj': product_obj,
             'simple_product': simple_product,
             'image_gallery': image_gallery,
-            'reviews': reviews,
-            'average_rating': average_rating,
             'similar_simple_products': similar_simple_products,
             'wishlist_items': wishlist_items,
-            'form': form,
             'MEDIA_URL': settings.MEDIA_URL,
-            'star_range': range(1, 6),  # Add star range to context
         }
 
-        return render(request, self.template_name, context)
-
-    def post(self, request, p_id):
-        product = get_object_or_404(Products, id=p_id)
-        form = ProductReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.product = product
-            review.user = request.user
-            review.save()
-            messages.success(request, "Your review has been submitted and is awaiting approval.")
-            return redirect('product:product_detail', p_id=p_id)
-        else:
-            simple_product = SimpleProduct.objects.get(product=product)
-            image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
-            reviews = ProductReview.objects.filter(product=product, approved=True)
-            average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
-            average_rating = round(average_rating, 1)
-
-            similar_product_list = Products.objects.filter(category=product.category).exclude(id=product.id)[:5]
-            similar_simple_products = []
-            for similar_product in similar_product_list:
-                try:
-                    simple = SimpleProduct.objects.get(product=similar_product)
-                    similar_simple_products.append({
-                        'product': similar_product,
-                        'simple_product': simple
-                    })
-                except SimpleProduct.DoesNotExist:
-                    continue
-
-            wishlist_items = []
-            if request.user.is_authenticated:
-                wishlist = WshList.objects.filter(user=request.user).first()
-                wishlist_items = wishlist.products.all() if wishlist else []
-
-            context = {
-                'user': request.user,
-                'product_obj': product,
-                'simple_product': simple_product,
-                'image_gallery': image_gallery,
-                'reviews': reviews,
-                'average_rating': average_rating,
-                'similar_simple_products': similar_simple_products,
-                'wishlist_items': wishlist_items,
-                'form': form,
-                'MEDIA_URL': settings.MEDIA_URL,
-                'star_range': range(1, 6),  # Add star range to context
-            }
-            return render(request, self.template_name, context)   
+        return render(request, self.template_name, context) 
 
 
 class AllTrendingProductsView(View):
