@@ -44,10 +44,6 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
-
-
-
-
 /* SIDEBAR */
 #sidebar {
 	position: fixed;
@@ -59,8 +55,10 @@ body::-webkit-scrollbar {
 	font-family: var(--lato);
 	overflow-x: hidden;
 	scrollbar-width: none;
-  	background: #0A2558;
-  	transition: all 0.5s ease;
+  background: #0B1739;
+  transition: all 0.5s ease;
+  box-shadow: rgba(11, 23, 57, 0.455) 0px 10px 20px, rgba(54, 77, 142, 0.822) 0px 6px 6px;
+
 }
 #sidebar::--webkit-scrollbar {
 	display: none;
@@ -76,14 +74,14 @@ body::-webkit-scrollbar {
 	position: sticky;
 	top: 0;
 	left: 0;
-	background: #0A2558;
+	background: #0B1739;
 	z-index: 500;
 	box-sizing: content-box;
 	font-size: 28px;
-    font-weight: 500;
-    color: #fff;
-    min-width: 60px;
-    /* margin: 0 20px; */
+  font-weight: 500;
+  color: #fff;
+  min-width: 60px;
+  /* margin: 0 20px; */
 }
 #sidebar .brand .lni-nextjs {
 	min-width: 60px;
@@ -146,7 +144,7 @@ a.sidebar-links{
 .chevron-icon {
   transition: transform 0.3s;
   font-size: 12px !important;
-  margin-left: 85px;
+  margin-left: 40px;
 }
 
 .chevron-icon.rotate {
@@ -159,9 +157,6 @@ a.sidebar-links{
   padding-left: 10px;
 }
 /* SIDEBAR */
-
-
-
 
 
 /* CONTENT */
@@ -177,47 +172,40 @@ a.sidebar-links{
 	left: 60px;
 }
 
-
-
-
 /* NAVBAR */
-
-
 nav .sidebar-button{
     display: flex;
     align-items: center;
     font-size: 15px;
     font-weight: 500;
+    color: white;
   }
   nav .sidebar-button i{
     font-size: 35px;
     margin-right: 10px;
   }
-#content nav {
-	height: 56px;
-	background: var(--light);
-	padding: 0 24px;
-	display: flex;
-	align-items: center;
-	grid-gap: 24px;
-	font-family: var(--lato);
-	position: sticky;
-	top: 0;
-	left: 0;
-	z-index: 1000;
+  #content nav {
+    height: 56px;
+    background-color: #c9d5e0;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    grid-gap: 24px;
+    font-family: var(--lato);
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    color: white !important;
+    box-shadow: 30px 30px 30px -10px rgba(0,0,0,0.15),
+                inset 15px 15px 10px rgba(255,255,255,0.75),
+                -15px -15px 35px rgba(255,255,255,0.55),
+                inset -1px -1px 10px rgba(0,0,0,0.2);
 }
-#content nav::before {
-	content: '';
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	bottom: -40px;
-	left: 0;
-	border-radius: 50%;
-	box-shadow: -20px -20px 0 var(--light);
-}
+
+
 #content nav a {
-	color: var(--dark);
+	color: #0B1739;
 }
 #content nav .bx.bx-menu {
 	cursor: pointer;
@@ -317,9 +305,6 @@ nav .sidebar-button{
 /* NAVBAR */
 
 
-
-
-
 /* MAIN */
 #content main {
 	width: 100%;
@@ -333,7 +318,10 @@ nav .sidebar-button{
 
 /*-----------------Admin Index  Page CSS------------------- */
 
-
+.heading
+{
+  color: #0B1739;
+}
 .overview-boxes{
     display: flex;
     align-items: center;
@@ -341,16 +329,42 @@ nav .sidebar-button{
     flex-wrap: wrap;
     margin-bottom: 26px;
   }
-  .overview-boxes .box{
+  .overview-boxes .box {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(100% / 4 - 15px);
-    background: #fff;
+    width: calc(100% / 4 - -135px);
+    height: 100px;
+    background: linear-gradient(45deg, #591463, #e7c63f);
     padding: 20px 10px;
     border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-  }
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    gap: 20px;
+    z-index: 1;
+}
+
+.overview-boxes .box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    padding: 2px;
+    background: linear-gradient(45deg, #e7c63f, #591463);
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    z-index: -1;
+}
   .overview-boxes .box-topic{
     font-size: 15px;
     font-weight: 500;
@@ -418,12 +432,11 @@ nav .sidebar-button{
     justify-content: space-between;
     /* padding: 0 20px; */
   }
-  
 
-
-
-
-
+.table-responsive
+{
+  border-radius: 10px;
+}
 
 /* -----------------------------Adim All Products CSS-------------------- */
 
@@ -457,7 +470,6 @@ nav .sidebar-button{
 .catagory-btn a {
     color: var(--para);
 }
-
 
 #tb-head {
     background-color:var(--dark-grey);
@@ -592,7 +604,7 @@ padding: 18px 10px;
   background-color: #bab6b6;
 }
 .background_color_page{
-  background-color: #e9e2e2;
+  background-color: #acbaca;
 }
 .Message-Details{
   font-family: var(--rubik);

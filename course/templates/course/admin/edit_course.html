@@ -1,0 +1,49 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Course</h2>
+    <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+        {% csrf_token %}
+        {{ form.media }}
+        <div class="row">
+            {% for field in form %}
+                <div class="col-12">
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- PDF Files Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="pdf-files">PDF Files</label>
+                    <div id="pdf-files-container">
+                        <!-- Existing PDF file inputs will be here -->
+                    </div>
+                    <button type="button" id="add-pdf-file" class="btn btn-primary mt-2">Add More PDF Files</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Links Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="video-links">Video Links</label>
+                    <div id="video-links-container">
+                        <!-- Existing video link inputs will be here -->
+                    </div>
+                    <button type="button" id="add-video-link" class="btn btn-primary mt-2">Add More Videos</button>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Save Changes</button>
+        <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

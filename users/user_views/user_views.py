@@ -6,7 +6,6 @@ from django.contrib import messages
 from users import forms
 from users.models import User
 from uuid import uuid4
-from product.models import Category
 app = "users/user/"
 
 class ProfileView(View):
@@ -14,7 +13,6 @@ class ProfileView(View):
 
     def get(self, request):
         user = request.user
-        category_obj = Category.objects.all()
 
         if not user.is_authenticated:
             return redirect("users:login")
@@ -28,7 +26,6 @@ class UpdateProfileView(View):
 
     def get(self, request):
         user = request.user
-        category_obj = Category.objects.all()
 
         initial_data = {
             "full_name": user.full_name,
@@ -65,7 +62,7 @@ class UpdateProfileView(View):
             except Exception as e:
                 messages.error(request, f"Error in updating profile: {str(e)}")
 
-        return render(request, self.template, {'category_obj': category_obj, 'form': form})
+        return render(request, self.template, {'form': form})
 
 
 
@@ -207,9 +204,7 @@ class AccountDetails(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
-        category_obj = Category.objects.all()
 
         return render(request, self.template, {
             'userobj': user,
-            'category_obj': category_obj
         })

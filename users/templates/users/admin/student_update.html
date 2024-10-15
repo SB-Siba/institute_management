@@ -1,0 +1,91 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Update Student</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- Installment Details Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Installment Details</h4>
+            <button type="button" id="add-more" class="btn btn-success">Add More</button>
+        </div>
+        
+        {{ installment_formset.management_form }}
+        <table class="table table-bordered" id="installment-table">
+            <thead>
+                <tr>
+                    <th>Installment Name</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in installment_formset %}
+                <tr class="installment-row">
+                    <td>{{ form.installment_name }}</td>
+                    <td>{{ form.amount }}</td>
+                    <td>{{ form.date }}</td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No installment data. Add a new one.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Update Student</button>
+        <a href="{% url 'users:student_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const installmentTable = document.getElementById('installment-table');
+        const addMoreButton = document.getElementById('add-more');
+
+        function addInstallmentRow() {
+            const formset = installmentTable.querySelector('tbody');
+            const formCount = formset.querySelectorAll('.installment-row').length;
+            
+            // Clone the first row for template structure
+            const newForm = formset.querySelector('.installment-row').cloneNode(true);
+
+            // Update form indices and clear values
+            newForm.querySelectorAll('input, select').forEach(input => {
+                input.name = input.name.replace(/-\d+-/, `-${formCount}-`);
+                input.id = input.id.replace(/_\d+_/, `_${formCount}_`);
+                input.value = '';  // Reset values for new row
+            });
+
+            formset.appendChild(newForm);
+        }
+
+        function removeInstallmentRow(event) {
+            const row = event.target.closest('.installment-row');
+            const formset = installmentTable.querySelector('tbody');
+            if (row && formset.querySelectorAll('.installment-row').length > 1) {
+                row.remove();
+            } else {
+                alert('At least one installment row is required.');
+            }
+        }
+
+        // Add new row on 'Add More' button click
+        addMoreButton.addEventListener('click', addInstallmentRow);
+
+        // Remove row on 'Remove' button click
+        installmentTable.addEventListener('click', function (event) {
+            if (event.target.classList.contains('remove-row')) {
+                removeInstallmentRow(event);
+            }
+        });
+    });
+</script>
+{% endblock content %}

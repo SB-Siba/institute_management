@@ -1,0 +1,187 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+    }
+
+    .certificate-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #fff;
+    }
+
+    .certificate-border {
+        border: 10px solid #ffcc00; /* Outer border */
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.1;
+        pointer-events: none;
+        height: 400px;
+        width: auto;
+    }
+
+    .certificate-header {
+        margin-bottom: 20px;
+    }
+
+    .certificate-logo {
+        width: 150px;
+    }
+
+    .certificate-background {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.2;
+        width: 80%;
+        z-index: -1;
+    }
+
+    .certificate-content h1 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .certificate-content h2 {
+        font-size: 22px;
+        color: #ff6600;
+    }
+
+    .certificate-details p, .signature p {
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .signature {
+        padding-right: 40px;
+    }
+
+    .verification {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .qr-code {
+        width: 100px; /* Adjust size as needed */
+    }
+
+    .verification p {
+        color: #999;
+        font-style: italic;
+    }
+
+    .certificate-content p {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    /* Contact and Address section */
+    .contact-address {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+    }
+
+    .contact-address p {
+        margin-bottom: 0.5rem;
+        font-size: 12px;
+    }
+</style>
+<body>
+    <div class="certificate-container">
+        <div class="certificate-border">
+            <div class="certificate-content text-center">
+                <!-- Watermark Image -->
+                <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" class="watermark" alt="Watermark">
+
+                <!-- Logo Image -->
+                <div class="certificate-header">
+                    <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="Certificate Logo" class="certificate-logo">
+                </div>
+
+                <h2>RATIONAL EDUCATION AND COMPUTER TRAINING</h2>
+                <p>BALUGAON</p>
+
+                <!-- Background/Decorative Image -->
+                <img src="{% static 'image/background.png' %}" alt="Decorative Image" class="certificate-background">
+
+                <h1>POST GRADUATE DIPLOMA IN COMPUTER APPLICATION</h1>
+                <p>(COURSE DURATION: 12 MONTHS)</p>
+                <p>(COURSE PERIOD: 04 Oct 2023 TO 03 Oct 2024)</p>
+
+                <!-- Name and QR code aligned side by side -->
+                <div class="d-flex justify-content-between align-items-center mt-5">
+                    <div>
+                        <strong>JITENDRA PRADHAN</strong> <br>
+                        <small>S/O PRAHALLAD PRADHAN</small>
+                    </div>
+
+                    <!-- QR Code -->
+                    <div>
+                        <img src="{% static 'image/qr-code.png' %}" alt="QR Code" class="qr-code">
+                    </div>
+                </div>
+
+                <p>A 73.20 %</p>
+
+                <div class="certificate-details">
+                    <p><strong>Certificate No : 74WOK6X223</strong></p>
+                    <p><strong>Date Of Issue : 03-10-2024</strong></p>
+                    <p><strong>Online Certificate Varification Available on:</strong></p>
+                    <p><strong>www.reactedu.in</strong></p>
+                </div>
+
+                <!-- Signature Area -->
+                <div class="row mt-5">
+                    <!-- Left Signature -->
+                    <div class="col-6 text-start">
+                        <p>-----------------------</p>
+                        <p><strong>SABITA DASH</strong></p>
+                        <p>Controller Of Examination</p>
+                    </div>
+
+                    <!-- Right Signature -->
+                    <div class="col-6 text-end">
+                        <p>-----------------------</p>
+                        <p><strong>BRAJASUNDAR BEHERA</strong></p>
+                        <p>Director</p>
+                    </div>
+                </div>
+
+                <!-- Contact and Address Section -->
+                <div class="contact-address mt-5">
+                    <p><strong>Contact No: 9778577090 / 8895895988 / 8895644410</strong></p>
+                    <p><strong>ADDRESS: AT: SUBASH JENA COLONY (HIGH SCHOOL ROAD, BALUGAON)</strong></p>
+                    <p><strong>PO/PS- BALUGAON, ZIP/PIN-752030, DIST-KHORDHA, STATE-ODISHA</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

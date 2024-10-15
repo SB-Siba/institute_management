@@ -20,8 +20,6 @@ from rest_framework.permissions import IsAuthenticated
 # -------------------------------------------- custom import
 from helpers import swagger_documentation
 from helpers import utils, api_permission
-from product.models import Category
-from product.serializers import CategorySerializer
 from users import models
 
 from users import serializers

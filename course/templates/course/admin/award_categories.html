@@ -1,0 +1,212 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2>List Award Categories</h2>
+        </div>
+        <div class="col text-end">
+            <a href="{% url 'course:add_award_categories' %}" class="btn btn-primary">Add Award Categories</a>
+        </div>
+    </div>
+
+    <!-- Search Field -->
+    <div class="row mb-3">
+        <div class="col">
+            <form method="GET" action="{% url 'course:award_categories' %}">
+                <input type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+
+    <!-- Alert Container for Success Messages -->
+    <div id="alert-container"></div>
+
+    <!-- Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Sl no</th>
+                <th>Award Categories Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in page_obj %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ category.category_name }}</td>
+                <td>{{ category.status|yesno:"Active,Inactive" }}</td>
+                <td>
+                    <!-- Action Buttons -->
+                    <button data-url="{% url 'course:edit_award_category' category.id %}" class="btn btn-info btn-sm edit-btn">Edit</button>
+                    <button data-url="{% url 'course:delete_award_category' category.id %}" class="btn btn-danger btn-sm delete-btn">Delete</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No categories found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&q={{ search_query }}" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&q={{ search_query }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editCategoryModalContent">
+            <!-- The content for the modal will be dynamically loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCategoryModalLabel">Delete Award Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this award category?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteCategoryForm" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    // Handle Edit Button Click
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const url = this.getAttribute('data-url');
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector('#editCategoryModalContent').innerHTML = html;
+                    $('#editCategoryModal').modal('show');
+
+                    const editForm = document.querySelector('#editCategoryModalContent form');
+                    editForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(editForm);
+                        fetch(editForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                const categoryRow = document.querySelector('button[data-url="' + url + '"]').closest('tr');
+                                categoryRow.querySelector('td:nth-child(2)').textContent = data.category_name;
+                                $('#editCategoryModal').modal('hide');
+
+                                // Show success message
+                                const alertContainer = document.createElement('div');
+                                alertContainer.className = 'alert alert-success alert-dismissible fade show';
+                                alertContainer.role = 'alert';
+                                alertContainer.innerHTML = `Award category updated successfully. <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+                                document.querySelector('#alert-container').appendChild(alertContainer);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                });
+        });
+    });
+
+    // Handle Delete Button Click
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const url = this.getAttribute('data-url');
+            const categoryName = this.closest('tr').querySelector('td:nth-child(2)').textContent;
+            document.querySelector('#deleteCategoryForm').action = url;
+            document.querySelector('#deleteCategoryModal .modal-body p').textContent = `Are you sure you want to delete the award category "${categoryName}"?`;
+            $('#deleteCategoryModal').modal('show');
+        });
+    });
+
+    // Handle Delete Form Submission
+    document.addEventListener('submit', function(event) {
+        if (event.target.matches('#deleteCategoryForm')) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch(event.target.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const deleteButton = document.querySelector('.delete-btn[data-url="' + event.target.action + '"]');
+                    const row = deleteButton.closest('tr');
+                    row.parentNode.removeChild(row);
+
+                    $('#deleteCategoryModal').modal('hide');
+
+                    // Show success message
+                    const alertContainer = document.createElement('div');
+                    alertContainer.className = 'alert alert-success alert-dismissible fade show';
+                    alertContainer.role = 'alert';
+                    alertContainer.innerHTML = `Award category deleted successfully. <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+                    document.querySelector('#alert-container').appendChild(alertContainer);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+{% endblock %}

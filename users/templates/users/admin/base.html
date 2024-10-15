@@ -12,7 +12,7 @@
 			<!-- ---------- CSS Links Files------------- -->
     <link rel="stylesheet" href="{% static 'users/css/Admin_Responsive.css' %}">
     <link rel="stylesheet" href="{% static 'users/css/Admin_Side_All.css' %}">
-    <link rel="stylesheet" href="{% static 'users/css/admin_products.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'users/css/admin_products.css' %}"> -->
 
 	<!-- ------------------Icons Files Link------------- -->
 
@@ -34,7 +34,7 @@
 	<section id="sidebar">
 		<a href="#" class="brand">
 			<i class="lni lni-nextjs"></i>
-        <span class="logo_name">Niwa Agro</span>
+        <span class="logo_name">REACT</span>
         <span class="text"></span>
 		</a>
 		<ul class="side-menu top">
@@ -44,64 +44,219 @@
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-		
+			<li class="active sidebar-item">
+				<a href="{% url 'users:franchise_list' %}">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Franchise List</span>
+				</a>
+			</li>
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
 
 					<i class='bx bxs-doughnut-chart'></i>
-					<span>Products</span><i class="lni lni-chevron-up chevron-icon"></i>
+					<span>Manage Students</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
+					<!-- <li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Student Enquiry</span>
+						</a>
+					</li> -->
 					<li class="sidebar-item">
-						<a href="{% url 'product:category_list' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">All Category List</span>
+						<a href="{% url 'users:student_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'product:product_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">All Products</span>
+						<a href="" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Re-Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'product:simple_product_list' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">All Simple Products</span>
+						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
+						</a>
+					</li>
+					<li class="sidebar-item"></li>
+						<a href="#" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student's course result</span>
+						</a>
+					</li>
+					<!-- <li class="sidebar-item">
+						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
+						</a>
+					</li> -->
+				</ul>
+			</li>
+			<li class="sidebar-item">
+				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
+   					data-bs-target="#authe" aria-expanded="false" aria-controls="authe" onclick="toggleChevron(this)">
+
+					<i class='bx bxs-doughnut-chart'></i>
+					<span>Manage Courses</span><i class="lni lni-chevron-down chevron-icon"></i>
+				</a>
+				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authe">
+					<li class="sidebar-item">
+						<a href="{% url 'course:award_categories' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Award Categories</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'course:course_list' %}" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Courses</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+
+			
+
+			<li class="sidebar-item">
+				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
+   					data-bs-target="#authen" aria-expanded="false" aria-controls="authen" onclick="toggleChevron(this)">
+									
+					<i class='bx bxs-doughnut-chart'></i>
+					<span>Student Exams</span><i class="lni lni-chevron-down chevron-icon"></i>
+				</a>
+				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authen">
+					<li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Reset Exam</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Exam Code</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Offline Exams Marks Update</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">All Exam Results</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Hall Tickets</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+
+
+
+			<li class="sidebar-item">
+				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
+   					data-bs-target="#authent" aria-expanded="false" aria-controls="authent" onclick="toggleChevron(this)">
+									
+					<i class='bx bxs-doughnut-chart'></i>
+					<span>Certificates</span><i class="lni lni-chevron-down chevron-icon"></i>
+				</a>
+				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authent">
+					<li class="sidebar-item">
+						<a href="{% url 'certificate:exam_results' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Apply For Certificates</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Approve Certificates</span>
+						</a>
+					</li>
+					<li class="sidebar-item"></li>
+						<a href="{% url 'certificate:designed_certificate' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Designed Certificate</span>
 						</a>
 					</li>
 				</ul>
 			</li>
 			<li>
-				<a href="{% url 'blog:blog_list' %}" class="">
-					<i class='bx bxl-blogger' ></i>
-					<span class="text">Blogs</span>
-				</a>
-			</li>
-			<li>
-				<a href="{% url 'orders:order_list' %}" class="">
+				<a href="" class="">
 					<i class='bx bxs-message-dots' ></i>
-					<span class="text">Orders</span>
+					<span class="text">Old Certificates</span>
 				</a>
 			</li>
-			<li>
-				<a href="{% url 'users:userslist' %}" class="">
-					<i class='bx bxs-group' ></i>
-					<span class="text">Customers</span>
+			<li class="sidebar-item">
+				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
+   					data-bs-target="#authenti" aria-expanded="false" aria-controls="authenti" onclick="toggleChevron(this)">
+									
+					<i class='bx bxs-doughnut-chart'></i>
+					<span>Notifications</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
+				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authenti">
+					<li class="sidebar-item">
+						<a href="{% url 'users:online_class_notifications' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Online Class Notifications</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Marquee Notifications</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Advertisements</span>
+						</a>
+					</li>
+				</ul>
 			</li>
-         {% comment %}
+			<li class="sidebar-item">
+				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
+   					data-bs-target="#authentic" aria-expanded="false" aria-controls="authentic" onclick="toggleChevron(this)">
+									
+					<i class='bx bxs-doughnut-chart'></i>
+					<span>Manage Attendance</span><i class="lni lni-chevron-down chevron-icon"></i>
+				</a>
+				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authentic">
+					<li class="sidebar-item">
+						<a href="{% url 'users:list_batches' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Batches</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Marquee Notifications</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Advertisements</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+         <!-- {% comment %}
       		<li>
-				<a href="{% url 'product:review_approval' %}" class="">
+				<a href="" class="">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Review&Ratings</span>
 				</a>
 			</li>
 			{% endcomment %}
 			<li>
-				<a href="{% url 'product:update_delivery_settings' %}" class="">
+				<a href="" class="">
 					<i class='bx bx-package' ></i>
 					<span class="text">Delivery Settings</span>
 				</a>
-			</li>
+			</li> -->
 			<li>
 				<a href="{% url 'app_common:admin_message_list' %}" class="">
 					<i class='bx bxs-contact'></i>
@@ -124,26 +279,31 @@
 
           <!-- NAVBAR -->
 		<nav>
-      <div class="sidebar-button">
-        <i class="bx bx-menu sidebarBtn"></i>
-        <span class="dashboard">Dashboard</span>
-      </div>
-			<form action="#">
-				<div class="form-input">
-					<!-- <input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button> -->
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" hidden>
-			<!-- <label for="switch-mode" class="switch-mode"></label> -->
-			<a href="#" class="notification">
-				<i class='bx bxs-bell' ></i>
-				<span class="num">8</span>
-			</a>
-			<a href="#" class="profile">
-				<img src="{% static 'users/images/user!.webp' %}">
-        <span class="admin_name">{{request.user.email}}</span>
-			</a>
+		    <div class="sidebar-button">
+		        <i class="bx bx-menu sidebarBtn"></i>
+		    </div>
+		    <form action="#">
+		        <div class="form-input">
+		            <!-- <input type="search" placeholder="Search...">
+		            <button type="submit" class="search-btn"><i class='bx bx-search' ></i></button> -->
+		        </div>
+		    </form>
+		    <input type="checkbox" id="switch-mode" hidden>
+		    <!-- <label for="switch-mode" class="switch-mode"></label> -->
+		
+		    <!-- Display Date and Time -->
+		    <div class="date-time">
+		        <span id="current-date-time"></span>
+		    </div>
+		
+		    <a href="#" class="notification">
+		        <i class='bx bxs-bell'></i>
+		        <span class="num">8</span>
+		    </a>
+		    <a href="#" class="profile">
+		        <img src="{% static 'users/images/user!.webp' %}">
+		        <span class="admin_name">{{request.user.email}}</span>
+		    </a>
 		</nav>
 		<!-- NAVBAR -->
      
@@ -175,18 +335,45 @@
         // Handle the click on the Products link to toggle the dropdown
         $('#productsLink').on('click', function(e) {
             e.stopPropagation();
-            $('#auth').collapse('toggle');
+            $('#auth,#authe,#authen,#authent,#authenti,#authentic').collapse('toggle');
         });
     
         // Close the dropdown when clicking outside
         $(document).on('click', function(e) {
-            if (!$(e.target).closest('#productsLink, #auth').length) {
-                $('#auth').collapse('hide');
+            if (!$(e.target).closest('#productsLink, #auth,#authe,#authen,#authent,#authenti,#authentic').length) {
+                $('#auth,#authe,#authen,#authent,#authenti,#authentic').collapse('hide');
             }
         });
     });
     </script>
-  
+  <script>
+    function formatDateTime(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12; // Convert 24h to 12h format
+
+        return `${day}-${month}-${year} ${formattedHours}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    function updateDateTime() {
+        const dateTimeElement = document.getElementById('current-date-time');
+        const now = new Date();
+        dateTimeElement.textContent = formatDateTime(now);
+    }
+
+    // Update date and time on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateDateTime();
+        // Optionally, update every second
+        setInterval(updateDateTime, 1000);
+    });
+</script>
+
 
 <script src="{% static 'users/js/script.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

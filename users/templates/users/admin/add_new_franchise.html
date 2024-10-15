@@ -1,0 +1,166 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Add New Franchise</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Franchise Information -->
+        <div class="form-group">
+            <label for="franchise_name">Franchise Name:</label>
+            <input type="text" id="franchise_name" name="franchise_name" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="owner_name">Owner Name:</label>
+            <input type="text" id="owner_name" name="owner_name" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="designation">Designation:</label>
+            <select id="designation" name="designation" class="form-control">
+                <option value="">--select--</option>
+                <option value="director">Director</option>
+                <option value="trustee">Trustee</option>
+                <option value="proprietor">Proprietor</option>
+                <option value="partner">Partner</option>
+                <option value="employee">Employee</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date Of Birth:</label>
+            <input type="date" id="dob" name="dob" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile" name="mobile" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="state">State:</label>
+            <select id="state" name="state" class="form-control">
+                <option value="">--select--</option>
+                {% for state_value, state_display in form.state.field.choices %}
+                    <option value="{{ state_value }}">{{ state_display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="taluka">Taluka:</label>
+            <input type="text" id="taluka" name="taluka" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" value="INDIA" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="postal_code">Postal Code:</label>
+            <input type="text" id="postal_code" name="postal_code" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="total_computers">Total Number of Computers:</label>
+            <input type="number" id="total_computers" name="total_computers" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="total_staff">Total Number of Staff:</label>
+            <input type="number" id="total_staff" name="total_staff" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="plan">Select Plan For Franchise:</label>
+            <select id="plan" name="plan" class="form-control">
+                <option value="">--select--</option>
+                <option value="Basic">Basic</option>
+                <option value="Premium">Premium</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status" class="form-control">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="verify">Verify:</label>
+            <select id="verify" name="verify" class="form-control">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="gst_number">GST Number:</label>
+            <input type="text" id="gst_number" name="gst_number" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="franchise_logo">Upload Franchise Documents:</label>
+            <input type="file" id="franchise_logo" name="franchise_logo" class="form-control-file">
+            <label for="owner_passport_photo">Owner Passport Photo:</label>
+            <input type="file" id="owner_passport_photo" name="owner_passport_photo" class="form-control-file">
+            <label for="franchise_signature">Franchise Signature:</label>
+            <input type="file" id="franchise_signature" name="franchise_signature" class="form-control-file">
+        </div>
+
+        <div class="form-group">
+            <label for="register_date">Register Date:</label>
+            <input type="date" id="register_date" name="register_date" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="expire_date">Expire Date:</label>
+            <input type="date" id="expire_date" name="expire_date" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="master_password">Master Password:</label>
+            <input type="password" id="master_password" name="master_password" class="form-control">
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'users:franchise_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Add Online Classes</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'users:online_class_notifications' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Student Payment Details</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="student">Student Name</label>
+            {{ form.student }}
+        </div>
+
+        <div class="form-group">
+            <label for="course">Select Course</label>
+            {{ form.course }}
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Enter Payment Amount</label>
+            {{ form.amount }}
+        </div>
+
+        <div class="form-group">
+            <label for="balance">Total Balance Amount</label>
+            {{ form.balance }}
+        </div>
+
+        <div class="form-group">
+            <label for="payment_mode">Payment Mode</label>
+            {{ form.payment_mode }}
+        </div>
+
+        <div class="form-group">
+            <label for="description">Any Notes</label>
+            {{ form.description }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Payment</button>
+        <a href="{% url 'users:student_payment_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
