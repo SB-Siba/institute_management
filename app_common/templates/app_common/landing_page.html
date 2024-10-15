@@ -1,0 +1,235 @@
+{% extends 'app_common/base.html' %}
+ {% load static %}
+ {% block title%} Home | NiwaAgro.com{% endblock title %} 
+ {% block content %}
+
+<!-- --------------------banner section--------------- -->
+
+
+<!-- --------------------End Trending Arrival Collection--------------- -->
+
+
+
+
+<!-- ------------------------- why  choose  niwa---------------------- -->
+<section class="whychoose p-lg-5 p-3 " >
+  <h4 class="text-center text-success">Why Choose Niwa Agro</h4>
+  <div class="row text-center container p-lg-4 p-3 chooseniwa_logo">
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg2.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Free Replacements if Damaged</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg3.svg' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Quality Assured</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg4.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Secure and Recyclable Packaging</h5>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+      <img src="{% static 'app_common/images/bg5.avif' %}" alt="" class="img-fluid">
+      <h5 class="p-1">Handpicked Plant Care Tips</h5>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- --------------------------about niwa agro-------------------------------- -->
+
+<section class="aboutniwa_bg">
+ <div class="p-lg-5 p-3 ">
+<div class="aboutniwa1 w-50 ">
+  <h2 class="text-success text-center pb-lg-5">ABOUT US</h2>
+    <p>Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
+    <p>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
+    <div>
+        <a href="{% url 'app_common:about_us' %}" class="text-white text-decoration-none u-button">Know More</a>
+    </div>
+</div>
+ </div>
+</section>
+<!-- --------------------------End about niwa agro-------------------------------- -->
+
+
+<!-- --------------------------Testimonial------------------------------- -->
+
+<section class= "  section mx-5 pt-5 pb-5 testimonial-section">
+  <div class="row">
+    <div class="col-12 d-flex align-items-center justify-content-start flex-column">
+        <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
+     </div>
+ </div>
+  <div class=" ">
+      <div class="testimonial-slider ">
+          <div class="testimonial-slide">
+              <div class="testimonial-box ">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                     
+                      <p>
+                          Wonderful stay! Modern facilities, great value, and hassle-free booking. Definitely coming back!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4> Mahesh Sethi</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Amazing stay! Comfortable rooms, great service, and perfect location. Highly recommend!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Rahul Jen</h4>
+                  </div>
+                
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Excellent experience! Clean rooms, friendly staff, and seamless booking process. Will return.</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Madhab Reddy</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Fantastic place! Cozy rooms, wonderful amenities, and superb customer service. Loved it!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Nitin Sah</h4>
+                  </div>
+                </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Loved our stay! Beautiful property, convenient booking, and outstanding hospitality. Five stars!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Hritik Kamal</h4>
+                  </div>
+                  
+              </div>
+          </div>
+          <div class="testimonial-slide">
+              <div class="testimonial-box">
+                  <div class="testimonial-icon">
+                      <i class="bi bi-quote"></i>
+                  </div>
+                  <div class="testimonial-text">
+                      <p>Perfect getaway! Spacious rooms, exceptional service, and easy booking. Highly satisfied!</p>
+                  </div>
+                  <div class="testimonial-img d-flex justify-content-center">
+                      <img src="https://img.freepik.com/free-photo/smiling-businessman-face-portrait-wearing-suit_53876-148138.jpg?w=740&t=st=1723114258~exp=1723114858~hmac=8bd75b9a333f28e5fd8b9e3e667ccb5e29893b0022a88deefb0e66ccc5c3daa5" alt="profile">
+                  </div>
+                  <div class="testimonial-name">
+                      <h4>Suraj Sen</h4>
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<!-- --------------------------End Testimonial------------------------------- -->
+  
+<!-- --------------------------Start Accordian------------------------------------- -->
+
+<section class="Shop_by_Collection p-lg-5 p-3  Accordian">
+  <div class="row">
+    <div class="col-12 d-flex align-items-center justify-content-center flex-column">
+        <h2 class="section-heading border-bottom p-lg-3 p-2">Frequently Asked Questions:</h2>
+     </div>
+ </div>
+  <div class="container">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <div class="accordion-item ">
+        <h2 class="accordion-header" id="flush-headingOne">
+          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            What is Niwa Agro?
+          </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">Niwa Agro is an agricultural company specializing in [specific services/products, e.g., sustainable farming solutions, organic produce, etc.].
+            You can reach us via email at [email address], call us at [phone number], or fill out the contact form on our website.We offer a range of products including [list of products such as organic vegetables, fruits, grains, etc.].Our services include [list of services such as agricultural consulting, farm management, sustainable farming practices, etc.].All our products are certified organic and meet [specific standards, e.g., USDA Organic, EU Organic Certification].
+          </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingTwo">
+          <button class="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            What farming practices does Niwa Agro use?
+          </button>
+        </h2>
+        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">We use sustainable and environmentally friendly farming practices, including [specific practices such as crop rotation, no-till farming, integrated pest management, etc.].We implement rigorous quality control measures at every stage of production, from planting to harvest, to ensure our products meet the highest standards.</div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingThree">
+          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+            How can I place an order with Niwa Agro?
+          </button>
+        </h2>
+        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">You can place an order through our website, by phone, or by visiting one of our partner retailers.
+
+            12. Does Niwa Agro offer home delivery?
+            Yes, we offer home delivery services in [specific areas/regions]. Delivery times and fees vary based on location.
+            
+            13. What payment methods does Niwa Agro accept?
+            We accept various payment methods including credit/debit cards, PayPal, and bank transfers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------End Accordian------------------------------------- -->
+
+
+
+
+
+
+
+
+{% endblock content %}

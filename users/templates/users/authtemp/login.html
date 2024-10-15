@@ -1,0 +1,81 @@
+{% extends 'users/authtemp/master.html' %}
+{% load static %}
+{% block title %}Login Page{% endblock title %}
+{% block content %}
+
+
+<section class="login_background">
+  <div class="login_card">
+    <div class="card">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 leftside_image">
+          <img src="{% static 'app_common/images/Download130.jpeg' %}" alt="Login Image">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 px-lg-3 border">
+          <form method="post" action="">
+            {% csrf_token %}
+            <h5 class="text-center mt-lg-3 mb-lg-4 fs-1 fw-bold">Welcome!</h5>
+            <div class="d-flex justify-content-center">
+              <p class="snippets_alert"> {% include 'snippets/alert.html' %}</p>
+
+            </div>
+            {% for field in form %}
+              <div class="mb-4">
+                <label for="{{ field.id_for_label }}" class="col-form-label">{{ field.label }}:</label>
+                {{ field }}
+              </div>
+            {% endfor %}
+            <div class="mt-lg-2 d-flex justify-content-end fs-6">
+              <button type="button" class="border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                <u>Forgot Password?</u>
+              </button>
+            </div>
+            <button class="Login_Button" type="submit">Log in</button>
+            <div class="d-flex justify-content-between">
+              <div class="text-center w-100 sign_up">
+                <small>Don't have an account?</small>
+                <a href="{% url 'users:signup' %}" class="ms-lg-1 text-warning text-decoration-none">Sign up</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content ">
+        <div class="modal-header">
+          <h5 class="modal-title" id="forgotPasswordModalLabel"> Password Reset</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Provide the email address associated with your account to recover your password.</p>
+          <form method="post" action="" class="border-bottom">
+            {% csrf_token %}
+            {{ form2.as_p }}
+            <div class="d-flex justify-content-center lh-lg pb-lg-4 ">
+              <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+            </div>
+          </form>
+          {% if messages %}
+            <ul class="messages mt-3">
+              {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <a href="{% url 'users:login' %}" class="text-decoration-none btn text-secondary mt-3 ">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock content %}

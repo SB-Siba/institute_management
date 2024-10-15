@@ -1,0 +1,30 @@
+<!-- take_attendance.html -->
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Take Attendance</h2>
+    <form method="GET" action="{% url 'users:take_attendance' %}">
+        <div class="form-group">
+            <label for="batch">Select Batch:</label>
+            <select id="batch" name="batch" class="form-control">
+                <option value="">-- Select Batch --</option>
+                <option value="batch1">Batch 1</option>
+                <option value="batch2">Batch 2</option>
+                <option value="batch3">Batch 3</option>
+                <option value="batch4">Batch 4</option>
+                <option value="batch5">Batch 5</option>
+                <option value="batch6">Batch 6</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" name="date" class="form-control" value="{{ today_date }}">
+        </div>
+        <div class="form-group">
+            <button type="submit" name="action" value="load" class="btn btn-primary">Load</button>
+            <button type="submit" name="action" value="refresh" class="btn btn-secondary">Refresh</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,1453 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* From Uiverse.io by cssbuttons-io */ 
+
+.u-button {
+  font-family:'Poppins',sans-serif ;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  padding-block: 0.7rem;
+  padding-inline: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 10px;
+  border: 1px solid #ffffff4d;
+  border-radius: 3px;
+  outline: none;
+  overflow: hidden;
+  font-size: 15px;
+}
+.u-button:hover {
+  transform: scale(1.05);
+  border-color: #fff9;
+}
+
+.u-button:hover::before {
+  animation: shine 1.5s ease-out infinite;
+}
+
+.u-button::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0) 70%
+  );
+  top: 0;
+  left: -100px;
+  opacity: 0.6;
+}
+
+@keyframes shine {
+  0% {
+    left: -100px;
+  }
+
+  60% {
+    left: 100%;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+.vd_button{
+  
+  display: inline-block;
+  outline: 0;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  
+}
+.vd_button:hover{
+  box-shadow: 0 4px 5px 0 rgba(73, 74, 74, 0.5);
+}
+
+
+/* ======================================================================= */
+/* ===================Root Fonts========================================== */
+ :root{
+  --p-fontfamily:"Nunito", sans-serif;
+  --headings-fontfamily:"Poppins", sans-serif;
+ }
+
+/* ===================Root Colors======================================== */
+:root {
+    --primary:rgb(6, 151, 83);
+    --primary2:rgb(54, 139, 104);
+    --secondary:rgb(245, 191, 18);;
+    --secondary2:rgb(255, 212, 46);
+    --third: rgb(255, 255, 255);
+    --third2:rgb(57, 153, 24);
+    --third3:#f1f1f1;
+    --pagebg:rgb(245, 245, 245);
+    --h6:rgb(135, 135, 135);
+    --discount:rgb(19, 146, 83);
+    --para: rgb(15, 15, 15);
+    --para2:rgb(33,33,33);
+    --footer:rgb(33, 33, 33);
+    --header:#D6EFD8;
+    --place-order:rgb(251, 100, 27);
+    --danger:rgb(236, 6, 6);
+    --info:#269f54;
+
+   }
+
+ 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 100%;
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  li{
+    list-style-type: none !important;
+  }
+  a{
+  text-decoration: none!important;
+  }
+  header {
+    background: var(--header) !important;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000000;
+    max-height: 130px;
+  }
+#header_rows{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+  .HeaderButton li a {
+    font-family: 'poppins', sans-serif;
+    font-size: .8rem;
+    letter-spacing:2px;
+    position: relative;
+    color:var(--third2) ;
+    padding: 0 2px;
+  
+  }
+ 
+.HeaderButton li a:after{
+  position: absolute;
+  content: "";
+  background-color:  #FF0099;
+  width: 0%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  transition:all 0.5s ease-in-out;
+}
+.HeaderButton li a:hover::after{
+  width: 100%;
+ 
+}
+
+  .HeaderIcons {
+    font-size: 1.2rem;
+  }
+#menu_button{
+    display:none;
+    color: black !important;
+}
+.loginHeader {
+  position: relative;
+  min-height: 90px;
+}
+.loginHeader img {
+  height: 50px;
+  width: 70px;
+  position: absolute;
+  left: 40%;
+}
+.navbar-brand img{
+  height: 60px;
+  width: 80px;
+}
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  margin-top: 10vh;
+  max-width: 75%;
+}
+
+.modal-content {
+  width: 10px;
+}
+#offcanvasWithBothOption{
+  width: 30%;
+}
+
+
+/* -------------------carousel start hero section------------------------ */
+
+#carouselExampleFade .carousel-inner{
+  margin-top: -10px;
+}
+.carousel-item img{
+  height: 33rem;
+  width: 100%;
+}
+
+/* ---------------App Download Section----------------------------------*/
+
+.AppDownload{
+margin-top: -0px;
+}
+.AppDownload div a{
+  background-color:var(--primary);
+  color: var(--third)!important;
+  
+}
+.AppDownload div a:hover{
+  opacity: 1;
+}
+
+/* ------------Shop By Collection  Section----------------------------------*/
+
+.Shop_by_Collection{
+  background-color: var(--pagebg);
+}
+.image-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: contain;
+  transition:transform 0.5s ;
+  height: 200px;
+  width: 200px;
+}
+.image-wrapper:hover{
+transform: scale(1.07);
+
+}
+.image-wrapper a img{
+height: 100%;
+width:100%;
+object-fit: cover;
+transition: transform 0.5s;
+transform: scale(1.15);
+}
+.image-wrapper a img:hover{
+transform: scale(1.03);
+}
+.content-wrapper h4{
+  font-family: 'poppins', sans-serif;
+  color: #0f6d3e;
+  font-size: 1.3rem;
+  line-height:2rem;
+  font-weight: 500;
+  margin: 10px 0;
+}
+.viewmoreButton a{
+  background-color:var( --secondary);
+  color: var(--para);
+  font-weight: 500;
+  margin: 1rem;
+}
+.viewmoreButton a:hover{
+  background-color:var( --secondary2);
+  color: var(--para);
+  opacity: 0.9;
+}
+.vd_button{
+  background-color: var(--primary);
+  color: var(--third)!important;
+}
+.vd_button:hover{
+  background-color: var(--primary2);
+  color: var(--third)!important;
+}
+
+
+/*------------------- new arrivals & Trending Products-------------- */
+ .new-head{
+  height: 407px;
+  width:  225px;
+  overflow: hidden;
+ }
+#new-products{
+  height: 407px;
+  width:  225px;
+  overflow: hidden;
+}
+#new-products a img{
+  height: 220px;
+  width: 220px;
+}
+#new-products .card-body{
+  text-align: start;
+}
+#new-products .card-body h5{
+  font-family: "inter",sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 21px;
+  margin-top: 10px;
+}
+#new-products .card-body .rating{
+  color:
+  rgb(245, 191, 18);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+}
+#new-products .card-body .rating span{
+  color: var(--para);
+    font-weight: 500;
+}
+#new-products .card-body div a{
+  background-color: var(--discount);
+  padding: 10px;
+  width: 80%;
+  margin: auto;
+}
+
+/* -------------------------------Why choose niwa----------------------- */
+
+.chooseniwa_logo div img{
+  height: 50px;
+  width:50px
+}
+.whychoose{
+  background:var(--gradient);
+}
+.aboutniwa_bg{
+  background-image:url("../images/picture-frame-leaning-against-white-wall.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  }
+  .aboutniwa1 div a{
+  background-color: var(--secondary2);
+  width: 50%;
+  margin-top: 10%;
+  }
+  .aboutniwa1 p:first-letter{
+    font-family: "Oswald",sans-serif;
+    font-size:30px;
+    font-weight:600;
+   
+  }
+  .aboutniwa1 p{
+    font-family: sans-serif;
+    font-weight: 200;
+    word-spacing: 6px;
+    line-height: 1.8;
+    letter-spacing: 1.5px;
+  }
+
+
+
+
+
+/* ---------------------testimonial---------------------------- */
+.testimonial-box {
+  padding: 20px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #E0FBFC;
+  margin:5px;
+}
+.testimonial-icon {
+  font-size: 24px;
+  color: #000000;
+  text-align: left;
+}
+.testimonial-text {
+  font-size: 12px;
+  color: #000000;
+  margin-bottom: 15px;
+}
+.testimonial-img {
+  margin-bottom: 10px;
+}
+.testimonial-img img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+.testimonial-name h4 {
+  font-size: 16px;
+  margin: 5px 0;
+  color: #000000;
+}
+.testimonial-job p {
+  font-size: 14px;
+  color: #777;
+}
+/*------------------- Account Deletion page CSS  Details */
+
+.deletion_page{
+  font-family: "Inter",sans-serif;
+}
+.listDeletion>li{
+  list-style-type:number !important;
+  font-weight: 300;
+  line-height: 30px;
+  
+}
+.listDeletion>li li{
+  list-style-type: disc !important;
+  line-height: 30px;
+}
+.vd_button{
+  background-color: rgb(207, 11, 11);
+  color: var(--third);
+  border: 1px solid rgb(246, 246, 246);
+  padding: 10px 25px; 
+}
+.vd_button:hover{
+  background-color: rgb(255, 1, 1);
+}
+
+
+/*------------------------------------------------------- Locate us Page---------------------------------------- */
+iframe {
+padding: 20px 0px;
+height: 550px;
+width: 100%;
+border:2px solid var(--third);
+}
+.locateuss{
+font-family:"Inter",sans-serif;
+line-height: 30px;
+}
+
+
+
+/* -------------------------------User_blog List CSS  Page----------------------- */
+
+.BlogImage{
+  height: 400px;
+  overflow: hidden;
+  width: auto;
+  object-fit: cover;
+}
+.BlogImage img{
+width: 100%;
+height: 100%;
+transition: transform 0.5s ease-in-out;
+  transform: scale(1);
+}
+.BlogImage img:hover{
+  transform: scale(1.04);
+}
+.blog_title h5 a{
+  font-size: 20px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 400;
+  line-height: 23px;
+}
+.blog_title p{
+  font-size: 14px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  line-height: 23px;
+}
+.blog_title h4{
+  font-size: 22px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  line-height: 23px;
+}
+.blog_title h3{
+  font-size: 24px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 400;
+  line-height: 23px;
+}
+.blog_title h2{
+  font-size: 24px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  line-height: 23px;
+}
+.blog_title h1{
+  font-size: 24px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  line-height: 23px;
+}
+
+button {
+position: relative;
+display: inline-block;
+cursor: pointer;
+outline: none;
+border: 0;
+vertical-align: middle;
+text-decoration: none;
+background: transparent;
+padding: 0;
+font-size: inherit;
+font-family: inherit;
+}
+
+button.learn-more {
+width: 12rem;
+height: auto;
+}
+
+button.learn-more .circle {
+transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+position: relative;
+display: block;
+margin: 0;
+width: 3rem;
+height: 3rem;
+background: #282936;
+border-radius: 1.625rem;
+}
+
+button.learn-more .circle .icon {
+transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+position: absolute;
+top: 0;
+bottom: 0;
+margin: auto;
+background: #fff;
+}
+
+button.learn-more .circle .icon.arrow {
+transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+left: 0.625rem;
+width: 1.125rem;
+height: 0.125rem;
+background: none;
+}
+
+button.learn-more .circle .icon.arrow::before {
+position: absolute;
+content: "";
+top: -0.29rem;
+right: 0.0625rem;
+width: 0.625rem;
+height: 0.625rem;
+border-top: 0.125rem solid #fff;
+border-right: 0.125rem solid #fff;
+transform: rotate(45deg);
+}
+
+button.learn-more .button-text {
+transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+padding: 0.75rem 0;
+margin: 0 0 0 1.85rem;
+color: #282936;
+font-weight: 700;
+font-size: 15px;
+line-height: 1.6;
+text-align: center;
+text-transform: uppercase;
+}
+
+button:hover .circle {
+width: 100%;
+}
+
+button:hover .circle .icon.arrow {
+background: #fff;
+transform: translate(1rem, 0);
+}
+
+button:hover .button-text {
+color: #fff;
+}
+
+/* -------------------------------User_blog_Single  List CSS  Page----------------------- */
+
+.Blog_detail_Title{
+  background-color: var(--third3);
+}
+.Blog_detail_Title h3{
+  font-size: 24px;
+  font-family: "Inter",sans-serif;
+  color: var(--para);
+  font-weight: 500;
+  line-height: 23px;
+}
+.Main_Image{
+  height: 650px;
+  overflow: hidden;
+  width: auto;
+  object-fit: cover;
+}
+.Main_Image img{
+  height: 100%;
+  width: 100%;
+}
+
+
+@media ( max-width:1000px) {
+ 
+  .Main_Image{
+      height: 350px;
+      overflow: hidden;
+      width: auto;
+      object-fit: cover;
+  }
+  .Main_Image img{
+      height: 100%;
+      width: 100%;
+  }
+}
+
+
+
+   /* ----------------------------About us Page css------------------------- */
+#about{     
+  font-family: "Poppins",sans-serif;
+  margin:20px  auto 80px;
+ }
+
+ #about div h3{
+  font-family: "Rufina",sans-serif;   
+ }
+
+ #about div p{
+  font-family:sans-serif ;
+  font-size: 15px;
+  font-weight: 100;
+  line-height:1.56;                 
+  }
+  .side_img img{ 
+      
+      border-radius:5px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  }
+  /* ----------------------------Return Policy Page css------------------------- */
+  
+  #return{
+      font-family: "Poppins",sans-serif;
+      width: 70%;
+      margin:20px  auto 80px;
+    
+  }
+  #return div h3{
+      font-family: "Rufina",sans-serif;
+  }
+  #return div p{
+      font-family:sans-serif ;
+      font-size: 15px;
+      font-weight: 100;
+      margin: 20px 0;
+      line-height: 2;
+  }
+  #return div h5{
+      font-weight: 600;
+      font-size: 15px;
+      margin: 12px 0;
+  }
+  #return div ul li{
+      list-style-type: number;
+  }
+  
+  #return div ul li ul li{
+      list-style-type: disc;
+      line-height: 2.5;
+      font-family:sans-serif ;
+      font-size: 15px;
+      font-weight: 100;
+  }
+  #return div ul li ul{
+      font-family:sans-serif ;
+      font-size: 15px;
+      font-weight: 100;
+  }
+  
+  /* ----------------------------Privacy Policy Page css------------------------- */
+  
+  #Privacy{
+      font-family: "Poppins",sans-serif;
+      width: 70%;
+      margin:20px  auto 80px;
+      font-weight: 100;
+    
+  }
+  #Privacy div h3{
+      font-family: "Rufina",sans-serif;
+  }
+  #Privacy div p{
+      font-family:sans-serif ;
+      font-size: 15px;
+      font-weight: 100;
+      margin: 20px 0;
+      line-height: 2;
+}
+#Privacy div ul li{
+    
+    list-style-type: number;
+}
+
+#Privacy div ul li ul li{
+    list-style: disc;
+    font-family:sans-serif ;
+    font-size: 15px;
+    font-weight: 100;
+    line-height: 2;
+    margin: 10px 0;
+    
+}
+
+
+/* ----------------------------Contact Us Page css------------------------- */
+
+#conatct_us{
+    font-family: "Poppins",sans-serif;
+    
+    margin:20px auto 80px;
+}
+.contactus-page{
+    background-color: var(--pagebg);
+}
+.contact_us_image{
+    height:400px;
+    width: 100%;
+    overflow: hidden;
+  
+}
+.contact_us_image img{
+    height:530px;
+    width: 100%;
+  
+}
+.contactus-page{
+    padding: 50px 30px;
+}
+.Address-page{
+    padding: 10px 50px;
+}
+.contactus-page .Address-page h5{
+    font-family: 'Inter',sans-serif;
+    font-weight: 400;
+    color: black;
+    line-height: 30px;
+
+}
+.contactus-page .Address-page p{
+    font-family: 'Inter',sans-serif;
+    font-weight: 400;
+    color: #191919;
+    line-height: 25px;
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+.contactus-page .Address-page .social-icons{
+    font-size: 20px;
+    line-height: 40px;
+}
+.contactus-page .Address-page .social-icons i{
+    color:var(--discount);
+    margin: 0 8px;
+}
+.contact-form h4{
+    font-family: 'Inter',sans-serif;
+    font-weight: 500;
+    font-size: 25px;
+  margin-bottom: 30px;
+}
+.contact-form form{
+    color: #363636 !important;
+}
+.contact-form form button{
+    background-color: var(--discount);
+    color: var(--third);
+    font-family:'inter',sans-serif;
+    font-weight: 400;
+    letter-spacing: 3px;
+    word-spacing: 6px;
+    font-size: 13px;
+    padding: 18px 35px;
+    border-radius: 2px;
+}
+.contact-form form .form-field{
+    margin: 15px 0;
+}
+.contact-form form .form-field input{
+    border-radius: 0;
+}
+.contact-form form .form-field input:focus{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.contact-form form .form-field textarea:focus{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.contact-form form .form-field textarea{
+    border-radius: 0;
+}
+
+
+/* ---------------------Showcart Page CSS------------------------- */
+
+.product-price-details{
+  position: sticky;
+  top:16.5%;
+  height: auto; 
+  z-index: 1000;
+ 
+}
+
+#continue-shop{
+  background-color: var(--third2);
+  padding: 15px 30px;
+}
+.cart-product-image a img{
+  height:80px;
+  width: 150px;
+}
+.checkout-check{
+  border-bottom: 1px dotted rgb(188, 188, 188);
+}
+
+.quantity_add input{
+  width:50px ;
+}
+.quantity_add i{
+  color: var(--h6);
+}
+
+.price-details span{
+  font-family:"Inter",sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--h6);
+  font-style: normal;
+  word-spacing: 2px;
+}
+.amount-details div span{
+  font-family:"Inter",sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--para2);
+  font-style: normal;
+  word-spacing: 2px;
+}
+.total-amount{
+  font-family:"Inter",sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 25px;
+  color: var(--para2);
+  font-style: normal;
+  word-spacing: 3px;
+}
+#t-Head{
+  font-family:"Inter",sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--h6);
+  font-style: normal;
+  word-spacing: 2px;
+}
+#t-Head i{
+  font-size: 30px;
+  text-shadow: rgba(7, 7, 7, 0.15) 3px 2px 2.6px;;
+}
+.proceed-to{
+  width: 100%;
+  background-color: var(--third);
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+  position: sticky;
+  bottom: 0;
+}
+.proceed-to-checkout{
+  display: flex;
+  justify-content: end;
+}
+.proceed-to-checkout a{
+  background-color: var(--place-order);
+  color: var(--third);
+  text-transform: uppercase;
+  padding: 15px 80px;
+  word-spacing: 5px;
+}
+.proceed-to-checkout a:hover{
+  color: var(--third);
+  transform: scale(1);
+}
+.proceed-to-checkout a:hover::before {
+  animation:none;
+}
+
+
+/* ---------------------Proceed to Payment With Address?------------------------- */
+
+.proceed-to-payment button{
+  background-color: var(--place-order);
+  color: var(--third);
+  text-transform: uppercase;
+  padding: 15px 80px;
+  word-spacing: 5px;
+}
+#addAddress{
+  background-color: var(--discount);
+  color: var(--third);
+}
+.u-button.trash{
+  color: var(--third);
+  background-color:var(--danger) ;
+  font-size: 12px;
+  padding: 7px;
+  
+}
+.u-button.pencil{
+  color: var(--third);
+  background-color:var(--info) ;
+  font-size: 12px;
+  padding: 7px;
+}
+
+
+
+
+.address-details li {
+  font-family:"Inter",sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--para);
+  font-style: normal;
+  word-spacing: 2px;
+  letter-spacing: 1px;
+}
+.address-detailss li {
+  font-family:"Inter",sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--para);
+  font-style: normal;
+  word-spacing: 2px;
+  letter-spacing: 1px;
+}
+#addAddressModal .modal-header,#addAddressModal .modal-footer{
+  background-color: var(--third2);
+  color: var(--third);
+}
+#addAddressModal .modal-footer{
+  display: flex;
+  justify-content:space-around;
+}
+
+
+#updateAddressModal .form-control {
+  border: 1px solid rgba(209, 203, 203, 0.45);
+  border-radius:2px;
+}
+
+
+#addAddressForm .form-control {
+  border: 1px solid rgba(209, 203, 203, 0.45);
+  border-radius:2px;
+}
+.u-button.add{
+  color: var(--third);
+  background-color:var(--info) ;
+  font-size: 15px;
+  padding: 10px;
+}
+.u-button.close{
+  color: var(--third);
+  background-color:var(--h6) ;
+  font-size: 15px;
+  padding: 10px 45px;
+}
+.payment-method label{
+  font-family:"Inter",sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 30px;
+  color: var(--para);
+  font-style: normal;
+  word-spacing: 2px;
+  letter-spacing: 1px;
+}
+
+
+/* ============================User Product of catagory  Page CSS================ */
+
+#products_of_category{
+  background: var(--pagebg);
+}
+.product-head{
+  height: 450px;
+  width:  268px;
+  overflow: hidden;
+}
+#product-cards{
+  height: 450px;
+  width:  257px;
+  overflow: hidden;
+}
+#product-cards a img{
+  height: 257px;
+  width: 257px;
+}
+#product-cards div{
+  text-align: start;
+}
+#product-cards div h5{
+  font-family: "inter",sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 21px;
+
+}
+#discount_price{
+  font-family: "inter",sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 16px;
+  color: var( --discount);
+
+}
+#max_price{
+  font-family: "inter",sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: var( --h6);
+  
+}
+#product-cards .card-body a{
+  background-color: var(--discount);
+  padding: 10px;
+  width: 80%;
+  margin: auto;
+}
+
+/* ============================User Product detail page CSS================ */
+
+.product-image {
+  flex: 1 1 40%;
+  width: 700px;
+  height: 500px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.product-image img {
+  width: 700px;
+  height:500px;
+  object-fit: cover;
+}
+
+.gallery-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 150px ;
+  height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.gallery-container::-webkit-scrollbar{
+  display: none;
+}
+
+
+.gallery-items {
+  display: flex;
+  transition: transform 0.3s ease;
+  flex-direction: column;
+}
+
+.gallery-item{
+  display: inline-block;
+
+}
+
+.gallery-item img,
+.gallery-item video {
+  width: 140px;
+  height: 120px;
+  object-fit: cover;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+
+.product-details {
+  flex: 1 1 50%;
+}
+.product-details h1{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 42px;
+}
+.product-ratings{
+  font-family:"inter",sans-serif;
+  color:var(--secondary);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 10px;
+}
+.product-ratings span{
+  font-family:"inter",sans-serif;
+  color: var(--para);
+  font-weight: 300;
+  font-size: 14px;
+}
+.discount-price{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 28px;
+  color: var(--discount);
+}
+.original-price{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--h6);
+}
+.quantity-selector label{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  margin: 10px 0;
+  font-size: 17px;
+}
+.quantity-selector .input-group{
+  width: 25%;
+  border: 1px solid var(--h6);
+}
+.stock-Details span{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  margin: 10px 0;
+  font-size: 17px;
+}
+.product-deatils-Buttons #addToCartButton{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  width: 30%;
+  background-color: var(--secondary);
+  color: var(--para);
+  
+}
+.product-deatils-Buttons #Buynow-Button{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  width: 30%;
+  background-color: var(--third2);
+  color: var(--third);
+}
+
+
+.wishlist-btn {
+  border-radius: 50%;
+  background-color:transparent;
+  color: rgb(249, 0, 0);
+  padding: 10px 16px;
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  top:3%;
+  right: 3%;
+}
+.wishlist-btn i{
+  font-size: 25px;
+}
+.wishlist-btn.in-wishlist {
+    color: var(--discount);
+}
+
+.wishlist-btn:hover {
+  background-color: #fdffff;
+  color: rgb(249, 0, 0);
+}
+.Stock{
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 35px;
+  font-size: 18px;
+  padding: 5px 0;
+}
+.description {
+
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 30px;
+  font-size: 14px;
+}
+.description h5 {
+
+  font-family:"inter",sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height:18px;
+  font-size: 16px;
+}
+
+
+.similar-products {
+  margin-top: 40px;
+}
+.similar-products h3 {
+  margin-bottom: 20px;
+}
+.similar-products .product-card {
+  height:340px;
+  overflow: hidden;
+}.similar-products .product-card a img{
+height:180px;
+object-fit: cover;
+}
+
+.review-item h6{
+  font-family:"Poppins",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height:25px;
+  font-size: 16px;
+  color: var(--para);
+}
+.review-item p{
+  font-family:"Inter",sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  line-height:25px;
+  font-size: 15px;
+  color: var(--para);
+}
+.review-item div span{
+  font-family:"inter",sans-serif;
+  color:var(--secondary);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 10px;
+}
+
+
+/*---------------------------- new products------------------------------- */
+                      /* nocss */
+/*---------------------------- new products------------------------------- */
+                   /* nocss */
+
+
+
+
+/* ------------Footer  Section page CSS----------------------------------*/
+
+footer {
+  background-color: var(--footer);
+  padding: 3rem 0;
+  color: var(--third);
+}
+
+.footer_div_ul div ul li a {
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 400;
+line-height: 30px;
+font-family:"Inter", sans-serif;
+}
+
+.footer_div_ul div h6{
+color: var(--h6);
+font-size:13px;
+font-weight: 400;
+text-transform: uppercase;
+}
+
+
+.footer_div_ul div p{
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 400;
+  line-height: 25px;
+  font-family:"Inter", sans-serif;
+}
+.footer_div_uldiv p i{
+  padding: 5px;
+}
+
+.footer_div_ul div li {
+  list-style: none;
+}
+
+.footer_subhead p{
+  text-decoration: none;
+  color: var(--third);
+  font-size:12px;
+  font-weight: 100;
+line-height: auto;
+font-family:"Inter", sans-serif;
+}
+
+
+
+.form_container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    background:var(--third);
+    padding: 40px 20px;
+    max-width: 350px;
+    /* min-height: 60vh; */
+    width: 100%;
+    border-radius: 12px;
+    pointer-events: all;
+display: none;
+    transition: all 0.5s ease-out;
+}
+
+.form_close {
+    position: absolute;
+    top: 30px;
+    right: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    opacity: 0.7;
+}
+
+.log_reg_logo {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.option_field {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+.form_container a {
+    text-decoration: none;
+    font-family: 'Poppins',sans-serif;
+}
+
+.form_container a:hover {
+    text-decoration: underline;
+    transition: all 0.3s ease-in-out;
+}
+
+.signup_form {
+    display: none;
+    
+    
+}
+
+.form_container.active .login_form {
+    display: none;
+}
+
+.form_container.active .signup_form {
+    display: block;
+}
+
+.home.show .form_container {
+    display: block;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+   .home::before {
+    content: "";
+    height: 200%;
+    width: 100%;
+    background-color: #2c2b2ba2;
+    background-position: center;
+    margin-top: -30%;
+    position: fixed;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease-out;
+}  
+
+.home.show::before {
+    opacity: 1;
+    pointer-events: all;
+}
+.Login_Signup{
+  font-size: 12px;
+  font-family: 'Poppins',sans-serif;
+  font-weight: 400;
+  margin: 10px 0;
+}
+#SignUp,#SignIn{
+  font-size: 12px;
+  font-family: 'Poppins',sans-serif;
+  font-weight: 600;
+  color: var(--Carouselbutton);
+}
+.login_form form p,.signup_form form p{
+  margin: 0;
+  font-size: 13px;
+}
+
+
+
+

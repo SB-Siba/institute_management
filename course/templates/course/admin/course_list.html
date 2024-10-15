@@ -1,0 +1,107 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">List Courses</h1>
+        <a href="{% url 'course:add_course' %}" class="btn btn-primary">Add Course</a>
+    </div>
+    
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search" value="{{ search_query }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </form>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sr.</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Course Fees</th>
+                <th>Course MRP</th>
+                <th>Minimum Fees</th>
+                <th>Duration</th>
+                <th>Exam Status</th>
+                <th>Question Bank Status</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in page_obj.object_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ course.course_code }}</td>
+                <td>{{ course.course_name }}</td>
+                <td>{{ course.course_fees }}</td>
+                <td>{{ course.course_mrp }}</td>
+                <td>{{ course.minimum_fees }}</td>
+                <td>{{ course.course_duration }}</td>
+                <td>{{ course.exam_status }}</td>
+                <td>{{ course.question_bank_status }}</td>
+                <td>{{ course.status }}</td>
+                <td>
+                    <a href="{% url 'course:edit_course' course.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-course-id="{{ course.id }}">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        <div>
+            {% if page_obj.has_previous %}
+                <a href="?page=1&q={{ search_query }}" class="btn btn-secondary btn-sm">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Last</a>
+            {% endif %}
+        </div>
+        <div>
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this course?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for handling modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var courseId = button.getAttribute('data-course-id'); // Extract course ID
+        var form = deleteModal.querySelector('#deleteForm');
+        // Generate the URL for the delete form action
+        var deleteUrl = "{% url 'course:delete_course' pk=0 %}".replace('0', courseId);
+        form.action = deleteUrl;
+    });
+});
+</script>
+{% endblock %}

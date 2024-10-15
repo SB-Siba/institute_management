@@ -1,0 +1,79 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container">
+    <h2>All Exams Results</h2>
+    <p class="alert alert-info">
+        Before Applying For Approval Certificate Please Ensure That You Can Enter Both Objective Marks And Practical Marks. After Approval Certificate You Are Not Able To Update Marks.
+    </p>
+    
+    <!-- Search Form -->
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+    
+    <!-- Exam Results Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Photo</th>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Exam Mode</th>
+                <th>Objective Marks</th>
+                <th>Practical Marks</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+                <th>Result</th>
+                <th>Student Exam Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in exam_results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><img src="{{ result.student.photo.url }}" alt="Photo" class="img-thumbnail" width="50"></td>
+                <td>{{ result.student.get_full_name }}</td>
+                <td>{{ result.course.name }}</td>
+                <td>{{ result.exam_mode }}</td>
+                <td>{{ result.objective_marks }}</td>
+                <td>{{ result.practical_marks }}</td>
+                <td>{{ result.percentage }}%</td>
+                <td>{{ result.grade }}</td>
+                <td>{{ result.result }}</td>
+                <td>{{ result.student_exam_date }}</td>
+                <td>
+                    <a href="{% url 'edit_exam_result' result.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'delete_exam_result' result.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="12" class="text-center">No exam results found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock content %}

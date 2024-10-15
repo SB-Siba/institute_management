@@ -1,0 +1,120 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<body>
+    <div class="container">
+        <h2>Add New Student</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+
+            <!-- Installment Details Section -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Installment Details</h4>
+                <button type="button" id="add-more" class="btn btn-success">Add More</button>
+            </div>
+            {{ installment_formset.management_form }}
+            <table class="table table-bordered" id="installment-table">
+                <thead>
+                    <tr>
+                        <th>Installment Name</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in installment_formset %}
+                    <tr class="installment-row">
+                        <td>{{ form.installment_name }}</td>
+                        <td>{{ form.amount }}</td>
+                        <td>{{ form.date }}</td>
+                        <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Register Admission</button>
+            <a href="{% url 'users:student_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const installmentTable = document.getElementById('installment-table');
+            const addMoreButton = document.getElementById('add-more');
+            const courseField = document.getElementById('id_course_of_interest');
+
+            // Function to add new installment row
+            function addInstallmentRow() {
+                const formset = installmentTable.querySelector('tbody');
+                const formRow = formset.querySelector('.installment-row');
+                const newForm = formRow.cloneNode(true);
+
+                // Update form indices for the new formset row
+                const formCount = formset.querySelectorAll('.installment-row').length;
+                newForm.querySelectorAll('input, select').forEach(input => {
+                    const newName = input.name.replace(/-\d+-/, `-${formCount}-`);
+                    input.name = newName;
+                    input.id = input.id.replace(/_\d+_/, `_${formCount}_`);
+                    input.value = '';  // Reset values for the new form
+                });
+
+                formset.appendChild(newForm);
+            }
+
+            // Function to remove installment row
+            function removeInstallmentRow(event) {
+                const row = event.target.closest('.installment-row');
+                if (row) {
+                    row.remove();
+                }
+            }
+
+            // Add more installment button handler
+            addMoreButton.addEventListener('click', addInstallmentRow);
+
+            // Remove installment row handler
+            installmentTable.addEventListener('click', function (event) {
+                if (event.target.classList.contains('remove-row')) {
+                    removeInstallmentRow(event);
+                }
+            });
+
+            // Update student fields based on selected course
+            courseField.addEventListener('change', function () {
+                const courseId = courseField.value;
+                if (courseId) {
+                    fetch(`/users/get_course_details/${courseId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data) {
+                                document.getElementById('id_total_fees').value = data.total_fees || '';
+                                document.getElementById('id_balance').value = data.balance || '';
+                                document.getElementById('id_discount_rate').value = data.discount_rate || '';
+                                document.getElementById('id_discount_amount').value = data.discount_amount || '';
+                                document.getElementById('id_fees_received').value = data.fees_received || '';
+                                document.getElementById('id_remarks').value = data.remarks || '';
+                            }
+                        })
+                        .catch(error => console.error('Error fetching course details:', error));
+                } else {
+                    clearFields();
+                }
+            });
+
+            // Function to clear course details fields
+            function clearFields() {
+                document.getElementById('id_total_fees').value = '';
+                document.getElementById('id_balance').value = '';
+                document.getElementById('id_discount_rate').value = '';
+                document.getElementById('id_discount_amount').value = '';
+                document.getElementById('id_fees_received').value = '';
+                document.getElementById('id_remarks').value = '';
+            }
+        });
+    </script>
+</body>
+{% endblock content %}
