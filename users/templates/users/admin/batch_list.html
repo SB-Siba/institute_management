@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center"> 
         <h2>List Batches</h2>
         <a href="{% url 'users:add_new_batch' %}" class="btn btn-primary">Add New Batch</a>
     </div>
@@ -10,13 +10,13 @@
         <form action="{% url 'users:online_class_filter' %}" method="get" class="form-inline">
             <label for="entries" class="mr-2">Show</label>
             <select id="entries" class="form-select d-inline-block w-auto mr-2" name="pagination">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
+                <option value="10" {% if request.GET.pagination == "10" %}selected{% endif %}>10</option>
+                <option value="25" {% if request.GET.pagination == "25" %}selected{% endif %}>25</option>
+                <option value="50" {% if request.GET.pagination == "50" %}selected{% endif %}>50</option>
             </select>
             <label for="entries" class="mr-4">entries</label>
 
-            <input type="text" id="search" class="form-control w-auto d-inline-block mr-2" name="search_query" placeholder="Search">
+            <input type="text" id="search" class="form-control w-auto d-inline-block mr-2" name="search_query" value="{{ search_query }}" placeholder="Search">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
@@ -33,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for batch in online_classes %}
+            {% for batch in page_obj %}
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ batch.name }}</td>
@@ -46,6 +46,10 @@
                     </button>
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No batches found matching your search.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -57,7 +61,7 @@
             <ul class="pagination">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    <a class="page-link" href="?search_query={{ search_query }}&pagination={{ request.GET.pagination }}&page={{ page_obj.previous_page_number }}">Previous</a>
                 </li>
                 {% endif %}
                 {% for num in page_obj.paginator.page_range %}
@@ -67,13 +71,13 @@
                 </li>
                 {% else %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    <a class="page-link" href="?search_query={{ search_query }}&pagination={{ request.GET.pagination }}&page={{ num }}">{{ num }}</a>
                 </li>
                 {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="page-link" href="?search_query={{ search_query }}&pagination={{ request.GET.pagination }}&page={{ page_obj.next_page_number }}">Next</a>
                 </li>
                 {% endif %}
             </ul>

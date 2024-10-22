@@ -47,6 +47,13 @@ INSTALLED_APPS = [
     'course',
     'certificate',
 ]
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
 
 
 MIDDLEWARE = [

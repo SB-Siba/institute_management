@@ -111,7 +111,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     referral_name = models.CharField(max_length=50, blank=True)
     referral_code = models.CharField(max_length=50, blank=True)
     aadhar_card_number = models.CharField(max_length=12, blank=True)
-    caste = models.CharField(max_length=50, blank=True)
+    caste = models.CharField(
+    max_length=50,
+    choices=[
+        ('General', 'General'),
+        ('OBC', 'OBC'),
+        ('SC/ST', 'SC/ST'),
+        ('Others', 'Others'),
+    ],
+)
     qualification = models.CharField(max_length=100, blank=True)
     occupation = models.CharField(max_length=100, blank=True)
     batch = models.ForeignKey('Batch', on_delete=models.SET_NULL, null=True, blank=True)
@@ -124,7 +132,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     discount_amount = models.FloatField(default=0.0, null=True, blank=True)
     total_fees = models.FloatField(default=0.0, null=True, blank=True, editable=False)
     fees_received = models.FloatField(default=0.0, null=True, blank=True)
-    balance = models.FloatField(default=0.0, null=True, blank=True, editable=False)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
     remarks = models.TextField(blank=True)
 
     is_active = models.BooleanField(default=True)
@@ -140,45 +148,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = MyAccountManager()
 
-    def clean(self):
-        """
-        Calculate the discount amount and total fees based on the discount rate and type.
-        """
-        if self.course_fees is None:
-            raise ValidationError('Course fees must be set.')
-
-        # Convert float values to Decimal for arithmetic operations
-        course_fees = Decimal(self.course_fees) if self.course_fees else Decimal(0)
-        fees_received = Decimal(self.fees_received) if self.fees_received else Decimal(0)
-        
-        discount_amount = Decimal(0)
-
-        if self.discount_rate == 'amount-':
-            discount_amount = min(course_fees, Decimal(self.discount_amount))
-        elif self.discount_rate == 'percent-':
-            discount_amount = (course_fees * Decimal(self.discount_amount)) / Decimal(100)
-
-        self.discount_amount = discount_amount
-        self.total_fees = course_fees - discount_amount
-        self.balance = self.total_fees - fees_received
-
-        # Ensure balance is non-negative
-        if self.balance < 0:
-            raise ValidationError('Balance cannot be negative.')
-
     def save(self, *args, **kwargs):
-        if not self.username:
-            self.username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))  # Generates an 8-character string like "G4U6PB5T"
-        
-        if not self.password:
-            self.password = ''.join(random.choices(string.digits, k=10))  # Generates a 10-digit string like "9364528710"
-
-
+        # Ensure course fees and balance are set when the course of interest is selected
         if self.course_of_interest:
-            self.course_fees = self.course_of_interest.course_fees
+            self.course_fees = self.course_of_interest.course_fees  # Automatically fetch the course fees from the selected course
+            self.total_fees = self.course_fees - Decimal(self.discount_amount or 0)
+            self.balance = self.total_fees - Decimal(self.fees_received or 0)
         else:
             self.course_fees = 0.0
-        self.clean()
+            self.total_fees = 0.0
+            self.balance = 0.0
+
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -199,23 +179,6 @@ class Payment(models.Model):
     amount = models.FloatField(default=0.0, null=True, blank=True)
     date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-
-class Franchise(models.Model):
-    approved = models.BooleanField(default=False)
-    action = models.TextField()
-    logo = models.ImageField(upload_to='franchise_logos/')
-    institute_name = models.CharField(max_length=255)
-    no_of_students = models.IntegerField(default=0)
-    state = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    atc_code = models.CharField(max_length=100)
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=15)
-    status = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.institute_name
     
 class ReferralSettings(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=300.00)
@@ -233,3 +196,10 @@ class OnlineClass(models.Model):
     def __str__(self):
         return self.title
     
+class Attendance(models.Model):
+    student = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
+
+    def __str__(self):
+        return f"{self.student.name} - {self.date} - {self.status}"

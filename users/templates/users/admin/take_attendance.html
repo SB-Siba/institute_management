@@ -1,30 +1,59 @@
-<!-- take_attendance.html -->
 {% extends 'users/admin/base.html' %}
 {% load static %}
+
 {% block content %}
 <div class="container">
     <h2>Take Attendance</h2>
-    <form method="GET" action="{% url 'users:take_attendance' %}">
+
+    <form method="get" action="" class="form-inline">
         <div class="form-group">
-            <label for="batch">Select Batch:</label>
-            <select id="batch" name="batch" class="form-control">
-                <option value="">-- Select Batch --</option>
-                <option value="batch1">Batch 1</option>
-                <option value="batch2">Batch 2</option>
-                <option value="batch3">Batch 3</option>
-                <option value="batch4">Batch 4</option>
-                <option value="batch5">Batch 5</option>
-                <option value="batch6">Batch 6</option>
+            <label for="batch">Batch:</label>
+            <select name="batch" id="batch" class="form-control" onchange="this.form.submit()">
+                <option value="">Select Batch</option>
+                {% for batch in batches %}
+                    <option value="{{ batch.id }}" {% if batch.id == selected_batch %}selected{% endif %}>
+                        {{ batch.name }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
+
         <div class="form-group">
-            <label for="date">Select Date:</label>
-            <input type="date" id="date" name="date" class="form-control" value="{{ today_date }}">
-        </div>
-        <div class="form-group">
-            <button type="submit" name="action" value="load" class="btn btn-primary">Load</button>
-            <button type="submit" name="action" value="refresh" class="btn btn-secondary">Refresh</button>
+            <label for="date">Date:</label>
+            <input type="date" name="date" class="form-control" value="{{ today_date }}" onchange="this.form.submit()">
         </div>
     </form>
+
+    {% if students %}
+        <form method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" name="batch" value="{{ selected_batch }}">
+            <input type="hidden" name="date" value="{{ today_date }}">
+            <table class="table table-bordered table-striped mt-4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.full_name }}</td>
+                            <td>
+                                <select name="attendance_{{ student.id }}" class="form-control">
+                                    <option value="Present" {% if attendance_status_map and attendance_status_map.student.id == 'Present' %}selected{% endif %}>Present</option>
+                                    <option value="Absent" {% if attendance_status_map and attendance_status_map.student.id == 'Absent' %}selected{% endif %}>Absent</option>
+                                </select>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-success">Submit Attendance</button>
+        </form>
+    {% else %}
+        <p>Please select a batch to take attendance.</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,9 +1,12 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 from django.core.paginator import Paginator
+from course.models import Course
+from course.forms import CourseForm
 
 
 from course.forms import AwardCategoryForm, CourseForm
@@ -84,36 +87,98 @@ class CourseListView(View):
             'search_query': search_query
         }
         return render(request, self.template_name, context)
-    
+
 class CourseCreateView(View):
     template_name = app + 'add_course.html'
 
-    def get(self, request):
-        form = CourseForm()
-        return render(request, self.template_name, {'form': form})
+    def get(self, request, pk=None):
+        if pk:  # Editing an existing course
+            course = get_object_or_404(Course, pk=pk)
+            form = CourseForm(instance=course)
+            subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
+        else:  # Adding a new course
+            course = None
+            form = CourseForm()
+            subjects = []
 
-    def post(self, request):
-        form = CourseForm(request.POST, request.FILES)
+        return render(request, self.template_name, {'form': form, 'course': course, 'subjects': subjects})
+
+    def post(self, request, pk=None):
+        # Initialize course variable to avoid UnboundLocalError
+        course = None
+
+        if pk:  # Editing an existing course
+            course = get_object_or_404(Course, pk=pk)
+            form = CourseForm(request.POST, request.FILES, instance=course)
+        else:  # Adding a new course
+            form = CourseForm(request.POST, request.FILES)
+
         if form.is_valid():
-            form.save()
+            course = form.save(commit=False)
+
+            # Get subjects from the hidden input
+            subjects_json = request.POST.get('subjects')
+            if subjects_json:
+                existing_subjects = json.loads(subjects_json)  # Load JSON string to list
+                course.course_subject = ', '.join(existing_subjects)  # Join subjects into a single string
+
+            course.save()
+
+            messages.success(request, "Course added successfully!")  # Flash message
             return redirect(reverse_lazy('course:course_list'))
-        return render(request, self.template_name, {'form': form})
-    
+        else:
+            print(form.errors)
+        # If form is invalid, retrieve existing subjects if editing
+        existing_subjects = course.course_subject.split(',') if course and course.course_subject else []
+
+        return render(request, self.template_name, {'form': form, 'course': course, 'subjects': existing_subjects})
+
 class CourseEditView(View):
-    template_name = app + 'edit_course.html'
+    template_name = app + 'edit_course.html'  # Adjust to your actual template path
 
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(instance=course)
-        return render(request, self.template_name, {'form': form, 'course': course})
+
+        # Split existing subjects and clean up whitespace
+        subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
+
+        return render(request, self.template_name, {
+            'form': form,
+            'course': course,
+            'subjects': subjects  # Pass existing subjects to the template
+        })
 
     def post(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(request.POST, request.FILES, instance=course)
+
         if form.is_valid():
-            form.save()
-            return redirect('course:course_list')  # Redirect to course list after saving
-        return render(request, self.template_name, {'form': form, 'course': course})
+            # Save the updated course instance
+            course = form.save(commit=False)
+
+            # Get existing subjects and new subjects from the form
+            existing_subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
+            new_subjects = request.POST.getlist('course_subject')
+
+            # Combine existing and new subjects, remove duplicates and empty entries
+            all_subjects = list(set(existing_subjects + [subject.strip() for subject in new_subjects if subject.strip()]))
+
+            # Join them into a single string and save
+            course.course_subject = ', '.join(all_subjects)
+            course.save()  # Save the updated course instance
+
+            return redirect(reverse_lazy('course:course_list'))  # Redirect after saving
+
+        # If form is not valid, render the form again with existing subjects
+        subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
+        
+        return render(request, self.template_name, {
+            'form': form,
+            'course': course,
+            'subjects': subjects  # Make sure this variable is defined here
+        })
+
     
 class CourseDeleteView(View):
     def post(self, request, *args, **kwargs):

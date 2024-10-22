@@ -1,3 +1,5 @@
+from collections import defaultdict
+from decimal import Decimal
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -8,16 +10,18 @@ from django.forms import formset_factory, modelformset_factory
 from users import models,forms
 from users.forms import BatchForm, OnlineClassForm, StudentForm, InstallmentForm, StudentPaymentForm
 from django.forms import formset_factory 
-from users.models import Installment, OnlineClass, Payment, Batch, Franchise, ReferralSettings, User
+from users.models import Installment, OnlineClass, Payment, Batch, ReferralSettings, User
 from course.models import Course
 import csv
 from django.http import HttpResponse
 from django.contrib import messages
-from datetime import date
+from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.views.generic import UpdateView
 
+from users.models import Attendance
 app = "users/admin/"
 
 # admin dashboard and manage users list
@@ -86,57 +90,67 @@ class StudentDetailView(View):
 
 def get_course_fee(request):
     course_id = request.GET.get('course_id')
-    try:
-        course = Course.objects.get(id=course_id)
-        return JsonResponse({'course_fee': course.course_fee})
-    except Course.DoesNotExist:
-        return JsonResponse({'error': 'Course not found'}, status=404)
+    if course_id:
+        try:
+            course = Course.objects.get(id=course_id)
+            return JsonResponse({
+                'total_fees': course.total_fees,
+                'balance': course.balance,
+                'discount_rate': course.discount_rate,
+                'discount_amount': course.discount_amount,
+                'fees_received': course.fees_received,
+                'remarks': course.remarks,
+            })
+        except Course.DoesNotExist:
+            return JsonResponse({'error': 'Course not found'}, status=404)
+    return JsonResponse({'error': 'No course_id provided'}, status=400)
 
 class AddNewStudentView(View):
-    template = app +'add_new_student.html'  # Update this path as needed
+    model = models.User
+    template = app + 'add_new_student.html'  # Update this path as needed
 
     def get(self, request):
         user_form = StudentForm()
         InstallmentFormSet = formset_factory(InstallmentForm, extra=1)
         installment_formset = InstallmentFormSet()
         batch = Batch.objects.all()
-        print(batch)
-        for i in batch:
-            print(i.name)
-            print(i.number_of_students)
+        courses = Course.objects.all()
         return render(request, self.template, {
             'user_form': user_form,
-            'installment_formset': installment_formset
+            'installment_formset': installment_formset,
+            'courses': courses,
         })
 
     def post(self, request):
-        user_form = StudentForm(request.POST, request.FILES)
+        user_form = StudentForm(request.POST, request.FILES)  # Ensure request.FILES is passed
         InstallmentFormSet = formset_factory(InstallmentForm, extra=1)
         installment_formset = InstallmentFormSet(request.POST)
 
         if user_form.is_valid() and installment_formset.is_valid():
             try:
-                student = user_form.save()
+                # Save the student form, including the file upload
+                student = user_form.save(commit=False)
+
+                # Check if student_image file is uploaded
+                if 'student_image' in request.FILES:
+                    student.student_image = request.FILES['student_image']
+
+                student.save()
+
+                # Save the installment forms
                 for form in installment_formset:
                     if form.cleaned_data and form.cleaned_data.get('installment_name'):
-                        try:
-                            installment = form.save(commit=False)
-                            installment.student = student
-                            installment.save()
-                        except ValueError as e:
-                            print("Error saving installment:", e)
-                            messages.error(request, 'There was an error saving the installment.')
-                            return render(request, self.template, {
-                                'user_form': user_form,
-                                'installment_formset': installment_formset
-                            })
+                        installment = form.save(commit=False)
+                        installment.student = student  # Link the installment to the student
+                        installment.save()
                 messages.success(request, 'Student added successfully!')
                 return redirect('users:student_list')
+
             except ValueError as e:
-                print("Error processing form data:", e)
-                messages.error(request, 'There was an error processing your request.')
+                messages.error(request, f"There was an error: {e}")
         else:
-            print("Form errors:", user_form.errors)
+            # Handle form validation errors
+            print("User form errors:", user_form.errors)
             print("Installment formset errors:", installment_formset.errors)
 
         return render(request, self.template, {
@@ -294,13 +308,153 @@ class AddNewPaymentView(View):
         return render(request, self.template, {'form': form})
 
 class TakeAttendanceView(View):
-    template = app + "take_attendance.html"
-    
+    template =  app + "take_attendance.html"  # Adjust the template path according to your structure
+
     def get(self, request):
-        today_date = date.today().strftime('%Y-%m-%d')
-        context = {'today_date': today_date}
+        today_date = request.GET.get('date', date.today().strftime('%Y-%m-%d'))
+        selected_batch = request.GET.get('batch', None)
+
+        # Fetch batches and students based on the selected batch
+        batches = Batch.objects.all()
+        students = User.objects.filter(batch__id=selected_batch) if selected_batch else None
+        attendance_records = Attendance.objects.filter(date=today_date, student__batch__id=selected_batch) if selected_batch else []
+
+        # Create a dictionary to store attendance status by student ID
+        attendance_status_map = {record.student.id: record.status for record in attendance_records}
+
+        context = {
+            'today_date': today_date,
+            'batches': batches,
+            'students': students,
+            'attendance_status_map': attendance_status_map,  # Pass the attendance status map
+            'selected_batch': selected_batch
+        }
         return render(request, self.template, context)
+
+    def post(self, request):
+        selected_batch = request.POST.get('batch')
+        attendance_date = request.POST.get('date', date.today())
+
+        students = User.objects.filter(batch__id=selected_batch)
+
+        # Update or create attendance records for each student
+        for student in students:
+            attendance_status = request.POST.get(f'attendance_{student.id}')
+            Attendance.objects.update_or_create(
+                student=student,
+                date=attendance_date,
+                defaults={'status': attendance_status}
+            )
+
+        return redirect('users:take_attendance')
     
+class AttendanceReportView(View):
+    template = app + "attendance_report.html"
+
+    def get(self, request):
+        selected_batch = request.GET.get('batch', None)
+        start_date = request.GET.get('start_date', None)
+        end_date = request.GET.get('end_date', None)
+
+        # Fetch all batches
+        batches = Batch.objects.all()
+
+        students = None
+        attendance_data = []
+        date_range = []
+
+        if selected_batch and start_date and end_date:
+            start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+            date_range = [start_date_obj + timedelta(days=i) for i in range((end_date_obj - start_date_obj).days + 1)]
+
+            # Fetch students enrolled in the selected batch
+            students = User.objects.filter(batch__id=selected_batch).select_related('course_of_interest')
+
+            # Fetch attendance records for students in the selected batch
+            attendance_records = Attendance.objects.filter(
+                student__batch__id=selected_batch,
+                date__range=[start_date_obj, end_date_obj]
+            ).select_related('student')
+
+            # Create a map for attendance data, defaulting to 'Not Attended'
+            attendance_map = defaultdict(lambda: {date: 'Not Attended' for date in date_range})
+
+            # Populate attendance_map with attendance records
+            for record in attendance_records:
+                attendance_map[record.student.id][record.date] = record.status
+
+            # Prepare attendance data for each student
+            for student in students:
+                attendance_row = []
+                for date in date_range:
+                    attendance_row.append({
+                        'date': date,
+                        'status': attendance_map[student.id].get(date, 'Not Attended')
+                    })
+                attendance_data.append({
+                    'student': student,
+                    'attendance_row': attendance_row,
+                    'course_name': student.course_of_interest.course_name if student.course_of_interest else ''
+                })
+
+        context = {
+            'batches': batches,
+            'students': students,
+            'attendance_data': attendance_data,
+            'date_range': date_range,
+            'selected_batch': selected_batch,
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        return render(request, self.template, context)
+
+class StudentAttendanceReportView(View):
+    template_name = app +'student_attendance_report.html'  # Adjust your template path
+
+    def get(self, request):
+        students = User.objects.all()  # Fetch all students
+        selected_student = request.GET.get('student', None)
+        selected_course = None
+        attendance_data = []
+        date_range = []
+
+        if selected_student:
+            selected_student_obj = User.objects.get(id=selected_student)
+            selected_course = selected_student_obj.course_of_interest
+
+            # Set up the date range for attendance
+            start_date = request.GET.get('start_date', None)
+            end_date = request.GET.get('end_date', None)
+            if start_date and end_date:
+                start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+                end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+                date_range = [start_date_obj + timedelta(days=i) for i in range((end_date_obj - start_date_obj).days + 1)]
+
+                # Fetch attendance records for the selected student and date range
+                attendance_records = Attendance.objects.filter(
+                    student=selected_student_obj,
+                    date__range=[start_date_obj, end_date_obj]
+                )
+
+                # Build the attendance_data list with date and status
+                for date in date_range:
+                    status = 'Not Attended'  # Default status
+                    for record in attendance_records:
+                        if record.date == date:
+                            status = record.status
+                            break
+                    attendance_data.append({'date': date, 'status': status})
+
+        context = {
+            'students': students,
+            'selected_student': selected_student_obj if selected_student else None,
+            'selected_course': selected_course,
+            'attendance_data': attendance_data,
+            'date_range': date_range,
+        }
+        return render(request, self.template_name, context)
+
 class BatchDetailsView(View):
     template = app + "batch_details.html"
     
@@ -309,28 +463,6 @@ class BatchDetailsView(View):
         batches = Batch.objects.all()
         context = {'batches': batches}
         return render(request, self.template, context)
-    
-class FranchiseListView(View):
-    template = app + "franchise_list.html"
-
-    def get(self, request):
-        franchises = Franchise.objects.all()
-
-        paginator = Paginator(franchises, 10)
-        page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-
-        context = {
-            'franchises': page_obj,
-        }
-
-        return render(request, self.template, context)
-        
-class AddNewFranchiseView(View):
-    template_name = app + "add_new_franchise.html"
-    
-    def get(self, request):
-        return render(request, self.template_name)    
 
 class ReferralAmountView(View):
     template = app + "referral_amount.html"
@@ -370,26 +502,28 @@ class FilterClass(View):
     template_name = app + 'online_class_list.html'
 
     def get(self, request):
+        # Get search query and pagination size from GET parameters
         search_query = request.GET.get('search_query', '')
-        pagination = request.GET.get('pagination', '')
+        pagination_size = request.GET.get('pagination', 10)  # Default to 10 entries per page if not provided
 
-        print(search_query,pagination)
+        # Filter the online classes based on the search query (or show all if no query is provided)
         if search_query:
-            online_classes = OnlineClass.objects.filter(course__course_name__icontains = search_query).order_by('id')
-        if pagination:
-            paginator = Paginator(online_classes, pagination)
+            online_classes = OnlineClass.objects.filter(course__course_name__icontains=search_query).order_by('id')
+        else:
+            online_classes = OnlineClass.objects.all().order_by('id')
 
- 
+        paginator = Paginator(online_classes, pagination_size)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         context = {
-            "online_classes":online_classes,
+            "online_classes": page_obj,  # Use page_obj to show paginated results
             'page_obj': page_obj,
-            'search_query': search_query
+            'search_query': search_query,
         }
 
         return render(request, self.template_name, context)
+    
 class AddOnlineClassView(View):
     form_class = OnlineClassForm
     template_name = app + 'add_online_class.html'
@@ -433,11 +567,13 @@ class AddNewBatchView(View):
             form.save()
             return redirect('users:list_batches')
         return render(request, self.template_name, {'form': form})
-    
-class BatchUpdateView(View):
+
+
+
+class BatchUpdateView(UpdateView):
     model = Batch
     form_class = BatchForm
-    template_name = app + 'edit_batch.html'
+    template_name = app + 'edit_batch.html' 
     success_url = reverse_lazy('users:list_batches')
     
 class BatchDeleteView(View):
@@ -461,3 +597,31 @@ class StudentFeesListView(View):
             "students": students,
         }
         return render(request, self.template, context)
+
+def course_selection_view(request):
+    selected_course = None
+    if request.method == 'POST':
+        course_id = request.POST.get('course')
+        selected_course = Course.objects.get(id=course_id)
+
+    courses = Course.objects.all()
+    return render(request, 'course_selection.html', {
+        'courses': courses,
+        'selected_course': selected_course
+    })
+
+def get_course_details(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+        data = {
+            'total_fees': course.total_fees,
+            'balance': course.balance,
+            'discount_rate': course.discount_rate,
+            'discount_amount': course.discount_amount,
+            'fees_received': course.fees_received,
+            'remarks': course.remarks,
+        }
+        return JsonResponse(data)
+    except Course.DoesNotExist:
+        return JsonResponse({'error': 'Course not found.'}, status=404)
+

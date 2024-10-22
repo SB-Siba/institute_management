@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
 from users.models import Batch, OnlineClass, User, Installment, Payment, User, Course
@@ -5,6 +6,8 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
+from django import forms
+from django.forms.widgets import HiddenInput
 
 class SignUpForm(forms.Form):
 
@@ -138,10 +141,6 @@ class AddUserForm(forms.ModelForm):
 
     # Optionally, you can add custom validation or widgets
     password = forms.CharField(widget=forms.PasswordInput)
-
-
-from django import forms
-from django.forms.widgets import HiddenInput
 
 class StudentForm(forms.ModelForm):
     total_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))

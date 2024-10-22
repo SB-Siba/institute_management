@@ -10,40 +10,51 @@
                 <div class="col-12">
                     <div class="form-group">
                         {{ field.label_tag }}
-                        {{ field }}
+                        {% if field.name == 'course_subject' %}
+                            <div class="input-group">
+                                <input type="text" name="course_subject" class="form-control" placeholder="Course Subject" value="{{ course.course_subject }}">
+                                <button type="button" id="add-subject" class="btn btn-secondary">Add Subject</button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- PDF Files Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="pdf-files">PDF Files</label>
-                    <div id="pdf-files-container">
-                        <!-- Existing PDF file inputs will be here -->
-                    </div>
-                    <button type="button" id="add-pdf-file" class="btn btn-primary mt-2">Add More PDF Files</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Video Links Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="video-links">Video Links</label>
-                    <div id="video-links-container">
-                        <!-- Existing video link inputs will be here -->
-                    </div>
-                    <button type="button" id="add-video-link" class="btn btn-primary mt-2">Add More Videos</button>
-                </div>
-            </div>
-        </div>
-
         <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Save Changes</button>
         <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
     </form>
+
+    <div id="added-subjects" class="mt-4">
+        <h5>Added Subjects</h5>
+        <ul id="subject-list">
+            {% for subject in subjects %}
+                <li>{{ subject }}</li>  <!-- Display existing subjects -->
+            {% endfor %}
+        </ul>
+    </div>
 </div>
+
+<script>
+document.getElementById('add-subject').addEventListener('click', function() {
+    const subjectInput = document.querySelector('input[name="course_subject"]');
+    const subjectValue = subjectInput.value.trim();
+
+    if (subjectValue) {
+        const subjectList = document.getElementById('subject-list');
+        const newListItem = document.createElement('li');
+        newListItem.textContent = subjectValue;
+
+        // Append the new subject to the list
+        subjectList.appendChild(newListItem);
+
+        // Clear the input field
+        subjectInput.value = '';
+    } else {
+        alert('Please enter a subject.');
+    }
+});
+</script>
 {% endblock %}

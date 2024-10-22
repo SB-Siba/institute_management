@@ -1,8 +1,17 @@
 {% extends 'users/admin/base.html' %}
 {% block content %}
-<div class="container">
-    <h1 class="h3">Add Course</h1>
-    <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+<div class="container mt-4">
+    <h2>{% if course %}Edit{% else %}Add{% endif %} Course</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form id="course-form" action="" method="post" enctype="multipart/form-data" class="lh-lg">
         {% csrf_token %}
         {{ form.media }}
         <div class="row">
@@ -10,64 +19,73 @@
                 <div class="col-12">
                     <div class="form-group">
                         {{ field.label_tag }}
-                        {{ field }}
+                        {% if field.name == 'course_subject' %}
+                            <div class="input-group">
+                                <input type="text" id="course_subject_input" name="course_subject" placeholder="Enter subject" class="form-control" />
+                                <button type="button" id="add-subject" class="btn btn-secondary">Add Subject</button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- PDF Files Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="pdf-files">PDF Files</label>
-                    <div id="pdf-files-container">
-                        <!-- Existing PDF file inputs will be here -->
-                    </div>
-                    <button type="button" id="add-pdf-file" class="btn btn-primary mt-2">Add More PDF Files</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Video Links Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="video-links">Video Links</label>
-                    <div id="video-links-container">
-                        <!-- Existing video link inputs will be here -->
-                    </div>
-                    <button type="button" id="add-video-link" class="btn btn-primary mt-2">Add More Videos</button>
-                </div>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Add Your Course</button>
+        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">
+            {% if course %}Save Changes{% else %}Add Course{% endif %}
+        </button>
         <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
     </form>
+
+    <div id="added-subjects" class="mt-4">
+        <h5>Added Subjects</h5>
+        <ul id="subject-list">
+            {% for subject in subjects %}
+                <li>{{ subject }}</li>
+            {% endfor %}
+        </ul>        
+    </div>
 </div>
 
 <script>
-document.getElementById('add-video-link').addEventListener('click', function() {
-    let container = document.getElementById('video-links-container');
-    let index = container.children.length;
-    let newRow = document.createElement('div');
-    newRow.classList.add('video-link-row');
-    newRow.innerHTML = `<div class="d-flex mb-2">
-                            <input type="text" name="video_links[${index}][title]" placeholder="Video Title" class="form-control me-2" style="max-width: 300px;">
-                            <input type="url" name="video_links[${index}][link]" placeholder="Video Link" class="form-control" style="max-width: 300px;">
-                        </div>`;
-    container.appendChild(newRow);
-});
-
-document.getElementById('add-pdf-file').addEventListener('click', function() {
-    let container = document.getElementById('pdf-files-container');
-    let newFileInput = document.createElement('input');
-    newFileInput.type = 'file';
-    newFileInput.name = 'pdf_files';
-    newFileInput.classList.add('form-control', 'mb-2');
-    newFileInput.accept = 'application/pdf';
-    container.appendChild(newFileInput);
-});
+    let subjectsArray = [];
+    
+    // Event listener for the "Add Subject" button
+    document.getElementById('add-subject').addEventListener('click', function() {
+        const subjectInput = document.getElementById('course_subject_input');
+        const subjectValue = subjectInput.value.trim();
+    
+        if (subjectValue) {
+            // Add subject to the array and display in the list
+            subjectsArray.push(subjectValue);
+    
+            const subjectList = document.getElementById('subject-list');
+            const newListItem = document.createElement('li');
+            newListItem.textContent = subjectValue;
+            subjectList.appendChild(newListItem);
+    
+            // Clear the input field
+            subjectInput.value = '';
+        } else {
+            alert('Please enter a subject.');
+        }
+    });
+    
+    // On form submission, store subjects in a hidden input
+    document.getElementById('course-form').addEventListener('submit', function(event) {
+        // Prevent default form submission to allow appending the hidden input first
+        event.preventDefault();
+    
+        const subjectsInput = document.createElement('input');
+        subjectsInput.type = 'hidden';
+        subjectsInput.name = 'course_subject'; // Set to course_subject to send in POST data
+        subjectsInput.value = subjectsArray.join(', '); // Convert array to a comma-separated string
+        this.appendChild(subjectsInput);
+    
+        // Now submit the form
+        this.submit();
+    });
 </script>
+    
 {% endblock %}

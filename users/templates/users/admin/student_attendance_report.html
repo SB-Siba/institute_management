@@ -1,0 +1,67 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2>Student-wise Attendance Report</h2>
+
+    <!-- Form to select student -->
+    <form method="GET" action="{% url 'users:student_attendance_report' %}">
+        <div class="form-group">
+            <label for="student">Select Student:</label>
+            <select id="student" name="student" class="form-control">
+                <option value="">-- Select Student --</option>
+                {% for student in students %}
+                <option value="{{ student.id }}" {% if request.GET.student == student.id|stringformat:"s" %}selected{% endif %}>
+                    {{ student.full_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="start_date">Select Start Date:</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+        </div>
+
+        <div class="form-group">
+            <label for="end_date">Select End Date:</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Get Report</button>
+    </form>
+
+    {% if selected_student %}
+    <!-- Display student details -->
+    <div class="student-details">
+        <h3>Student: {{ selected_student.full_name }}</h3>
+        <p>Course: {{ selected_course.course_name }}</p>
+        <img src="{{ selected_student.student_image.url }}" alt="{{ selected_student.full_name }}" class="img-thumbnail" style="max-width: 150px;">
+    </div>
+
+    <!-- Display attendance records -->
+    <h3>Attendance Records</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Date</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ record.date }}</td>
+                <td>{{ record.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No student selected.</p>
+    {% endif %}
+</div>
+{% endblock %}

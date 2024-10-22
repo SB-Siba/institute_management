@@ -25,39 +25,37 @@ class AwardCategoryForm(forms.ModelForm):
         }
 
 class CourseForm(forms.ModelForm):
-    award = forms.ModelChoiceField(
-        queryset=AwardCategory.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        required=False
-    )
-
     class Meta:
         model = Course
         fields = [
             'course_code', 'award', 'course_name', 'course_subject', 'course_fees',
             'course_mrp', 'minimum_fees', 'course_duration','exam_fees', 'course_video_link_1', 
-            'course_video_link_2', 'course_syllabus','eligibility', 'course_image', 'course_video_links',
+            'course_video_link_2', 'course_syllabus', 'eligibility', 'course_image', 'course_video_links',
             'display_course_fees_on_website', 'status'
         ]
         widgets = {
             'course_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'award': forms.Select(attrs={'class': 'form-control'}),  # Ensure proper widget usage
             'course_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'course_subject': forms.TextInput(attrs={'class': 'form-control'}),
+            'course_subject': forms.TextInput(attrs={'class': 'form-control', 'id': 'course-subject-input'}),
             'course_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_mrp': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'minimum_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 30 hours'}),
             'exam_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'course_video_link_1': forms.URLInput(attrs={'class': 'form-control'}),
-            'course_video_link_2': forms.URLInput(attrs={'class': 'form-control'}),
-            'course_syllabus': CKEditorWidget(attrs={'class': 'form-control'}),
-            'eligibility': CKEditorWidget(attrs={'class': 'form-control'}),
-            'course_image': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'course_syllabus': forms.Textarea(attrs={'class': 'form-control'}),
+            'eligibility': forms.Textarea(attrs={'class': 'form-control'}),
+            'course_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'course_video_links': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')], attrs={'class': 'form-control'}),
-            'status': forms.RadioSelect(choices=[('Active', 'Active'), ('Inactive', 'Inactive')], attrs={'class': 'form-control'}),
+            'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
+            'status': forms.RadioSelect(choices=[('Active', 'Active'), ('Inactive', 'Inactive')]),
         }
+
+
+    def clean_course_subject(self):
+        subjects = self.cleaned_data.get('course_subject')
+        # Ensure that subjects are stored as a comma-separated string without trailing commas
+        return ','.join([subject.strip() for subject in subjects.split(',') if subject.strip()])
+
 
     def clean_pdf_files(self):
         pdf_files = self.files.getlist('pdf_files')
