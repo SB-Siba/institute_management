@@ -1,48 +1,33 @@
 {% extends 'users/admin/base.html' %}
+
 {% block content %}
 <div class="container mt-4">
-    <h2>Edit Course</h2>
-    <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+    <h2>{% if course %}Edit{% else %}Add{% endif %} Course</h2>
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.media }}
-        <div class="row">
-            {% for field in form %}
-                <div class="col-12">
-                    <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field }}
-                    </div>
-                </div>
-            {% endfor %}
+        {{ form.as_p }}
+        
+        <div class="form-group">
+            <label for="course-subject-input">Subjects</label>
+            <input type="text" id="course-subject-input" name="course_subject" class="form-control" placeholder="Enter subject">
         </div>
 
-        <!-- PDF Files Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="pdf-files">PDF Files</label>
-                    <div id="pdf-files-container">
-                        <!-- Existing PDF file inputs will be here -->
-                    </div>
-                    <button type="button" id="add-pdf-file" class="btn btn-primary mt-2">Add More PDF Files</button>
-                </div>
-            </div>
-        </div>
+        <button type="submit" name="add_subject" class="btn btn-primary">Add Subject</button>
 
-        <!-- Video Links Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="video-links">Video Links</label>
-                    <div id="video-links-container">
-                        <!-- Existing video link inputs will be here -->
-                    </div>
-                    <button type="button" id="add-video-link" class="btn btn-primary mt-2">Add More Videos</button>
-                </div>
-            </div>
-        </div>
+        {% if subjects %}
+            <ul>
+                {% for subject in subjects %}
+                    <li>
+                        {{ subject.name }}
+                        <button type="submit" name="delete_subject" value="{{ forloop.counter0 }}" class="btn btn-danger">Delete</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Save Changes</button>
+        <button type="submit" name="{% if course %}edit_course{% else %}add_course{% endif %}" class="btn btn-success">
+            {% if course %}Save Changes{% else %}Save Course{% endif %}
+        </button>
         <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
     </form>
 </div>

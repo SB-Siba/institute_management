@@ -6,6 +6,8 @@ from users import forms
 from users.user_views import user_views,admin_views,authentication_views
 from app_common.app_common_views import app_common_views
 from django.contrib.auth import views as auth_view
+from users.user_views.admin_views import course_selection_view
+from users.user_views import admin_views
 app_name = 'users'
 
 
@@ -42,9 +44,8 @@ urlpatterns = [
     path('payments/export/', admin_views.ExportPaymentsView.as_view(), name='export_payments'),
     path('payments/add/', admin_views.AddNewPaymentView.as_view(), name='add_new_payment'),
     path('take-attendance/', admin_views.TakeAttendanceView.as_view(), name='take_attendance'),
+    path('attendance-report/', admin_views.AttendanceReportView.as_view(), name='attendance_report'),
     path('batch-details/', admin_views.BatchDetailsView.as_view(), name='batch_details'),
-    path('franchise-list/', admin_views.FranchiseListView.as_view(), name='franchise_list'),
-    path('add-new-franchise/', admin_views.AddNewFranchiseView.as_view(), name='add_new_franchise'),
     path('referral-amount/', admin_views.ReferralAmountView.as_view(), name='referral_amount'),
     path('user/user_detail/<int:user_id>', admin_views.StudentDetailView.as_view(), name='user_detail'),
     path('online_class_notifications/', admin_views.OnlineClassListView.as_view(), name='online_class_notifications'),
@@ -56,7 +57,13 @@ urlpatterns = [
     path('batches/<int:pk>/delete/', admin_views.BatchDeleteView.as_view(), name='delete_batch'),
     path('student-fees/', admin_views.StudentFeesListView.as_view(), name='student_fees_list'),
     path('get-course-fee/', admin_views.get_course_fee, name='get_course_fee'),
-    
+    path('select-course/', admin_views.course_selection_view, name='select_course'),
+    path('student-attendance-report/', admin_views.StudentAttendanceReportView.as_view(), name='student_attendance_report'),
+    path('re-admission/', admin_views.ReAdmissionView.as_view(), name='re-admission'),
+    path('get-course-fees/<int:course_id>/', admin_views.GetCourseFeesView.as_view(), name='get-course-fees'),
+    path('get-batch-seats/<int:batch_id>/', admin_views.GetBatchRemainingSeatsView.as_view(), name='get-batch-seats'),
+    path('re-admission-list/', admin_views.ReAdmissionListView.as_view(), name='re-admission-list'),
+
 
 ]
 if settings.DEBUG:

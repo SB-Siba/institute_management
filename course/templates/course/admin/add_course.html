@@ -1,73 +1,32 @@
 {% extends 'users/admin/base.html' %}
+
 {% block content %}
-<div class="container">
-    <h1 class="h3">Add Course</h1>
-    <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+<div class="container mt-4">
+    <h2>{% if course %}Edit{% else %}Add{% endif %} Course</h2>
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.media }}
-        <div class="row">
-            {% for field in form %}
-                <div class="col-12">
-                    <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field }}
-                    </div>
-                </div>
-            {% endfor %}
+        {{ form.as_p }}
+        
+        <div class="form-group">
+            <label for="course-subject-input">Subjects</label>
+            <input type="text" id="course-subject-input" name="course_subject" class="form-control" placeholder="Enter subject">
         </div>
-
-        <!-- PDF Files Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="pdf-files">PDF Files</label>
-                    <div id="pdf-files-container">
-                        <!-- Existing PDF file inputs will be here -->
-                    </div>
-                    <button type="button" id="add-pdf-file" class="btn btn-primary mt-2">Add More PDF Files</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Video Links Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group">
-                    <label for="video-links">Video Links</label>
-                    <div id="video-links-container">
-                        <!-- Existing video link inputs will be here -->
-                    </div>
-                    <button type="button" id="add-video-link" class="btn btn-primary mt-2">Add More Videos</button>
-                </div>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Add Your Course</button>
+    
+        <button type="submit" name="add_subject" class="btn btn-primary">Add Subject</button>
+    
+        {% if subjects %}
+            <ul>
+                {% for subject in subjects %}
+                    <li>
+                        {{ subject }}
+                        <button type="submit" name="delete_subject" value="{{ forloop.counter0 }}" class="btn btn-danger">Delete</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    
+        <button type="submit" name="add_course" class="btn btn-success">Save Course</button>
         <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
     </form>
 </div>
-
-<script>
-document.getElementById('add-video-link').addEventListener('click', function() {
-    let container = document.getElementById('video-links-container');
-    let index = container.children.length;
-    let newRow = document.createElement('div');
-    newRow.classList.add('video-link-row');
-    newRow.innerHTML = `<div class="d-flex mb-2">
-                            <input type="text" name="video_links[${index}][title]" placeholder="Video Title" class="form-control me-2" style="max-width: 300px;">
-                            <input type="url" name="video_links[${index}][link]" placeholder="Video Link" class="form-control" style="max-width: 300px;">
-                        </div>`;
-    container.appendChild(newRow);
-});
-
-document.getElementById('add-pdf-file').addEventListener('click', function() {
-    let container = document.getElementById('pdf-files-container');
-    let newFileInput = document.createElement('input');
-    newFileInput.type = 'file';
-    newFileInput.name = 'pdf_files';
-    newFileInput.classList.add('form-control', 'mb-2');
-    newFileInput.accept = 'application/pdf';
-    container.appendChild(newFileInput);
-});
-</script>
 {% endblock %}

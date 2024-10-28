@@ -16,6 +16,10 @@
             <label for="id_number_of_students">Number of Students</label>
             {{ form.number_of_students }}
         </div>
+        <div class="form-group">
+            <label for="id_total_seats">Total Seats</label>
+            {{ form.total_seats }}
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         <a href="{% url 'users:list_batches' %}" class="btn btn-secondary">Cancel</a>
     </form>

@@ -1,11 +1,12 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 from django.core.paginator import Paginator
-
-
+from course.models import Course
+from course.forms import CourseForm
 from course.forms import AwardCategoryForm, CourseForm
 from course.models import AwardCategory, Course
 
@@ -45,26 +46,36 @@ class AwardCategoryCreateView(View):
             return redirect(self.success_url)
         return render(request, self.template_name, {'form': form})
     
-class AwardCategoryUpdateView(View):
-    model = AwardCategory
-    form_class = AwardCategoryForm
-    template_name = 'edit_award_category_form.html'
-    context_object_name = 'category'
+class EditAwardCategoryView(View):
+        model = AwardCategory
+        form_class = AwardCategoryForm
+        success_url = reverse_lazy('course:award_categories')  # Ensure correct URL name
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'status': 'success', 'category_name': self.object.name})
+        def get(self, request, category_id):
+            category = get_object_or_404(AwardCategory, id=category_id)
+            form = AwardCategoryForm(instance=category)
+            return render(request, 'award_category.html', {'form': form})
 
-    def form_invalid(self, form):
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        def post(self, request, category_id):
+            category = get_object_or_404(AwardCategory, id=category_id)
+            form = AwardCategoryForm(request.POST, instance=category)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'status': 'success', 'category_name': form.instance.category_name})
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
     
 class AwardCategoryDeleteView(View):
     model = AwardCategory
+    form_class = AwardCategoryForm
+    
+    def post(self, request, category_id):
+        try:
+            category = AwardCategory.objects.get(id=category_id)
+            category.delete()
+            return redirect('course:award_categories')  # Redirect to the award category list view
+        except AwardCategory.DoesNotExist:
+            return JsonResponse({'error': 'Award category not found.'}, status=404)
 
-    def post(self, request, *args, **kwargs):
-        category = get_object_or_404(self.model, pk=kwargs.get('pk'))
-        category.delete()
-        return JsonResponse({'status': 'success'})
     
 class CourseListView(View):
     template_name = app + 'course_list.html'
@@ -84,20 +95,53 @@ class CourseListView(View):
             'search_query': search_query
         }
         return render(request, self.template_name, context)
-    
+
 class CourseCreateView(View):
     template_name = app + 'add_course.html'
 
     def get(self, request):
         form = CourseForm()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'subjects': []})
 
     def post(self, request):
         form = CourseForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy('course:course_list'))
-        return render(request, self.template_name, {'form': form})
+
+        if 'add_subject' in request.POST:
+            subject_name = request.POST.get('course_subject', '').strip()
+            subjects = request.POST.getlist('subjects', [])
+
+            if subject_name:
+                # Add the new subject to the subjects list
+                subjects.append(subject_name)
+            
+            return render(request, self.template_name, {'form': form, 'subjects': subjects})
+
+        elif 'delete_subject' in request.POST:
+            subject_index = int(request.POST.get('delete_subject'))
+            subjects = request.POST.getlist('subjects', [])
+
+            if 0 <= subject_index < len(subjects):
+                subjects.pop(subject_index)
+
+            return render(request, self.template_name, {'form': form, 'subjects': subjects})
+
+        elif 'add_course' in request.POST:
+            subjects = request.POST.getlist('subjects', [])
+            if form.is_valid():
+                course = form.save(commit=False)
+
+                # Save subjects as JSON in the course_subject field
+                course.course_subject = [{'id': i + 1, 'name': subject} for i, subject in enumerate(subjects)]
+                course.save()
+
+                # Redirect to course list after successful save
+                messages.success(request, 'Course added successfully!')
+                return redirect('course:course_list')  # Adjust the URL name as per your config
+            else:
+                return render(request, self.template_name, {'form': form, 'subjects': subjects})
+
+        return render(request, self.template_name, {'form': form, 'subjects': []})
+
     
 class CourseEditView(View):
     template_name = app + 'edit_course.html'
@@ -105,15 +149,70 @@ class CourseEditView(View):
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(instance=course)
-        return render(request, self.template_name, {'form': form, 'course': course})
+
+        # Load existing subjects from the course's JSONField
+        subjects = course.course_subject if course.course_subject else []
+
+        return render(request, self.template_name, {
+            'form': form,
+            'subjects': subjects,
+            'course': course
+        })
 
     def post(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(request.POST, request.FILES, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect('course:course_list')  # Redirect to course list after saving
-        return render(request, self.template_name, {'form': form, 'course': course})
+        subjects = course.course_subject if course.course_subject else []
+
+        if 'add_subject' in request.POST:
+            subject_name = request.POST.get('course_subject', '').strip()
+
+            if subject_name:
+                # Append new subject to the list, ensuring each has a unique ID
+                subjects.append({'id': len(subjects) + 1, 'name': subject_name})
+
+            return render(request, self.template_name, {
+                'form': form,
+                'subjects': subjects,
+                'course': course
+            })
+
+        elif 'delete_subject' in request.POST:
+            subject_index = int(request.POST.get('delete_subject'))
+
+            if 0 <= subject_index < len(subjects):
+                subjects.pop(subject_index)  # Remove the selected subject
+
+            return render(request, self.template_name, {
+                'form': form,
+                'subjects': subjects,
+                'course': course
+            })
+
+        elif 'edit_course' in request.POST:
+            if form.is_valid():
+                course = form.save(commit=False)
+
+                # Save updated subjects as JSON in the course_subject field
+                course.course_subject = [{'id': subject['id'], 'name': subject['name']} for subject in subjects]
+                course.save()
+
+                # Redirect to course list after successful edit
+                messages.success(request, 'Course updated successfully!')
+                return redirect('course:course_list')
+            else:
+                return render(request, self.template_name, {
+                    'form': form,
+                    'subjects': subjects,
+                    'course': course
+                })
+
+        return render(request, self.template_name, {
+            'form': form,
+            'subjects': subjects,
+            'course': course
+        })
+
     
 class CourseDeleteView(View):
     def post(self, request, *args, **kwargs):

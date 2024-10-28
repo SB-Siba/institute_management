@@ -44,12 +44,6 @@
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li class="active sidebar-item">
-				<a href="{% url 'users:franchise_list' %}">
-					<i class='bx bxs-dashboard' ></i>
-					<span class="text">Franchise List</span>
-				</a>
-			</li>
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
@@ -69,18 +63,13 @@
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="" class="sidebar-links">
+						<a href="{% url 'users:re-admission' %}" class="sidebar-links">
 							<i class="lni lni-database"></i><span class="ms-4">Re-Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
-						</a>
-					</li>
-					<li class="sidebar-item"></li>
-						<a href="#" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student's course result</span>
 						</a>
 					</li>
 					<!-- <li class="sidebar-item">
@@ -113,11 +102,11 @@
 							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
 						</a>
 					</li>
-					<li class="sidebar-item">
+					<!--<li class="sidebar-item">
 						<a href="" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
 						</a>
-					</li>
+					</li>-->
 				</ul>
 			</li>
 
@@ -171,13 +160,18 @@
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authent">
 					<li class="sidebar-item">
-						<a href="{% url 'certificate:exam_results' %}" class="sidebar-links">
+						<a href="{% url 'certificate:apply_certificate' %}" class="sidebar-links">
 							<i class="lni lni-list"></i><span class="ms-4">Apply For Certificates</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Approve Certificates</span>
+						<a href="{% url 'certificate:applied_certificates' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Approve Certificates</span>
+						</a>
+					</li>					
+					<li class="sidebar-item">
+						<a href="#" class="sidebar-links">
+							<i class="bx bxs-message-dots"></i><span class="text ms-3">Old Approved Certificate</span>
 						</a>
 					</li>
 					<li class="sidebar-item"></li>
@@ -187,12 +181,12 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="" class="">
+			<!--<li>
+				<a href="#" class="sidebar-links">
 					<i class='bx bxs-message-dots' ></i>
 					<span class="text">Old Certificates</span>
 				</a>
-			</li>
+			</li>-->
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#authenti" aria-expanded="false" aria-controls="authenti" onclick="toggleChevron(this)">
@@ -232,13 +226,18 @@
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Marquee Notifications</span>
+						<a href="{% url 'users:take_attendance'%}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Attendance</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Advertisements</span>
+						<a href="{% url 'users:attendance_report' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Attendance Report</span>
+						</a>
+					</li>
+					<li class="sidebar-item">
+						<a href="{% url 'users:student_attendance_report' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student Wise Report</span>
 						</a>
 					</li>
 				</ul>
