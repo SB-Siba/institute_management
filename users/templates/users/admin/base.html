@@ -63,18 +63,13 @@
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="" class="sidebar-links">
+						<a href="{% url 'users:re-admission' %}" class="sidebar-links">
 							<i class="lni lni-database"></i><span class="ms-4">Re-Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
-						</a>
-					</li>
-					<li class="sidebar-item"></li>
-						<a href="#" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student's course result</span>
 						</a>
 					</li>
 					<!-- <li class="sidebar-item">
@@ -107,11 +102,11 @@
 							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
 						</a>
 					</li>
-					<li class="sidebar-item">
+					<!--<li class="sidebar-item">
 						<a href="" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
 						</a>
-					</li>
+					</li>-->
 				</ul>
 			</li>
 
@@ -171,12 +166,12 @@
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'certificate:applied_certificates' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Applied Certificates</span>
+							<i class="lni lni-list"></i><span class="ms-4">Approve Certificates</span>
 						</a>
 					</li>					
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Approve Certificates</span>
+						<a href="#" class="sidebar-links">
+							<i class="bx bxs-message-dots"></i><span class="text ms-3">Old Approved Certificate</span>
 						</a>
 					</li>
 					<li class="sidebar-item"></li>
@@ -186,12 +181,12 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="" class="">
+			<!--<li>
+				<a href="#" class="sidebar-links">
 					<i class='bx bxs-message-dots' ></i>
 					<span class="text">Old Certificates</span>
 				</a>
-			</li>
+			</li>-->
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#authenti" aria-expanded="false" aria-controls="authenti" onclick="toggleChevron(this)">

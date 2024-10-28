@@ -59,6 +59,10 @@ urlpatterns = [
     path('get-course-fee/', admin_views.get_course_fee, name='get_course_fee'),
     path('select-course/', admin_views.course_selection_view, name='select_course'),
     path('student-attendance-report/', admin_views.StudentAttendanceReportView.as_view(), name='student_attendance_report'),
+    path('re-admission/', admin_views.ReAdmissionView.as_view(), name='re-admission'),
+    path('get-course-fees/<int:course_id>/', admin_views.GetCourseFeesView.as_view(), name='get-course-fees'),
+    path('get-batch-seats/<int:batch_id>/', admin_views.GetBatchRemainingSeatsView.as_view(), name='get-batch-seats'),
+    path('re-admission-list/', admin_views.ReAdmissionListView.as_view(), name='re-admission-list'),
 
 
 ]

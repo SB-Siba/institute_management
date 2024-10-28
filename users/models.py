@@ -64,15 +64,20 @@ def generate_unique_username():
 class Batch(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     timing = models.CharField(max_length=50, blank=True, null=True)
-    number_of_students = models.PositiveIntegerField(blank=True, null=True)
+    number_of_students = models.PositiveIntegerField(blank=True, null=True) 
+    total_seats = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if self.name:
             self.name = self.name.upper()
         super().save(*args, **kwargs)
 
+    def get_remaining_seats(self):
+        """Calculate remaining seats by subtracting enrolled students from total seats."""
+        return self.total_seats - (self.number_of_students or 0)
+
     def __str__(self):
-        return self.name
+        return f'{self.name}'
 
 class User(AbstractBaseUser, PermissionsMixin):
     YESNO = (
@@ -162,7 +167,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.email
+        return self.full_name   
 
 class Installment(models.Model):
     student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)

@@ -1,60 +1,34 @@
 {% extends 'users/admin/base.html' %}
+
 {% block content %}
 <div class="container mt-4">
-    <h2>Edit Course</h2>
-    <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+    <h2>{% if course %}Edit{% else %}Add{% endif %} Course</h2>
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.media }}
-        <div class="row">
-            {% for field in form %}
-                <div class="col-12">
-                    <div class="form-group">
-                        {{ field.label_tag }}
-                        {% if field.name == 'course_subject' %}
-                            <div class="input-group">
-                                <input type="text" name="course_subject" class="form-control" placeholder="Course Subject" value="{{ course.course_subject }}">
-                                <button type="button" id="add-subject" class="btn btn-secondary">Add Subject</button>
-                            </div>
-                        {% else %}
-                            {{ field }}
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+        {{ form.as_p }}
+        
+        <div class="form-group">
+            <label for="course-subject-input">Subjects</label>
+            <input type="text" id="course-subject-input" name="course_subject" class="form-control" placeholder="Enter subject">
         </div>
 
-        <button type="submit" class="btn btn-success w-100 mt-3" id="save-btn">Save Changes</button>
+        <button type="submit" name="add_subject" class="btn btn-primary">Add Subject</button>
+
+        {% if subjects %}
+            <ul>
+                {% for subject in subjects %}
+                    <li>
+                        {{ subject.name }}
+                        <button type="submit" name="delete_subject" value="{{ forloop.counter0 }}" class="btn btn-danger">Delete</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <button type="submit" name="{% if course %}edit_course{% else %}add_course{% endif %}" class="btn btn-success">
+            {% if course %}Save Changes{% else %}Save Course{% endif %}
+        </button>
         <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
     </form>
-
-    <div id="added-subjects" class="mt-4">
-        <h5>Added Subjects</h5>
-        <ul id="subject-list">
-            {% for subject in subjects %}
-                <li>{{ subject }}</li>  <!-- Display existing subjects -->
-            {% endfor %}
-        </ul>
-    </div>
 </div>
-
-<script>
-document.getElementById('add-subject').addEventListener('click', function() {
-    const subjectInput = document.querySelector('input[name="course_subject"]');
-    const subjectValue = subjectInput.value.trim();
-
-    if (subjectValue) {
-        const subjectList = document.getElementById('subject-list');
-        const newListItem = document.createElement('li');
-        newListItem.textContent = subjectValue;
-
-        // Append the new subject to the list
-        subjectList.appendChild(newListItem);
-
-        // Clear the input field
-        subjectInput.value = '';
-    } else {
-        alert('Please enter a subject.');
-    }
-});
-</script>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'users/admin/base.html' %}
+{% load static %}
 {% block content %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -17,6 +18,7 @@
         <thead>
             <tr>
                 <th>Sr.</th>
+                <th>Photo</th>
                 <th>Course Code</th>
                 <th>Course Name</th>
                 <th>Course Fees</th>
@@ -24,7 +26,6 @@
                 <th>Minimum Fees</th>
                 <th>Duration</th>
                 <th>Exam Status</th>
-                <th>Question Bank Status</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -33,6 +34,13 @@
             {% for course in page_obj.object_list %}
             <tr>
                 <td>{{ forloop.counter }}</td>
+                <td>
+                    {% if course.course_image %}
+                        <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" style="width: 50px; height: auto;">
+                    {% else %}
+                        <img src="{% static 'path/to/default/image.png' %}" alt="No image available" style="width: 50px; height: auto;">
+                    {% endif %}
+                </td>
                 <td>{{ course.course_code }}</td>
                 <td>{{ course.course_name }}</td>
                 <td>{{ course.course_fees }}</td>
@@ -40,7 +48,6 @@
                 <td>{{ course.minimum_fees }}</td>
                 <td>{{ course.course_duration }}</td>
                 <td>{{ course.exam_status }}</td>
-                <td>{{ course.question_bank_status }}</td>
                 <td>{{ course.status }}</td>
                 <td>
                     <a href="{% url 'course:edit_course' course.id %}" class="btn btn-warning btn-sm">Edit</a>
@@ -104,4 +111,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script>
+        CKEDITOR.replace('course_syllabus'); // Use the correct ID based on your form field
+    </script>
 {% endblock %}

@@ -7,8 +7,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from course.models import Course
 from course.forms import CourseForm
-
-
 from course.forms import AwardCategoryForm, CourseForm
 from course.models import AwardCategory, Course
 
@@ -48,26 +46,36 @@ class AwardCategoryCreateView(View):
             return redirect(self.success_url)
         return render(request, self.template_name, {'form': form})
     
-class AwardCategoryUpdateView(View):
-    model = AwardCategory
-    form_class = AwardCategoryForm
-    template_name = 'edit_award_category_form.html'
-    context_object_name = 'category'
+class EditAwardCategoryView(View):
+        model = AwardCategory
+        form_class = AwardCategoryForm
+        success_url = reverse_lazy('course:award_categories')  # Ensure correct URL name
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'status': 'success', 'category_name': self.object.name})
+        def get(self, request, category_id):
+            category = get_object_or_404(AwardCategory, id=category_id)
+            form = AwardCategoryForm(instance=category)
+            return render(request, 'award_category.html', {'form': form})
 
-    def form_invalid(self, form):
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        def post(self, request, category_id):
+            category = get_object_or_404(AwardCategory, id=category_id)
+            form = AwardCategoryForm(request.POST, instance=category)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'status': 'success', 'category_name': form.instance.category_name})
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
     
 class AwardCategoryDeleteView(View):
     model = AwardCategory
+    form_class = AwardCategoryForm
+    
+    def post(self, request, category_id):
+        try:
+            category = AwardCategory.objects.get(id=category_id)
+            category.delete()
+            return redirect('course:award_categories')  # Redirect to the award category list view
+        except AwardCategory.DoesNotExist:
+            return JsonResponse({'error': 'Award category not found.'}, status=404)
 
-    def post(self, request, *args, **kwargs):
-        category = get_object_or_404(self.model, pk=kwargs.get('pk'))
-        category.delete()
-        return JsonResponse({'status': 'success'})
     
 class CourseListView(View):
     template_name = app + 'course_list.html'
@@ -91,92 +99,118 @@ class CourseListView(View):
 class CourseCreateView(View):
     template_name = app + 'add_course.html'
 
-    def get(self, request, pk=None):
-        if pk:  # Editing an existing course
-            course = get_object_or_404(Course, pk=pk)
-            form = CourseForm(instance=course)
-            subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
-        else:  # Adding a new course
-            course = None
-            form = CourseForm()
-            subjects = []
+    def get(self, request):
+        form = CourseForm()
+        return render(request, self.template_name, {'form': form, 'subjects': []})
 
-        return render(request, self.template_name, {'form': form, 'course': course, 'subjects': subjects})
+    def post(self, request):
+        form = CourseForm(request.POST, request.FILES)
 
-    def post(self, request, pk=None):
-        # Initialize course variable to avoid UnboundLocalError
-        course = None
+        if 'add_subject' in request.POST:
+            subject_name = request.POST.get('course_subject', '').strip()
+            subjects = request.POST.getlist('subjects', [])
 
-        if pk:  # Editing an existing course
-            course = get_object_or_404(Course, pk=pk)
-            form = CourseForm(request.POST, request.FILES, instance=course)
-        else:  # Adding a new course
-            form = CourseForm(request.POST, request.FILES)
+            if subject_name:
+                # Add the new subject to the subjects list
+                subjects.append(subject_name)
+            
+            return render(request, self.template_name, {'form': form, 'subjects': subjects})
 
-        if form.is_valid():
-            course = form.save(commit=False)
+        elif 'delete_subject' in request.POST:
+            subject_index = int(request.POST.get('delete_subject'))
+            subjects = request.POST.getlist('subjects', [])
 
-            # Get subjects from the hidden input
-            subjects_json = request.POST.get('subjects')
-            if subjects_json:
-                existing_subjects = json.loads(subjects_json)  # Load JSON string to list
-                course.course_subject = ', '.join(existing_subjects)  # Join subjects into a single string
+            if 0 <= subject_index < len(subjects):
+                subjects.pop(subject_index)
 
-            course.save()
+            return render(request, self.template_name, {'form': form, 'subjects': subjects})
 
-            messages.success(request, "Course added successfully!")  # Flash message
-            return redirect(reverse_lazy('course:course_list'))
-        else:
-            print(form.errors)
-        # If form is invalid, retrieve existing subjects if editing
-        existing_subjects = course.course_subject.split(',') if course and course.course_subject else []
+        elif 'add_course' in request.POST:
+            subjects = request.POST.getlist('subjects', [])
+            if form.is_valid():
+                course = form.save(commit=False)
 
-        return render(request, self.template_name, {'form': form, 'course': course, 'subjects': existing_subjects})
+                # Save subjects as JSON in the course_subject field
+                course.course_subject = [{'id': i + 1, 'name': subject} for i, subject in enumerate(subjects)]
+                course.save()
 
+                # Redirect to course list after successful save
+                messages.success(request, 'Course added successfully!')
+                return redirect('course:course_list')  # Adjust the URL name as per your config
+            else:
+                return render(request, self.template_name, {'form': form, 'subjects': subjects})
+
+        return render(request, self.template_name, {'form': form, 'subjects': []})
+
+    
 class CourseEditView(View):
-    template_name = app + 'edit_course.html'  # Adjust to your actual template path
+    template_name = app + 'edit_course.html'
 
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(instance=course)
 
-        # Split existing subjects and clean up whitespace
-        subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
+        # Load existing subjects from the course's JSONField
+        subjects = course.course_subject if course.course_subject else []
 
         return render(request, self.template_name, {
             'form': form,
-            'course': course,
-            'subjects': subjects  # Pass existing subjects to the template
+            'subjects': subjects,
+            'course': course
         })
 
     def post(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         form = CourseForm(request.POST, request.FILES, instance=course)
+        subjects = course.course_subject if course.course_subject else []
 
-        if form.is_valid():
-            # Save the updated course instance
-            course = form.save(commit=False)
+        if 'add_subject' in request.POST:
+            subject_name = request.POST.get('course_subject', '').strip()
 
-            # Get existing subjects and new subjects from the form
-            existing_subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
-            new_subjects = request.POST.getlist('course_subject')
+            if subject_name:
+                # Append new subject to the list, ensuring each has a unique ID
+                subjects.append({'id': len(subjects) + 1, 'name': subject_name})
 
-            # Combine existing and new subjects, remove duplicates and empty entries
-            all_subjects = list(set(existing_subjects + [subject.strip() for subject in new_subjects if subject.strip()]))
+            return render(request, self.template_name, {
+                'form': form,
+                'subjects': subjects,
+                'course': course
+            })
 
-            # Join them into a single string and save
-            course.course_subject = ', '.join(all_subjects)
-            course.save()  # Save the updated course instance
+        elif 'delete_subject' in request.POST:
+            subject_index = int(request.POST.get('delete_subject'))
 
-            return redirect(reverse_lazy('course:course_list'))  # Redirect after saving
+            if 0 <= subject_index < len(subjects):
+                subjects.pop(subject_index)  # Remove the selected subject
 
-        # If form is not valid, render the form again with existing subjects
-        subjects = [subject.strip() for subject in course.course_subject.split(',')] if course.course_subject else []
-        
+            return render(request, self.template_name, {
+                'form': form,
+                'subjects': subjects,
+                'course': course
+            })
+
+        elif 'edit_course' in request.POST:
+            if form.is_valid():
+                course = form.save(commit=False)
+
+                # Save updated subjects as JSON in the course_subject field
+                course.course_subject = [{'id': subject['id'], 'name': subject['name']} for subject in subjects]
+                course.save()
+
+                # Redirect to course list after successful edit
+                messages.success(request, 'Course updated successfully!')
+                return redirect('course:course_list')
+            else:
+                return render(request, self.template_name, {
+                    'form': form,
+                    'subjects': subjects,
+                    'course': course
+                })
+
         return render(request, self.template_name, {
             'form': form,
-            'course': course,
-            'subjects': subjects  # Make sure this variable is defined here
+            'subjects': subjects,
+            'course': course
         })
 
     

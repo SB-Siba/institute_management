@@ -5,17 +5,18 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from requests import request
 from helpers import utils
 from django.forms import formset_factory, modelformset_factory
 from users import models,forms
-from users.forms import BatchForm, OnlineClassForm, StudentForm, InstallmentForm, StudentPaymentForm
+from users.forms import BatchForm, OnlineClassForm, StudentForm, InstallmentForm, StudentPaymentForm,ReAdmissionForm
 from django.forms import formset_factory 
 from users.models import Installment, OnlineClass, Payment, Batch, ReferralSettings, User
 from course.models import Course
 import csv
 from django.http import HttpResponse
 from django.contrib import messages
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -128,16 +129,11 @@ class AddNewStudentView(View):
 
         if user_form.is_valid() and installment_formset.is_valid():
             try:
-                # Save the student form, including the file upload
                 student = user_form.save(commit=False)
 
-                # Check if student_image file is uploaded
                 if 'student_image' in request.FILES:
                     student.student_image = request.FILES['student_image']
-
                 student.save()
-
-                # Save the installment forms
                 for form in installment_formset:
                     if form.cleaned_data and form.cleaned_data.get('installment_name'):
                         installment = form.save(commit=False)
@@ -148,10 +144,6 @@ class AddNewStudentView(View):
 
             except ValueError as e:
                 messages.error(request, f"There was an error: {e}")
-        else:
-            # Handle form validation errors
-            print("User form errors:", user_form.errors)
-            print("Installment formset errors:", installment_formset.errors)
 
         return render(request, self.template, {
             'user_form': user_form,
@@ -165,23 +157,22 @@ class StudentUpdateView(View):
     success_url = reverse_lazy('student_list')
 
     def get_object(self):
-        # Fetch the User object you want to update
         return get_object_or_404(User, pk=self.kwargs['pk'])
 
     def get_installment_formset(self, instance=None, data=None):
-        # Create the Installment formset
         InstallmentFormSet = modelformset_factory(
-            Installment, 
-            fields=('installment_name', 'amount', 'date'), 
-            extra=1
+            Installment,
+            form=InstallmentForm,
+            fields=('installment_name', 'amount', 'date'),
+            extra=1  # Allow one extra empty form for a new installment
         )
         if data:
-            return InstallmentFormSet(data, queryset=instance.installments.all())
+            # Provide the queryset to include existing installments during POST
+            return InstallmentFormSet(data, queryset=Installment.objects.filter(student=instance))
         else:
-            return InstallmentFormSet(queryset=instance.installments.all())
+            return InstallmentFormSet(queryset=Installment.objects.filter(student=instance))
 
     def get_context_data(self, form=None, installment_formset=None):
-        # Prepare context data for the template
         if form is None:
             form = self.form_class(instance=self.get_object())
         if installment_formset is None:
@@ -193,36 +184,43 @@ class StudentUpdateView(View):
         }
 
     def get(self, request, *args, **kwargs):
-        # Handle GET requests
-        user = self.get_object()
         context = self.get_context_data()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        # Handle POST requests (submitting the form)
         user = self.get_object()
         form = self.form_class(request.POST, request.FILES, instance=user)
         installment_formset = self.get_installment_formset(instance=user, data=request.POST)
 
         if form.is_valid() and installment_formset.is_valid():
-            # Save the student form
-            form.save()
+            try:
+                # Save the student form
+                form.save()
 
-            # Save the installment formset
-            installments = installment_formset.save(commit=False)
-            for installment in installments:
-                installment.student = user  # Associate the installment with the student (user)
-                installment.save()
-            
-            # Save any deleted installments
-            installment_formset.save()
+                # Save each installment in the formset, only if it has data
+                installments = installment_formset.save(commit=False)
+                for installment in installments:
+                    if installment.installment_name and installment.amount and installment.date:
+                        installment.student = user
+                        installment.save()
 
-            # Redirect to the student list after successful update
-            return redirect(self.success_url)
+                # Handle deletions and save the formset
+                installment_formset.save()
+
+                messages.success(request, 'Student updated successfully!')
+                return redirect(self.success_url)
+
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
         else:
-            # If form or formset is invalid, render the template with errors
-            context = self.get_context_data(form, installment_formset)
-            return render(request, self.template_name, context)
+            # Log form and formset errors for debugging
+            print("Form errors:", form.errors)
+            print("Formset errors:", installment_formset.errors)
+            messages.error(request, 'Please correct the errors below.')
+
+        # Render the template with errors if form or formset is invalid
+        context = self.get_context_data(form=form, installment_formset=installment_formset)
+        return render(request, self.template_name, context)
         
 class StudentDeleteView(View):
     def delete(self, request, pk):
@@ -233,6 +231,97 @@ class StudentDeleteView(View):
         except models.User.DoesNotExist:
             return JsonResponse({'error': 'Student not found.'}, status=404)
 
+from django.utils import timezone
+class ReAdmissionView(View):
+    template_name = app + 're_admission.html'
+    form_class = ReAdmissionForm
+    success_url = reverse_lazy('users:re-admission-list')
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        try:
+            print("Form is valid, processing...")
+            student = form.cleaned_data['student']
+            course = form.cleaned_data['course_of_interest']
+            batch = form.cleaned_data['batch']
+            course_fees = course.course_fees
+            discount_amount = form.cleaned_data.get('discount_amount', 0)
+            fees_received = form.cleaned_data.get('fees_received', 0)
+
+            total_fees = float(course_fees) - float(discount_amount)  # Convert to float
+            balance = total_fees - float(fees_received)  # Convert to float
+
+            # Update the session with re-admission data
+            re_admission_data = {
+                'student': student.full_name,
+                'student_id': student.id,
+                'profile_photo': student.student_image.url if student.student_image else None,
+                'course': course.course_name,
+                'total_fees': total_fees,
+                'date': timezone.now().strftime('%Y-%m-%d')
+            }
+            self.request.session['re_admission_data'] = re_admission_data
+
+            # Update batch seats
+            if batch.number_of_students > 0:
+                batch.number_of_students -= 1
+                batch.save()
+            else:
+                form.add_error('batch', 'No seats available in this batch.')
+                return self.form_invalid(form)
+
+            print("Redirecting to success URL:", self.success_url)
+            return redirect(self.success_url)
+        except Exception as e:
+            print("An error occurred:", e)
+            return self.form_invalid(form) 
+    def form_invalid(self, form):
+        print("Form is invalid. Errors:", form.errors)
+        return render(self.request, self.template_name, {'form': form})
+
+# AJAX view to fetch course fees dynamically
+class GetCourseFeesView(View):
+    def get(self, request, course_id, *args, **kwargs):
+        course = get_object_or_404(Course, id=course_id)
+        data = {
+            'course_fees': course.course_fees,
+            'minimum_fees': course.minimum_fees,
+            'exam_fees': course.exam_fees,
+        }
+        return JsonResponse(data)
+
+# AJAX view to fetch remaining batch seats dynamically
+class GetBatchRemainingSeatsView(View):
+    def get(self, request, batch_id, *args, **kwargs):  
+        batch = get_object_or_404(Batch, id=batch_id)  
+  
+        return JsonResponse({  
+            'batch_id': batch.id,  
+            'remaining_seats': batch.remaining_seats,    
+        }) 
+        
+
+class ReAdmissionListView(View):
+    template_name =  app + 're_admission_list.html'
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve data from the session
+        re_admission_data = request.session.get('re_admission_data')
+        context = {
+            're_admissions': [re_admission_data] if re_admission_data else []
+        }
+        return render(request, self.template_name, context)
+
+    
 class CourseDetailsView(View):
     def get(self, request, course_id):
         try:

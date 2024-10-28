@@ -29,9 +29,12 @@
             {% csrf_token %}
             <input type="hidden" name="batch" value="{{ selected_batch }}">
             <input type="hidden" name="date" value="{{ today_date }}">
+        <div class="table-responsive">
             <table class="table table-bordered table-striped mt-4">
                 <thead class="thead-dark">
                     <tr>
+                        <th>S/N</th>
+                        <th>Photo</th>
                         <th>Student Name</th>
                         <th>Status</th>
                     </tr>
@@ -39,6 +42,10 @@
                 <tbody>
                     {% for student in students %}
                         <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <img src="{{ student.student_image.url }}" alt="{{ student.full_name }}" class="img-thumbnail" style="max-width: 50px;">
+                            </td>
                             <td>{{ student.full_name }}</td>
                             <td>
                                 <select name="attendance_{{ student.id }}" class="form-control">
@@ -50,6 +57,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
             <button type="submit" class="btn btn-success">Submit Attendance</button>
         </form>
     {% else %}

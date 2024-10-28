@@ -25,18 +25,18 @@ class AwardCategoryForm(forms.ModelForm):
         }
 
 class CourseForm(forms.ModelForm):
+    #subjects = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'id': 'subject-input-area'}), required=False)
     class Meta:
         model = Course
         fields = [
-            'course_code', 'award', 'course_name', 'course_subject', 'course_fees',
-            'course_mrp', 'minimum_fees', 'course_duration','exam_fees', 'course_video_link_1', 
+            'course_code', 'award', 'course_name', 'course_fees',
+            'course_mrp', 'minimum_fees', 'course_duration', 'exam_fees', 'course_video_link_1', 
             'course_video_link_2', 'course_syllabus', 'eligibility', 'course_image', 'course_video_links',
             'display_course_fees_on_website', 'status'
         ]
         widgets = {
             'course_code': forms.TextInput(attrs={'class': 'form-control'}),
             'course_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'course_subject': forms.TextInput(attrs={'class': 'form-control', 'id': 'course-subject-input'}),
             'course_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_mrp': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'minimum_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
@@ -50,15 +50,14 @@ class CourseForm(forms.ModelForm):
             'status': forms.RadioSelect(choices=[('Active', 'Active'), ('Inactive', 'Inactive')]),
         }
 
-
-    def clean_course_subject(self):
-        subjects = self.cleaned_data.get('course_subject')
-        # Ensure that subjects are stored as a comma-separated string without trailing commas
-        return ','.join([subject.strip() for subject in subjects.split(',') if subject.strip()])
-
+    def clean_subjects(self):
+        subjects_data = self.cleaned_data['subjects']
+        if subjects_data:
+            return [{'id': i+1, 'name': subject.strip()} for i, subject in enumerate(subjects_data.split(',')) if subject.strip()]
+        return []
 
     def clean_pdf_files(self):
-        pdf_files = self.files.getlist('pdf_files')
+        pdf_files = self.files.getlist('pdf_files')  
         for pdf_file in pdf_files:
             if not pdf_file.name.endswith('.pdf'):
                 raise forms.ValidationError('Only PDF files are allowed.')

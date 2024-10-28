@@ -1,0 +1,226 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    margin: 0 auto;
+    margin-bottom: 2px;
+    width: 95%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  select, input[type="number"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    padding: 20px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  #total_fees {
+    background-color: #e9ecef;
+    pointer-events: none;
+  }
+
+  #balance {
+    font-weight: bold;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  .remaining-seats {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+</style>
+
+<h1>Re-Admission Student</h1>
+
+<div class="container">
+  <form method="POST" action="{% url 'users:re-admission' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <table>
+      <thead>
+        <tr>
+          <th>Course Fees</th>
+          <th>Discount Type</th>
+          <th>Discount Amount</th>
+          <th>Total Fees</th>
+          <th>Fees Received</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="course_fees">0.00</td>
+          <td>
+            <select id="discount_type" name="discount_type">
+              <option value="amount">Amount</option>
+              <option value="percentage">Percentage</option>
+            </select>
+          </td>
+          <td><input type="number" id="discount_amount" name="discount_amount" value="0.00"></td>
+          <td id="total_fees">0.00</td>
+          <td><input type="number" id="fees_received" name="fees_received" value="0.00"></td>
+          <td id="balance">0.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Installment Details</h2>
+    <div id="installment-container">
+      <table id="installment-table">
+        <thead>
+          <tr>
+            <th>Installment Name</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" name="installment_name_1" placeholder="Installment Name"></td>
+            <td><input type="number" name="installment_amount_1" placeholder="Amount"></td>
+            <td><input type="date" name="installment_date_1"></td>
+            <td><button type="button" class="remove-row-btn btn btn-danger btn-sm">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" class="add-row-btn btn btn-success btn-sm">Add More</button>
+
+    <div class="form-group">
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" name="remarks" rows="4" placeholder="Enter any remarks or comments here..."></textarea>
+    </div>
+
+    <div>
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back();">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('installment-container').addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-row-btn')) {
+      const row = e.target.closest('tr');
+      if (row) {
+        row.remove();
+      }
+    }
+  });
+
+  // Update course fees dynamically when a course is selected
+  document.getElementById('id_course_of_interest').addEventListener('change', function() {
+    var courseId = this.value;
+    fetch(`/get-course-fees/${courseId}/`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('course_fees').textContent = data.course_fees;
+        updateTotalFees();
+      });
+  });
+
+  // Recalculate total fees and balance when discount or fees received is updated
+  document.getElementById('discount_amount').addEventListener('input', updateTotalFees);
+  document.getElementById('fees_received').addEventListener('input', updateBalance);
+  document.getElementById('discount_type').addEventListener('change', updateTotalFees);
+
+  function updateTotalFees() {
+    var courseFees = parseFloat(document.getElementById('course_fees').textContent) || 0;
+    var discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+    var discountType = document.getElementById('discount_type').value;
+    var totalFees = courseFees;
+
+    if (discountType === 'percentage') {
+      discountAmount = courseFees * (discountAmount / 100);
+    }
+
+    totalFees = courseFees - discountAmount;
+    document.getElementById('total_fees').textContent = totalFees.toFixed(2);
+
+    updateBalance();
+  }
+
+  function updateBalance() {
+    var totalFees = parseFloat(document.getElementById('total_fees').textContent) || 0;
+    var feesReceived = parseFloat(document.getElementById('fees_received').value) || 0;
+    var balance = totalFees - feesReceived;
+
+    document.getElementById('balance').textContent = balance.toFixed(2);
+  }
+
+  // Add event listener to the external "Add More" button
+  document.querySelector('.add-row-btn').addEventListener('click', function() {
+    const table = document.getElementById('installment-table').getElementsByTagName('tbody')[0];
+    const rowCount = table.rows.length + 1;
+
+    // Create new row with inputs for installment name, amount, and date
+    const newRow = `
+      <tr>
+        <td><input type="text" name="installment_name_${rowCount}" placeholder="Installment Name"></td>
+        <td><input type="number" name="installment_amount_${rowCount}" placeholder="Amount"></td>
+        <td><input type="date" name="installment_date_${rowCount}"></td>
+        <td><button type="button" class="remove-row-btn btn btn-danger btn-sm">Remove</button></td>
+      </tr>
+    `;
+
+    // Append the new row to the table body
+    table.insertAdjacentHTML('beforeend', newRow);
+  });
+</script>
+{% endblock %}
