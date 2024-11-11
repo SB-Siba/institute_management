@@ -105,40 +105,30 @@ class CourseCreateView(View):
 
     def post(self, request):
         form = CourseForm(request.POST, request.FILES)
+        subjects = request.POST.getlist('course_subjects', [])
 
         if 'add_subject' in request.POST:
             subject_name = request.POST.get('course_subject', '').strip()
-            subjects = request.POST.getlist('subjects', [])
-
             if subject_name:
-                # Add the new subject to the subjects list
                 subjects.append(subject_name)
-            
+
             return render(request, self.template_name, {'form': form, 'subjects': subjects})
 
         elif 'delete_subject' in request.POST:
             subject_index = int(request.POST.get('delete_subject'))
-            subjects = request.POST.getlist('subjects', [])
-
             if 0 <= subject_index < len(subjects):
                 subjects.pop(subject_index)
 
             return render(request, self.template_name, {'form': form, 'subjects': subjects})
 
         elif 'add_course' in request.POST:
-            subjects = request.POST.getlist('subjects', [])
             if form.is_valid():
                 course = form.save(commit=False)
-
-                # Save subjects as JSON in the course_subject field
                 course.course_subject = [{'id': i + 1, 'name': subject} for i, subject in enumerate(subjects)]
                 course.save()
-
-                # Redirect to course list after successful save
                 messages.success(request, 'Course added successfully!')
-                return redirect('course:course_list')  # Adjust the URL name as per your config
-            else:
-                return render(request, self.template_name, {'form': form, 'subjects': subjects})
+                return redirect('course:course_list')  
+            return render(request, self.template_name, {'form': form, 'subjects': subjects})
 
         return render(request, self.template_name, {'form': form, 'subjects': []})
 

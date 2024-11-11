@@ -25,7 +25,6 @@
                 <th>Course MRP</th>
                 <th>Minimum Fees</th>
                 <th>Duration</th>
-                <th>Exam Status</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -47,7 +46,6 @@
                 <td>{{ course.course_mrp }}</td>
                 <td>{{ course.minimum_fees }}</td>
                 <td>{{ course.course_duration }}</td>
-                <td>{{ course.exam_status }}</td>
                 <td>{{ course.status }}</td>
                 <td>
                     <a href="{% url 'course:edit_course' course.id %}" class="btn btn-warning btn-sm">Edit</a>

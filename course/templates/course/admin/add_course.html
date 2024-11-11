@@ -1,32 +1,88 @@
 {% extends 'users/admin/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>{% if course %}Edit{% else %}Add{% endif %} Course</h2>
-    <form method="POST" enctype="multipart/form-data">
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    input, select, textarea {
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        background-color: #f9f9f9;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #007bff;
+        background-color: #fff;
+        outline: none;
+    }
+
+    .btn {
+        border-radius: 0.25rem;
+    }
+</style>
+
+<div class="container mt-4 bg-white p-5 rounded shadow-sm">
+    <h2 class="text-center mb-4">{% if course %}Edit Course{% else %}Add New Course{% endif %}</h2>
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
         
-        <div class="form-group">
-            <label for="course-subject-input">Subjects</label>
+        {{ form.non_field_errors }}
+        
+        <!-- Render all form fields -->
+        {% for field in form %}
+        <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% if field.errors %}
+                <div class="text-danger">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <!-- Subjects Field -->
+        <div class="form-group mb-4">
+            <label for="course-subject-input" class="form-label">Add Subject</label>
             <input type="text" id="course-subject-input" name="course_subject" class="form-control" placeholder="Enter subject">
         </div>
-    
-        <button type="submit" name="add_subject" class="btn btn-primary">Add Subject</button>
-    
+
+        <button type="submit" name="add_subject" class="btn btn-primary mb-4">Add Subject</button>
+
+        <!-- Display Added Subjects in Table Format -->
         {% if subjects %}
-            <ul>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>S/N</th>
+                    <th>Subject Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for subject in subjects %}
-                    <li>
-                        {{ subject }}
-                        <button type="submit" name="delete_subject" value="{{ forloop.counter0 }}" class="btn btn-danger">Delete</button>
-                    </li>
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ subject }}</td>
+                    <td>
+                        <button type="submit" name="delete_subject" value="{{ forloop.counter0 }}" class="btn btn-danger btn-sm">Delete</button>
+                        <input type="hidden" name="course_subjects" value="{{ subject }}">
+                    </td>
+                </tr>
                 {% endfor %}
-            </ul>
+            </tbody>
+        </table>
         {% endif %}
-    
-        <button type="submit" name="add_course" class="btn btn-success">Save Course</button>
-        <a href="{% url 'course:course_list' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+
+        <!-- Form Action Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" name="add_course" class="btn btn-success">Save Course</button>
+            <a href="{% url 'course:course_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
 </div>
 {% endblock %}

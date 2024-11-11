@@ -64,9 +64,7 @@
                         <td>{{ forloop.counter }}</td>
                         <td>
                             <a href="{% url 'users:update_student' student.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                          <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ student.id }}">
-                            Delete
-                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ student.id }}">Delete</button>
                           <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#shareModal{{ student.id }}">
                             <i class='bx bxs-share-alt'></i>
                           </button>

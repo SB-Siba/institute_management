@@ -2,17 +2,17 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1>List Students Payments</h1>
+    <h1>Students Payments List</h1>
 
     <div class="row mb-3">
         <div class="col-md-4">
-            <strong>Total Fees: Rs. {{ students|length }}</strong> <!-- Customize this to display correct total fees -->
+            <strong>Total Course Fees: Rs. {{ total_fees }}</strong> 
         </div>
         <div class="col-md-4">
-            <strong>Paid Fees: Rs. 10000</strong> <!-- Placeholder, update with correct logic -->
+            <strong>Total Fees Paid: Rs. {{ total_paid_fees }}</strong> 
         </div>
         <div class="col-md-4">
-            <strong>Balance Fees: Rs. 5000</strong> <!-- Placeholder, update with correct logic -->
+            <strong>Total Balance Fees: Rs. {{ total_balance_fees }}</strong> 
         </div>
     </div>
 
@@ -31,8 +31,8 @@
         <div class="col-md-6">
             <form method="GET">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Search" value="{{ request.GET.search }}">
-                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    <input type="text" name="search" class="form-control" placeholder="Search" value="{{ search_query }}">
+                    <button class="btn btn-primary" type="submit">Search</button>
                 </div>
             </form>
         </div>
@@ -41,12 +41,13 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>#</th>
+                <th>S/N</th>
                 <th>Student Name</th>
                 <th>Course Name</th>
                 <th>Total Course Fees</th>
                 <th>Fees Paid</th>
-                <th>Fees Balance</th>
+                <th>Balance Fees</th>
+                <th>Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -54,13 +55,34 @@
             {% for student in students %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ student.full_name }}</td>
-                    <td>{{ student.course_of_interest }}</td>
+                    <td>{{ student.user.full_name }}</td> 
+                    <td>{{ student.user.course_of_interest }}</td>
                     <td>Rs. {{ student.total_fees }}</td>
                     <td>Rs. {{ student.fees_received }}</td>
                     <td>Rs. {{ student.balance }}</td>
+                    <td>{{ student.latest_payment_date|date:"d-m-Y" }}</td>
                     <td>
-                        
+                        <a href="{% url 'users:add_new_payment' student.user.id %}" class="btn btn-sm btn-warning">Edit</a>  
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.user.id }}">  
+                            Delete  
+                        </button>
+                        <div class="modal fade" id="deleteModal{{ student.user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ student.user.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ student.user.id }}">Confirm Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete {{ student.full_name }}?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <a href="{% url 'users:student_delete' student.user.id %}" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
                     </td>
                 </tr>
             {% empty %}
@@ -70,9 +92,8 @@
             {% endfor %}
         </tbody>
     </table>
-
     <!-- Pagination controls -->
-    <nav>
+    <!-- <nav>
         <ul class="pagination">
             {% if students.has_previous %}
                 <li class="page-item">
@@ -96,7 +117,7 @@
                 </li>
             {% endif %}
         </ul>
-    </nav>
+    </nav> -->
 </div>
 
 {% endblock %}

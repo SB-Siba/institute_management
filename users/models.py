@@ -3,19 +3,14 @@ import random
 import string
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser ,PermissionsMixin
-from PIL import Image
-from django.forms import ValidationError
 from django.urls import reverse
 from course.models import Course
 from users.manager import MyAccountManager
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from helpers import utils
-import uuid
 from django.conf import settings
 from helpers.methods import request_deletion, cancel_deletion
-from datetime import date
-from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -73,11 +68,10 @@ class Batch(models.Model):
         super().save(*args, **kwargs)
 
     def get_remaining_seats(self):
-        """Calculate remaining seats by subtracting enrolled students from total seats."""
         return self.total_seats - (self.number_of_students or 0)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name or "Unknown Batch"
 
 class User(AbstractBaseUser, PermissionsMixin):
     YESNO = (
@@ -134,9 +128,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     course_fees = models.FloatField(max_length=100, blank=True, null=True)
     admission_date = models.DateField(default=timezone.now)
     discount_rate = models.CharField(max_length=10, choices=DISCOUNT_CHOICES, default='amount-', blank=True)
-    discount_amount = models.FloatField(default=0.0, null=True, blank=True)
+    discount_amount = models.FloatField(null=True, blank=True)
     total_fees = models.FloatField(default=0.0, null=True, blank=True, editable=False)
-    fees_received = models.FloatField(default=0.0, null=True, blank=True)
+    fees_received = models.FloatField(null=True, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
     remarks = models.TextField(blank=True)
 
@@ -154,20 +148,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = MyAccountManager()
 
     def save(self, *args, **kwargs):
-        # Ensure course fees and balance are set when the course of interest is selected
         if self.course_of_interest:
-            self.course_fees = self.course_of_interest.course_fees  # Automatically fetch the course fees from the selected course
+            self.course_fees = self.course_of_interest.course_fees or 0.0
             self.total_fees = self.course_fees - Decimal(self.discount_amount or 0)
             self.balance = self.total_fees - Decimal(self.fees_received or 0)
         else:
             self.course_fees = 0.0
             self.total_fees = 0.0
             self.balance = 0.0
-
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.full_name   
+        return self.full_name or "Unknown User"
 
 class Installment(models.Model):
     student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
@@ -179,10 +171,18 @@ class Installment(models.Model):
         return f"{self.installment_name} - {self.amount}"
         
 class Payment(models.Model):
+    PAYMENT_MODE_CHOICES = [
+        ('cash', 'Cash'),
+        ('cheque', 'Cheque'),
+        ('demand draft', 'Demand Draft'),
+        ('online transfer', 'Online Transfer'),
+        ('account adjustment', 'Account Adjustment')
+    ]
     student = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
     amount = models.FloatField(default=0.0, null=True, blank=True)
-    date = models.DateField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    payment_mode = models.CharField(max_length=20, choices=PAYMENT_MODE_CHOICES, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     
 class ReferralSettings(models.Model):
@@ -208,3 +208,17 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.name} - {self.date} - {self.status}"
+    
+class ReAdmission(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    course_fees = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_fees = models.DecimalField(max_digits=10, decimal_places=2)
+    fees_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(default=timezone.now)
+    remarks = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return f"{self.student.full_name} - {self.course.course_name} - {self.date}"

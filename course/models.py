@@ -39,24 +39,4 @@ class Course(models.Model):
     def __str__(self):
         return self.course_name
     
-    def calculate_fees(self, fees_received=0):
-        """
-        Calculate the discount amount, total fees, and balance.
-        """
-        if self.discount_rate:
-            discount_rate = float(self.discount_rate)
-        else:
-            discount_rate = 0
-
-        if self.discount_rate == 'amount+':
-            self.discount_amount = max(0, discount_rate)
-        elif self.discount_rate == 'amount-':
-            self.discount_amount = min(self.course_fees, discount_rate)
-        elif self.discount_rate == 'percent+':
-            self.discount_amount = (self.course_fees * discount_rate) / 100
-        elif self.discount_rate == 'percent-':
-            self.discount_amount = (self.course_fees * discount_rate) / 100
-
-        self.total_fees = self.course_fees - self.discount_amount
-        self.balance = self.total_fees - fees_received
-        self.save()
+    

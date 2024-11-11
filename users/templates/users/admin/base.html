@@ -63,13 +63,13 @@
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:re-admission' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Re-Admission</span>
+						<a href="{% url 'users:re-admission-list' %}" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-4">Re-Admission List</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
+						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees list</span>
 						</a>
 					</li>
 					<!-- <li class="sidebar-item">
@@ -97,12 +97,12 @@
 							<i class="lni lni-database"></i><span class="ms-4">Courses</span>
 						</a>
 					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
+					<!--<li class="sidebar-item">
+						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
 						</a>
 					</li>
-					<!--<li class="sidebar-item">
+						<li class="sidebar-item">
 						<a href="" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
 						</a>
@@ -196,8 +196,8 @@
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authenti">
 					<li class="sidebar-item">
-						<a href="{% url 'users:online_class_notifications' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Online Class Notifications</span>
+						<a href="#" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Offline Class Notifications</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
