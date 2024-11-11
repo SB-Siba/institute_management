@@ -11,79 +11,39 @@
                   <table class="table table-hover table-nowrap">
                       <thead class="table-light">
                         <tr>
-                            <th class="" id="tb-head" scope="col">Name</th>
-                            <th class="" id="tb-head" scope="col">E-Mail</th>
-                            <th class="" id="tb-head" scope="col">Contact</th>
-                            <th class="" id="tb-head" scope="col">Date & Time</th>
-                            <th class="" id="tb-head" scope="col">User Type</th>
-                            <th class="" id="tb-head" scope="col">Action</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">E-Mail</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Date & Time</th>
+                            <th scope="col">User Type</th>
+                            <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody id="test_table_tbody">
-                        {% for message in messages %}                  
+                        {% for message in messages %}
                         <tr>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              {{ message.name }}
-                            </div>
-                          </td>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              {{ message.email }}
-                            </div>
-                          </td>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              {{ message.contact }}
-                            </div>
-                          </td>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              {{ message.created_at }}
-                            </div>
-                          </td>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              {% if message.user %}
-                                Authenticated
-                              {% else %}
-                                Unauthenticated
-                              {% endif %}
-                            </div>
-                          </td>
-                          <td class="tb-body">
-                            <div class="tb-body_sub">
-                              <a href="{% url 'app_common:admin_message_detail' message.id %}" class="text-info">View Details</a>
-                            </div>
-                          </td>
+                            <td class="tb-body">{{ message.full_name|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.email|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.contact|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.created_at }}</td>
+                            <td class="tb-body">
+                                {% if message.user %}
+                                    Authenticated
+                                {% else %}
+                                    Unauthenticated
+                                {% endif %}
+                            </td>
+                            <td class="tb-body">
+                                <a href="{% url 'app_common:admin_message_detail' message.id %}" class="text-info">View Details</a>
+                            </td>
                         </tr>
                         {% endfor %}
-                      </tbody>
+                    </tbody>                    
                   </table>
               </div>
-              
           </div>
-      </div>
-      <div class="py-lg-2">
-        <div class="pagination">
-          <a href="#">&laquo;</a>
-          <a href="#">1</a>
-          <a href="#" class="active">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">5</a>
-          <a href="#">6</a>
-          <a href="#">...</a>
-          <a href="#">&raquo;</a>
-        </div>
       </div>
   </div>
 </section>
 
-
-
-
-
-
 {% endblock content %}
- 

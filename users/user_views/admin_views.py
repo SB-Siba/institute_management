@@ -21,6 +21,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.generic import UpdateView
+from django.utils import timezone
 
 from users.models import Attendance
 app = "users/admin/"
@@ -29,20 +30,21 @@ app = "users/admin/"
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class AdminDashboard(View):
-    template = app + "index.html"  # Update the template path if necessary
+    template = app + "index.html"
 
     def get(self, request):
         return render(request, self.template)
 
 class StudentListView(View):
-    template_name = app + 'student_list.html'  # Adjust the path as needed
+    template_name = app + 'student_list.html'
     
     def get(self, request):
         search_query = request.GET.get('q', '')
-        students = models.User.objects.filter(full_name__icontains=search_query).order_by('id')
+        # Only display students (users with is_admitted=True)
+        students = models.User.objects.filter(is_admitted=True, full_name__icontains=search_query).order_by('id')
         
         # Pagination
-        paginator = Paginator(students, 10)  # Show 10 students per page
+        paginator = Paginator(students, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         
@@ -107,45 +109,65 @@ def get_course_fee(request):
     return JsonResponse({'error': 'No course_id provided'}, status=400)
 
 class AddNewStudentView(View):
-    model = models.User
-    template = app + 'add_new_student.html'  # Update this path as needed
+    template_name = app + 'add_new_student.html'
 
-    def get(self, request):
-        user_form = StudentForm()
+    def get(self, request, student_id=None):
+        """
+        Handles the GET request to display the form for adding a new student
+        or admitting an existing student.
+        """
+        student_instance = get_object_or_404(User, id=student_id) if student_id else None
+        # Set admit_existing_user=True if student_instance is provided
+        user_form = StudentForm(instance=student_instance, admit_existing_user=bool(student_instance))
+        
         InstallmentFormSet = formset_factory(InstallmentForm, extra=1)
         installment_formset = InstallmentFormSet()
+
+        registered_users = User.objects.filter(is_admitted=False, is_superuser=False)
         batch = Batch.objects.all()
         courses = Course.objects.all()
-        return render(request, self.template, {
+
+        return render(request, self.template_name, {
             'user_form': user_form,
             'installment_formset': installment_formset,
             'courses': courses,
+            'registered_users': registered_users,
+            'batch': batch
         })
 
-    def post(self, request):
-        user_form = StudentForm(request.POST, request.FILES)  # Ensure request.FILES is passed
+    def post(self, request, student_id=None):
+        """
+        Handles the POST request to save the student data and associated installment data.
+        """
+        student_instance = get_object_or_404(User, id=student_id) if student_id else None
+        # Pass admit_existing_user=True if an existing user is being admitted
+        user_form = StudentForm(request.POST, request.FILES, instance=student_instance, admit_existing_user=bool(student_instance))
+
         InstallmentFormSet = formset_factory(InstallmentForm, extra=1)
         installment_formset = InstallmentFormSet(request.POST)
 
         if user_form.is_valid() and installment_formset.is_valid():
             try:
                 student = user_form.save(commit=False)
-
+                student.is_admitted = True  # Mark as admitted
                 if 'student_image' in request.FILES:
                     student.student_image = request.FILES['student_image']
                 student.save()
+
+                # Save each installment
                 for form in installment_formset:
-                    if form.cleaned_data and form.cleaned_data.get('installment_name'):
+                    if form.cleaned_data.get('installment_name'):
                         installment = form.save(commit=False)
-                        installment.student = student  # Link the installment to the student
+                        installment.student = student
                         installment.save()
-                messages.success(request, 'Student added successfully!')
+
+                messages.success(request, 'Student admitted successfully!')
                 return redirect('users:student_list')
 
             except ValueError as e:
                 messages.error(request, f"There was an error: {e}")
 
-        return render(request, self.template, {
+        return render(request, self.template_name, {
             'user_form': user_form,
             'installment_formset': installment_formset
         })
@@ -231,7 +253,6 @@ class StudentDeleteView(View):
         except models.User.DoesNotExist:
             return JsonResponse({'error': 'Student not found.'}, status=404)
 
-from django.utils import timezone
 class ReAdmissionView(View):
     template_name = app + 're_admission.html'
     form_class = ReAdmissionForm
@@ -714,3 +735,28 @@ def get_course_details(request, course_id):
     except Course.DoesNotExist:
         return JsonResponse({'error': 'Course not found.'}, status=404)
 
+class AllUserListView(View):
+    template_name = app + 'all_users.html'
+
+    def get(self, request):
+        # Get all users, excluding superuser and staff accounts
+        users = User.objects.filter(is_superuser=False, is_staff=False, is_admitted=False).order_by('id')
+        
+        # Pass users to the template with additional context
+        context = {
+            'users': users,
+            'title': 'All Users',
+        }
+        return render(request, self.template_name, context)
+    
+class UserEditView(View):
+    model = User
+    template_name = 'user_edit.html'
+    fields = ['username', 'email', 'profile__contact']  # Adjust fields as needed
+    success_url = reverse_lazy('all_user_list')
+
+class DeleteUserView(View):
+    def delete(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        return JsonResponse({'success': True, 'user_id': user.id})

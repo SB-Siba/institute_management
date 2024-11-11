@@ -112,9 +112,15 @@ body::-webkit-scrollbar {
 	white-space: nowrap;
 	overflow-x: hidden;
 }
+.sidebar-links i {
+  margin-right: 1rem;
+}
+.sidebar-item {
+  margin-bottom: 0.5rem;
+}
 a.sidebar-links{
 	padding: .625rem 0rem;
-
+  
 	color: #fff;
 	display: block;
 	white-space: nowrap;
@@ -144,7 +150,7 @@ a.sidebar-links{
 .chevron-icon {
   transition: transform 0.3s;
   font-size: 12px !important;
-  margin-left: 40px;
+  margin-left: auto;
 }
 
 .chevron-icon.rotate {
@@ -154,7 +160,11 @@ a.sidebar-links{
   position: relative;
 }
 .sidebar-dropdown{
-  padding-left: 10px;
+  padding-left: 1.5rem;
+  margin-top: 0.2rem;
+}
+.sidebar-link.has-dropdown {
+  margin-bottom: 1rem;
 }
 /* SIDEBAR */
 

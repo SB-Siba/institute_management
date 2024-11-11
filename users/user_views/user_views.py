@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from datetime import datetime
 from django.conf import settings
+from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 from users import forms
 from users.models import User
 from uuid import uuid4
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import UpdateView
 app = "users/user/"
 
 class ProfileView(View):
-    template = app + "userprofile.html"
+    template = app + "userprofie.html"
 
     def get(self, request):
         user = request.user
@@ -19,55 +23,6 @@ class ProfileView(View):
 
         return render(request, self.template, locals())
 
-
-class UpdateProfileView(View):
-    template = app + "update_profile.html"
-    form = forms.UpdateProfileForm
-
-    def get(self, request):
-        user = request.user
-
-        initial_data = {
-            "full_name": user.full_name,
-            "email": user.email,
-            "contact": user.contact,
-
-        }
-        form = self.form(initial=initial_data)
-
-        return render(request, self.template, locals())
-
-    def post(self, request):
-        form = self.form(request.POST, request.FILES)
-        
-        if form.is_valid():
-            email = form.cleaned_data["email"]
-            full_name = form.cleaned_data["full_name"]
-            contact = form.cleaned_data["contact"]
-            profile_picture = form.cleaned_data["profile_pic"]
-            user = request.user
-
-            try:
-                user.email = email
-                user.full_name = full_name
-                user.contact = contact
-
-                if profile_picture:
-                    user.profile_pic = profile_picture
-
-                user.save()
-                messages.success(request, "Profile updated successfully.")
-                return redirect("users:account_details")
-
-            except Exception as e:
-                messages.error(request, f"Error in updating profile: {str(e)}")
-
-        return render(request, self.template, {'form': form})
-
-
-
-
-
 class AllAddress(View):
     template = app + "alladdress.html"
 
@@ -76,8 +31,6 @@ class AllAddress(View):
         addresses = user.address or []  # This will return a list of addresses
 
         return render(request, self.template, {"addresses": addresses})
-
-
 
 class ProfileAddAddress(View):
     template = app + "addaddress.html"
@@ -194,9 +147,8 @@ class ProfileDeleteAddress(View):
 
         return redirect("users:alladdress")
 
-
 class AccountDetails(View):
-    template = app + "account_details.html"
+    template = app + "index.html"
 
     def get(self, request):
         user = request.user
@@ -208,3 +160,44 @@ class AccountDetails(View):
         return render(request, self.template, {
             'userobj': user,
         })
+
+class UpdateProfileView(UpdateView):
+    model = User
+    form_class = forms.ProfileUpdateForm
+    template_name = app + 'profile_update.html'
+    success_url = reverse_lazy('users:home')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, "Profile updated successfully.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "There was an error updating your profile. Please try again.")
+        return super().form_invalid(form)
+
+@method_decorator(login_required, name='dispatch')
+class SupportView(View):
+    template_name = app + 'help_support.html'
+
+    def get(self, request):
+        form = forms.SupportForm(initial={
+            'mobile': request.user.contact,
+            'email': request.user.email
+        })
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login') 
+
+        form = forms.SupportForm(request.POST, request.FILES)
+        if form.is_valid():
+            support = form.save(commit=False)
+            support.user = request.user  
+            support.save()
+            messages.success(request, 'Your support request has been submitted successfully.')
+            return redirect('users:support')
+        return render(request, self.template_name, {'form': form})

@@ -3,16 +3,28 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from app_common.models import ContactMessage
 from app_common.forms import ReplyForm
+from users.models import Support
 from users.user_views.emails import send_template_email
+from itertools import chain
+
 
 
 app = 'app_common/'
 
 class AdminMessageListView(View):
-    template = app +'admin/message_list.html'
+    template = app + 'admin/message_list.html'
 
     def get(self, request, *args, **kwargs):
-        messages = ContactMessage.objects.all().order_by('-created_at')
+        contact_messages = ContactMessage.objects.all().order_by('-created_at')
+        support_messages = Support.objects.all().order_by('-created_at')
+        
+        # Combine both message types, sorted by created_at
+        messages = sorted(
+            chain(contact_messages, support_messages),
+            key=lambda message: message.created_at,
+            reverse=True
+        )
+
         return render(request, self.template, {'messages': messages})
 
 class AdminMessageDetailView(View):

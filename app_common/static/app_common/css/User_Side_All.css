@@ -138,37 +138,40 @@
     top: 0;
     left: 0;
     z-index: 1000000;
-    max-height: 130px;
+    max-height: 50px;
   }
 #header_rows{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-  .HeaderButton li a {
-    font-family: 'poppins', sans-serif;
-    font-size: .8rem;
-    letter-spacing:2px;
-    position: relative;
-    color:var(--third2) ;
-    padding: 0 2px;
-  
-  }
- 
-.HeaderButton li a:after{
+.HeaderButton li a {
+  font-family: 'poppins', sans-serif;
+  font-size: .8rem;
+  letter-spacing: 2px;
+  position: relative;
+  color: var(--third2);
+  padding: 0 2px;
+}
+
+/* Add underline for active link */
+.HeaderButton li a.active::after {
   position: absolute;
   content: "";
-  background-color:  #FF0099;
-  width: 0%;
+  background-color: #FF0099;
+  width: 100%; /* Ensure it covers the whole width */
   height: 2px;
   bottom: -2px;
   left: 0;
-  transition:all 0.5s ease-in-out;
 }
-.HeaderButton li a:hover::after{
+
+/* Underline on hover */
+.HeaderButton li a:hover::after {
   width: 100%;
- 
+  background-color: #FF0099; /* Maintain same color as active */
+  transition: all 0.5s ease-in-out;
 }
+
 
   .HeaderIcons {
     font-size: 1.2rem;
@@ -356,12 +359,6 @@ transform: scale(1.03);
   width: 50%;
   margin-top: 10%;
   }
-  .aboutniwa1 p:first-letter{
-    font-family: "Oswald",sans-serif;
-    font-size:30px;
-    font-weight:600;
-   
-  }
   .aboutniwa1 p{
     font-family: sans-serif;
     font-weight: 200;
@@ -370,7 +367,7 @@ transform: scale(1.03);
     letter-spacing: 1.5px;
   }
 
-
+  
 
 
 

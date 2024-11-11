@@ -1,0 +1,126 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %} Course Details | NiwaAgro.com {% endblock title %}
+
+{% block content %}
+
+<style>
+    .course-details-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .course-details-left img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .course-details-right {
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        flex-grow: 1;
+    }
+
+    .course-details-heading {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .subject-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .subject-list li {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .basic-info {
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    .basic-info p {
+        margin: 8px 0;
+    }
+
+    .admission-button {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .admission-button:hover {
+        background-color: #0056b3;
+        color: #000;
+    }
+</style>
+
+<section id="course-details">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'app_common:our_courses' %}">Courses</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ course.course_name }}</li>
+            </ol>
+        </nav>
+
+        <!-- Course Title -->
+        <h3 class="course-details-heading">{{ course.course_name }} ({{ course.course_code }})</h3>
+
+        <!-- Course Details Container -->
+        <div class="course-details-container">
+            <!-- Left Side: Course Image -->
+            <div class="course-details-left">
+                {% if course.course_image %}
+                    <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}">
+                {% else %}
+                    <img src="{% static 'app_common/images/default-course-image.jpg' %}" alt="Default Image">
+                {% endif %}
+            </div>
+
+            <!-- Right Side: Course Information -->
+            <div class="course-details-right">
+                <h5>BASIC INFORMATION</h5>
+                <p><strong>Course Duration:</strong> {{ course.course_duration }}</p>
+                <p><strong>Course Fees:</strong> ₹{{ course.course_fees }} 
+                    <span style="text-decoration: line-through; color: red;">₹{{ course.course_mrp }}</span>
+                </p>
+                <p><strong>Minimum Amount To Pay:</strong> ₹{{ course.minimum_fees }}</p>
+                <a href="#" class="admission-button">Admission Now</a>
+            </div>
+        </div>
+
+        <!-- Course Subjects -->
+        {% if course.subjects.all %}
+        <div class="course-subjects mt-4">
+            <h5>All Subjects:</h5>
+            <ul class="subject-list">
+                {% for subject in course.subjects.all %}
+                    <li>{{ forloop.counter }}. {{ subject }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p>No subjects available for this course.</p>
+        {% endif %}
+    </div>
+</section>
+<br><br><br>
+{% endblock content %}

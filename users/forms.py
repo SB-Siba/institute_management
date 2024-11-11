@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from users.models import Batch, OnlineClass, User, Installment, Payment, User, Course
+from users.models import Batch, OnlineClass, Support, User, Installment, Payment, User, Course
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -101,7 +101,6 @@ class UpdateProfileForm(forms.Form):
 
 
 
-
 class AddressForm(forms.Form):
     Address1 = forms.CharField(max_length=255)
     Address1.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
@@ -125,7 +124,6 @@ class AddressForm(forms.Form):
     pincode.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Pincode',"required":"required"})
 
 
-
 class EditUserForm(forms.Form):
     model =User
     email = forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
@@ -133,13 +131,11 @@ class EditUserForm(forms.Form):
     contact = forms.IntegerField(label="Contact",widget=forms.NumberInput(attrs={"class":"form-control"}))
 
 
-
 class AddUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'full_name', 'contact', 'password']  # Include necessary fields
 
-    # Optionally, you can add custom validation or widgets
     password = forms.CharField(widget=forms.PasswordInput)
 
 class StudentForm(forms.ModelForm):
@@ -149,16 +145,11 @@ class StudentForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'student_image', 'student_signature', 'roll_number', 'abbreviation',
-            'full_name', 'select_one', 'father_husband_name', 'show_father_husband_on_certificate',
-            'surname', 'show_surname_on_certificate', 'mother_name', 'course_of_interest',
-            'email', 'contact', 'alternative_contact', 'date_of_birth',
-            'gender', 'state', 'city', 'pincode', 'permanent_address', 'exam_type',
-            'referral_code', 'aadhar_card_number', 'caste', 'qualification', 'occupation',
-            'course_fees', 'discount_rate', 'discount_amount',
-            'fees_received',
-            'remarks', 'batch', 'remaining_seats_for_batch',
-            'display_admission_form_id_card_fees_recipt'
+            'student_image', 'student_signature', 'roll_number', 'abbreviation', 'full_name', 'select_one', 
+            'father_husband_name', 'show_father_husband_on_certificate', 'mother_name', 'course_of_interest',
+            'email', 'contact', 'alternative_contact', 'date_of_birth', 'gender', 'state', 'city', 'pincode',
+            'permanent_address', 'aadhar_card_number', 'caste', 'qualification', 'occupation', 'course_fees',
+            'discount_rate', 'discount_amount', 'fees_received', 'remarks', 'batch', 'remaining_seats_for_batch',
         ]
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
@@ -166,47 +157,25 @@ class StudentForm(forms.ModelForm):
             'display_admission_form_id_card_fees_recipt': forms.RadioSelect(choices=User.YESNO),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.admit_existing_user = kwargs.pop('admit_existing_user', False)  # New flag
+        super().__init__(*args, **kwargs)
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            raise ValidationError("Please enter a valid email address.")
+        # Skip validation if admitting an existing user
+        if not self.admit_existing_user:
+            if User.objects.filter(email=email, is_admitted=True).exists():
+                raise ValidationError("A user with this email already exists.")
         return email
 
     def clean_contact(self):
         contact = self.cleaned_data.get('contact')
-        if not re.match(r"^[6-9]\d{9}$", contact):  # Only 10-digit numbers starting with 6-9
-            raise ValidationError("Please enter a valid 10-digit phone number.")
+        # Skip validation if admitting an existing user
+        if not self.admit_existing_user:
+            if User.objects.filter(contact=contact, is_admitted=True).exists():
+                raise ValidationError("A user with this contact number already exists.")
         return contact
-
-    def clean_aadhar_card_number(self):
-        aadhar = self.cleaned_data.get('aadhar_card_number')
-        if not re.match(r"^\d{12}$", aadhar):  # Exactly 12 digits
-            raise ValidationError("Please enter a valid 12-digit Aadhaar number.")
-        return aadhar
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['father_husband_name'].label = "Father/husband name"
-        self.fields['show_father_husband_on_certificate'].label = "Show father/husband on certificate"
-
-        if self.instance and self.instance.pk:
-            self.fields['total_fees'].initial = self.instance.total_fees
-            self.fields['balance'].initial = self.instance.balance
-        
-        self.fields['roll_number'].widget.attrs.update({
-            'placeholder': 'ROLL0001'
-        })
-        self.fields['full_name'].widget.attrs.update({
-            'placeholder': 'Enter full name'
-        })
-        self.fields['email'].widget.attrs.update({
-            'placeholder': 'Enter email address'
-        })
-        self.fields['contact'].widget.attrs.update({
-            'placeholder': 'Enter contact number'
-        })
-        
 
 class ReAdmissionForm(forms.Form):
     student = forms.ModelChoiceField(queryset=User.objects.filter(course_of_interest__isnull=False), required=True, label="Select Student")
@@ -284,3 +253,24 @@ class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
         fields = ['name', 'timing','number_of_students','total_seats']
+
+class SupportForm(forms.ModelForm):
+    file = forms.FileField(required=False, label="Attach Files")
+    class Meta:
+        model = Support
+        fields = ['description', 'mobile', 'email', 'file']
+        widgets = {
+            'description': forms.Textarea(attrs={'placeholder': 'Please add your queries here...', 'class': 'form-control'}),
+            'mobile': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'file': forms.FileInput(attrs={'class': 'form-control'}),
+
+        }
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['full_name', 'student_image', 'date_of_birth', 'contact', 'email', 'permanent_address']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+        }

@@ -20,6 +20,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 import uuid
 
 
@@ -91,18 +92,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     student_image = models.ImageField(upload_to='student_photos/', max_length=250, blank=True, null=True)
     student_signature = models.ImageField(upload_to='student_signatures/', max_length=250, blank=True, null=True)
-    roll_number = models.CharField(max_length=20, unique=True)
+    roll_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
     abbreviation = models.CharField(max_length=10, choices=[('Mr.', 'Mr.'), ('Ms.', 'Ms.')], blank=True)
     full_name = models.CharField(max_length=255, null=True, blank=True)
     select_one = models.CharField(max_length=10, choices=[('S/O', 'S/O'), ('D/O', 'D/O'), ('W/O', 'W/O')], blank=True)
     father_husband_name = models.CharField(max_length=100, blank=True)
     show_father_husband_on_certificate = models.BooleanField(default=False)
-    surname = models.CharField(max_length=100, blank=True)
-    show_surname_on_certificate = models.BooleanField(default=False)
     mother_name = models.CharField(max_length=100, blank=True)
     course_of_interest = models.ForeignKey('course.Course', on_delete=models.SET_NULL, null=True, blank=True)
     email = models.EmailField(null=True, blank=True, unique=True)
-    username = models.CharField(max_length=8, unique=True, blank=True, null=True)
     password = models.CharField(max_length=128, null=True, blank=True)
     contact = models.CharField(max_length=10, null=True, blank=True, unique=True)
     alternative_contact = models.CharField(max_length=10, null=True, blank=True, unique=True)
@@ -112,9 +110,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=100, blank=True)
     pincode = models.CharField(max_length=10, blank=True)
     permanent_address = models.TextField(blank=True)
-    exam_type = models.CharField(max_length=100, choices=[('ONLINE', 'ONLINE'), ('OFFLINE', 'OFFLINE')], blank=True)
-    referral_name = models.CharField(max_length=50, blank=True)
-    referral_code = models.CharField(max_length=50, blank=True)
     aadhar_card_number = models.CharField(max_length=12, blank=True)
     caste = models.CharField(
     max_length=50,
@@ -130,7 +125,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     batch = models.ForeignKey('Batch', on_delete=models.SET_NULL, null=True, blank=True)
     remaining_seats_for_batch = models.PositiveIntegerField(blank=True, null=True)
     display_admission_form_id_card_fees_recipt = models.CharField(max_length=10, choices=YESNO, default="yes")
-    status = models.CharField(max_length=10, default='active')
     course_fees = models.FloatField(max_length=100, blank=True, null=True)
     admission_date = models.DateField(default=timezone.now)
     discount_rate = models.CharField(max_length=10, choices=DISCOUNT_CHOICES, default='amount-', blank=True)
@@ -143,6 +137,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_admitted = models.BooleanField(default=False)
 
     deletion_requested = models.BooleanField(default=False)
     deletion_date = models.DateTimeField(null=True, blank=True)
@@ -167,7 +162,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.full_name   
+        return self.full_name
+    
+    @property
+    def user_type_display(self):
+        return "Student" if self.is_admitted else "User"
 
 class Installment(models.Model):
     student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
@@ -208,3 +207,18 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.name} - {self.date} - {self.status}"
+
+
+class Support(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField()
+    mobile = models.CharField(
+        max_length=15,
+        validators=[RegexValidator(r'^\+?1?\d{9,15}$', 'Enter a valid mobile number.')]
+    )
+    email = models.EmailField(blank=True, null=True)
+    file = models.FileField(upload_to='support_files/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Support Request by {self.user.username} - {self.created_at}"

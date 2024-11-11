@@ -2,6 +2,8 @@
 {% load static %}
 {% block title %} About Us | NiwaAgro.com {% endblock title %}
 {% block content %}
+<!-- AOS Library CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
 <section>
     <div class="container" id="about">
@@ -13,42 +15,56 @@
                 </ol>
               </nav>
             <h3 class="text-center border-bottom pb-lg-3">About Us</h3>
-            
-            <p class="mt-lg-4">Niwa Agro Pvt Ltd is a dynamic company in the agricultural sector, dedicated to revolutionizing modern farming practices. With a focus on sustainability, innovation, and technology integration, Niwa Agro aims to enhance productivity and efficiency in agriculture. The company is committed to supporting farmers by providing advanced solutions, quality inputs, and comprehensive support services.
-               </p>
-                <div class="row p-lg-2">
-                    <div class="col col-12 col-lg-6  " >
-                        <h4 class="mb-lg-4  text-center text-success ">Welcome to Niwa Agro!</h4>
-                        <p class="text-dark lh-lg">Niwa Agro Pvt. Ltd. is a forward-thinking agricultural company committed to revolutionizing the agricultural landscape through innovative practices and sustainable solutions. With a mission to enhance food security and promote environmentally friendly farming techniques, Niwa Agro focuses on integrating modern technology with traditional farming methods to optimize productivity and ensure high-quality produce. Niwa Agro Pvt Ltd offers a wide range of products and services including high-quality seeds, fertilizers, and crop protection products. Additionally, the company invests in research and development to bring cutting-edge technologies and sustainable farming practices to its clients.</p>
+            <p>On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot fore see the pain and trouble that are bound to belongs to who fail in their duty.</p>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6">
+                    <h4>Why Choose Us?</h4><br>            
+                    <!-- Why Choose Us List -->
+                    <ul class="list-unstyled">
+                        <li><strong>1. Comprehensive Curriculum:</strong> Our courses are meticulously designed to cover a wide range of computer software and vocational subjects, ensuring that our students receive a holistic education that meets industry standards.</li>
+                        <li><strong>2. Experienced Instructors:</strong> Our team of experienced instructors are experts in their respective fields, dedicated to providing quality education and personalized guidance to every student.</li>
+                        <li><strong>3. Flexible Learning Options:</strong> We understand that our students have busy schedules, which is why we offer flexible learning options, including both in-person and online classes, to accommodate diverse needs.</li>
+                        <li><strong>4. Hands-on Training:</strong> Learning by doing is at the core of our teaching philosophy. Through hands-on training and practical exercises, our students gain valuable real-world experience that prepares them for success in their chosen careers.</li>
+                        <li><strong>5. Supportive Community:</strong> At Rational Education and Computer Training, we foster a supportive learning environment where students can collaborate, learn from each other, and grow together as a community.</li>
+                    </ul>
                     </div>
-                    <div class="col col-12 col-lg-6 side_img">
-                        <img class=" img-fluid" src="{% static 'app_common\images\about.jpg'%}" alt="About Us">
-                    </div>
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React about.jpg' %}" alt="About Us" data-aos="fade-up">
                 </div>
-                <br>
-                <div class="row border p-4">
-                    <div class="col col-12 col-lg-4 ">
-                        <h4 class="mt-lg-4 text-center text-success pb-2 " ><u>MISSION</u></h4>
-                        <h6 class="mt-lg-2 text-success" >"Cultivating Sustainable Solutions for a Healthier Tomorrow"</h6>
-                                <p class="text-dark">
-                                        At Niwa Agro Pvt. Ltd., our vision is to revolutionize the agricultural landscape by embracing innovation, sustainability, and community empowerment. We aim to be at the forefront of agricultural excellence, fostering a future where advanced farming techniques and eco-friendly practices harmonize to produce nutritious, high-quality crops.
-                            </p>
-                    </div>
-                    <div class="col col-12 col-lg-4">
-                        <h4 class="mt-lg-4 text-center text-success pb-2"><u>VISSION</u> </h4>
-                        <h6 class="mt-lg-2 text-success">"Growing green for a better world. Nurturing nature, feeding the future."</h6>
-                            <p class="text-dark" >At Niwa Agro Pvt. Ltd., our mission is to revolutionize the agricultural sector by empowering farmers with innovative and sustainable solutions. We are dedicated to enhancing productivity, ensuring food security, and promoting environmental stewardship. 
-                        </p>
-                    </div>
-                    <div class="col col-12 col-lg-4">
-                        <h4 class="mt-lg-4 text-center text-success pb-2"><u>VALUE</u> </h4>
-                        <h6 class="mt-lg-2 text-success">"Growing green for a better world. Nurturing nature, feeding the future."</h6>
-                        <p class="text-dark">At Niwa Agro, we believe in the power of sustainable agriculture to transform communities and ensure a prosperous future for all. Our values are deeply rooted in our commitment to innovation, integrity, and environmental stewardship.</p>
-                    </div>
+                <p>Whether you're looking to master essential software programs, explore new career opportunities, or simply expand your knowledge, Rational Education and Computer Training is here to help you achieve your goals. Join us today and embark on a journey of learning and growth!</p>
+                <p><strong>Ready to take the next step?</strong> Contact us now to learn more about our courses and enrollment process.</p>    
+            </div>
+            <br><br>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React_mission.jpg' %}" alt="About Us" data-aos="fade-right">
                 </div>
+                <div class="col col-12 col-lg-6">
+                    <h4 class="mb-lg-4 text-center text-success">OUR MISSION</h4>
+                    <p class="text-dark lh-lg">At Rational Education and Computer Training, our mission is to empower individuals with the skills and knowledge they need to succeed in the ever-evolving digital landscape. We are committed to providing high-quality, accessible education through a comprehensive curriculum, hands-on training, and personalized support. Our goal is to cultivate a generation of learners who are not only proficient in technology but also equipped with the critical thinking, problem-solving, and professional skills necessary to thrive in today's competitive world. By offering flexible learning options and fostering a supportive environment, we ensure that every student has the opportunity to achieve their full potential and make meaningful contributions to society.</p>
+                </div>
+            </div>
+            <br><br><br>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6">
+                    <h4 class="mb-lg-4 text-center text-success">OUR VISION</h4>
+                    <p class="text-dark lh-lg">Our vision is to become a leading educational institution that bridges the gap between traditional education and modern technological skills. We envision a future where students from all walks of life can access world-class computer software and vocational training, preparing them for the challenges and opportunities of the digital age. Through innovation, quality instruction, and a focus on lifelong learning, we aim to inspire and guide our students towards successful careers, fostering a brighter and more sustainable future for all. Our vision is to create a global community of learners, innovators, and professionals who are ready to lead in a constantly changing world.</p>
+                </div>
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React_vision.jpg' %}" alt="About Us" data-aos="fade-left">
+                </div>
+            </div>
         </div>
-       
     </div>
 </section>
+<!-- AOS Library JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 1200,  // Animation duration
+    once: true       // Animation happens only once when it enters the viewport
+  });
+</script>
 
 {% endblock content %}

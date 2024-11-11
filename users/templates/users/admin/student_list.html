@@ -45,33 +45,20 @@
             <thead>
                 <tr>
                     <th>S/N</th>
-                    <th>Action</th>
-                    <th>Status</th>
                     <th>Photo</th>
                     <th>Batch</th>
                     <th>Student Name</th>
+                    <th>Email</th>
                     <th>Course Interested</th>
-                    <th>Username</th>
-                    <th>Password</th>
                     <th>Mobile</th>
-                    <th>Referral Code</th>
                     <th>Admission Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="studentTableBody">
                 {% for student in page_obj %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>
-                            <a href="{% url 'users:update_student' student.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                          <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ student.id }}">
-                            Delete
-                          </button>
-                          <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#shareModal{{ student.id }}">
-                            <i class='bx bxs-share-alt'></i>
-                          </button>
-                        </td>
-                        <td>{{ student.status }}</td>
                         <td>
                             {% if student.student_image %}
                                 <img src="{{ student.student_image.url }}" alt="Photo" width="50">
@@ -81,12 +68,19 @@
                         </td>                        
                         <td>{{ student.batch }}</td>
                         <td>{{ student.full_name }}</td>
+                        <td>{{ student.email }}</td>
                         <td>{{ student.course_of_interest }}</td>
-                        <td>{{ student.username }}</td>
-                        <td>{{ student.password }}</td>
                         <td>{{ student.contact }}</td>
-                        <td>{{ student.referral_code }}</td>
                         <td>{{ student.admission_date }}</td>
+                        <td>
+                            <a href="{% url 'users:update_student' student.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ student.id }}">
+                                Delete
+                            </button>
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#shareModal{{ student.id }}">
+                                <i class='bx bxs-share-alt'></i>
+                            </button>
+                        </td>
                     </tr>
 
                     <!-- Share Modal -->

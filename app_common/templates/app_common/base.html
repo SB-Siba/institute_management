@@ -44,100 +44,163 @@
   <script src="
   https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+  <style>
+    /* Contact Container Styling */
+    .contact-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: #077aec;
+      width: 70%;
+      max-width: 1200px;           /* Limits container width */
+      margin: 0 auto 20px;          /* Centers container with spacing at the bottom */
+      border-radius: 20px;
+      position: relative;
+      bottom: 25px;
+      transform: scale(1);          /* Default scale */
+      transition: transform 0.3s ease-in-out; /* Smooth transition for zoom effect */
+      z-index: 1;
+    }
+  
+    /* Zoom-in effect */
+    .contact-container.zoomed {
+      transform: scale(1.2);        /* Adjust scale for zoom intensity */
+    }
+  
+    /* Styling for icons in contact sections */
+    .contact-section i {
+      font-size: 40px;              /* Icon size */
+      color: white;                 /* Icon color */
+      margin-bottom: 10px;          /* Space between icon and heading */
+      display: block;
+      text-align: center;
+    }
+  
+    /* Contact Section Styling */
+    .contact-section {
+      width: 30%;                   /* Each section takes up 30% of the container */
+      color: #fff;                  /* Text color */
+      text-align: center;           /* Center-align text */
+    }
+  
+    .contact-section h6 {
+      font-size: 16px;
+      margin: 5px 0;                /* Space between heading and paragraph */
+    }
+  
+    .contact-section p {
+      margin: 5px 0;                /* Space between paragraph lines */
+    }
+  
+    /* Footer Styling */
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;           /* Adds padding for visual separation */
+      margin-top: 20px;             /* Space above footer */
+    }
+  
+    .footer-content {
+      max-width: 1200px;            /* Limits footer content width */
+      margin: 0 auto;               /* Centers footer content */
+      padding: 20px;
+    }
+  
+    /* Quick Links Styling */
+    .quick-links {
+      margin-bottom: 20px;          /* Space between Quick Links and footer text */
+    }
+  
+    .quick-links h6 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  
+    /* Non-Responsive Grid Layout for 4 Columns */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
+      gap: 20px;                /* Space between columns */
+      justify-items: center;    /* Center the content within columns */
+      max-width: 1200px;        /* Aligns grid width with footer and contact container */
+      margin: 0 auto;           /* Centers the grid */
+      margin-top: 20px;
+    }
+  
+    .links-column ul {
+      list-style: none;         /* Remove bullet points */
+      padding: 0;
+    }
+  
+    .links-column ul li {
+      margin-bottom: 8px;
+    }
+  
+    .links-column ul li a {
+      text-decoration: none;
+      color: white;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+  
+    .links-column ul li a:hover {
+      color: #077aec;           /* Link color on hover */
+    }
+  
+    /* Footer Text Styling */
+    footer p {
+      font-size: 14px;
+      margin-top: 20px;
+    }
+  </style>  
 
 </head>
 
 <body>
   {% if user.is_authenticated %}
 
-  <header class="p-lg-3">
-    <div class="container">
-      <div class="row align-items-center" id="header_rows">
-        <div class="col-lg-2 col-6" id="menu-bar">
-          <!-- logo -->
-          <button class="btn" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
-              class="fa-solid fa-bars"></i>
-          </button>
+  
+  {% elif not user.is_authenticated %}
 
-          <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
-            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-header">
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <ul class="list-unstyled">
-                <li><a class="nav-link" href="#">Home</a></li>
-                <li><a class="nav-link" href="#">About us</a></li>
-                <li><a class="nav-link" href="#">Blogs</a></li>
-              </ul>
-            </div>
-          </div>
-          <a class="navbar-brand" href="{% url 'users:home' %}">
-            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
-          </a>
-        </div>
-
-        <!-- full screen header -->
-        <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="">Blogs</a>
-            </li>
-              
-            <li class="nav-item">
-              <a class="nav-link" href="">Services</a>
-            </li>
-              
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
-            </li>
-            
-          </ul>
-        </div>
-        <!-- close full screen header -->
-
-        <!-- ----------Side buttons ------------->
-        <div class="col-lg-3 col-6 d-flex justify-content-around align-items-center">
-          <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
-          </button>
-          <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
-            <i class="fa-regular fa-user HeaderIcons text-success"></i> 
-          </a>
-          <a href="" class="btn">
-            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
-          </a>
-          <a href="">
-            <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-          </a>
-        
-         
-        </div>
-          
-         
-        
-        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
-          {% csrf_token %}
-          <div class="input-group">
-            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
-          </div>
-        </form>
-        
-        <!-- end ------- Side buttons --->
-
-       
+  <!-- Additional Header -->
+<header class="p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6><i class='bx bxs-bank'></i>Welcome to RATIONAL EDUCATION AND COMPUTER TRAINING</h6>
       </div>
     </div>
-  </header>
-  {% elif not user.is_authenticated %}
+  </div>
+</header>
+
+<!-- Space between headers -->
+<div style="height: 80px;">
+  <div class="d-flex justify-content-between align-items-center px-5">
+    <!-- Left: Logo -->
+    <a class="navbar-brand" href="{% url 'users:home' %}">
+      <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="Certificate Logo" class="certificate-logo">
+    </a>
+
+    <!-- Center: Contact Details -->
+    <div class="d-flex flex-column text-center mx-4" style="font-size: 18px; justify-content: center;">
+      <div class="d-inline-flex gap-2">
+        <strong><i class='bx bxs-envelope'></i> Mail Us:</strong>
+        <a href="mailto:step2reactindia@gmail.com" class="text-decoration-none">step2reactindia@gmail.com</a>
+        <strong><i class='bx bxs-phone'></i> Call Us:</strong>
+        <a href="tel:+919778577090" class="text-decoration-none">+91 97785 77090</a>
+      </div>
+    </div>
+
+    <!-- Right: Login Buttons -->
+    <div class="d-flex gap-2">
+      <a href="{% url 'users:login' %}" class="btn btn-outline-success">Signup</a>
+      <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Login</a>
+    </div>
+  </div>
+</div>
+
 
   <header class="p-lg-3">
     <div class="container">
@@ -165,213 +228,122 @@
             </ul>
           </div>
         </div>
-    
-          <a class="navbar-brand" href="{% url 'users:home' %}">
-            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
-          </a>
-        </div>
+      </div>
 
         <!-- full screen header -->
 
 
-        <div class="col-lg-7 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
-            <li class="nav-item" id="Navbarlinks">
-              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">Blogs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">Seeds</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
-            </li>
-           
+        <div class="col-lg-15 col-xl-19 d-none mt-lg-10 d-lg-block" id="nav_buttons">
+          <ul class="d-flex justify-content-center align-items-center list-unstyled text-uppercase HeaderButton">
+              <li class="nav-item ms-3" id="Navbarlinks">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'users:home' %}active{% endif %}" aria-current="page" href="{% url 'users:home' %}">Home</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:about_us' %}active{% endif %}" href="{% url 'app_common:about_us' %}">About Us</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_courses' %}active{% endif %}" href="{% url 'app_common:our_courses' %}">Courses</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_services' %}active{% endif %}" href="">Our Services</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_achievers' %}active{% endif %}" href="">Our Achievers</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:gallery' %}active{% endif %}" href="">Gallery</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:job_updates' %}active{% endif %}" href="">Job Updates</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:certifications' %}active{% endif %}" href="">Certifications</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:contact_support' %}active{% endif %}" href="{% url 'app_common:contact_support' %}">Contact Us</a>
+              </li>
           </ul>
-        </div>
+      </div>      
         <!-- close full screen header -->
 
-        <!-- ----------Side buttons ------------->
-        <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-around align-items-center">
-          <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
-          </button>
-          <!-- <button type="button" class="btn">
-            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
-          </button> -->
-          <button type="button" class="btn" id="form_open">
-            <a href="{% url 'users:login' %}"><i class="fa-regular fa-user HeaderIcons text-success"></i></a>
-          </button>
-          <button type="button" class="btn">
-            <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
-          </button>
-          <button class="btn">
-            <a href="">
-              <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-            </a>
-          </button>
-          <!-- <button class="btn" type="button" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasWithBothOption" aria-controls="offcanvasWithBothOptions">
-          <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-        </button> -->
-        </div>
-          
-
-
-    
-         
-
-        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
-          {% csrf_token %}
-          <div class="input-group">
-            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
-          </div>
-        </form>
-        
-        <!-- end ------- Side buttons --->
-
-       
       </div>
     </div>
   </header>
   {% endif %}
 
-
-
-
-
-
-
-
-
   {% block content %}
   
-  
-  
   {% endblock %}
+
+  <!-- Contact Information Container (Split between footer and above) -->
+  <div class="contact-container">
+    <div class="contact-section">
+      <i class='bx bxs-map'></i>
+      <h6>Registered Office Address</h6>
+      <p>SUBASH JENA COLONY, HIGH SCHOOL ROAD, BALUGAON,<br>
+         DIST-KHORDHA, ORISHA-752030, STREET NO 37C</p>
+    </div>
+    
+    <div class="contact-section">
+      <i class='bx bxs-phone'></i>
+      <h6>Phone Numbers</h6>
+      <p>+91 9778577090</p>
+      <p>8895895988</p>
+    </div>
   
-  <!-- --------- 
+    <div class="contact-section">
+      <i class='bx bxs-envelope'></i>
+      <h6>Email Address</h6>
+      <p>step2reactindia@gmail.com</p>
+    </div>
+  </div>  
 
-  <div>
-    <form action="" method="post" class="d-flex" role="search"
-      style="padding-right: 80px; width: 550px;">
-      {% csrf_token %}
-      <div class="input-group input-group-lg">
-        <input name="search-box" type="search" class="form-control me-4" id="search" placeholder="Search Books"
-          aria-label="Search">
-
-        <button type="submit" class="btn btn-outline-success" id="submit">
-          <i class="fa fa-search" aria-hidden="true"></i>
-        </button>
-      </div>
-    </form>
-    <div id="search-suggestions" class="position-absolute border mx-auto" style="display: none;"></div>
-  </div>
-  </div>
-  </div>
-  </nav> -->
-  <!-- end header -->
-  
-  <!-- end page 4 -->
-
-
-
-
-  <!-- -------------------------Footer------------------------- -->
-  <footer class=" ">
-    <div class="container  border-bottom border-secondary ">
-      <div class="row mb-lg-4 ">
-  
-        <div class="col-12 col-md-4">
-          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul ">
-            <div >
-              <ul class="p-0">
-                <h6>About Us</h6>
-                <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'app_common:contact_support' %}">Support</a></li>
-                {% elif not user.is_authenticated %}
-                <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
-                {% endif %}
-                <li><a href="{% url 'app_common:locate_us' %}">Locate Us</a></li>
-              </ul>
-            </div>
-            <div class="">
-              <ul>
-              <h6>Consumer Policy</h6>
-                <li><a href="">Security</a></li>
-                <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
-                <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
-                <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
-              </ul>
-            </div>
-           
-          </div>
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <!-- Quick Links Section with 4 columns -->
+    <div class="quick-links">
+      <h6>Quick Links</h6>
+      <div class="links-grid">
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Downloads</a></li>
+            <li><a href="#">Privacy Policies</a></li>
+          </ul>
         </div>
-  
-        <div class="col-12 col-md-4">
-          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul">
-            <div class="d-none d-md-block d-lg-block">
-              <ul>
-              <h6>Help</h6>
-                <li><a href="">Own Grown</a></li>
-                <li><a href="">Garden Services</a></li>
-                <li><a href="">Maintenance</a></li>
-              </ul>
-            </div>
-            <div class="text-start d-none d-md-block d-lg-block ">
-              <ul class="p-0">
-                <h6>Customer Care</h6>
-                <li><a href="">Track Order</a></li>
-                <li><a href="">Shipping Policy</a></li>
-              </ul>
-            </div>
-          </div>
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Payments Methods</a></li>
+            <li><a href="#">Refund policies</a></li>
+            <li><a href="#">Disclaimer</a></li>
+            <li><a href="#">Our Blogs</a></li>
+          </ul>
         </div>
-  
-        <div class="col-12 col-md-4">
-          <div class="row row-cols-2 row-cols-sm-2 border-start border-secondary ms-lg-2  footer_div_ul">
-            <div>
-              <h6>Get in Touch</h6>
-              <p><i class="fa-solid fa-phone"></i> +91 -7735955569</p>
-              <p><i class="fa-solid fa-envelope"></i> niwacare@outlook.com</p>
-              
-              <h6>Socials:</h6>
-              <p class="fs-5">
-                <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-instagram"></i>
-                <i class="fa-brands fa-whatsapp"></i>
-                <i class="fa-brands fa-square-x-twitter"></i>
-                <i class="fa-brands fa-youtube"></i>
-              </p>
-            </div>
-            <div>
-              <h6>Registered Office Address</h6>
-              <p>Plot No: 3298/5536,<br>
-                C-8, Lane-5A,<br>
-                Gouri Nagar,<br>
-                Old Town (Khorda),<br>
-                Bhubaneswar, Khorda- 751002,<br>
-                Odisha</p>
-            </div>
-          </div>
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Our Affiliations</a></li>
+            <li><a href="#">Our Team</a></li>
+            <li><a href="#">Our Register Center's</a></li>
+            <li><a href="#">Franchise Details</a></li>
+          </ul>
         </div>
-  
+        <div class="links-column">
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="text-center mt-4 ps-3 pe-3 mt-lg-3 footer_subhead">
-      <p class="">This Website is Designed and Developed by ❤ Techavia IT Solutions.  @Copyright 2024 Niwa Agro Pvt. Ltd.</p>
-    </div>
-  </footer>
-  
+
+    <!-- Footer Text -->
+    <p>This Website is Designed and Developed by ❤ Brainsie Tech. © 2024 RATIONAL EDUCATION AND COMPUTER TRAINING</p>
+  </div>
+</footer>
        
   {% block js %}
 
@@ -513,11 +485,39 @@ $(document).ready(function () {
 
 
 </script>
- 
+<script>
+  // Function to check if the element is in the viewport
+  function isElementInViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  // Function to apply the zoom effect when the container is in view
+  function checkZoomEffect() {
+    var contactContainer = document.querySelector('.contact-container');
+    if (isElementInViewport(contactContainer)) {
+      contactContainer.classList.add('zoomed');
+    } else {
+      contactContainer.classList.remove('zoomed');
+    }
+  }
+
+  // Listen for scroll events
+  window.addEventListener('scroll', checkZoomEffect);
+
+  // Initial check on page load
+  checkZoomEffect();
+</script>
+
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></scrip>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
