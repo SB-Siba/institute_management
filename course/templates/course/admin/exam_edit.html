@@ -1,0 +1,112 @@
+{% extends 'users/admin/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light grey background for the page */
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-container {
+            background-color: white; /* White background for the content */
+            width: 80%; /* Or any percentage/px value you prefer */
+            max-width: 800px; /* Limit the width */
+            margin: 50px auto; /* Center it and add top margin */
+            padding: 20px; /* Padding around the content */
+            border-radius: 8px; /* Optional rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for some depth */
+        }
+
+        h1 {
+            color: #333; /* Dark color for the header */
+            text-align: center;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #4CAF50; /* Green alert color */
+        }
+
+        .alert.error {
+            background-color: #f44336; /* Red alert color for errors */
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50; /* Green color for the submit button */
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        button[type="submit"]:focus {
+            outline: none;
+        }
+
+        button[type="button"] {
+            background-color: #f44336; /* Red color for the cancel button */
+            color: white;
+        }
+
+        button[type="button"]:hover {
+            background-color: #e53935;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="content-container">
+        <h1>Edit Exam: {{ exam.exam_name }}</h1>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update Exam</button>
+        </form>
+
+        <form action="{% url 'course:exam_list' %}" method="get">
+            <button type="submit">Cancel</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
+{% endblock content %}

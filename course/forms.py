@@ -1,8 +1,12 @@
 
+from datetime import timedelta
+from doctest import Example
 from django import forms
-from course.models import AwardCategory, Course
+from course.models import AwardCategory, Course, Exam
 from ckeditor.widgets import CKEditorWidget
 from django.forms.widgets import ClearableFileInput
+
+from users.models import Batch
 
 class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True  # Allow multiple files to be selected
@@ -62,3 +66,44 @@ class CourseForm(forms.ModelForm):
             if not pdf_file.name.endswith('.pdf'):
                 raise forms.ValidationError('Only PDF files are allowed.')
         return pdf_files
+
+
+class ExamapplyForm(forms.ModelForm):
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(), 
+        label="Course"
+    )
+    batch = forms.ModelChoiceField(
+        queryset=Batch.objects.all(), 
+        label="Batch"
+    )
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}), 
+        label="Exam Date"
+    )
+    duration = forms.DurationField(
+        widget=forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
+    )
+    status = forms.ChoiceField(
+        choices=Exam.STATUS_CHOICES,
+        label="Exam Status",
+        initial='pending',  # You can set a default value
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+  
+    class Meta:
+        model = Exam
+        fields = ['exam_name', 'date', 'duration', 'total_marks', 'course', 'batch', 'status']
+
+    def clean_duration(self):
+        duration = self.cleaned_data['duration']
+        if isinstance(duration, int):  # If entered as an integer (minutes)
+            duration = timedelta(minutes=duration)  # Convert minutes to timedelta
+        elif isinstance(duration, str):  # If entered as a string
+            try:
+                hours, minutes, seconds = map(int, duration.split(':'))
+                duration = timedelta(hours=hours, minutes=minutes, seconds=seconds)
+            except ValueError:
+                raise forms.ValidationError("Duration must be in HH:MM:SS format or an integer representing minutes.")
+        return duration

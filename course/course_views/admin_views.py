@@ -1,14 +1,14 @@
 import json
+from msilib.schema import ListView
+from winreg import DeleteKey
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.contrib import messages
 from django.core.paginator import Paginator
-from course.models import Course
-from course.forms import CourseForm
-from course.forms import AwardCategoryForm, CourseForm
-from course.models import AwardCategory, Course
+from course.forms import AwardCategoryForm, CourseForm, ExamapplyForm
+from course.models import AwardCategory, Course, Exam, ExamResult
 
 app = "course/admin/"
 
@@ -221,3 +221,101 @@ class CourseDeleteView(View):
         course.delete()
         messages.success(request, 'Course deleted successfully.')
         return redirect('course:course_list')
+
+
+
+class ExamApply(View):
+    template_name = app +'exam_apply.html'  # Adjust `app` to your actual template directory name
+    success_url = reverse_lazy('course:exam_list')  # Redirect URL on successful form submission
+    exam_data = []
+
+    def get(self, request):
+        form = ExamapplyForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = ExamapplyForm(request.POST)
+        if form.is_valid():
+            # Save a new Exam instance with all fields from the form
+            new_exam = form.save(commit=False)  # We use commit=False so we can add extra logic before saving
+            new_exam.save()  # Save the exam instance to the database
+            return redirect(self.success_url)
+
+        # If the form is not valid, render the form with errors
+        return render(request, self.template_name, {'form': form})
+
+
+class ExamListView(View):
+    template_name = app +'exam_list.html'
+
+   
+    def get(self, request):
+        search_query = request.GET.get('q', '').strip()  # Default to empty string if no query
+        exams = Exam.objects.all() 
+        if search_query:
+            exams = exams.filter(exam_name__icontains=search_query)  # Fetch all exams from the database
+        return render(request, self.template_name, {'exams': exams,'search_query': search_query})
+
+    def post(self, request):
+        # Implement search/filter functionality as before
+        search_query = request.POST.get('search_query', '').strip()
+        filter_course = request.POST.get('filter_course')
+        filter_date = request.POST.get('filter_date')
+
+        exams = Exam.objects.all()
+        if search_query:
+            exams = exams.filter(name__icontains=search_query)
+        if filter_course:
+            exams = exams.filter(course__course_name=filter_course)
+        if filter_date:
+            exams = exams.filter(date=filter_date)
+
+        return render(request, self.template_name, {'exams': exams, 'search_query': search_query})
+
+class DeleteExamView(View):
+  
+    def post(self, request, *args, **kwargs):
+        exam = get_object_or_404(Exam, pk=kwargs['pk'])
+        exam.delete()
+        return redirect('course:exam_list')
+
+class EditExamView(View):
+    template_name = app + 'exam_edit.html'  # Template for the edit exam form
+    success_url = reverse_lazy('course:exam_list')  # Redirect to the exam list after editing
+
+    def get(self, request, *args, **kwargs):
+        # Get the exam object to be edited using the primary key (pk) from the URL
+        exam = get_object_or_404(Exam, pk=kwargs['pk'])
+        
+        # Make sure only staff members or admins can edit the exam
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to edit this exam.")
+            return redirect(self.success_url)
+        
+        # Prepopulate the form with the existing exam data
+        form = ExamapplyForm(instance=exam)
+        
+        return render(request, self.template_name, {'form': form, 'exam': exam})
+
+    def post(self, request, *args, **kwargs):
+        # Get the exam object to be edited
+        exam = get_object_or_404(Exam, pk=kwargs['pk'])
+        
+        # Make sure only staff members or admins can edit the exam
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to edit this exam.")
+            return redirect(self.success_url)
+        
+        # Bind the form with the POST data and the current exam instance
+        form = ExamapplyForm(request.POST, instance=exam)
+        
+        # Validate the form
+        if form.is_valid():
+            # Save the updated exam object
+            form.save()
+            messages.success(request, "Exam updated successfully.")
+            return redirect(self.success_url)  # Redirect to the success_url after saving the form
+
+        # If the form is invalid, render the form with errors
+        return render(request, self.template_name, {'form': form, 'exam': exam})
+

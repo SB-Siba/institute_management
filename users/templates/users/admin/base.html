@@ -121,31 +121,21 @@
 					<span>Student Exams</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authen">
-					<li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Reset Exam</span>
+					<!--<li class="sidebar-item">
+						<a href="{% url 'course:exam_apply' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Exam Apply</Form></span>
 						</a>
-					</li>
+					</li>-->
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Exam Code</span>
+						<a href="{% url 'course:exam_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-4">Exam list</span>
 						</a>
-					</li>
-					<li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Offline Exams Marks Update</span>
-						</a>
-					</li>
+					
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">All Exam Results</span>
 						</a>
-					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Hall Tickets</span>
-						</a>
-					</li>
+				
 				</ul>
 			</li>
 
