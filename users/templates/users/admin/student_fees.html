@@ -62,7 +62,7 @@
                     <td>Rs. {{ student.balance }}</td>
                     <td>{{ student.latest_payment_date|date:"d-m-Y" }}</td>
                     <td>
-                        <a href="{% url 'users:add_new_payment' student.user.id %}" class="btn btn-sm btn-warning">Edit</a>  
+                        <a href="{% url 'users:add_new_payment' student.user.id %}" class="btn btn-sm btn-warning">Add Payment</a>  
                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.user.id }}">  
                             Delete  
                         </button>

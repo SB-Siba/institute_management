@@ -51,7 +51,7 @@ class Registration(View):
             full_name = form.cleaned_data.get('full_name')
 
             try:
-                new_user = self.model(email=email, full_name=full_name, contact=contact)
+                new_user = self.model(email=email, full_name=full_name, contact=contact, is_admitted=False)
                 new_user.set_password(password)
                 new_user.save()
                 new_user_login = authenticate(request, username=email, password=password)

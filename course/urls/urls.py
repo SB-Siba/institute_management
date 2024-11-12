@@ -1,5 +1,6 @@
 from django.urls import path
 from course.course_views import admin_views
+from course.course_views import user_views
 from users import forms
 from app_common.app_common_views import app_common_views
 from django.contrib.auth import views as auth_view
@@ -14,4 +15,8 @@ urlpatterns = [
     path('course/add/', admin_views.CourseCreateView.as_view(), name='add_course'),
     path('course/<int:pk>/edit/', admin_views.CourseEditView.as_view(), name='edit_course'), 
     path('course/<int:pk>/delete/', admin_views.CourseDeleteView.as_view(), name='delete_course'),
+
+    #user side
+    path('user-courses/', user_views.UserCourseListView.as_view(), name='user_course_list'),
+
 ]

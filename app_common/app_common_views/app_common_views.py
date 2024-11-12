@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 from app_common import forms
 from app_common.models import ContactMessage
+from course.models import Course
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm
@@ -17,23 +18,21 @@ app = "app_common/"
 
 
 class HomeView(View):
-    template = app + "landing_page.html"
+    unauthenticated_template = app + "landing_page.html"
+    authenticated_template = "users/user/index.html"
 
     def get(self, request):
-        
-        # cart = Cart.objects.filter(user=request.user).first()
-        # if cart:
-        # # Assuming 'products' is stored as a list of dictionaries in JSON
-        #     cart_products = cart.products
-        #     cart_count = sum(item['quantity'] for item in cart_products.values()) if cart_products else 0
-        # else:
-        #     cart_count = 0
-        
+        # If user is not authenticated, render the landing page
+        if not request.user.is_authenticated:
+            context = {
+                'MEDIA_URL': settings.MEDIA_URL,
+            }
+            return render(request, self.unauthenticated_template, context)
+
         context = {
-            # 'cart_count': cart_count,
             'MEDIA_URL': settings.MEDIA_URL,
         }
-        return render(request, self.template, context)
+        return render(request, self.authenticated_template, context)
 
 
 class AboutUs(View):
@@ -42,6 +41,28 @@ class AboutUs(View):
     def get(self, request):
        
         return render(request, self.template)
+
+class Ourcourses(View):
+    template = 'app_common/our_courses.html'
+
+    def get(self, request):
+        courses = Course.objects.filter(status='Active')
+
+        return render(request, self.template, {'courses': courses})
+
+class OurCourseDetailView(View):
+    template_name = 'app_common/our_course_details.html'
+
+    def get(self, request, course_code):
+        course = get_object_or_404(Course, course_code=course_code)
+        
+        # Check if 'subjects' attribute exists on the course, otherwise set an empty list
+        subjects = getattr(course, 'subjects', [])
+        context = {
+            'course': course,
+            'subjects': subjects if subjects else []  # Use empty list if subjects are missing
+        }
+        return render(request, self.template_name, context)
 
 
 class ContactSupport(View):

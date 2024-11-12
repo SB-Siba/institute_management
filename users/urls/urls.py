@@ -25,12 +25,14 @@ urlpatterns = [
 
     #user
     path('profile',user_views.ProfileView.as_view(),name="profile"),
-    path('updateprofile/',user_views.UpdateProfileView.as_view(),name="updateprofile"),
-    path('account-details',user_views.AccountDetails.as_view(),name='account_details'),
+    path('profile/update/', user_views.UpdateProfileView.as_view(), name='update_profile'),
+    # path('account-details',user_views.AccountDetails.as_view(),name='account_details'),
     path('profile/alladdress',user_views.AllAddress.as_view(),name="alladdress"),
     path('profile/addaddress',user_views.ProfileAddAddress.as_view(),name="profile_addaddress"),
     path('profile/update-address/<str:address_id>/', user_views.ProfileUpdateAddress.as_view(), name='profile_update_address'),
     path('profile/delete-address/<str:address_id>/', user_views.ProfileDeleteAddress.as_view(), name='profile_delete_address'),
+    path('support/', user_views.SupportView.as_view(), name='support'),
+
 
     # admin 
     path('students/', admin_views.StudentListView.as_view(), name='student_list'),
@@ -64,7 +66,10 @@ urlpatterns = [
     path('re-admission-list/', admin_views.ReAdmissionListView.as_view(), name='re-admission-list'),
     path('re-admission/delete/<int:pk>/', admin_views.ReAdmissionDeleteView.as_view(), name='re-admission-delete'),
     path('re-admission/update/<int:pk>/', admin_views.ReAdmissionUpdateView.as_view(), name='re-admission-update'),
+    path('all-users/', admin_views.AllUserListView.as_view(), name='all_user_list'),
+    path('user/edit/<int:pk>/', admin_views.UserEditView.as_view(), name='user_edit'),
+    path('delete_user/<int:user_id>/', admin_views.DeleteUserView.as_view(), name='delete_user'),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

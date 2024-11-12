@@ -23,7 +23,8 @@ from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.generic import UpdateView
-from django.db.models import Sum
+from django.utils import timezone
+
 from users.models import Attendance
 app = "users/admin/"
 
@@ -31,29 +32,33 @@ app = "users/admin/"
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class AdminDashboard(View):
-    template = app + "index.html"  # Update the template path if necessary
+    template = app + "index.html"
 
     def get(self, request):
         return render(request, self.template)
 
 class StudentListView(View):
-    template_name = app + 'student_list.html'  # Adjust the path as needed
+    template_name = app + 'student_list.html'
     
     def get(self, request):
-        search_query = request.GET.get('q', '')
-        students = models.User.objects.filter(full_name__icontains=search_query).order_by('id')
-        
-        # Pagination
-        paginator = Paginator(students, 10)  # Show 10 students per page
+        search_query = request.GET.get('q', '').strip()
+        students = User.objects.filter(is_admitted=True)
+
+        # Apply search filter if query is provided
+        if search_query:
+            students = students.filter(full_name__icontains=search_query)
+
+        # Paginate the student list
+        paginator = Paginator(students, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        
+
         context = {
             'page_obj': page_obj,
-            'search_query': search_query
+            'search_query': search_query,
         }
         return render(request, self.template_name, context)
-
+    
 class ExportStudentsView(View):
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
@@ -62,17 +67,15 @@ class ExportStudentsView(View):
         writer = csv.writer(response)
         # Write the headers for the CSV file
         writer.writerow([
-            'S/N', 'Status', 'Batch', 'Student Name', 'Course Interested',
-            'Username', 'Password', 'Mobile', 'Referral Code',
-            'Referral Name', 'Admission Date'
+            'S/N', 'Photo', 'Batch', 'Student Name','Email', 'Course Interested', 'Mobile', 'Admission Date','Action'
         ])
 
         students = models.User.objects.all()
         for idx, student in enumerate(students, start=1):
             writer.writerow([
-                idx, student.status, student.batch, student.full_name,
-                student.course_of_interest, student.username, student.password,
-                student.contact, student.referral_code, student.referral_name,
+                idx, student.student_image, student.batch, student.full_name,student.email,
+                student.course_of_interest,
+                student.contact,
                 student.admission_date
             ])
 
@@ -120,13 +123,25 @@ class AddNewStudentView(View):
 
     def post(self, request):
         course_id = request.POST.get('course_of_interest')
-        user_form = StudentForm(request.POST, request.FILES, course_id=course_id)
+        admit_existing_user = request.POST.get('admit_existing_user', False) == 'true'
+
+        # Initialize the form
+        user_form = StudentForm(
+            request.POST,
+            request.FILES,
+            course_id=course_id,
+            admit_existing_user=admit_existing_user
+        )
 
         if user_form.is_valid():
             student = user_form.save(commit=False)
+            
+            # Fetch data for discount and fees calculation
             discount_rate = request.POST.get('discount_rate', 'amount')
             discount_amount = float(request.POST.get('discount_amount', 0))
             course_fees = float(request.POST.get('course_fees', 0))
+            
+            # Calculate discounted fees based on the discount rate type
             if discount_rate == 'amount':
                 discounted_fee = course_fees - discount_amount
             elif discount_rate == 'percent':
@@ -136,14 +151,17 @@ class AddNewStudentView(View):
 
             fees_received = float(request.POST.get('fees_received', 0))
             balance = discounted_fee - fees_received
-            total_fees = discounted_fee  
-            student.total_fees = total_fees
+
+            # Set additional fields and save
+            student.total_fees = discounted_fee
             student.balance = balance
+            student.is_admitted = True  # Explicitly set this field
             student.save()
 
             messages.success(request, 'Student added successfully!')
             return redirect('users:student_list')
 
+        # If form is not valid, re-render the page with the form
         courses = Course.objects.all()
         return render(request, self.template, {
             'user_form': user_form,
@@ -186,14 +204,10 @@ class StudentUpdateView(View):
 
         
 class StudentDeleteView(View):
-    def delete(self, request, pk):
-        try:
-            student = models.User.objects.get(pk=pk)
-            student.delete()
-            return JsonResponse({'success': True}, status=200)
-        except models.User.DoesNotExist:
-            return JsonResponse({'error': 'Student not found.'}, status=404)
-
+    def post(self, request, student_id):
+        student = get_object_or_404(models.User, id=student_id, is_admitted=True)
+        student.delete()
+        return JsonResponse({'success': True})
 
 class ReAdmissionView(View):
     template_name = app + 're_admission.html'
@@ -350,11 +364,10 @@ class StudentPaymentListView(View):
     def get(self, request):
         payments = Payment.objects.select_related('user').all().order_by('-date')
         
-        # You can also aggregate the total fees, paid, and balance if needed
-        total_fees = sum(payment.course_fees for payment in payments)
-        total_paid_fees = sum(payment.amount for payment in payments)
-        total_balance_fees = total_fees - total_paid_fees
-
+        # Calculate the total fees, paid, and balance 
+        total_fees = sum(payment.course_fees or 0 for payment in payments)
+        total_paid_fees = sum(payment.amount or 0 for payment in payments)
+        total_balance_fees = total_fees - total_paid_fees   
         return render(request, self.template_name, {
             'payments': payments,
             'total_fees': total_fees,
@@ -737,7 +750,7 @@ class StudentFeesListView(View):
         if query:
             students = self.model.objects.filter(Q(full_name__icontains=query))
         else:
-            students = self.model.objects.all()
+            students = self.model.objects.filter(is_superuser=False, is_staff=False)
 
         # Fetch the latest payment date for each student
         student_data = []
@@ -754,7 +767,7 @@ class StudentFeesListView(View):
             })
 
         total_fees = sum(data['total_fees'] for data in student_data)
-        total_paid_fees = sum(data['fees_received'] for data in student_data)
+        total_paid_fees = sum(data['fees_received'] or 0 for data in student_data)
         total_balance_fees = sum(data['balance'] for data in student_data)
 
         context = {
@@ -815,3 +828,32 @@ def get_course_details(request, course_id):
     except Course.DoesNotExist:
         return JsonResponse({'error': 'Course not found.'}, status=404)
 
+class AllUserListView(View):
+    template_name = app + 'all_users.html'
+
+    def get(self, request):
+        # Get users who are only registered (not admitted)
+        registered_users = User.objects.filter(is_superuser=False, is_staff=False, is_admitted=False).order_by('id')
+        
+        # Get users who are admitted (students)
+        admitted_students = User.objects.filter(is_superuser=False, is_staff=False, is_admitted=True).order_by('id')
+        
+        # Pass users to the template with additional context
+        context = {
+            'registered_users': registered_users,
+            'admitted_students': admitted_students,
+            'title': 'All Users',
+        }
+        return render(request, self.template_name, context)
+    
+class UserEditView(View):
+    model = User
+    template_name = 'user_edit.html'
+    fields = ['username', 'email', 'profile__contact']  # Adjust fields as needed
+    success_url = reverse_lazy('all_user_list')
+
+class DeleteUserView(View):
+    def delete(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        return JsonResponse({'success': True, 'user_id': user.id})
