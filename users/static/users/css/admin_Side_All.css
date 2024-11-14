@@ -49,7 +49,7 @@ body::-webkit-scrollbar {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 280px;
+	width: 300px;
 	height: 100%;
 	z-index: 2000;
 	font-family: var(--lato);
@@ -113,7 +113,7 @@ body::-webkit-scrollbar {
 	overflow-x: hidden;
 }
 .sidebar-links i {
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
 }
 .sidebar-item {
   margin-bottom: 0.5rem;
@@ -160,7 +160,7 @@ a.sidebar-links{
   position: relative;
 }
 .sidebar-dropdown{
-  padding-left: 1.5rem;
+  /* padding-left: 1.5rem; */
   margin-top: 0.2rem;
 }
 .sidebar-link.has-dropdown {
@@ -172,8 +172,8 @@ a.sidebar-links{
 /* CONTENT */
 #content {
 	position: relative;
-	width: calc(100% - 280px);
-	left: 280px;
+	width: calc(100% - 300px);
+	left: 300px;
 	transition: .3s ease;
 	
 }

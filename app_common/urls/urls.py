@@ -12,6 +12,7 @@ urlpatterns = [
     path('about_us/',app_common_views.AboutUs.as_view(),name="about_us"),    
     path('our_courses/' ,app_common_views.Ourcourses.as_view(),name="our_courses"),
     path('course/<str:course_code>/', app_common_views.OurCourseDetailView.as_view(), name='our_course_details'),
+    path('our-achievers/', app_common_views.OurAchieversView.as_view(), name='our_achievers'),
     path('contact_us/',app_common_views.ContactSupport.as_view(),name="contact_support"),
     path('terms_conditions/',app_common_views.TermsConditions.as_view(),name="terms_conditions"),
     path('privacy_policy/',app_common_views.PrivacyPolicy.as_view(),name="privacy_policy"),

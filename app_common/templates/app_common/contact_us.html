@@ -6,7 +6,7 @@ Contact Us | NiwaAgro.com
 
 {% block content %}
 <section>
-  <div  id="conatct_us">
+  <div id="conatct_us">
     <div class="container">
       <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
         <ol class="breadcrumb m-0">
@@ -14,11 +14,12 @@ Contact Us | NiwaAgro.com
           <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
         </ol>
       </nav>
-    <h3 class="text-center border-bottom pb-lg-3">Contact Us</h3>
+      <h3 class="text-center border-bottom pb-lg-3">Contact Us</h3>
     </div>
 
-    <div class="contact_us_image">
-        <img src="{% static 'app_common\images\img3.jpg' %}" alt="">
+    <!-- Replace the image with the map -->
+    <div class="contact_us_map">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d60193.96217390507!2d72.8181727!3d19.4502787!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a181773a72440bd%3A0x243606a10fd0758b!2sRATIONAL%20EDUCATION%20AND%20COMPUTER%20TRAINING!5e0!3m2!1sen!2sin!4v1731405514606!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <div class="container">
@@ -26,7 +27,6 @@ Contact Us | NiwaAgro.com
        
         <div class="col col-lg-8">
           <div class="contact-form ">
-                
             <h4 class="">Let's get in touch</h4>
             <form method="post">
               {% csrf_token %}
@@ -34,65 +34,56 @@ Contact Us | NiwaAgro.com
               <div class="form-field">
                {{ field }}
               </div>
-                {% endfor %}
-                
-                <button type="submit" class="u-button text-uppercase">Send Message</button>
+              {% endfor %}
+              
+              <button type="submit" class="u-button text-uppercase">Send Message</button>
             </form>
+          </div>
         </div>
-        </div>
+
         <div class="col col-lg-4">
           <div class="Address-page">
-           
-              <h5>Name</h5>
-              <p>RATIONAL EDUCATION AND COMPUTER TRAINING</p>
-              <h5>Address</h5>
-              <p>SUBASH JENA COLONY, HIGH SCHOOL ROAD, BALUGAON,
-                DIST-KHORDHA, ORISHA-752030, STREET NO 37C
-              </p>
-              <h5>Phone</h5>
-              <p>+91 9778577090
-                <br>
-                +91 8895895988</p>
-              <h5>E-mail:</h5>
-              <p>step2reactindia@gmail.com</p>
-              <h5>Follow us</h5>
-              <p class="social-icons">
-                <a href="#">
-                  <i class="fa-brands fa-square-facebook"></i>
+            <h5>Name</h5>
+            <p>RATIONAL EDUCATION AND COMPUTER TRAINING</p>
+            <h5>Address</h5>
+            <p>SUBASH JENA COLONY, HIGH SCHOOL ROAD, BALUGAON,
+              DIST-KHORDHA, ORISHA-752030, STREET NO 37C
+            </p>
+            <h5>Phone</h5>
+            <p>+91 9778577090
+              <br>
+              +91 8895895988</p>
+            <h5>E-mail:</h5>
+            <p>step2reactindia@gmail.com</p>
+            <h5>Follow us</h5>
+            <p class="social-icons">
+              <a href="#">
+                <i class="fa-brands fa-square-facebook"></i>
               </a>
               <a href="#">
                 <i class="fa-brands fa-x-twitter"></i>
               </a>
               <a href="#">
-                  <i class="fab fa-instagram"></i>
+                <i class="fab fa-instagram"></i>
               </a>
               <a href="#">
-                  <i class="fab fa-linkedin-in"></i>
+                <i class="fab fa-linkedin-in"></i>
               </a>
               <a href="#">
                 <i class="fa-brands fa-whatsapp"></i>
               </a>
               <a href="#">
                 <i class="fab fa-youtube"></i>
-            </a>
-              </p>
+              </a>
+            </p>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     </div>
   </div>
 </section>
 
-
-
-
-
-
-
 <section>
-   
     {% include 'snippets/alert.html' %}
-   
 </section>
 {% endblock content %}
-   

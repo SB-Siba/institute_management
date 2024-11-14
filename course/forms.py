@@ -25,7 +25,6 @@ class AwardCategoryForm(forms.ModelForm):
         }
 
 class CourseForm(forms.ModelForm):
-    #subjects = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'id': 'subject-input-area'}), required=False)
     class Meta:
         model = Course
         fields = [

@@ -25,10 +25,8 @@
   </head>
   <style>
 
-
   </style>
   <body>
-
     
    	<!-- SIDEBAR -->
 	<section id="sidebar">
@@ -57,30 +55,30 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Manage Students</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="auth">
 					<!-- <li class="sidebar-item">
 						<a href="" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Student Enquiry</span>
+							<i class="lni lni-list"></i><span class="ms-0">Student Enquiry</span>
 						</a>
 					</li> -->
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Admission</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Student Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:re-admission' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Re-Admission</span>
+						<a href="{% url 'users:re-admission-list' %}" class="sidebar-links">
+							<i class="lni lni-database"></i><span class="ms-0">Re-Admission List</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
-						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
+						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
+							<i class="lni lni-line-double"></i><span class="ms-0">Student Fees list</span>
 						</a>
 					</li>
 					<!-- <li class="sidebar-item">
 						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Set Referral Amount</span>
 						</a>
 					</li> -->
 				</ul>
@@ -92,32 +90,19 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Manage Courses</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authe">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="authe">
 					<li class="sidebar-item">
 						<a href="{% url 'course:award_categories' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Award Categories</span>
+							<i class="lni lni-list"></i><span class="ms-0">Award Categories</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'course:course_list' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Courses</span>
+							<i class="lni lni-database"></i><span class="ms-0">Courses</span>
 						</a>
 					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
-						</a>
-					</li>
-					<!--<li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
-						</a>
-					</li>-->
 				</ul>
 			</li>
-
-
-			
 
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
@@ -126,37 +111,34 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Student Exams</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authen">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="authen">
 					<li class="sidebar-item">
 						<a href="" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Reset Exam</span>
+							<i class="lni lni-list"></i><span class="ms-0">Reset Exam</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Exam Code</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Exam Code</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Offline Exams Marks Update</span>
+							<i class="lni lni-database"></i><span class="ms-0">Offline Exams Marks Update</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">All Exam Results</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">All Exam Results</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Hall Tickets</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Hall Tickets</span>
 						</a>
 					</li>
 				</ul>
 			</li>
-
-
-
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#authent" aria-expanded="false" aria-controls="authent" onclick="toggleChevron(this)">
@@ -164,15 +146,10 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Certificates</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authent">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="authent">
 					<li class="sidebar-item">
-						<a href="{% url 'certificate:apply_certificate' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Apply For Certificates</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'certificate:applied_certificates' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Approve Certificates</span>
+						<a href="{% url 'certificate:requested_certificates' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-0">Requested Certificates</span>
 						</a>
 					</li>					
 					<li class="sidebar-item">
@@ -182,7 +159,7 @@
 					</li>
 					<li class="sidebar-item"></li>
 						<a href="{% url 'certificate:designed_certificate' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Designed Certificate</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Designed Certificate</span>
 						</a>
 					</li>
 				</ul>
@@ -200,20 +177,20 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Notifications</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authenti">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="authenti">
 					<li class="sidebar-item">
-						<a href="{% url 'users:online_class_notifications' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Online Class Notifications</span>
+						<a href="#" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-0">Offline Class Notifications</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Marquee Notifications</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Marquee Notifications</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Advertisements</span>
+							<i class="lni lni-database"></i><span class="ms-0">Advertisements</span>
 						</a>
 					</li>
 				</ul>
@@ -225,43 +202,29 @@
 					<i class='bx bxs-doughnut-chart'></i>
 					<span>Manage Attendance</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authentic">
+				<ul class="sidebar-dropdown collapse ms-0" data-bs-parent="#sidebar" id="authentic">
 					<li class="sidebar-item">
 						<a href="{% url 'users:list_batches' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Batches</span>
+							<i class="lni lni-list"></i><span class="ms-0">Batches</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:take_attendance'%}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Attendance</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Attendance</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:attendance_report' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Attendance Report</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Attendance Report</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_attendance_report' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Wise Report</span>
+							<i class="lni lni-line-double"></i><span class="ms-0">Student Wise Report</span>
 						</a>
 					</li>
 				</ul>
 			</li>
-         <!-- {% comment %}
-      		<li>
-				<a href="" class="">
-					<i class='bx bxs-group' ></i>
-					<span class="text">Review&Ratings</span>
-				</a>
-			</li>
-			{% endcomment %}
-			<li>
-				<a href="" class="">
-					<i class='bx bx-package' ></i>
-					<span class="text">Delivery Settings</span>
-				</a>
-			</li> -->
 			<li>
 				<a href="{% url 'app_common:admin_message_list' %}" class="">
 					<i class='bx bxs-contact'></i>
@@ -311,7 +274,7 @@
 		    </a>
 		</nav>
 		<!-- NAVBAR -->
-     
+    
     <!-- MAIN -->
 		<div class="background_color_page" style="min-height: 92vh;">
       {% block content %}
@@ -321,8 +284,6 @@
 		<!-- MAIN -->
 
 </section>
-
-
 
     <script>
       function myFunction() {

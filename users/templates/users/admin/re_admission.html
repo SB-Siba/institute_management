@@ -81,16 +81,19 @@
     margin-top: 10px;
     font-weight: bold;
   }
-
 </style>
 
 <h1>Re-Admission Student</h1>
-
 <div class="container">
   <form method="POST" action="{% url 'users:re-admission' %}">
     {% csrf_token %}
     {{ form.as_p }}
-
+    
+    <!-- Hidden Inputs to Capture Calculated Values -->
+    <input type="hidden" id="hidden_course_fees" name="course_fees">
+    <input type="hidden" id="hidden_total_fees" name="total_fees">
+    <input type="hidden" id="hidden_balance" name="balance">
+  
     <table>
       <thead>
         <tr>
@@ -118,109 +121,56 @@
         </tr>
       </tbody>
     </table>
-
-    <h2>Installment Details</h2>
-    <div id="installment-container">
-      <table id="installment-table">
-        <thead>
-          <tr>
-            <th>Installment Name</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><input type="text" name="installment_name_1" placeholder="Installment Name"></td>
-            <td><input type="number" name="installment_amount_1" placeholder="Amount"></td>
-            <td><input type="date" name="installment_date_1"></td>
-            <td><button type="button" class="remove-row-btn btn btn-danger btn-sm">Remove</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <button type="button" class="add-row-btn btn btn-success btn-sm">Add More</button>
-
-    <div class="form-group">
-      <label for="remarks">Remarks</label>
-      <textarea id="remarks" name="remarks" rows="4" placeholder="Enter any remarks or comments here..."></textarea>
-    </div>
-
+  
     <div>
       <button type="submit" class="btn btn-primary btn-sm">Submit</button>
       <button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back();">Cancel</button>
     </div>
-  </form>
+  </form>  
 </div>
 
 <script>
-  document.getElementById('installment-container').addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-row-btn')) {
-      const row = e.target.closest('tr');
-      if (row) {
-        row.remove();
-      }
-    }
-  });
+  // Helper function to update total fees and balance
+  function updateTotalFeesAndBalance() {
+    const courseFees = parseFloat(document.getElementById('course_fees').textContent) || 0;
+    let discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+    const discountType = document.getElementById('discount_type').value;
+    const feesReceived = parseFloat(document.getElementById('fees_received').value) || 0;
 
-  // Update course fees dynamically when a course is selected
-  document.getElementById('id_course_of_interest').addEventListener('change', function() {
-    var courseId = this.value;
-    fetch(`/get-course-fees/${courseId}/`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('course_fees').textContent = data.course_fees;
-        updateTotalFees();
-      });
-  });
-
-  // Recalculate total fees and balance when discount or fees received is updated
-  document.getElementById('discount_amount').addEventListener('input', updateTotalFees);
-  document.getElementById('fees_received').addEventListener('input', updateBalance);
-  document.getElementById('discount_type').addEventListener('change', updateTotalFees);
-
-  function updateTotalFees() {
-    var courseFees = parseFloat(document.getElementById('course_fees').textContent) || 0;
-    var discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
-    var discountType = document.getElementById('discount_type').value;
-    var totalFees = courseFees;
-
+    // Calculate discount based on type
     if (discountType === 'percentage') {
       discountAmount = courseFees * (discountAmount / 100);
     }
 
-    totalFees = courseFees - discountAmount;
+    const totalFees = courseFees - discountAmount;
+    const balance = totalFees - feesReceived;
+
+    // Update the table display
     document.getElementById('total_fees').textContent = totalFees.toFixed(2);
-
-    updateBalance();
-  }
-
-  function updateBalance() {
-    var totalFees = parseFloat(document.getElementById('total_fees').textContent) || 0;
-    var feesReceived = parseFloat(document.getElementById('fees_received').value) || 0;
-    var balance = totalFees - feesReceived;
-
     document.getElementById('balance').textContent = balance.toFixed(2);
+
+    // Update hidden input fields
+    document.getElementById('hidden_course_fees').value = courseFees.toFixed(2);
+    document.getElementById('hidden_total_fees').value = totalFees.toFixed(2);
+    document.getElementById('hidden_balance').value = balance.toFixed(2);
   }
 
-  // Add event listener to the external "Add More" button
-  document.querySelector('.add-row-btn').addEventListener('click', function() {
-    const table = document.getElementById('installment-table').getElementsByTagName('tbody')[0];
-    const rowCount = table.rows.length + 1;
-
-    // Create new row with inputs for installment name, amount, and date
-    const newRow = `
-      <tr>
-        <td><input type="text" name="installment_name_${rowCount}" placeholder="Installment Name"></td>
-        <td><input type="number" name="installment_amount_${rowCount}" placeholder="Amount"></td>
-        <td><input type="date" name="installment_date_${rowCount}"></td>
-        <td><button type="button" class="remove-row-btn btn btn-danger btn-sm">Remove</button></td>
-      </tr>
-    `;
-
-    // Append the new row to the table body
-    table.insertAdjacentHTML('beforeend', newRow);
+  // Fetch course fees when a course is selected
+  document.getElementById('id_course_of_interest').addEventListener('change', function () {
+    const courseId = this.value;
+    fetch(`/get-course-fees/${courseId}/`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('course_fees').textContent = data.course_fees;
+        document.getElementById('hidden_course_fees').value = data.course_fees;
+        updateTotalFeesAndBalance();
+      });
   });
+
+  // Event listeners for dynamic updates
+  document.getElementById('discount_amount').addEventListener('input', updateTotalFeesAndBalance);
+  document.getElementById('fees_received').addEventListener('input', updateTotalFeesAndBalance);
+  document.getElementById('discount_type').addEventListener('change', updateTotalFeesAndBalance);
 </script>
+
 {% endblock %}

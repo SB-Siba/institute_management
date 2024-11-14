@@ -2,66 +2,84 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>Student-wise Attendance Report</h2>
+<style>
+    .card {
+    border-radius: 10px; /* Rounded corners for the card */
+}
 
-    <!-- Form to select student -->
-    <form method="GET" action="{% url 'users:student_attendance_report' %}">
-        <div class="form-group">
-            <label for="student">Select Student:</label>
-            <select id="student" name="student" class="form-control">
-                <option value="">-- Select Student --</option>
-                {% for student in students %}
-                <option value="{{ student.id }}" {% if request.GET.student == student.id|stringformat:"s" %}selected{% endif %}>
-                    {{ student.full_name }}
-                </option>
-                {% endfor %}
-            </select>
+.table th, .table td {
+    text-align: center; /* Center-align table headers and data */
+}
+
+.student-details h2, .student-details h3 {
+    margin: 10px 0; /* Consistent spacing for headings */
+}
+
+.img-thumbnail {
+    border: 2px solid #007bff; /* Blue border for the student image */
+}
+
+</style>
+<div class="container my-4 ">
+    <div class="card shadow ">
+        <div class="card-body">
+            <h2 class="text-center mb-2" style="font-weight:bold; color:#211917;">Student-wise Attendance Report</h2>
+            <form method="GET" action="{% url 'users:student_attendance_report' %}" class="form-inline mb-4 justify-content-center">
+                <div class="form-group mr-2" >
+                    <label for="student" class="mr-2">Select Student:</label>
+                    <select id="student" name="student" class="form-control " required style="width: 200px;">
+                        <option value="">-- Select Student --</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}" {% if request.GET.student == student.id|stringformat:"s" %}selected{% endif %}>
+                            {{ student.full_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mr-2 ">
+                    <label for="start_date" class="mr-2">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}" required style="width: 150px;">
+                </div>
+
+                <div class="form-group mr-2">
+                    <label for="end_date" class="mr-2">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}" required style="width: 150px;">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Get Report</button>
+            </form>
+
+            {% if selected_student %}
+            <div class="student-details text-center mb-4">
+                <h2 style="color: rgb(19, 19, 68); font-weight: bold;">Name: {{ selected_student.full_name }}</h2>
+                <h3 style="color: rgb(23, 58, 23); font-weight: bold;">Course: {{ selected_course.course_name }}</h3>        
+                <img src="{{ selected_student.student_image.url }}" alt="{{ selected_student.full_name }}" class="img-thumbnail" style="max-width: 150px;">
+            </div>
+
+            <h3 class="text-center">Attendance Records</h3>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Date</th>
+                        <th>Attendance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance_data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-center mt-4">No student selected. Please choose a student to see the attendance report.</p>
+            {% endif %}
         </div>
-
-        <div class="form-group">
-            <label for="start_date">Select Start Date:</label>
-            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
-        </div>
-
-        <div class="form-group">
-            <label for="end_date">Select End Date:</label>
-            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Get Report</button>
-    </form>
-
-    {% if selected_student %}
-    <!-- Display student details -->
-    <div class="student-details">
-        <h3>Student: {{ selected_student.full_name }}</h3>
-        <p>Course: {{ selected_course.course_name }}</p>
-        <img src="{{ selected_student.student_image.url }}" alt="{{ selected_student.full_name }}" class="img-thumbnail" style="max-width: 150px;">
     </div>
-
-    <!-- Display attendance records -->
-    <h3>Attendance Records</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>S/N</th>
-                <th>Date</th>
-                <th>Attendance</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in attendance_data %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ record.date }}</td>
-                <td>{{ record.status }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No student selected.</p>
-    {% endif %}
 </div>
 {% endblock %}

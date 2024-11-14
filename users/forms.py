@@ -1,11 +1,11 @@
 import re
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from users.models import Batch, OnlineClass, Support, User, Installment, Payment, User, Course
+from users.models import Batch, ReAdmission, Support, User, Installment, Payment, User, Course
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-
+from django.db.models import Sum
 from django import forms
 from django.forms.widgets import HiddenInput
 
@@ -141,11 +141,12 @@ class AddUserForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     total_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     balance = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-
+    course_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+   
     class Meta:
         model = User
         fields = [
-            'student_image', 'student_signature', 'roll_number', 'abbreviation', 'full_name', 'select_one', 
+            'student_image', 'student_signature', 'roll_number', 'abbreviation', 'full_name', 'select_one',
             'father_husband_name', 'show_father_husband_on_certificate', 'mother_name', 'course_of_interest',
             'email', 'contact', 'alternative_contact', 'date_of_birth', 'gender', 'state', 'city', 'pincode',
             'permanent_address', 'aadhar_card_number', 'caste', 'qualification', 'occupation', 'course_fees',
@@ -156,33 +157,51 @@ class StudentForm(forms.ModelForm):
             'password': forms.PasswordInput(),
             'display_admission_form_id_card_fees_recipt': forms.RadioSelect(choices=User.YESNO),
         }
-
+        labels = {
+            'father_husband_name': 'Father/Husband name',
+            'show_father_husband_on_certificate': 'Show father/husband on certificate'
+        }
+ 
     def __init__(self, *args, **kwargs):
-        self.admit_existing_user = kwargs.pop('admit_existing_user', False)  # New flag
+        # Fetch and remove the 'course_id' and 'admit_existing_user' if provided
+        course_id = kwargs.pop('course_id', None)
+        self.admit_existing_user = kwargs.pop('admit_existing_user', False)
+       
         super().__init__(*args, **kwargs)
-
+       
+        # Populate course fees based on course_of_interest
+        if course_id:
+            try:
+                course = Course.objects.get(id=course_id)
+                self.fields['course_fees'].initial = course.course_fees
+            except Course.DoesNotExist:
+                self.fields['course_fees'].initial = "Course not found"
+   
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        # Skip validation if admitting an existing user
-        if not self.admit_existing_user:
-            if User.objects.filter(email=email, is_admitted=True).exists():
-                raise ValidationError("A user with this email already exists.")
+        # Validate email only if not admitting an existing user
+        if not self.admit_existing_user and User.objects.filter(email=email, is_admitted=True).exists():
+            raise ValidationError("A user with this email already exists.")
         return email
-
+ 
     def clean_contact(self):
         contact = self.cleaned_data.get('contact')
-        # Skip validation if admitting an existing user
-        if not self.admit_existing_user:
-            if User.objects.filter(contact=contact, is_admitted=True).exists():
-                raise ValidationError("A user with this contact number already exists.")
+        # Validate contact only if not admitting an existing user
+        if not self.admit_existing_user and User.objects.filter(contact=contact, is_admitted=True).exists():
+            raise ValidationError("A user with this contact number already exists.")
         return contact
 
-class ReAdmissionForm(forms.Form):
+    def clean_aadhar_card_number(self):
+        aadhar = self.cleaned_data.get('aadhar_card_number')
+        if not re.match(r"^\d{12}$", aadhar):  # Exactly 12 digits
+            raise ValidationError("Please enter a valid 12-digit Aadhaar number.")
+        return aadhar
+
+class ReAdmissionForm(forms.ModelForm):
     student = forms.ModelChoiceField(queryset=User.objects.filter(course_of_interest__isnull=False), required=True, label="Select Student")
     course_of_interest = forms.ModelChoiceField(queryset=Course.objects.filter(status='Active'), required=True, label="Course of Interest")
     exam_type = forms.ChoiceField(choices=[('OFFLINE', 'OFFLINE'), ('ONLINE', 'ONLINE')], required=True, label="Select Exam Type")
     batch = forms.ModelChoiceField(queryset=Batch.objects.all(), required=True)
-    # Hidden fields for fees, discount, and other details that will be updated dynamically
     course_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
     discount_rate = forms.CharField(required=False, widget=forms.HiddenInput())
     discount_amount = forms.DecimalField(required=False, widget=forms.HiddenInput())
@@ -190,6 +209,20 @@ class ReAdmissionForm(forms.Form):
     fees_received = forms.DecimalField(required=False, widget=forms.HiddenInput())
     balance = forms.DecimalField(required=False, widget=forms.HiddenInput())
 
+
+    class Meta:
+        model = ReAdmission  
+        fields = ['student', 'course_of_interest', 'exam_type', 'batch', 
+                  'course_fees', 'discount_rate', 'discount_amount', 
+                  'total_fees', 'fees_received', 'balance', 'date', 'remarks']
+        widgets = {
+            'remarks': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter any remarks here...'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(ReAdmissionForm, self).__init__(*args, **kwargs)
+    
+        
+        
 class InstallmentForm(forms.ModelForm):
     class Meta:
         model = Installment
@@ -200,8 +233,10 @@ class InstallmentForm(forms.ModelForm):
 
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
+        if amount is None or amount == '':
+            return 0  # Default to 0 if no amount is entered
         if amount < 0:
-            raise forms.ValidationError("Amount must be a positive number.")
+            raise ValidationError("Amount cannot be negative.")
         return amount
 
     def clean_date(self):
@@ -213,41 +248,44 @@ class InstallmentForm(forms.ModelForm):
 class StudentPaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
-        fields = ['student', 'course', 'amount', 'payment_mode', 'description']  # Define the fields to be used
+        fields = ['student', 'course', 'amount', 'payment_mode', 'description']
         widgets = {
             'amount': forms.NumberInput(attrs={'value': '0.00', 'step': '0.01'}),
             'description': forms.Textarea(attrs={'rows': 3}),
         }
 
-    # Additional fields for balance amount and payment mode choices
-    balance = forms.DecimalField(label='Total Balance Amount', max_digits=10, decimal_places=2, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    balance = forms.DecimalField(
+        label='Total Balance', 
+        max_digits=10, 
+        decimal_places=2, 
+        required=False,
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+
     payment_mode = forms.ChoiceField(
-        choices=[
-            ('', '--select--'),
-            ('cash', 'Cash'),
-            ('cheque', 'Cheque'),
-            ('demand draft', 'Demand Draft'),
-            ('online transfer', 'Online Transfer'),
-            ('account adjustment', 'Account Adjustment')
-        ],
+        choices=Payment.PAYMENT_MODE_CHOICES,
         label='Payment Mode',
     )
 
-    # Override the __init__ method to populate the dropdowns dynamically
     def __init__(self, *args, **kwargs):
-        super(StudentPaymentForm, self).__init__(*args, **kwargs)
-        # Dynamically populate the student dropdown with users who are students
-        self.fields['student'].queryset = User.objects.filter(is_superuser=False)  # Assuming `is_superuser=False` indicates students
-        # Dynamically populate the course dropdown with available courses
+        student_id = kwargs.pop('student_id', None)
+        course_id = kwargs.pop('course_id', None)
+        super().__init__(*args, **kwargs)
+        
+        # Filter student and course fields
+        self.fields['student'].queryset = User.objects.filter(is_superuser=False)
         self.fields['course'].queryset = Course.objects.all()
+        
+        # Dynamically set the balance if student and course IDs are provided
+        if student_id and course_id:
+            self.fields['balance'].initial = self.calculate_balance(student_id, course_id)
 
-class OnlineClassForm(forms.ModelForm):
-    class Meta:
-        model = OnlineClass
-        fields = ['course', 'title', 'link', 'description', 'expiry_date']
-        widgets = {
-            'expiry_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+    def calculate_balance(self, student_id, course_id):
+        student = User.objects.get(id=student_id)
+        course = Course.objects.get(id=course_id)
+        total_payments = student.payments.aggregate(Sum('amount'))['amount__sum'] or 0
+        balance = course.course_fees - total_payments
+        return balance
 
 class BatchForm(forms.ModelForm):
     class Meta:
