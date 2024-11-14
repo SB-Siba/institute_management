@@ -1,8 +1,12 @@
 
+from datetime import timedelta
+from doctest import Example
 from django import forms
-from course.models import AwardCategory, Course
+from course.models import AwardCategory, Course, Exam, ExamResult
 from ckeditor.widgets import CKEditorWidget
 from django.forms.widgets import ClearableFileInput
+
+from users.models import Batch, User
 
 class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True  # Allow multiple files to be selected
@@ -46,7 +50,7 @@ class CourseForm(forms.ModelForm):
             'course_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'course_video_links': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
-            'status': forms.RadioSelect(choices=[('Active', 'Active'), ('Inactive', 'Inactive')]),
+            'status': forms.Select(choices=Course.STATUS_CHOICES, attrs={'class': 'form-control'}),
         }
 
     def clean_subjects(self):
@@ -61,3 +65,115 @@ class CourseForm(forms.ModelForm):
             if not pdf_file.name.endswith('.pdf'):
                 raise forms.ValidationError('Only PDF files are allowed.')
         return pdf_files
+
+
+class ExamapplyForm(forms.ModelForm):
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(), 
+        label="Course"
+    )
+    batch = forms.ModelChoiceField(
+        queryset=Batch.objects.all(), 
+        label="Batch"
+    )
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}), 
+        label="Exam Date"
+    )
+    duration = forms.DurationField(
+        widget=forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
+    )
+    subjects = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Subjects",
+    )
+    status = forms.ChoiceField(
+        choices=Exam.STATUS_CHOICES,
+        label="Exam Status",
+        initial='pending',  # You can set a default value
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    total_questions = forms.IntegerField(
+        required=False,
+        label="Total Questions",
+        widget=forms.NumberInput(attrs={'placeholder': 'Total Questions'})
+    )
+    passing_marks = forms.IntegerField(
+        required=False,
+        label="Passing Marks",
+        widget=forms.NumberInput(attrs={'placeholder': 'Passing Marks'})
+    )
+
+  
+    class Meta:
+        model = Exam
+        fields = ['exam_name', 'date', 'duration', 'total_marks', 'total_questions', 'passing_marks', 'course', 'batch', 'status','subjects']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['subjects'].choices = []
+
+        # Populate subjects with names only based on the selected course
+        if 'course' in self.data:
+            try:
+                course_id = int(self.data.get('course'))
+                course = Course.objects.get(id=course_id)
+                self.fields['subjects'].choices = [(sub['name'], sub['name']) for sub in course.course_subject]
+            except (ValueError, Course.DoesNotExist):
+                pass
+
+    def clean_subjects(self):
+        # Return only the selected subject names
+        subjects = self.cleaned_data.get('subjects', [])
+        return subjects
+
+    def clean_duration(self):
+        duration = self.cleaned_data['duration']
+        if isinstance(duration, int):
+            duration = timedelta(minutes=duration)
+        elif isinstance(duration, str):
+            try:
+                hours, minutes, seconds = map(int, duration.split(':'))
+                duration = timedelta(hours=hours, minutes=minutes, seconds=seconds)
+            except ValueError:
+                raise forms.ValidationError("Duration must be in HH:MM:SS format or an integer representing minutes.")
+        return duration
+    
+class ExamResultForm(forms.ModelForm):
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all(),
+        label="Course",
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'course-select'})
+    )
+    student = forms.ModelChoiceField(
+        queryset=User.objects.none(),
+        label="Student",
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'student-select'}),
+        
+    )
+    class Meta:
+        model = ExamResult
+        fields = [ 'course','student']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['course'].widget.attrs.update({'class': 'form-control'})
+        self.fields['student'].widget.attrs.update({'class': 'form-control'})
+        self.fields['student'].label_from_instance = lambda obj: f"{obj.full_name} ({obj.email})" if obj.full_name else obj.roll_number
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        theory_marks = cleaned_data.get('theory_marks')
+        practical_marks = cleaned_data.get('practical_marks')
+        total_mark = cleaned_data.get('total_mark')
+
+        # Validate that theory + practical marks do not exceed total marks
+        if theory_marks and practical_marks and total_mark:
+            obtained_mark = theory_marks + practical_marks
+            if obtained_mark > total_mark:
+                raise forms.ValidationError("Obtained marks cannot exceed total marks.")
+        return cleaned_data

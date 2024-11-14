@@ -283,7 +283,7 @@ class StudentPaymentForm(forms.ModelForm):
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['name', 'timing','number_of_students','total_seats']
+        fields = ['name', 'timing','total_seats']
 
 class SupportForm(forms.ModelForm):
     file = forms.FileField(required=False, label="Attach Files")

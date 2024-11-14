@@ -154,7 +154,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.full_name
+        return self.full_name if self.full_name else "Unnamed User"
     
     @property
     def user_type_display(self):

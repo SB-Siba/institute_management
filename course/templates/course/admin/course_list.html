@@ -2,28 +2,31 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">List Courses</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Course List</h1>
         <a href="{% url 'course:add_course' %}" class="btn btn-primary">Add Course</a>
     </div>
     
-    <form method="get" class="mb-3">
+    <!-- Search Form -->
+    <form method="get" class="mb-4">
         <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search" value="{{ search_query }}">
+            <input type="text" name="q" class="form-control" placeholder="Search by Course Name or Code" value="{{ search_query }}">
             <button class="btn btn-outline-secondary" type="submit">Search</button>
         </div>
     </form>
     
-    <table class="table table-striped">
-        <thead>
+    <!-- Course List Table -->
+    <table class="table table-hover align-middle table-bordered">
+        <thead class="table-white">
             <tr>
-                <th>Sr.</th>
+                <th>S/N</th>
                 <th>Photo</th>
                 <th>Course Code</th>
                 <th>Course Name</th>
-                <th>Course Fees</th>
-                <th>Course MRP</th>
-                <th>Minimum Fees</th>
+                <th>Subjects</th>
+                <th>Fees</th>
+                <th>MRP</th>
+                <th>Min Fees</th>
                 <th>Duration</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -32,31 +35,77 @@
         <tbody>
             {% for course in page_obj.object_list %}
             <tr>
+                <!-- Serial Number -->
                 <td>{{ forloop.counter }}</td>
+                
+                <!-- Course Image -->
                 <td>
                     {% if course.course_image %}
-                        <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" style="width: 50px; height: auto;">
+                        <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" class="img-thumbnail" style="width: 60px; height: auto;">
                     {% else %}
-                        <img src="{% static 'path/to/default/image.png' %}" alt="No image available" style="width: 50px; height: auto;">
+                        <img src="{% static 'path/to/default/image.png' %}" alt="No Image" class="img-thumbnail" style="width: 60px; height: auto;">
                     {% endif %}
                 </td>
+                
+                <!-- Course Details -->
                 <td>{{ course.course_code }}</td>
                 <td>{{ course.course_name }}</td>
+                
+                <!-- Subjects List as Nested Table -->
+                <td>
+                    {% if course.course_subject %}
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Subject</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in course.course_subject %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ subject.name }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">No subjects available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <span class="text-muted">No subjects available</span>
+                    {% endif %}
+                </td>
+
+                <!-- Fees Details -->
                 <td>{{ course.course_fees }}</td>
                 <td>{{ course.course_mrp }}</td>
                 <td>{{ course.minimum_fees }}</td>
-                <td>{{ course.course_duration }}</td>
-                <td>{{ course.status }}</td>
+                
+                <!-- Course Duration & Status -->
+                <td>{{ course.course_duration }} months</td>
                 <td>
-                    <a href="{% url 'course:edit_course' course.id %}" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-course-id="{{ course.id }}">Delete</button>
+                    {% if course.status == 'Inactive' %}
+                        <span class="badge bg-success">Inactive</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Active</span>
+                    {% endif %}
+                </td>
+                
+                <!-- Action Buttons -->
+                <td>
+                    <a href="{% url 'course:edit_course' course.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-course-id="{{ course.id }}">Delete</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <div class="d-flex justify-content-between">
+    
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
         <div>
             {% if page_obj.has_previous %}
                 <a href="?page=1&q={{ search_query }}" class="btn btn-secondary btn-sm">First</a>
@@ -67,9 +116,7 @@
                 <a href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Last</a>
             {% endif %}
         </div>
-        <div>
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        </div>
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
     </div>
 </div>
 
@@ -95,22 +142,16 @@
     </div>
 </div>
 
-<!-- JavaScript for handling modal -->
+<!-- JavaScript for Modal -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var deleteModal = document.getElementById('deleteModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var courseId = button.getAttribute('data-course-id'); // Extract course ID
+        var button = event.relatedTarget;
+        var courseId = button.getAttribute('data-course-id');
         var form = deleteModal.querySelector('#deleteForm');
-        // Generate the URL for the delete form action
-        var deleteUrl = "{% url 'course:delete_course' pk=0 %}".replace('0', courseId);
-        form.action = deleteUrl;
+        form.action = "{% url 'course:delete_course' pk=0 %}".replace('0', courseId);
     });
 });
 </script>
-<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-    <script>
-        CKEDITOR.replace('course_syllabus'); // Use the correct ID based on your form field
-    </script>
 {% endblock %}

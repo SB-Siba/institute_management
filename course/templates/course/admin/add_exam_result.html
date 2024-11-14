@@ -1,0 +1,183 @@
+{% extends 'users/admin/base.html' %}
+
+{% block content %}
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    select, input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+    .subject-table th, .subject-table td {
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
+<h2 class="mt-4 mb-4">Add Student Results</h2>
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} 
+       
+        
+      <table class="table table-bordered" id="subjects-container">
+    <thead>
+        <tr>
+            <th rowspan="2">Subject</th>
+            <th colspan="2">Theory Marks</th>
+            <th colspan="2">Practical Marks</th>
+            <th rowspan="2">Total Marks</th>
+            <th rowspan="2">Total Obtained Marks</th>
+        </tr>
+        <tr>
+            <th>Total Theory Marks</th>
+            <th>Obtained Theory Marks</th>
+            <th>Total Practical Marks</th>
+            <th>Obtained Practical Marks</th>
+        </tr>
+    </thead>
+    <tbody id="subject-list">
+        <!-- Dynamically generated rows for subjects will go here -->
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5"><strong>Total Marks</strong></td>
+            <td id="total-marks">0</td>
+            <td id="total-obtained-marks">0</td>
+        </tr>
+        <tr>
+            <td colspan="5"><strong>Percentage</strong></td>
+            <td colspan="2" id="percentage">0%</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div id="error-message" style="color: red;"></div>
+
+        <!-- Verification Checkbox -->
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="verification" required>
+                I declare that I have verified the candidate appearing for examination in all respects...
+            </label>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary">Save Marks</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ request.path }}'">Cancel</button>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const courseSelect = document.getElementById('course-select');
+    const studentSelect = document.getElementById('student-select');
+
+    // Update this line with the correct namespaced URL
+    const fetchUrl = "{% url 'course:get_students_by_course' 0 %}".replace('/0', '');
+
+    courseSelect.addEventListener('change', function () {
+        const courseId = this.value;
+
+        // Clear existing student options
+        studentSelect.innerHTML = '<option value="">Select Student</option>';
+
+        if (courseId) {
+            fetch(`${fetchUrl}${courseId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        studentSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching students:', error));
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const courseSelect = document.getElementById('course-select');
+    const subjectList = document.getElementById('subject-list');
+    const totalMarksElement = document.getElementById('total-marks');
+    const totalObtainedMarksElement = document.getElementById('total-obtained-marks');
+    const percentageElement = document.getElementById('percentage');
+    const errorMessage = document.getElementById('error-message');
+
+    const fetchSubjectsUrl = "{% url 'course:get_subjects_by_course' 0 %}".replace('/0/', '/');
+
+    courseSelect.addEventListener('change', function () {
+        const courseId = this.value;
+        subjectList.innerHTML = ''; // Clear existing rows
+        errorMessage.textContent = ''; // Clear any previous error message
+
+        if (courseId) {
+            fetch(`${fetchSubjectsUrl}${courseId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.subjects && data.subjects.length > 0) {
+                        data.subjects.forEach((subject, index) => {
+                         
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${subject.name.name}</td>  <!-- Displaying only the subject name -->
+                                <td><input type="number" name="total_theory_marks_${subject.id}" placeholder="Total Theory Marks" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="theory_marks_${subject.id}" placeholder="Enter Theory Marks" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="total_practical_marks_${subject.id}" placeholder="Total Practical Marks" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="practical_marks_${subject.id}" placeholder="Enter Practical Marks" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="total_marks_${subject.id}" placeholder="Total Marks" readonly></td>
+                                <td><input type="number" name="total_obtained_marks_${subject.id}" placeholder="Total Obtained Marks" readonly></td>
+                            `;
+                            subjectList.appendChild(row);
+                        });
+                    } else {
+                        errorMessage.textContent = 'No subjects available for this course.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching subjects:', error);
+                    errorMessage.textContent = 'Error loading subjects.';
+                });
+        }
+    });
+
+    function calculateMarks() {
+        let totalMarks = 0;
+        let totalObtainedMarks = 0;
+        const rows = subjectList.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const totalTheoryMarks = parseFloat(row.querySelector('input[name^="total_theory_marks"]').value) || 0;
+            const theoryMarks = parseFloat(row.querySelector('input[name^="theory_marks"]').value) || 0;
+            const totalPracticalMarks = parseFloat(row.querySelector('input[name^="total_practical_marks"]').value) || 0;
+            const practicalMarks = parseFloat(row.querySelector('input[name^="practical_marks"]').value) || 0;
+
+            const totalRowMarks = totalTheoryMarks + totalPracticalMarks;
+            const totalObtained = theoryMarks + practicalMarks;
+
+            row.querySelector('input[name^="total_marks"]').value = totalRowMarks;
+            row.querySelector('input[name^="total_obtained_marks"]').value = totalObtained;
+
+            totalMarks += totalRowMarks;
+            totalObtainedMarks += totalObtained;
+        });
+
+        totalMarksElement.textContent = totalMarks;
+        totalObtainedMarksElement.textContent = totalObtainedMarks;
+        const percentage = totalMarks > 0 ? (totalObtainedMarks / totalMarks) * 100 : 0;
+        percentageElement.textContent = `${percentage.toFixed(2)}%`;
+    }
+});
+
+</script>
+    
+{% endblock %}

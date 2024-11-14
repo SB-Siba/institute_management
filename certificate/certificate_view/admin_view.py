@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from certificate.forms import ApplyCertificateForm, SearchForm
-from certificate.models import AppliedCertificate, ExamResult
-from course.models import Course
+from certificate.models import AppliedCertificate
+from course.models import Course, ExamResult
 from django.contrib.auth import get_user_model
 from django.views.generic import ListView
 from django.db.models import Q
