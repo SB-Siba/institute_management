@@ -1,9 +1,8 @@
 {% extends 'app_common/base.html' %}
 {% load static %}
-{% block title %} Course Details | NiwaAgro.com {% endblock title %}
+{% block title %} Course Details | reactedu.in {% endblock title %}
 
 {% block content %}
-
 <style>
     .course-details-container {
         display: flex;
@@ -98,28 +97,26 @@
             <!-- Right Side: Course Information -->
             <div class="course-details-right">
                 <h5>BASIC INFORMATION</h5>
+                <!-- Course Subjects -->
+                <h5 class="mt-4">Subjects:</h5>
+                {% if course.course_subject %}
+                    <ul class="subject-list">
+                        {% for subject in course.course_subject %}
+                            <li>{{ forloop.counter }}. {{ subject.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No subjects available for this course.</p>
+                {% endif %}
                 <p><strong>Course Duration:</strong> {{ course.course_duration }}</p>
-                <p><strong>Course Fees:</strong> ₹{{ course.course_fees }} 
-                    <span style="text-decoration: line-through; color: red;">₹{{ course.course_mrp }}</span>
+                <p><strong>Course Fees:</strong> ₹{{ course.course_fees|floatformat:2 }} 
+                    <span style="text-decoration: line-through; color: red;">₹{{ course.course_mrp|floatformat:2 }}</span>
                 </p>
-                <p><strong>Minimum Amount To Pay:</strong> ₹{{ course.minimum_fees }}</p>
+                <p><strong>Minimum Amount To Pay:</strong> ₹{{ course.minimum_fees|floatformat:2 }}</p>
+                <!-- Admission Button -->
                 <a href="#" class="admission-button">Admission Now</a>
             </div>
         </div>
-
-        <!-- Course Subjects -->
-        {% if course.subjects.all %}
-        <div class="course-subjects mt-4">
-            <h5>All Subjects:</h5>
-            <ul class="subject-list">
-                {% for subject in course.subjects.all %}
-                    <li>{{ forloop.counter }}. {{ subject }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% else %}
-        <p>No subjects available for this course.</p>
-        {% endif %}
     </div>
 </section>
 <br><br><br>

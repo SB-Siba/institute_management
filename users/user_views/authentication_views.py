@@ -139,7 +139,7 @@ class ForgotPasswordView(View):
     def post(self, request):
         form2 = forms.ForgotPasswordForm(request.POST)
         if form2.is_valid():
-            email = form.cleaned_data['email']
+            email = form2.cleaned_data['email']
             try:
                 user = models.User.objects.get(email=email)
                 token = user.generate_reset_password_token()

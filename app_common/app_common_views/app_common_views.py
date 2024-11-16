@@ -4,11 +4,18 @@ from django.contrib import messages
 from app_common import forms
 from app_common.models import ContactMessage
 from course.models import Course
+from users.models import Attendance, User
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm
 from django.conf import settings
 from django.db.models import Prefetch
+from django.utils import timezone
+from django.db.models import Count
+from datetime import datetime
+from django.db import models
+from django.db.models import Count, Q
+
 
 
 app = "app_common/"
@@ -22,18 +29,34 @@ class HomeView(View):
     authenticated_template = "users/user/index.html"
 
     def get(self, request):
-        # If user is not authenticated, render the landing page
         if not request.user.is_authenticated:
+            popular_courses = Course.objects.filter(status='Active')[:4]  # Retrieve top 4 popular courses
+            current_month = datetime.now().month
+            current_year = datetime.now().year
+            students_with_attendance = Attendance.objects.filter(
+                date__month=current_month,
+                date__year=current_year
+            ).values('student').annotate(present_days=Count('status', filter=models.Q(status="Present")))
+            if students_with_attendance:
+                max_attendance = max(students_with_attendance, key=lambda x: x['present_days'])['present_days']
+                achievers = User.objects.filter(
+                    id__in=[attendance['student'] for attendance in students_with_attendance if attendance['present_days'] == max_attendance]
+                ).select_related('course_of_interest')
+            else:
+                achievers = []  
+
             context = {
                 'MEDIA_URL': settings.MEDIA_URL,
+                'popular_courses': popular_courses,
+                'achievers': achievers, 
             }
+
             return render(request, self.unauthenticated_template, context)
 
         context = {
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.authenticated_template, context)
-
 
 class AboutUs(View):
     template = app + "about_us.html"
@@ -148,3 +171,27 @@ class LocateUs(View):
     def get(self, request):
        
         return render(request, self.template)
+
+class OurAchieversView(View):
+    template = app + "our_achievers.html"
+    
+    def get(self, request):
+        # Get the current month and year
+        current_month = datetime.now().month
+        current_year = datetime.now().year
+        
+        # Filter attendance for the current month
+        students_with_attendance = Attendance.objects.filter(
+            date__month=current_month,
+            date__year=current_year
+        ).values('student').annotate(present_days=Count('status', filter=models.Q(status="Present")))
+
+        # Find the student with maximum attendance
+        max_attendance = max(students_with_attendance, key=lambda x: x['present_days'])['present_days']
+        
+        # Get all students with the maximum attendance
+        achievers = User.objects.filter(
+            id__in=[attendance['student'] for attendance in students_with_attendance if attendance['present_days'] == max_attendance]
+        ).select_related('course_of_interest')  # Use the correct related field 'course_of_interest'
+        
+        return render(request, self.template, {'achievers': achievers})

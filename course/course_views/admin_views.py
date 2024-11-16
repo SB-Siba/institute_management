@@ -340,37 +340,86 @@ class AddStudentResultsView(View):
         form = ExamResultForm()
         return render(request, self.template_name, {'form': form})
 
-    def post(self, request, *args, **kwargs):
-        course_id = request.POST.get('course')
-        student_id = request.POST.get('student')
+    def post(self, request):
+        # Extract data from the form submission
+        form = ExamResultForm(request.POST)
 
-        if not course_id or not student_id:
-            return JsonResponse({'error': 'Course and Student are required'}, status=400)
-
-        course = get_object_or_404(Course, id=course_id)
-        student = get_object_or_404(User, id=student_id)
-        subjects = course.course_subject if course.course_subject else []
-        print(subjects)
-        print(student)
-        print(course)
-        form = ExamResultForm(request.POST, subjects=subjects)
         if form.is_valid():
-            for idx, subject in enumerate(subjects):
-                ExamResult.objects.create(
-                    student=student,
-                    course=course,
-                    subject=subject,
-                    theory_marks=form.cleaned_data[f'obtained_theory_marks_{idx}'],
-                    practical_marks=form.cleaned_data[f'obtained_practical_marks_{idx}']
-                )
-            return redirect('/success/')
+            course = form.cleaned_data['course']
+            student = form.cleaned_data['student']
+
+            # Fetch subjects from the course JSON field
+            subjects = json.loads(course.course_subject or '[]')
+            total_marks = 0
+            total_obtained_marks = 0
+
+            # Collecting subject data and calculating total marks
+            subjects_data = []
+            for subject in subjects:
+                subject_id = subject['id']
+                subject_name = subject['name']
+
+                # Extract marks from the form input
+                total_theory_marks = int(request.POST.get(f'total_theory_marks_{subject_id}', 0))
+                theory_marks = int(request.POST.get(f'theory_marks_{subject_id}', 0))
+                total_practical_marks = int(request.POST.get(f'total_practical_marks_{subject_id}', 0))
+                practical_marks = int(request.POST.get(f'practical_marks_{subject_id}', 0))
+
+                # Calculate total and obtained marks for each subject
+                total_subject_marks = total_theory_marks + total_practical_marks
+                obtained_subject_marks = theory_marks + practical_marks
+
+                # Append to subjects_data for further use if needed
+                subjects_data.append({
+                    'subject': subject_name,
+                    'total_theory_marks': total_theory_marks,
+                    'theory_marks': theory_marks,
+                    'total_practical_marks': total_practical_marks,
+                    'practical_marks': practical_marks,
+                    'total_marks': total_subject_marks,
+                    'obtained_marks': obtained_subject_marks,
+                })
+
+                # Accumulate total and obtained marks
+                total_marks += total_subject_marks
+                total_obtained_marks += obtained_subject_marks
+
+            # Calculate percentage
+            percentage = (total_obtained_marks / total_marks) * 100 if total_marks > 0 else 0
+
+            # Determine grade based on percentage
+            if percentage >= 90:
+                grade = 'A+'
+            elif percentage >= 80:
+                grade = 'A'
+            elif percentage >= 70:
+                grade = 'B'
+            elif percentage >= 60:
+                grade = 'C'
+            elif percentage >= 50:
+                grade = 'D'
+            else:
+                grade = 'E'
+
+            # Save the ExamResult record
+            ExamResult.objects.create(
+                student=student,
+                course=course,
+                total_mark=total_marks,
+                obtained_mark=total_obtained_marks,
+                percentage=percentage,
+                grade=grade,
+                result='passed' if grade != 'E' else 'failed'
+            )
+
+            return redirect('course:exam_results_list')  # Adjust redirection as needed
+
         return render(request, self.template_name, {'form': form})
 
 # AJAX endpoint to fetch students for a given course
 def get_students_by_course(request, course_id):
     if request.method == "GET":
         students = User.objects.filter(course_of_interest_id=course_id, is_admitted=True)
-        #print(students)
         student_list = [
             {'id': student.id, 'name': student.full_name or student.roll_number or student.email}
             for student in students
@@ -383,45 +432,18 @@ def get_students_by_course(request, course_id):
     
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-# AJAX endpoint to fetch subjects for a given course
 def get_subjects_by_course(request, course_id):
     if request.method == "GET":
-        try:
             course = Course.objects.get(id=course_id)
-            print(course.course_subject)  # Print the entire course_subject field to check its structure
-
-            # Assuming the structure is [{"name": {"id": 1, "name": "Subject1"}}, ...]
-            subjects = []
-            if course.course_subject:
-                for subject in course.course_subject:
-                    # Make sure to handle the case where the 'name' or 'name.name' might be missing or malformed
-                    if isinstance(subject, dict) and 'name' in subject and isinstance(subject['name'], dict):
-                        subjects.append(subject['name'].get('name', 'Unknown Subject'))  # Default to 'Unknown Subject' if missing
-                    else:
-                        subjects.append('Invalid Subject Format')  # Fallback for incorrect format
-
-            return JsonResponse({'subjects': subjects})
-
-        except Course.DoesNotExist:
-            return JsonResponse({'error': 'Course not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+            subjects = json.loads(course.course_subject or '[]')
+    return JsonResponse({'subjects': subjects})
 
 
 class GetSubjectsView(View):
     def get(self, request, course_id):
-        # Fetch the course object using the course_id
         course = Course.objects.filter(id=course_id).first()
         if not course:
             return JsonResponse({'error': 'Course not found'}, status=404)
-        
-        # Get the list of subjects stored in the course's 'course_subject' JSON field
-        subjects = course.course_subject  # List of subjects (strings)
-        
-        # Prepare subject data in the desired format
-        subject_data = [{'id': idx + 1, 'name': subject} for idx, subject in enumerate(subjects)]
-        
-        # Return the subject data as a JSON response
+        subjects = course.course_subject         
+        subject_data = [{'id': idx + 1, 'name': subject} for idx, subject in enumerate(subjects)]        
         return JsonResponse({'subjects': subject_data})

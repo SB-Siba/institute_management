@@ -1,0 +1,92 @@
+{% extends 'users/admin/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Applied Certificates{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Requested Certificates</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-header">
+                <tr>
+                    <th>Sl</th>
+                    <th>Student Image</th>
+                    <th>Full Name</th>
+                    <th>Course</th>
+                    <th>Batch</th>
+                    <th>Applied Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if application.user.student_image %}
+                            <img src="{{ application.user.student_image.url }}" alt="{{ application.user.full_name }}'s image" style="width: 50px; height: 50px; border-radius: 50%;">
+                        {% else %}
+                            <img src="" alt="No image available" style="width: 50px; height: 50px; border-radius: 50%;">
+                        {% endif %}
+                    </td>
+                    <td>{{ application.user.full_name }}</td>
+                    <td>{{ application.course.course_name }}</td>
+                    <td>{{ application.batch.name }}</td>
+                    <td>{{ application.applied_date|date:"d M Y" }}</td>
+                    <td>
+                        <div id="action-buttons-{{ application.pk }}">
+                            {% if application.status == 'Approved' %}
+                                <button class="btn btn-success btn-sm" onclick="toggleStatus({{ application.pk }}, 'reset')">Approved</button>
+                            {% elif application.status == 'Rejected' %}
+                                <button class="btn btn-danger btn-sm" onclick="toggleStatus({{ application.pk }}, 'reset')">Rejected</button>
+                            {% else %}
+                                <button class="btn btn-primary btn-sm" onclick="toggleStatus({{ application.pk }}, 'approve')">Approve</button>
+                                <button class="btn btn-warning btn-sm" onclick="toggleStatus({{ application.pk }}, 'reject')">Reject</button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No certificates applied yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>                  
+        </table>
+    </div>
+</div>
+
+<script>
+    function toggleStatus(applicationId, action) {
+        const url = `{% url 'toggle-certificate-status' 0 %}`.replace('0', applicationId);
+        const formData = new FormData();
+        formData.append('status', action);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const actionButtons = document.getElementById(`action-buttons-${applicationId}`);
+            if (data.status === 'Approved') {
+                actionButtons.innerHTML = `<button class="btn btn-success btn-sm" onclick="toggleStatus(${applicationId}, 'reset')">Approved</button>`;
+            } else if (data.status === 'Rejected') {
+                actionButtons.innerHTML = `<button class="btn btn-danger btn-sm" onclick="toggleStatus(${applicationId}, 'reset')">Rejected</button>`;
+            } else {
+                actionButtons.innerHTML = `
+                    <button class="btn btn-primary btn-sm" onclick="toggleStatus(${applicationId}, 'approve')">Approve</button>
+                    <button class="btn btn-warning btn-sm" onclick="toggleStatus(${applicationId}, 'reject')">Reject</button>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the status.');
+        });
+    }
+</script>
+{% endblock content %}

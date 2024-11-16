@@ -348,18 +348,12 @@ transform: scale(1.03);
 .whychoose{
   background:var(--gradient);
 }
-.aboutniwa_bg{
-  background-image:url("../images/picture-frame-leaning-against-white-wall.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  }
-  .aboutniwa1 div a{
+  .aboutreact_bg div a{
   background-color: var(--secondary2);
   width: 50%;
   margin-top: 10%;
   }
-  .aboutniwa1 p{
+  .aboutreact_bg p{
     font-family: sans-serif;
     font-weight: 200;
     word-spacing: 6px;
@@ -367,45 +361,304 @@ transform: scale(1.03);
     letter-spacing: 1.5px;
   }
 
-  
+/* Mission and Vision Section Styles */
+.mission-vision-bg {
+  background-color: #f8f9fa;
+  margin-top: 50px;
+  padding-top: 50px;
+}
 
+.mission-section, .vision-section {
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.mission-section h3, .vision-section h3 {
+  font-size: 24px;
+  margin: 0;
+  color: #28a745;
+}
+
+/* Arrow Icon Styling */
+.arrow {
+  font-size: 20px;
+  color: #28a745;
+  transition: transform 0.3s ease;
+}
+
+/* Section Content Animation */
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 1.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+
+.section-content.show {
+  max-height: 300px; /* Adjust max-height as needed */
+  opacity: 1;
+}
+
+.d-flex:hover .arrow {
+  cursor: pointer;
+}
+
+.arrow.active {
+  transform: rotate(180deg); /* Rotate the arrow */
+}
+
+
+/* Flexbox Layout for Mission and Vision */
+.row.justify-content-between {
+  display: flex;
+  justify-content: space-between; /* Adds space between the sections */
+  gap: 10px;  /* Adds space between the sections (left-right gap) */
+}
+
+@media (max-width: 768px) {
+  .mission-section, .vision-section {
+      margin-bottom: 30px; /* Spacing for mobile */
+  }
+
+  .row.justify-content-between {
+      flex-direction: column;  /* Stack vertically on smaller screens */
+      gap: 15px;  /* Adjust the gap for mobile */
+  }
+}
+
+  
+  #react_course {
+    padding: 30px 0;
+}
+
+#react_course .course-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#react_course .course-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#react_course .course-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+#react_course .course-duration {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+#react_course .course-image-wrapper {
+    position: relative;
+}
+
+#react_course .course-details {
+    margin-top: 15px;
+    text-align: left;
+}
+
+#react_course .course-details h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#react_course .course-fees {
+    margin: 5px 0;
+}
+
+#react_course .course-mrp {
+    color: red;
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+#react_course .course-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+#react_course .course-actions .btn {
+    flex: 1;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+/* Heading and sub-heading styles */
+#react_course .text-center h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+#react_course .text-center p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* ---------------------Achievers---------------------------- */
+/* Achiever Container Styling */
+.achiever-card {
+  border: 1px solid #ddd;
+  width: 100%;
+  max-width: 350px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.achiever-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.achiever-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.achiever-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.achiever-details p {
+  color: #666;
+  margin: 5px 0;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+
+/* Centered Achievers Heading with Right-Aligned Button */
+.d-flex.justify-content-center.position-relative {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.btn-more-info {
+  font-size: 1rem;
+  color: #28a745;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 2px solid #28a745;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+}
+
+.btn-more-info:hover {
+  color: #fff;
+  background-color: #28a745;
+}
+
+.btn-more-info::after {
+  content: '→';
+  font-size: 1.2rem;
+  color: #28a745;
+  margin-left: 8px;
+  position: relative;
+  top: 1px;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.btn-more-info:hover::after {
+  transform: translateX(5px);
+  color: #fff;
+  opacity: 1;
+}
 
 
 /* ---------------------testimonial---------------------------- */
+.section-heading {
+  font-size: 2rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #333;
+}
+
 .testimonial-box {
-  padding: 20px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  border-radius: 8px;
-  text-align: center;
-  background-color: #E0FBFC;
-  margin:5px;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.testimonial-icon {
-  font-size: 24px;
-  color: #000000;
-  text-align: left;
+
+.testimonial-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-.testimonial-text {
-  font-size: 12px;
-  color: #000000;
-  margin-bottom: 15px;
-}
-.testimonial-img {
-  margin-bottom: 10px;
-}
-.testimonial-img img {
-  width: 60px;
-  height: 60px;
+
+.testimonial-img-wrapper {
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
 }
-.testimonial-name h4 {
-  font-size: 16px;
-  margin: 5px 0;
-  color: #000000;
+
+.testimonial-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
-.testimonial-job p {
-  font-size: 14px;
-  color: #777;
+
+.testimonial-info h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial-info .branch {
+  font-size: 1rem;
+  color: #888;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .testimonial-box {
+      margin-bottom: 1.5rem;
+  }
 }
 /*------------------- Account Deletion page CSS  Details */
 

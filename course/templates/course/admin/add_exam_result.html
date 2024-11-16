@@ -46,17 +46,28 @@
         </tr>
     </thead>
     <tbody id="subject-list">
+        {% for subject in subjects %}
+    <tr>
+        <td>{{ subject.name }}</td>
+        <td><input type="number" name="total_theory_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
+        <td><input type="number" name="theory_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
+        <td><input type="number" name="total_practical_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
+        <td><input type="number" name="practical_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
+        <td><input type="number" name="total_marks_{{ subject.id }}" readonly class="form-control"></td>
+        <td><input type="number" name="total_obtained_marks_{{ subject.id }}" readonly class="form-control"></td>
+    </tr>
+    {% endfor %}
         <!-- Dynamically generated rows for subjects will go here -->
     </tbody>
     <tfoot>
         <tr>
             <td colspan="5"><strong>Total Marks</strong></td>
-            <td id="total-marks">0</td>
-            <td id="total-obtained-marks">0</td>
+            <td id="total-marks"></td>
+            <td id="total-obtained-marks"></td>
         </tr>
         <tr>
             <td colspan="5"><strong>Percentage</strong></td>
-            <td colspan="2" id="percentage">0%</td>
+            <td colspan="2" id="percentage">%</td>
         </tr>
     </tfoot>
 </table>
@@ -105,6 +116,8 @@
         }
     });
 });
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const courseSelect = document.getElementById('course-select');
     const subjectList = document.getElementById('subject-list');
@@ -125,17 +138,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.subjects && data.subjects.length > 0) {
-                        data.subjects.forEach((subject, index) => {
-                         
+                        data.subjects.forEach(subject => {
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                                <td>${subject.name.name}</td>  <!-- Displaying only the subject name -->
-                                <td><input type="number" name="total_theory_marks_${subject.id}" placeholder="Total Theory Marks" onchange="calculateMarks()"></td>
-                                <td><input type="number" name="theory_marks_${subject.id}" placeholder="Enter Theory Marks" onchange="calculateMarks()"></td>
-                                <td><input type="number" name="total_practical_marks_${subject.id}" placeholder="Total Practical Marks" onchange="calculateMarks()"></td>
-                                <td><input type="number" name="practical_marks_${subject.id}" placeholder="Enter Practical Marks" onchange="calculateMarks()"></td>
-                                <td><input type="number" name="total_marks_${subject.id}" placeholder="Total Marks" readonly></td>
-                                <td><input type="number" name="total_obtained_marks_${subject.id}" placeholder="Total Obtained Marks" readonly></td>
+                                <td>${subject.name.name}</td>
+                                <td><input type="number" name="total_theory_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
+                                <td><input type="number" name="theory_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
+                                <td><input type="number" name="total_practical_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
+                                <td><input type="number" name="practical_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
+                                <td><input type="number" name="total_marks_${subject.id}" readonly class="form-control"></td>
+                                <td><input type="number" name="total_obtained_marks_${subject.id}" readonly class="form-control"></td>
                             `;
                             subjectList.appendChild(row);
                         });
@@ -149,35 +161,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         }
     });
-
-    function calculateMarks() {
-        let totalMarks = 0;
-        let totalObtainedMarks = 0;
-        const rows = subjectList.querySelectorAll('tr');
-
-        rows.forEach(row => {
-            const totalTheoryMarks = parseFloat(row.querySelector('input[name^="total_theory_marks"]').value) || 0;
-            const theoryMarks = parseFloat(row.querySelector('input[name^="theory_marks"]').value) || 0;
-            const totalPracticalMarks = parseFloat(row.querySelector('input[name^="total_practical_marks"]').value) || 0;
-            const practicalMarks = parseFloat(row.querySelector('input[name^="practical_marks"]').value) || 0;
-
-            const totalRowMarks = totalTheoryMarks + totalPracticalMarks;
-            const totalObtained = theoryMarks + practicalMarks;
-
-            row.querySelector('input[name^="total_marks"]').value = totalRowMarks;
-            row.querySelector('input[name^="total_obtained_marks"]').value = totalObtained;
-
-            totalMarks += totalRowMarks;
-            totalObtainedMarks += totalObtained;
-        });
-
-        totalMarksElement.textContent = totalMarks;
-        totalObtainedMarksElement.textContent = totalObtainedMarks;
-        const percentage = totalMarks > 0 ? (totalObtainedMarks / totalMarks) * 100 : 0;
-        percentageElement.textContent = `${percentage.toFixed(2)}%`;
-    }
 });
 
+// Move this function outside the DOMContentLoaded block
+function calculateMarks() {
+    const rows = document.querySelectorAll('#subject-list tr');
+    let totalMarks = 0;
+    let totalObtainedMarks = 0;
+
+    rows.forEach(row => {
+        const totalTheoryMarks = parseFloat(row.querySelector('input[name^="total_theory_marks"]').value) || 0;
+        const theoryMarks = parseFloat(row.querySelector('input[name^="theory_marks"]').value) || 0;
+        const totalPracticalMarks = parseFloat(row.querySelector('input[name^="total_practical_marks"]').value) || 0;
+        const practicalMarks = parseFloat(row.querySelector('input[name^="practical_marks"]').value) || 0;
+
+        const totalRowMarks = totalTheoryMarks + totalPracticalMarks;
+        const totalObtained = theoryMarks + practicalMarks;
+
+        row.querySelector('input[name^="total_marks"]').value = totalRowMarks;
+        row.querySelector('input[name^="total_obtained_marks"]').value = totalObtained;
+
+        totalMarks += totalRowMarks;
+        totalObtainedMarks += totalObtained;
+    });
+
+    document.getElementById('total-marks').textContent = totalMarks;
+    document.getElementById('total-obtained-marks').textContent = totalObtainedMarks;
+    const percentage = totalMarks > 0 ? (totalObtainedMarks / totalMarks) * 100 : 0;
+    document.getElementById('percentage').textContent = `${percentage.toFixed(2)}%`;
+}
+
+
+
+
 </script>
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}

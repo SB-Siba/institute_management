@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import user_passes_test
 from requests import request
 from helpers import utils
 from django.forms import formset_factory, modelformset_factory
@@ -24,7 +25,6 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.generic import UpdateView
 from django.utils import timezone
-
 from users.models import Attendance
 app = "users/admin/"
 
@@ -39,7 +39,7 @@ class AdminDashboard(View):
 
 class StudentListView(View):
     template_name = app + 'student_list.html'
-    
+   
     def get(self, request):
         search_query = request.GET.get('q', '').strip()
         students = User.objects.filter(is_admitted=True)
@@ -52,7 +52,6 @@ class StudentListView(View):
         paginator = Paginator(students, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-
         context = {
             'page_obj': page_obj,
             'search_query': search_query,
@@ -109,13 +108,13 @@ def get_course_fee(request):
             return JsonResponse({'error': 'Course not found'}, status=404)
     return JsonResponse({'error': 'No course_id provided'}, status=400)
 
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class AddNewStudentView(View):
-    model = models.User
-    template = app + 'add_new_student.html'  
+    template = app + 'add_new_student.html'  # Update with your actual template path
 
     def get(self, request):
         user_form = StudentForm()
-        courses = Course.objects.all()
+        courses = Course.objects.all()  # Get all available courses
         return render(request, self.template, {
             'user_form': user_form,
             'courses': courses,
@@ -125,48 +124,46 @@ class AddNewStudentView(View):
         course_id = request.POST.get('course_of_interest')
         admit_existing_user = request.POST.get('admit_existing_user', False) == 'true'
 
-        # Initialize the form
-        user_form = StudentForm(
-            request.POST,
-            request.FILES,
-            course_id=course_id,
-            admit_existing_user=admit_existing_user
-        )
+        # Initialize the form with POST data
+        user_form = StudentForm(request.POST, request.FILES)
 
         if user_form.is_valid():
-            student = user_form.save(commit=False)
-            
-            # Fetch data for discount and fees calculation
-            discount_rate = request.POST.get('discount_rate', 'amount')
-            discount_amount = float(request.POST.get('discount_amount', 0))
-            course_fees = float(request.POST.get('course_fees', 0))
-            
-            # Calculate discounted fees based on the discount rate type
-            if discount_rate == 'amount':
-                discounted_fee = course_fees - discount_amount
-            elif discount_rate == 'percent':
-                discounted_fee = course_fees - (course_fees * (discount_amount / 100))
-            else:
-                discounted_fee = course_fees
+            email = user_form.cleaned_data.get('email')
 
-            fees_received = float(request.POST.get('fees_received', 0))
-            balance = discounted_fee - fees_received
+            try:
+                # Check if the user is already registered (but not admitted)
+                student = User.objects.get(email=email)
 
-            # Set additional fields and save
-            student.total_fees = discounted_fee
-            student.balance = balance
-            student.is_admitted = True  # Explicitly set this field
-            student.save()
+                if student.is_admitted:
+                    # If the user is already admitted, notify the admin
+                    messages.error(request, 'This user is already admitted to a course.')
+                    return redirect('users:student_list')  # Redirect to the student list page
 
-            messages.success(request, 'Student added successfully!')
-            return redirect('users:student_list')
+                # If the user is not admitted, update their admission status and assign the course
+                student.is_admitted = True
+                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
+                student.save()
 
-        # If form is not valid, re-render the page with the form
-        courses = Course.objects.all()
-        return render(request, self.template, {
-            'user_form': user_form,
-            'courses': courses,
-        })
+                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
+                return redirect('users:student_list')
+
+            except User.DoesNotExist:
+                # If the user does not exist, create a new user and admit them to the course
+                student = user_form.save(commit=False)
+                student.is_admitted = True  # Mark as admitted
+                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
+                student.save()
+
+                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
+                return redirect('users:student_list')
+
+        else:
+            # If the form is not valid, re-render the page with form errors
+            courses = Course.objects.all()
+            return render(request, self.template, {
+                'user_form': user_form,
+                'courses': courses,
+            })
     
 class StudentUpdateView(View):
     model = User

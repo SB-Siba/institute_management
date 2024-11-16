@@ -1,9 +1,88 @@
 {% extends 'users/admin/base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Students Payments List</h1>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+  }
 
+  h1 {
+    text-align: center;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    margin: 0 auto;
+    width: 95%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .row.mb-3 strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  .btn-primary, .btn-warning, .btn-danger {
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-warning {
+    background-color: #ffc107;
+  }
+
+  .btn-warning:hover {
+    background-color: #e0a800;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .input-group .form-control {
+    border-radius: 4px 0 0 4px;
+  }
+</style>
+
+<h1 class="mt-4 mb-4">Students Payments List</h1>
+
+<div class="container">
     <div class="row mb-3">
         <div class="col-md-4">
             <strong>Total Course Fees: Rs. {{ total_fees }}</strong> 
@@ -38,7 +117,7 @@
         </div>
     </div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>S/N</th>
@@ -66,6 +145,7 @@
                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.user.id }}">  
                             Delete  
                         </button>
+                        
                         <div class="modal fade" id="deleteModal{{ student.user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ student.user.id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -74,7 +154,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Are you sure you want to delete {{ student.full_name }}?
+                                        Are you sure you want to delete {{ student.user.full_name }}?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -87,37 +167,10 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="7">No students found.</td>
+                    <td colspan="8">No students found.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <!-- Pagination controls -->
-    <!-- <nav>
-        <ul class="pagination">
-            {% if students.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">&laquo; First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.previous_page_number }}">Previous</a>
-                </li>
-            {% endif %}
-
-            <li class="page-item disabled">
-                <span class="page-link">Page {{ students.number }} of {{ students.paginator.num_pages }}</span>
-            </li>
-
-            {% if students.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.next_page_number }}">Next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.paginator.num_pages }}">Last &raquo;</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav> -->
 </div>
-
 {% endblock %}

@@ -9,179 +9,180 @@
     <title>Certificate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/certificate.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,700;1,300;1,400&family=Rubik+Distressed&display=swap" rel="stylesheet">
 </head>
 <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f7f7f7;
-    }
 
-    .certificate-container {
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 40px;
-        background-color: #fff;
-    }
-
-    .certificate-border {
-        border: 10px solid #ffcc00; /* Outer border */
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
-
-    .watermark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.1;
-        pointer-events: none;
-        height: 400px;
-        width: auto;
-    }
-
-    .certificate-header {
-        margin-bottom: 20px;
-    }
-
-    .certificate-logo {
-        width: 150px;
-    }
-
-    .certificate-background {
-        position: absolute;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.2;
-        width: 80%;
-        z-index: -1;
-    }
-
-    .certificate-content h1 {
-        font-size: 28px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .certificate-content h2 {
-        font-size: 22px;
-        color: #ff6600;
-    }
-
-    .certificate-details p, .signature p {
-        margin: 0;
-        font-size: 14px;
-        color: #555;
-    }
-
-    .signature {
-        padding-right: 40px;
-    }
-
-    .verification {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    .qr-code {
-        width: 100px; /* Adjust size as needed */
-    }
-
-    .verification p {
-        color: #999;
-        font-style: italic;
-    }
-
-    .certificate-content p {
-        font-size: 20px;
-        margin-bottom: 15px;
-    }
-
-    /* Contact and Address section */
-    .contact-address {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 16px;
-        color: #555;
-    }
-
-    .contact-address p {
-        margin-bottom: 0.5rem;
-        font-size: 12px;
-    }
 </style>
 <body>
-    <div class="certificate-container">
-        <div class="certificate-border">
+    <div class="certificate-container ">
+        <div class="certificate-border ">
             <div class="certificate-content text-center">
                 <!-- Watermark Image -->
-                <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" class="watermark" alt="Watermark">
+                <!-- <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" class="watermark" alt="Watermark"> -->
 
                 <!-- Logo Image -->
-                <div class="certificate-header">
-                    <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="Certificate Logo" class="certificate-logo">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="certificate-headers">
+                        <img src="{% static 'app_common/images/msme.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-headers">
+                        <img src="{% static 'app_common/images/digi.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-header">
+                        <img src="{% static 'images/logoMain.png' %}" alt="Certificate Logo" class="certificate-logo">
+                    </div>
+                    <div class="certificate-headers2">
+                        <img src="{% static 'app_common/images/beti.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-headers2">
+                        <img src="{% static 'app_common/images/swatch.png' %}" alt="Certificate Logo">
+                    </div>
                 </div>
 
-                <h2>RATIONAL EDUCATION AND COMPUTER TRAINING</h2>
-                <p>BALUGAON</p>
+               <div class="content_div ">
+                <h1 class="bebas-neue-regular">RATIONAL EDUCATION AND COMPUTER TRAINING</h1>
+                <br>
+                <p><b>As ISO 9001:2015 Certified Organization</b></p>
+                <h1 class="CERTIFICtE">Certificate</h1>
+               </div>
+
+                <!-- New 3-column section after the ISO certification line -->
+                <div class="row mt-3">
+                    <!-- Left Column -->
+                   <div class="col-lg-4 d-flex justify-content-start">
+                      <div>
+                        <div class=" ">
+                            <img src="{% static 'app_common/images/ISO.png' %}" alt="Left Image 2" height="160px" width="160px" class="mb-2">
+                        </div>
+                        <div>
+                            <img src="{% static 'app_common/images/IAF.png' %}" alt="Left Image 1" height="140px" width="140px" class="mb-2">
+                        </div>
+                      </div>
+                   </div>
+
+                    <!-- Middle Column (Student Photo and Signature) -->
+                     <div class="col-lg-4 mt-5">
+                        <div class=" text-center student_img">
+                            <img src="{% static 'images/PAsspHoto.jpg' %}" alt="Student Photo" class="mb-2 student-photo">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div class=" text-center student_sign">
+                                <img src="{% static 'app_common/images/signature.png' %}" alt="Signature" class=" student-signature">
+                            </div>
+                        </div>
+                     </div>
+
+                    <!-- Right Column (Verification Code and Scanner) -->
+                    <div class="col-lg-4 mt-5 d-flex justify-content-end">
+                        <div>
+                            <div class=" text-center">
+                                <p class="fw-bold" style="font-size: 15px;">FOR ONLINE <br> VERIFICATION SCAN</p>
+                            </div>
+                            <div class=" text-center">
+                                <img src="{% static 'path/to/scanner_code.png' %}" alt="Scanner Code" class="mt-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="this_is_certify">
+                    <p><b>This is to certify that,</b></p>
+                    <div class="underline-hr bg-black"> </div>
+                </div>
+                
 
                 <!-- Background/Decorative Image -->
-                <img src="{% static 'image/background.png' %}" alt="Decorative Image" class="certificate-background">
+                <img src="{% static 'images/ReactMain Logo.png' %}" alt="Decorative Image" class="certificate-background">
 
-                <h1>POST GRADUATE DIPLOMA IN COMPUTER APPLICATION</h1>
-                <p>(COURSE DURATION: 12 MONTHS)</p>
-                <p>(COURSE PERIOD: 04 Oct 2023 TO 03 Oct 2024)</p>
+             <div class="Student_name">
+                <h3 class="  text-uppercase">
+                    Sibananda Swain
+                </h3>
+                <h6 class=" text-uppercase">
+                  S/O- Sibananda Swain
+                </h6>
+                <div class="underline-hr2 bg-black"> </div>
+             </div>
+             <div>
+                <p class="Rational_edu"><b>RATIONAL EDUCATION AND COMPUTER TRAINING | BALUGAON</b></p>
+                <div class="underline-hr3 bg-black"> </div>
+             </div>
+             <span>
+                <p class="inline-text"><b>Has passed the prescribed examination with </b></p>
+                <h3 class="inline-heading"><b> A</b></h3>
+                <p class="inline-text"><b> grade</b></p>
+                <p class="inline-text"><b>( </b></p>
+                <h3 class="inline-heading"> <b> 78.6%</b> </h3>
+                    <p class="inline-text"><b> marks )</b></p>
+                    <p class="inline-text"><b> has been awarded the</b></p>
+               
+            </span>
+            <h4 class="post_garduate">POST GRADUTE DIPLOMA IN COMPUTER APPLICATION</h4>
 
-                <!-- Name and QR code aligned side by side -->
-                <div class="d-flex justify-content-between align-items-center mt-5">
-                    <div>
-                        <strong>JITENDRA PRADHAN</strong> <br>
-                        <small>S/O PRAHALLAD PRADHAN</small>
-                    </div>
-
-                    <!-- QR Code -->
-                    <div>
-                        <img src="{% static 'image/qr-code.png' %}" alt="QR Code" class="qr-code">
-                    </div>
+                <div class="duration_div">
+                    <p class="fs-6">(COURSE DURATION: 12 MONTHS)</p>
+                <p class="fs-6">(COURSE PERIOD: 04 Oct 2023 TO 03 Oct 2024)</p>
                 </div>
+                
 
-                <p>A 73.20 %</p>
+              <div class="inline-text">
+                <p class="m-0"><b>design and devloped as per the standards of</b></p>
+                <p class=" Rational_edu mt-1"><b>RATIONAL EDUCATION AND COMPUTER TRAINING </b></p>
+              </div>
+              <div class="mb-4">
+                <p class="inline-text"><b>An ISO 9001:2015 Certified Organization</b></p>
+              </div>
 
-                <div class="certificate-details">
-                    <p><strong>Certificate No : 74WOK6X223</strong></p>
-                    <p><strong>Date Of Issue : 03-10-2024</strong></p>
-                    <p><strong>Online Certificate Varification Available on:</strong></p>
-                    <p><strong>www.reactedu.in</strong></p>
+                <div class="position-relative d-flex justify-content-center ">
+                    <div class="certificate-details ">
+                        <p class="m-0">Certificate No : 74WOK6X223</p>
+                        <p class="mt-1">Date Of Issue : 03-10-2024</p>
+                        
+                    </div>
+                    <div class="position-absolute imgISo">
+                        <img src="{% static 'app_common/images/ISO_with_tick.png' %}" alt="ISo Halmark" height="80px">
+                    </div>
+                    
+                </div>
+                <div>
+                    <div>
+                        <p class="details-para m-0">Online Certificate Verification Available on:</p>
+                        <p class="details-para">www.reactedu.in</p>
+                    </div>
                 </div>
 
                 <!-- Signature Area -->
-                <div class="row mt-5">
+                <div class="row">
                     <!-- Left Signature -->
-                    <div class="col-6 text-start">
-                        <p>-----------------------</p>
-                        <p><strong>SABITA DASH</strong></p>
+                    <div class="col-3 text-start Left_Signature">
+                        <p class="p-0 m-0">---------------------</p>
+                        <p style="margin: 0; text-transform: uppercase;">SABITA DASH</p>
                         <p>Controller Of Examination</p>
                     </div>
+                        <div class="col-6 p-0">
+                            <div class="contact-address">
+                                <p>Contact No: 9778577090 / 8895895988 / 8895644410</p>
+                                <p>ADDRESS:-AT:SUBASH JENA COLONY (HIGH SCHOOL ROAD, BALUGAON)</p>
+                                <p>PO/PS- BALUGAON, ZIP/PIN- 752030, KHORDHA, ODISHA, INDIA</p>
+                            </div>
 
+                        </div>
                     <!-- Right Signature -->
-                    <div class="col-6 text-end">
-                        <p>-----------------------</p>
-                        <p><strong>BRAJASUNDAR BEHERA</strong></p>
+                    <div class="col-3 text-end Right_Signature">
+                        <p class="p-0 m-0"><img src="" alt=""></p>
+                        <p style="margin: 0; text-transform: uppercase;">BRAJASUNDAR BEHERA</p>
                         <p>Director</p>
                     </div>
                 </div>
 
                 <!-- Contact and Address Section -->
-                <div class="contact-address mt-5">
-                    <p><strong>Contact No: 9778577090 / 8895895988 / 8895644410</strong></p>
-                    <p><strong>ADDRESS: AT: SUBASH JENA COLONY (HIGH SCHOOL ROAD, BALUGAON)</strong></p>
-                    <p><strong>PO/PS- BALUGAON, ZIP/PIN-752030, DIST-KHORDHA, STATE-ODISHA</strong></p>
-                </div>
+              
             </div>
         </div>
     </div>
 </body>
 </html>
-{% endblock content %}
+{% endblock %}

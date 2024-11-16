@@ -39,10 +39,8 @@
                 <td>{{ category.category_name }}</td>
                 <td>{{ category.status|yesno:"Active,Inactive" }}</td>
                 <td>
-                    <!-- Action Buttons -->
                     <button data-id="{{ category.id }}" class="btn btn-info btn-sm edit-btn">Edit</button>
-                    <button data-id="{{ category.id }}" class="btn btn-danger btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" >Delete</button>
-                    
+                    <button data-id="{{ category.id }}" class="btn btn-danger btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
                 </td>
             </tr>
             {% empty %}
@@ -57,16 +55,8 @@
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1&q={{ search_query }}" aria-label="First">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
+            <li class="page-item"><a class="page-link" href="?page=1&q={{ search_query }}" aria-label="First">&laquo;&laquo;</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" aria-label="Previous">&laquo;</a></li>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
             <li class="page-item {% if page_obj.number == num %}active{% endif %}">
@@ -74,16 +64,8 @@
             </li>
             {% endfor %}
             {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" aria-label="Last">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" aria-label="Next">&raquo;</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" aria-label="Last">&raquo;&raquo;</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -128,7 +110,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this student?
+                Are you sure you want to delete this award category?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -137,8 +119,18 @@
         </div>
     </div>
 </div>
+
 <!-- JavaScript -->
 <script>
+    // Function to display success message
+    function displayAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('alert-container');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+        alertContainer.appendChild(alert);
+    }
+
     // Handle Edit Button Click
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function(event) {
@@ -148,104 +140,71 @@
             const categoryName = row.querySelector('td:nth-child(2)').textContent;
             const status = row.querySelector('td:nth-child(3)').textContent.trim() === 'Active' ? 'active' : 'inactive';
 
-            // Set values in the modal form
-            document.querySelector('#editCategoryId').value = categoryId;
-            document.querySelector('#editCategoryName').value = categoryName;
-            document.querySelector('#editCategoryStatus').value = status;
+            document.getElementById('editCategoryId').value = categoryId;
+            document.getElementById('editCategoryName').value = categoryName;
+            document.getElementById('editCategoryStatus').value = status;
 
             $('#editCategoryModal').modal('show');
         });
     });
 
- // Handle Edit Form Submission
- document.querySelector('#editCategoryForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const categoryId = document.querySelector('#editCategoryId').value;
-    const formData = new FormData(this);
-    
+    // Handle Edit Form Submission
+    document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const categoryId = document.getElementById('editCategoryId').value;
+        const formData = new FormData(this);
 
-   const baseUrl = "{% url 'course:edit_award_category' category_id=0 %}".replace("0", categoryId);
-    fetch(baseUrl, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        }
-    })
-
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Update the row with new values
-            const row = document.querySelector(`button[data-id="${categoryId}"]`).closest('tr');
-            row.querySelector('td:nth-child(2)').textContent = data.category_name;
-            $('#editCategoryModal').modal('hide');
-
-            // Show success message
-            const alertContainer = document.createElement('div');
-            alertContainer.className = 'alert alert-success alert-dismissible fade show';
-            alertContainer.role = 'alert';
-            alertContainer.innerHTML = `Award category updated successfully.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-            document.querySelector('#alert-container').appendChild(alertContainer);
-        } else {
-            // Handle validation errors
-            for (const [key, value] of Object.entries(data.errors)) {
-                const errorElement = document.createElement('div');
-                errorElement.className = 'alert alert-danger';
-                errorElement.innerHTML = `${key}: ${value.join(', ')}`;
-                document.querySelector('#alert-container').appendChild(errorElement);
+        fetch("{% url 'course:edit_award_category' category_id=0 %}".replace("0", categoryId), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
             }
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const row = document.querySelector(`button[data-id="${categoryId}"]`).closest('tr');
+                row.querySelector('td:nth-child(2)').textContent = data.category_name;
+                $('#editCategoryModal').modal('hide');
+                displayAlert('Award category updated successfully.');
+            } else {
+                displayAlert(data.error || 'Failed to update category.', 'danger');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
-});
 
-// Handle Delete Button Click
-// Set up delete button click events
-document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', function () {
+    // Handle Delete Button Click
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const categoryId = this.getAttribute('data-id');
+            document.getElementById('confirmDeleteBtn').setAttribute('data-id', categoryId);
+        });
+    });
+
+    // Handle Delete Confirmation
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
         const categoryId = this.getAttribute('data-id');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-        confirmDeleteBtn.setAttribute('data-id', categoryId);
-    });
-});
 
-// Handle the delete confirmation
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteModal = document.getElementById('deleteModal');
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const categoryId = button.getAttribute('data-id');
-        confirmDeleteBtn.setAttribute('data-id', categoryId);
+        fetch("{% url 'course:delete_award_category' category_id=0 %}".replace("0", categoryId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.querySelector(`button[data-id="${categoryId}"]`).closest('tr').remove();
+                $('#deleteModal').modal('hide');
+                displayAlert('Award category deleted successfully.');
+            } else {
+                displayAlert(data.error || 'Failed to delete category.', 'danger');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
-
-    confirmDeleteBtn.addEventListener('click', function () {
-        const categoryId = confirmDeleteBtn.getAttribute('data-id');
-       
-            const baseUrl = "{% url 'course:delete_award_category' category_id=0 %}".replace("0", categoryId);
-            fetch (baseUrl,{
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())  // Parse the JSON response
-            .then(data => {
-                if (data && data.status === 'success') {
-                    // Update the UI... (as before)
-                } else {
-                    // Handle specific error messages from the view (if provided)
-                    const errorMessage = data?.error || 'Failed to delete award category.';
-                    alert(errorMessage);
-                }
-            });
-        
-    });
-});
 </script>
 {% endblock %}

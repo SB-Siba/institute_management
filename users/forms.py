@@ -142,7 +142,7 @@ class StudentForm(forms.ModelForm):
     total_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     balance = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     course_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    
+   
     class Meta:
         model = User
         fields = [
@@ -157,7 +157,11 @@ class StudentForm(forms.ModelForm):
             'password': forms.PasswordInput(),
             'display_admission_form_id_card_fees_recipt': forms.RadioSelect(choices=User.YESNO),
         }
-
+        labels = {
+            'father_husband_name': 'Father/Husband name',
+            'show_father_husband_on_certificate': 'Show father/husband on certificate'
+        }
+ 
     def __init__(self, *args, **kwargs):
         # Fetch and remove the 'course_id' and 'admit_existing_user' if provided
         course_id = kwargs.pop('course_id', None)
@@ -179,7 +183,7 @@ class StudentForm(forms.ModelForm):
         if not self.admit_existing_user and User.objects.filter(email=email, is_admitted=True).exists():
             raise ValidationError("A user with this email already exists.")
         return email
-
+ 
     def clean_contact(self):
         contact = self.cleaned_data.get('contact')
         # Validate contact only if not admitting an existing user
@@ -187,7 +191,13 @@ class StudentForm(forms.ModelForm):
             raise ValidationError("A user with this contact number already exists.")
         return contact
 
-class ReAdmissionForm(forms.Form):
+    def clean_aadhar_card_number(self):
+        aadhar = self.cleaned_data.get('aadhar_card_number')
+        if not re.match(r"^\d{12}$", aadhar):  # Exactly 12 digits
+            raise ValidationError("Please enter a valid 12-digit Aadhaar number.")
+        return aadhar
+
+class ReAdmissionForm(forms.ModelForm):
     student = forms.ModelChoiceField(queryset=User.objects.filter(course_of_interest__isnull=False), required=True, label="Select Student")
     course_of_interest = forms.ModelChoiceField(queryset=Course.objects.filter(status='Active'), required=True, label="Course of Interest")
     exam_type = forms.ChoiceField(choices=[('OFFLINE', 'OFFLINE'), ('ONLINE', 'ONLINE')], required=True, label="Select Exam Type")

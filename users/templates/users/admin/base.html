@@ -155,14 +155,10 @@
 					<span>Certificates</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authent">
+					
 					<li class="sidebar-item">
-						<a href="{% url 'certificate:apply_certificate' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Apply For Certificates</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'certificate:applied_certificates' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Approve Certificates</span>
+						<a href="{% url 'certificate:requested_certificates' %}" class="sidebar-links">
+							<i class="lni lni-list"></i><span class="ms-4">Requested Certificates</span>
 						</a>
 					</li>					
 					<li class="sidebar-item">

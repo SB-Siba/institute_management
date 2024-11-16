@@ -1,7 +1,7 @@
 from django import views
 from django.urls import path
 from certificate.certificate_view import admin_view
-from course.course_views import admin_views
+from course.course_views import admin_views, user_views
 from course.models import Exam
 from users import forms
 from app_common.app_common_views import app_common_views
@@ -30,5 +30,8 @@ urlpatterns = [
     path('edit/<int:pk>/', admin_views.EditExamView.as_view(), name='edit_exam'),
     path('delete/<int:pk>/', admin_views.DeleteExamView.as_view(), name='delete_exam'),
     path('get-students/<int:course_id>/', admin_views.get_students_by_course, name='get_students_by_course'),
-    path('get-subjects/<int:course_id>/', admin_views.get_subjects_by_course, name='get_subjects_by_course')
+    path('get-subjects/<int:course_id>/', admin_views.get_subjects_by_course, name='get_subjects_by_course'),
+
+        #user side
+    path('user-courses/', user_views.UserCourseListView.as_view(), name='user_course_list'),
 ]

@@ -1,23 +1,124 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    /* Container and layout */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin-bottom: 20px;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #f8f9fa;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .input-group input {
+        margin-right: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pagination span {
+        margin-top: 10px;
+    }
+
+    /* Layout for search and add button */
+    .d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .d-flex .input-group {
+        flex: 1;
+        max-width: 60%;
+    }
+
+    .d-flex .btn-primary {
+        flex: 0 0 auto;
+    }
+</style>
+
+<h1>List Courses</h1>
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">Course List</h1>
+    <div class="d-flex mb-3">
+        <!-- Search on the left -->
+        <form method="get" class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search" value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+
+        <!-- Add Course button on the right -->
         <a href="{% url 'course:add_course' %}" class="btn btn-primary">Add Course</a>
     </div>
     
-    <!-- Search Form -->
-    <form method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search by Course Name or Code" value="{{ search_query }}">
-            <button class="btn btn-outline-secondary" type="submit">Search</button>
-        </div>
-    </form>
-    
-    <!-- Course List Table -->
-    <table class="table table-hover align-middle table-bordered">
-        <thead class="table-white">
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <th>S/N</th>
                 <th>Photo</th>
@@ -103,10 +204,9 @@
             {% endfor %}
         </tbody>
     </table>
-    
-    <!-- Pagination Controls -->
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <div>
+
+    <div class="d-flex justify-content-between">
+        <div class="pagination">
             {% if page_obj.has_previous %}
                 <a href="?page=1&q={{ search_query }}" class="btn btn-secondary btn-sm">First</a>
                 <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Previous</a>
@@ -153,5 +253,9 @@ document.addEventListener('DOMContentLoaded', function () {
         form.action = "{% url 'course:delete_course' pk=0 %}".replace('0', courseId);
     });
 });
+</script>
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script>
+    CKEDITOR.replace('course_syllabus'); // Use the correct ID based on your form field
 </script>
 {% endblock %}
