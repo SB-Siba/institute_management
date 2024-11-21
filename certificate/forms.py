@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models import Q 
-from certificate.models import AppliedCertificate
+from certificate.models import Requested
 from course.models import Course
 from users.models import Batch
 
@@ -22,8 +22,20 @@ class ApplyCertificateForm(forms.ModelForm):
     course = forms.ModelChoiceField(queryset=Course.objects.all(), label='Select Course')
 
     class Meta:
-        model = AppliedCertificate
-        fields = ['batch', 'course']  # Only show these fields in the form
+        model = Requested
+        fields = ['batch', 'course']
 
     def __init__(self, *args, **kwargs):
-        super(ApplyCertificateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.fields['batch'].widget.attrs.update({'class': 'form-control'})
+        self.fields['course'].widget.attrs.update({'class': 'form-control'})
+
+
+class RequestedCertificateForm(forms.ModelForm):
+    class Meta:
+        model = Requested
+        fields = ['status']
+
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }

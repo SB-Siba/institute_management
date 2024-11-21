@@ -72,17 +72,17 @@ def __str__(self):
 class ExamResult(models.Model):
     student = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='exam_results',null=True, blank=True)
     course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='exam_results', null=True, blank=True)
-    theory_marks = models.IntegerField(null=True, blank=True)
-    practical_marks = models.IntegerField(null=True, blank=True)
-    total_mark = models.DecimalField(max_digits=5, decimal_places=2)
-    obtained_mark = models.DecimalField(max_digits=5, decimal_places=2)
-    percentage = models.DecimalField(max_digits=5, decimal_places=2)
-
+    obtained_theory_marks = models.IntegerField(null=True, blank=True, default=0)
+    obtained_practical_marks = models.IntegerField(null=True, blank=True, default=0)
+    total_mark = models.FloatField(default=0)
+    obtained_mark = models.FloatField(null=True, blank=True, default=0)
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Updated to DecimalField
     grade = models.CharField(max_length=2, choices=[
         ('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E')
-    ])
-    result = models.CharField(max_length=7, choices=[('passed', 'Passed'), ('failed', 'Failed')])
+    ],blank=True)
+    result = models.CharField(max_length=7, choices=[('passed', 'Passed'), ('failed', 'Failed')],blank=True)
     created_on = models.DateField(auto_now_add=True)
+    subjects_data = models.JSONField(default=list)
 
     # Updated __str__ method to handle potential None values
     def __str__(self):
@@ -90,17 +90,23 @@ class ExamResult(models.Model):
         course_name = self.course.course_name if self.course and self.course.course_name else "No Course"
         return f"Result for {student_name} in {course_name}"
 
-    def calculate_percentage(self):
+    
+    def save(self, *args, **kwargs):
+        # Ensure the student and course names are stored correctly
+        if self.student:
+            self.student_name = self.student.full_name if hasattr(self.student, 'full_name') else "Unknown Student"
+        
+        if self.course:
+            self.course_name = self.course.course_name if hasattr(self.course, 'course_name') else "No Course"
+
+        # Calculate the total obtained marks
+        self.obtained_mark = (self.obtained_theory_marks or 0) + (self.obtained_practical_marks or 0)
+        
+        # Calculate percentage
         if self.total_mark > 0:
             self.percentage = (self.obtained_mark / self.total_mark) * 100
-        return self.percentage
 
-    def save(self, *args, **kwargs):
-        # Ensure obtained marks are calculated based on theory and practical
-        self.obtained_mark = self.theory_marks + self.practical_marks
-        self.calculate_percentage()
-        
-        # Assign grade based on percentage
+        # Determine grade based on percentage
         if self.percentage >= 90:
             self.grade = 'A+'
         elif self.percentage >= 80:
@@ -113,5 +119,8 @@ class ExamResult(models.Model):
             self.grade = 'D'
         else:
             self.grade = 'E'
-        
+
+        # Set result status
+        self.result = 'passed' if self.grade != 'E' else 'failed'
+
         super().save(*args, **kwargs)

@@ -334,60 +334,54 @@ class ExamResultListView(View):
         return render(request, self.template_name, context)
     
 class AddStudentResultsView(View):
-    template_name = app + 'add_exam_result.html'  # Adjust the template path as needed
-
+    template_name = app + 'add_exam_result.html'  
     def get(self, request, *args, **kwargs):
         form = ExamResultForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        # Extract data from the form submission
-        form = ExamResultForm(request.POST)
+        course_id = request.POST.get('course')
+        form = ExamResultForm(request.POST, course_id=course_id)
 
         if form.is_valid():
             course = form.cleaned_data['course']
             student = form.cleaned_data['student']
-
-            # Fetch subjects from the course JSON field
-            subjects = json.loads(course.course_subject or '[]')
+            subjects = course.course_subject or []
+            
             total_marks = 0
             total_obtained_marks = 0
+            obtained_theory_total = 0
+            obtained_practical_total = 0
 
-            # Collecting subject data and calculating total marks
             subjects_data = []
             for subject in subjects:
                 subject_id = subject['id']
                 subject_name = subject['name']
 
-                # Extract marks from the form input
                 total_theory_marks = int(request.POST.get(f'total_theory_marks_{subject_id}', 0))
-                theory_marks = int(request.POST.get(f'theory_marks_{subject_id}', 0))
+                theory_obtained_marks = int(request.POST.get(f'theory_marks_{subject_id}', 0))
                 total_practical_marks = int(request.POST.get(f'total_practical_marks_{subject_id}', 0))
-                practical_marks = int(request.POST.get(f'practical_marks_{subject_id}', 0))
+                practical_obtained_marks = int(request.POST.get(f'practical_marks_{subject_id}', 0))
 
-                # Calculate total and obtained marks for each subject
                 total_subject_marks = total_theory_marks + total_practical_marks
-                obtained_subject_marks = theory_marks + practical_marks
+                obtained_subject_marks = theory_obtained_marks + practical_obtained_marks
 
-                # Append to subjects_data for further use if needed
+                total_marks += total_subject_marks
+                total_obtained_marks += obtained_subject_marks
+                obtained_theory_total += theory_obtained_marks
+                obtained_practical_total += practical_obtained_marks
+
                 subjects_data.append({
                     'subject': subject_name,
                     'total_theory_marks': total_theory_marks,
-                    'theory_marks': theory_marks,
+                    'theory_marks': theory_obtained_marks,
                     'total_practical_marks': total_practical_marks,
-                    'practical_marks': practical_marks,
+                    'practical_marks': practical_obtained_marks,
                     'total_marks': total_subject_marks,
                     'obtained_marks': obtained_subject_marks,
                 })
 
-                # Accumulate total and obtained marks
-                total_marks += total_subject_marks
-                total_obtained_marks += obtained_subject_marks
-
-            # Calculate percentage
             percentage = (total_obtained_marks / total_marks) * 100 if total_marks > 0 else 0
-
-            # Determine grade based on percentage
             if percentage >= 90:
                 grade = 'A+'
             elif percentage >= 80:
@@ -401,22 +395,26 @@ class AddStudentResultsView(View):
             else:
                 grade = 'E'
 
-            # Save the ExamResult record
-            ExamResult.objects.create(
+            exam_result = ExamResult.objects.create(
                 student=student,
                 course=course,
                 total_mark=total_marks,
                 obtained_mark=total_obtained_marks,
+                obtained_theory_marks=obtained_theory_total,
+                obtained_practical_marks=obtained_practical_total,
                 percentage=percentage,
                 grade=grade,
-                result='passed' if grade != 'E' else 'failed'
+                result='passed' if grade != 'E' else 'failed',
+                subjects_data=subjects_data
             )
 
-            return redirect('course:exam_results_list')  # Adjust redirection as needed
+            exam_result.student_name = student.full_name
+            exam_result.save()
+
+            return redirect('course:exam_results_list')
 
         return render(request, self.template_name, {'form': form})
 
-# AJAX endpoint to fetch students for a given course
 def get_students_by_course(request, course_id):
     if request.method == "GET":
         students = User.objects.filter(course_of_interest_id=course_id, is_admitted=True)
@@ -447,3 +445,100 @@ class GetSubjectsView(View):
         subjects = course.course_subject         
         subject_data = [{'id': idx + 1, 'name': subject} for idx, subject in enumerate(subjects)]        
         return JsonResponse({'subjects': subject_data})
+    
+class ExamResultDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        exam_result = get_object_or_404(ExamResult, pk=self.kwargs['pk'])
+        
+        exam_result.delete()
+        
+        return JsonResponse({'success': True})
+    
+class UpdateStudentResultsView(View):
+    template_name = app + 'update_exam_result.html'  # Adjust the template path as needed
+
+    def get(self, request, pk):
+        # Fetch the student's exam result
+        exam_result = get_object_or_404(ExamResult, student_id=pk)
+
+        # Load the subject data from the JSON field
+        subjects_data = exam_result.subjects_data or []
+
+        return render(request, self.template_name, {
+            'exam_result': exam_result,
+            'subjects_data': subjects_data,
+        })
+
+    def post(self, request, pk):
+        exam_result = get_object_or_404(ExamResult, student_id=pk)
+        subjects_data = exam_result.subjects_data or []
+
+        # Initialize totals
+        total_obtained_marks = 0
+        obtained_theory_total = 0
+        obtained_practical_total = 0
+
+        updated_subjects_data = []
+
+        for subject in subjects_data:
+            subject_name = subject['subject']
+            total_theory_marks = subject['total_theory_marks']
+            total_practical_marks = subject['total_practical_marks']
+
+            # Fetch updated marks from the form
+            try:
+                theory_obtained_marks = int(request.POST.get(f'theory_marks_{subject_name}', 0))
+                practical_obtained_marks = int(request.POST.get(f'practical_marks_{subject_name}', 0))
+
+                # Calculate obtained marks
+                obtained_subject_marks = theory_obtained_marks + practical_obtained_marks
+
+                # Update totals
+                total_obtained_marks += obtained_subject_marks
+                obtained_theory_total += theory_obtained_marks
+                obtained_practical_total += practical_obtained_marks
+
+                # Update the subject data
+                updated_subjects_data.append({
+                    'subject': subject_name,
+                    'total_theory_marks': total_theory_marks,
+                    'theory_marks': theory_obtained_marks,
+                    'total_practical_marks': total_practical_marks,
+                    'practical_marks': practical_obtained_marks,
+                    'total_marks': total_theory_marks + total_practical_marks,
+                    'obtained_marks': obtained_subject_marks,
+                })
+            except ValueError:
+                messages.error(request, f"Invalid marks entered for {subject_name}")
+                return redirect('course:update_exam_result', student_id=pk)
+
+        # Recalculate percentage
+        total_marks = sum(sub['total_marks'] for sub in updated_subjects_data)
+        percentage = (total_obtained_marks / total_marks) * 100 if total_marks > 0 else 0
+
+        # Determine grade based on percentage
+        if percentage >= 90:
+            grade = 'A+'
+        elif percentage >= 80:
+            grade = 'A'
+        elif percentage >= 70:
+            grade = 'B'
+        elif percentage >= 60:
+            grade = 'C'
+        elif percentage >= 50:
+            grade = 'D'
+        else:
+            grade = 'E'
+
+        # Update the ExamResult instance
+        exam_result.subjects_data = updated_subjects_data
+        exam_result.obtained_mark = total_obtained_marks
+        exam_result.obtained_theory_marks = obtained_theory_total
+        exam_result.obtained_practical_marks = obtained_practical_total
+        exam_result.percentage = percentage
+        exam_result.grade = grade
+        exam_result.result = 'passed' if grade != 'E' else 'failed'
+        exam_result.save()
+
+        messages.success(request, "Marks updated successfully!")
+        return redirect('course:exam_results_list')

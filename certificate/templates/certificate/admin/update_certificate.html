@@ -1,0 +1,85 @@
+{% extends 'users/admin/base.html' %}
+
+{% block title %}Update Certificate{% endblock title %}
+
+{% block content %}
+<style>
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .form-label {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>Update Certificate</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label class="form-label">Student Photo</label>
+            <input type="file" name="student_image" class="form-control">
+            <small>Current: <img src="{{ object.user.student_image.url }}" width="50"></small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Student Name</label>
+            <select name="user" class="form-control">
+                {% for student in students %}
+                <option value="{{ student.pk }}" {% if student.pk == object.user.pk %}selected{% endif %}>
+                    {{ student.full_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Student Name on Marksheet</label>
+            <input type="text" name="student_name_on_marksheet" value="{{ student_name_on_marksheet }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Father Name / Husband Name</label>
+            <input type="text" name="father_name" value="{{ father_name }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Surname Name</label>
+            <input type="text" name="surname_name" value="{{ surname_name }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Mother Name</label>
+            <input type="text" name="mother_name" value="{{ mother_name }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" name="date_of_birth" value="{{ date_of_birth }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Exam Title</label>
+            <input type="text" name="exam_title" value="{{ exam_title }}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Certificate No.</label>
+            <input type="text" name="certificate_no" value="{{ certificate_no }}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Certificate Date</label>
+            <input type="text" name="certificate_date" value="{{ certificate_date }}" class="form-control" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Certificate</button>
+        <a href="{% url 'certificate:approved-certificates' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

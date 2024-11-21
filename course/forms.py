@@ -159,61 +159,10 @@ class ExamResultForm(forms.ModelForm):
         fields = ['course', 'student']
 
     def __init__(self, *args, **kwargs):
-        # Extract subjects passed from the view
-        subjects = kwargs.pop('subjects', [])
+        course_id = kwargs.pop('course_id', None)
         super().__init__(*args, **kwargs)
 
-        # Update widgets
-        self.fields['course'].widget.attrs.update({'class': 'form-control'})
-        self.fields['student'].widget.attrs.update({'class': 'form-control'})
+        # Populate the student field based on the course_id if available
+        if course_id:
+            self.fields['student'].queryset = User.objects.filter(course_of_interest_id=course_id, is_admitted=True)
         self.fields['student'].label_from_instance = lambda obj: f"{obj.full_name} ({obj.email})" if obj.full_name else obj.roll_number
-
-        # Dynamically add fields for each subject
-        for index, subject in enumerate(subjects):
-            subject_id = subject['id']
-            subject_name = subject['name']
-
-            # Fields for theory and practical marks
-            self.fields[f'total_theory_marks_{subject_id}'] = forms.IntegerField(
-                label=f"{subject_name} - Total Theory Marks",
-                required=False,
-                widget=forms.NumberInput(attrs={'class': 'form-control', 'onchange': 'calculateMarks()'})
-            )
-            self.fields[f'theory_marks_{subject_id}'] = forms.IntegerField(
-                label=f"{subject_name} - Obtained Theory Marks",
-                required=False,
-                widget=forms.NumberInput(attrs={'class': 'form-control', 'onchange': 'calculateMarks()'})
-            )
-            self.fields[f'total_practical_marks_{subject_id}'] = forms.IntegerField(
-                label=f"{subject_name} - Total Practical Marks",
-                required=False,
-                widget=forms.NumberInput(attrs={'class': 'form-control', 'onchange': 'calculateMarks()'})
-            )
-            self.fields[f'practical_marks_{subject_id}'] = forms.IntegerField(
-                label=f"{subject_name} - Obtained Practical Marks",
-                required=False,
-                widget=forms.NumberInput(attrs={'class': 'form-control', 'onchange': 'calculateMarks()'})
-            )
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = []
-
-        for field_name in self.fields:
-            if field_name.startswith('total_theory_marks_'):
-                subject_id = field_name.split('_')[-1]
-                total_theory_marks = cleaned_data.get(f'total_theory_marks_{subject_id}', 0)
-                theory_marks = cleaned_data.get(f'theory_marks_{subject_id}', 0)
-                total_practical_marks = cleaned_data.get(f'total_practical_marks_{subject_id}', 0)
-                practical_marks = cleaned_data.get(f'practical_marks_{subject_id}', 0)
-
-                total_mark = total_theory_marks + total_practical_marks
-                obtained_mark = theory_marks + practical_marks
-
-                if obtained_mark > total_mark:
-                    errors.append(f"Obtained marks cannot exceed total marks for subject {subject_id}.")
-
-        if errors:
-            raise forms.ValidationError(errors)
-
-        return cleaned_data

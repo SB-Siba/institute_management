@@ -1,13 +1,17 @@
 {% extends 'users/admin/base.html' %}
 
 {% block content %}
-
 <style>
     .form-group {
         margin-bottom: 15px;
+        
     }
     .form-group label {
         font-weight: bold;
+        padding-left: 5px;
+    }
+    .input-checkbox{
+        width: auto;
     }
     select, input {
         width: 100%;
@@ -26,83 +30,72 @@
 <div class="container">
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }} 
-       
+        {{ form.as_p }}
         
-      <table class="table table-bordered" id="subjects-container">
-    <thead>
-        <tr>
-            <th rowspan="2">Subject</th>
-            <th colspan="2">Theory Marks</th>
-            <th colspan="2">Practical Marks</th>
-            <th rowspan="2">Total Marks</th>
-            <th rowspan="2">Total Obtained Marks</th>
-        </tr>
-        <tr>
-            <th>Total Theory Marks</th>
-            <th>Obtained Theory Marks</th>
-            <th>Total Practical Marks</th>
-            <th>Obtained Practical Marks</th>
-        </tr>
-    </thead>
-    <tbody id="subject-list">
-        {% for subject in subjects %}
-    <tr>
-        <td>{{ subject.name }}</td>
-        <td><input type="number" name="total_theory_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
-        <td><input type="number" name="theory_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
-        <td><input type="number" name="total_practical_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
-        <td><input type="number" name="practical_marks_{{ subject.id }}" onchange="calculateMarks()" class="form-control"></td>
-        <td><input type="number" name="total_marks_{{ subject.id }}" readonly class="form-control"></td>
-        <td><input type="number" name="total_obtained_marks_{{ subject.id }}" readonly class="form-control"></td>
-    </tr>
-    {% endfor %}
-        <!-- Dynamically generated rows for subjects will go here -->
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="5"><strong>Total Marks</strong></td>
-            <td id="total-marks"></td>
-            <td id="total-obtained-marks"></td>
-        </tr>
-        <tr>
-            <td colspan="5"><strong>Percentage</strong></td>
-            <td colspan="2" id="percentage">%</td>
-        </tr>
-    </tfoot>
-</table>
+        <table class="table table-bordered" id="subjects-container">
+            <thead>
+                <tr>
+                    <th rowspan="2">Subject</th>
+                    <th colspan="2">Theory Marks</th>
+                    <th colspan="2">Practical Marks</th>
+                    <th rowspan="2">Total Marks</th>
+                    <th rowspan="2">Total Obtained Marks</th>
+                </tr>
+                <tr>
+                    <th>Total Theory Marks</th>
+                    <th>Obtained Theory Marks</th>
+                    <th>Total Practical Marks</th>
+                    <th>Obtained Practical Marks</th>
+                </tr>
+            </thead>
+            <tbody id="subject-list">
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5"><strong>Total</strong></td>
+                    <td id="total-marks"></td>
+                    <td id="total-obtained-marks"></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>Percentage</strong></td>
+                    <td colspan="2" id="percentage">%</td>
+                </tr>
+            </tfoot>
+        </table>
 
-<div id="error-message" style="color: red;"></div>
-
+        <div id="error-message" style="color: rgb(39, 30, 30);"> </div>
         <!-- Verification Checkbox -->
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="verification" required>
-                I declare that I have verified the candidate appearing for examination in all respects...
-            </label>
+        <div class="form-group" style="display: flex;">
+            <div><input class="input-checkbox" type="checkbox" name="verification" required ></div>
+            <label>I declare that I have verified the candidate appearing for Examination in all respect. I had conducted the examination of this student under the supervision of subject experts. All Details / Records of Exam conduction is available with me and I promise to provide the records immediately whenever demanded. I am responsible and answerable for all queries, whenever arises.</label>
         </div>
-
         <!-- Buttons -->
-        <button type="submit" class="btn btn-primary">Save Marks</button>
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ request.path }}'">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="padding-bottom: 5px;">Save Marks</button>
+        <a href="{% url 'course:exam_results_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const courseSelect = document.getElementById('course-select');
     const studentSelect = document.getElementById('student-select');
+    const subjectList = document.getElementById('subject-list');
+    const totalMarksElement = document.getElementById('total-marks');
+    const totalObtainedMarksElement = document.getElementById('total-obtained-marks');
+    const percentageElement = document.getElementById('percentage');
+    const errorMessage = document.getElementById('error-message');
 
-    // Update this line with the correct namespaced URL
-    const fetchUrl = "{% url 'course:get_students_by_course' 0 %}".replace('/0', '');
+    const fetchSubjectsUrl = "{% url 'course:get_subjects_by_course' 0 %}".replace('/0/', '/');
+    const fetchStudentsUrl = "{% url 'course:get_students_by_course' 0 %}".replace('/0', '');
 
+    // Fetch and populate students based on selected course
     courseSelect.addEventListener('change', function () {
         const courseId = this.value;
-
-        // Clear existing student options
         studentSelect.innerHTML = '<option value="">Select Student</option>';
 
         if (courseId) {
-            fetch(`${fetchUrl}${courseId}/`)
+            fetch(`${fetchStudentsUrl}${courseId}/`)
                 .then(response => response.json())
                 .then(data => {
                     data.students.forEach(student => {
@@ -114,24 +107,14 @@
                 })
                 .catch(error => console.error('Error fetching students:', error));
         }
+        
+        // Fetch subjects for the selected course
+        fetchSubjects(courseId);
     });
-});
 
-
-document.addEventListener('DOMContentLoaded', function () {
-    const courseSelect = document.getElementById('course-select');
-    const subjectList = document.getElementById('subject-list');
-    const totalMarksElement = document.getElementById('total-marks');
-    const totalObtainedMarksElement = document.getElementById('total-obtained-marks');
-    const percentageElement = document.getElementById('percentage');
-    const errorMessage = document.getElementById('error-message');
-
-    const fetchSubjectsUrl = "{% url 'course:get_subjects_by_course' 0 %}".replace('/0/', '/');
-
-    courseSelect.addEventListener('change', function () {
-        const courseId = this.value;
-        subjectList.innerHTML = ''; // Clear existing rows
-        errorMessage.textContent = ''; // Clear any previous error message
+    function fetchSubjects(courseId) {
+        subjectList.innerHTML = '';
+        errorMessage.textContent = '';
 
         if (courseId) {
             fetch(`${fetchSubjectsUrl}${courseId}/`)
@@ -142,12 +125,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             const row = document.createElement('tr');
                             row.innerHTML = `
                                 <td>${subject.name.name}</td>
-                                <td><input type="number" name="total_theory_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
-                                <td><input type="number" name="theory_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
-                                <td><input type="number" name="total_practical_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
-                                <td><input type="number" name="practical_marks_${subject.id}" onchange="calculateMarks()" class="form-control"></td>
-                                <td><input type="number" name="total_marks_${subject.id}" readonly class="form-control"></td>
-                                <td><input type="number" name="total_obtained_marks_${subject.id}" readonly class="form-control"></td>
+                                <td><input type="number" name="total_theory_marks_${subject.id}" class="form-control" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="theory_marks_${subject.id}" class="form-control" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="total_practical_marks_${subject.id}" class="form-control" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="practical_marks_${subject.id}" class="form-control" onchange="calculateMarks()"></td>
+                                <td><input type="number" name="total_marks_${subject.id}" class="form-control" readonly></td>
+                                <td><input type="number" name="total_obtained_marks_${subject.id}" class="form-control" readonly></td>
                             `;
                             subjectList.appendChild(row);
                         });
@@ -160,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     errorMessage.textContent = 'Error loading subjects.';
                 });
         }
-    });
+    }
 });
 
-// Move this function outside the DOMContentLoaded block
+// Global function for marks calculation
 function calculateMarks() {
     const rows = document.querySelectorAll('#subject-list tr');
     let totalMarks = 0;
@@ -190,10 +173,5 @@ function calculateMarks() {
     const percentage = totalMarks > 0 ? (totalObtainedMarks / totalMarks) * 100 : 0;
     document.getElementById('percentage').textContent = `${percentage.toFixed(2)}%`;
 }
-
-
-
-
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
