@@ -315,18 +315,11 @@ class ExamResultListView(View):
     template_name = app + 'exam_result_list.html'
     
     def get(self, request, *args, **kwargs):
-        # Fetch all results, order by creation date
-        exam_results = ExamResult.objects.all().order_by('-created_on')
-        
-        # Apply filtering by grade if a grade is selected
+        exam_results = ExamResult.objects.all().order_by('-created_on')        
         grade = request.GET.get('grade')
         if grade:
-            exam_results = exam_results.filter(grade=grade)
-        
-        # Fetch list of unique grades for the dropdown
-        grades = [choice[0] for choice in ExamResult._meta.get_field('grade').choices]
-        
-        # Prepare context data for the template
+            exam_results = exam_results.filter(grade=grade)        
+        grades = [choice[0] for choice in ExamResult._meta.get_field('grade').choices]        
         context = {
             'exam_results': exam_results,
             'grades': grades,

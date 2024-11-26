@@ -94,22 +94,22 @@ WSGI_APPLICATION = 'niwa_agro.wsgi.application'
 
 
 DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
+
+
+"""DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'react',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',  
     }
-}
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'niwa_agro',
-#         'USER': 'postgres',
-#         'PASSWORD': 'tapas@123',
-#         'HOST': 'localhost',  
-#     }
-# }
+}"""
 
 
 # Password validation

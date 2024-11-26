@@ -1,22 +1,14 @@
-import logging
-from multiprocessing import Value
+from datetime import date
+from decimal import Decimal
+import random
+import string
 from django.contrib import messages
-from django.forms import CharField
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
 from django.views import View
 from certificate.forms import ApplyCertificateForm, SearchForm
 from certificate.models import ApprovedCertificate, ApprovedCertificate, Requested
-from course.models import Course, ExamResult
-from django.contrib.auth import get_user_model
-from django.views.generic import ListView
-from django.db.models import Q
-from django.core.exceptions import FieldError
-from django.db.models.functions import Concat
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from course.models import ExamResult
 
 from users.models import User
 
@@ -53,7 +45,7 @@ class DesignedCertificateView(View):
         
 class ApplyCertificateView(View):
     form_class = ApplyCertificateForm
-    template_name = 'certificate/apply_certificate.html'
+    template_name = app + 'apply_cerificate.html'
 
     def get(self, request):
         form = self.form_class()
@@ -62,32 +54,62 @@ class ApplyCertificateView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            batch = form.cleaned_data['batch']
             course = form.cleaned_data['course']
+            student = form.cleaned_data['student']
 
-            users = User.objects.filter(batch=batch, course_of_interest=course)
+            if student:  # If a specific student is selected
+                users = User.objects.filter(id=student.id)
+            else:  # If no student is selected, apply for all students in the course
+                users = User.objects.filter(course_of_interest=course)
+
             if not users.exists():
-                messages.warning(request, "No students found for the selected batch and course.")
+                messages.warning(request, "No students found for the selected course.")
                 return render(request, self.template_name, {'form': form})
 
             for user in users:
                 exam_result = ExamResult.objects.filter(student=user, course=course).first()
-                exam_data = None
+
                 if exam_result:
                     exam_data = {
                         'subjects': exam_result.subjects_data,
-                        'percentage': exam_result.percentage,
+                        'percentage': self.convert_decimal(exam_result.percentage),
                         'grade': exam_result.grade,
                         'result': exam_result.result,
                     }
+                else:
+                    exam_data = None
+
                 Requested.objects.create(
-                    user=user, course=course, batch=batch, exam_data=exam_data
+                    user=user,
+                    course=course,
+                    exam_data=exam_data,
+                    status='Pending'
                 )
 
             messages.success(request, "Certificates applied successfully.")
             return redirect('certificate:requested_certificates')
+
         return render(request, self.template_name, {'form': form})
 
+    def convert_decimal(self, value):
+        if isinstance(value, Decimal):
+            return float(value)
+        return value
+
+def get_students_by_course(request, course_id):
+    if request.method == "GET":
+        students = User.objects.filter(course_of_interest_id=course_id)
+        student_list = [
+            {'id': student.id, 'name': student.full_name or student.roll_number or student.email}
+            for student in students
+        ]
+
+        if student_list:
+            return JsonResponse({'students': student_list})
+        else:
+            return JsonResponse({'students': []})
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 class RequestedCertificatesListView(View):
     template_name = app + 'requested_certificates.html'
@@ -107,8 +129,8 @@ class RequestedCertificatesListView(View):
             application.save()
             ApprovedCertificate.objects.create(
                 user=application.user, 
-                course=application.course, 
-                batch=application.batch
+                course=application.course,
+                batch=application.batch, 
             )
         elif action == 'reject':
             application.status = 'Rejected'
@@ -140,64 +162,11 @@ class ApprovedCertificatesListView(View):
         }
         return render(request, self.template_name, context)
     
-
-@method_decorator(csrf_exempt, name='dispatch')
-class DeleteCertificateApplicationView(View):
-    def delete(self, request, pk):
-        # Fetch the application and delete it
-        application = get_object_or_404(ApprovedCertificate, pk=pk)
-        application.delete()
-        return JsonResponse({'success': True, 'message': 'Application deleted successfully.'})
-
-class RequestedCertificatesListView(View):
-    template_name = app + 'requested_certificates.html'
-
-    def get(self, request):
-        # Fetch search parameters and filter requested certificates
-        full_name_query = request.GET.get('full_name', '').strip()
-        course_query = request.GET.get('course', '').strip()
-        batch_query = request.GET.get('batch', '').strip()
-
-        applications = Requested.objects.filter(status = 'Approved')
-
-        if full_name_query:
-            applications = applications.filter(user__full_name__icontains=full_name_query)
-
-        if course_query:
-            applications = applications.filter(course__icontains=course_query)
-
-        if batch_query:
-            applications = applications.filter(batch__icontains=batch_query)
-
-        
-
-        context = {'applications': applications}
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        # Handle certificate approval
-        certificate_id = request.POST.get('certificate_id')
-        if certificate_id:
-            try:
-                requested_certificate = Requested.objects.get(id=certificate_id)
-                ApprovedCertificate.objects.create(
-                    user=requested_certificate.user,
-                    batch=requested_certificate.batch,
-                    course=requested_certificate.course,
-                )
-                requested_certificate.is_approved = True
-                requested_certificate.save()
-                messages.success(request, 'Certificate approved successfully!')
-            except Requested.DoesNotExist:
-                messages.error(request, 'Requested certificate not found.')
-
-        return redirect('requested-certificates')
-    
 class DeleteAppliedCertificateView(View):
     def post(self, request, pk):
-        applied_certificate = get_object_or_404(ApprovedCertificate, pk=pk)
+        applied_certificate = get_object_or_404(Requested, pk=pk)
         applied_certificate.delete()
-        return redirect('certificate:applied_certificates')  
+        return JsonResponse({'success': True, 'message': 'Application deleted successfully.'})
     
     
 def toggle_certificate_status(request, pk):
@@ -221,45 +190,75 @@ def toggle_certificate_status(request, pk):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
-class UpdateCertificateView(View):
-    model = ApprovedCertificate
-    template_name = app + 'update_certificate.html'
-    fields = ['user', 'batch', 'course']  # Editable fields for updating certificates
+# class UpdateCertificateView(View):
+#     model = ApprovedCertificate
+#     template_name = app + 'update_certificate.html'
+#     fields = ['user', 'batch', 'course']  # Editable fields for updating certificates
 
-    def get(self, request, pk):
-        """Handles GET requests to display the form."""
-        application = get_object_or_404(ApprovedCertificate, pk=pk)
+#     def get(self, request, pk):
+#         """Handles GET requests to display the form."""
+#         application = get_object_or_404(ApprovedCertificate, pk=pk)
 
-        # Populate context with dynamic fields
+#         # Populate context with dynamic fields
+#         context = {
+#             'application': application,
+#             'student_name_on_marksheet': application.user.full_name,
+#             'father_name': application.user.father_name,  # Assuming this field exists
+#             'surname_name': application.user.surname,
+#             'mother_name': application.user.mother_name,
+#             'date_of_birth': application.user.date_of_birth,
+#             'subjects': application.course.course_subject,  # Assuming subjects stored in JSONField
+#             'exam_title': "POST GRADUATE DIPLOMA IN COMPUTER APPLICATION",
+#             'certificate_no': f"PGDCA-{application.pk:05d}",
+#             'certificate_date': application.applied_date.strftime('%d %b %Y'),
+#         }
+#         return render(request, self.template_name, context)
+
+#     def post(self, request, pk):
+#         """Handles POST requests to update the certificate."""
+#         application = get_object_or_404(ApprovedCertificate, pk=pk)
+
+#         # Update fields from form submission
+#         application.user.full_name = request.POST.get('student_name_on_marksheet')
+#         application.user.father_name = request.POST.get('father_name')
+#         application.user.surname = request.POST.get('surname_name')
+#         application.user.mother_name = request.POST.get('mother_name')
+#         application.user.date_of_birth = request.POST.get('date_of_birth')
+
+#         # Assuming `subjects` and other data are submitted in JSON format
+#         application.course.course_subject = request.POST.get('subjects')
+
+#         # Save changes
+#         application.save()
+#         messages.success(request, "Certificate updated successfully!")
+#         return redirect('certificate:approved-certificates')
+
+class DesignedCertificateView(View):
+    template_name = app + 'designed_certificate.html'  
+
+    def generate_certificate_no(self):
+        while True:
+            certificate_no = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+            if not ApprovedCertificate.objects.filter(certificate_no=certificate_no).exists():
+                return certificate_no
+
+    def get(self, request,application_id, *args, **kwargs):
+        application = get_object_or_404(ApprovedCertificate, id=application_id)
+        if not application.certificate_no:
+            application.certificate_no = self.generate_certificate_no()
+            application.save()
+        exam_result = ExamResult.objects.filter(student=application.user).first()
+        if not exam_result:
+            return render(request, 'error_page.html', {'message': 'Exam result not found.'})
+        date_of_issue = date.today().strftime('%d-%m-%Y')
         context = {
             'application': application,
-            'student_name_on_marksheet': application.user.full_name,
-            'father_name': application.user.father_name,  # Assuming this field exists
-            'surname_name': application.user.surname,
-            'mother_name': application.user.mother_name,
-            'date_of_birth': application.user.date_of_birth,
-            'subjects': application.course.course_subject,  # Assuming subjects stored in JSONField
-            'exam_title': "POST GRADUATE DIPLOMA IN COMPUTER APPLICATION",
-            'certificate_no': f"PGDCA-{application.pk:05d}",
-            'certificate_date': application.applied_date.strftime('%d %b %Y'),
+            'percentage': exam_result.percentage,
+            'grade': exam_result.grade,
+            'course_name': exam_result.course.course_name,
+            'course_duration': exam_result.course.course_duration,
+            'course_period': '23 Nov 2023 TO 22 Nov 2024',
+            'date_of_issue': date_of_issue,
         }
+        
         return render(request, self.template_name, context)
-
-    def post(self, request, pk):
-        """Handles POST requests to update the certificate."""
-        application = get_object_or_404(ApprovedCertificate, pk=pk)
-
-        # Update fields from form submission
-        application.user.full_name = request.POST.get('student_name_on_marksheet')
-        application.user.father_name = request.POST.get('father_name')
-        application.user.surname = request.POST.get('surname_name')
-        application.user.mother_name = request.POST.get('mother_name')
-        application.user.date_of_birth = request.POST.get('date_of_birth')
-
-        # Assuming `subjects` and other data are submitted in JSON format
-        application.course.course_subject = request.POST.get('subjects')
-
-        # Save changes
-        application.save()
-        messages.success(request, "Certificate updated successfully!")
-        return redirect('certificate:approved-certificates')

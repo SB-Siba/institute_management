@@ -1,18 +1,14 @@
 from collections import defaultdict
-from decimal import Decimal
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
-from requests import request
 from helpers import utils
-from django.forms import formset_factory, modelformset_factory
 from users import models,forms
-from users.forms import BatchForm, StudentForm, InstallmentForm, StudentPaymentForm,ReAdmissionForm
-from django.forms import formset_factory 
-from users.models import Installment, OnlineClass, Payment, Batch, ReAdmission, ReferralSettings, User
+from users.forms import BatchForm, StudentForm, StudentPaymentForm,ReAdmissionForm
+from users.models import OnlineClass, Payment, Batch, ReAdmission, ReferralSettings, User
 from course.models import Course
 import csv
 from django.db.models import Q

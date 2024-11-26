@@ -20,7 +20,7 @@
             {{ message }}
         </div>
     {% endfor %}
-{% endif %}
+    {% endif %}
 
     <form method="post">
         {% csrf_token %}
@@ -28,4 +28,53 @@
         <button type="submit" class="btn btn-primary">Apply Certificate</button>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const courseField = document.querySelector('select[name="course"]');
+    const studentField = document.querySelector('select[name="student"]');
+
+    if (!courseField || !studentField) return;
+
+    courseField.addEventListener('change', function () {
+        const courseId = this.value;
+
+        if (!courseId) {
+            studentField.innerHTML = '<option value="">Select a student</option>';
+            return;
+        }
+
+        fetch(`${fetchStudentsUrl}${courseId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    console.error(`Error: ${response.statusText}`);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched Students:", data); // Debug log
+                studentField.innerHTML = ''; // Clear previous options
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a student';
+                studentField.appendChild(defaultOption);
+
+                data.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = student.full_name;
+                    studentField.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching student data:', error);
+                studentField.innerHTML = '<option value="">Failed to load students</option>';
+            });
+
+        });
+});
+
+</script>
+
 {% endblock content %}
