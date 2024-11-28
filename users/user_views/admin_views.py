@@ -31,7 +31,47 @@ class AdminDashboard(View):
     template = app + "index.html"
 
     def get(self, request):
-        return render(request, self.template)
+        query = request.GET.get('search', '')  # Allow search query for filtering students
+        if query:
+            students = User.objects.filter(Q(full_name__icontains=query), is_superuser=False, is_staff=False)
+        else:
+            students = User.objects.filter(is_superuser=False, is_staff=False)
+
+        # Fetch the latest payment details for each student
+        student_data = []
+        for student in students:
+            # Get the latest payment for each student
+            latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
+
+            # Calculate fees details for each student
+            total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
+            fees_received = latest_payment.amount if latest_payment else 0
+            balance = total_fees - fees_received
+
+            student_data.append({
+                'user': student,
+                'latest_payment_date': latest_payment.date if latest_payment else None,
+                'total_fees': total_fees,
+                'fees_received': fees_received,
+                'balance': balance,
+            })
+
+        # Calculate the overall totals
+        total_fees = sum(data['total_fees'] for data in student_data)
+        total_paid_fees = sum(data['fees_received'] for data in student_data)
+        total_balance_fees = sum(data['balance'] for data in student_data)
+
+        # Context to pass to the template
+        context = {
+            "students": student_data,
+            "total_fees": total_fees,
+            "total_paid_fees": total_paid_fees,
+            "total_balance_fees": total_balance_fees,
+            "search_query": query,
+        }
+
+        # Render the template with dynamic context
+        return render(request, self.template, context)
 
 class StudentListView(View):
     template_name = app + 'student_list.html'

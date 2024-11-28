@@ -45,30 +45,29 @@ class Registration(View):
     def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            contact = form.cleaned_data.get('contact')
             full_name = form.cleaned_data.get('full_name')
 
             try:
-                new_user = self.model(email=email, full_name=full_name, contact=contact, is_admitted=False)
+                new_user = self.model(username=username, full_name=full_name, is_admitted=False)
                 new_user.set_password(password)
                 new_user.save()
-                new_user_login = authenticate(request, username=email, password=password)
+                new_user_login = authenticate(request, username=username, password=password)
                 if new_user_login is not None:
                     login(request, new_user_login)
                     
-                    context = {
-                        'full_name': full_name,
-                        'email': email,
-                    }
+                    # context = {
+                    #     'full_name': full_name,
+                    #     'username': username,
+                    # }
 
-                    send_template_email(
-                        subject='Registration Confirmation',
-                        template_name='users/email/register_email.html',
-                        context=context,
-                        recipient_list=[email]
-                    )
+                    # send_template_email(
+                    #     subject='Registration Confirmation',
+                    #     template_name='users/email/register_email.html',
+                    #     context=context,
+                    #     recipient_list=[username]
+                    # )
                     
                     messages.success(request, "Registration successful! You are now logged in.")
                     return redirect('users:home')
@@ -95,12 +94,12 @@ class Login(View):
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             
             try:
-                user = models.User.objects.get(email=email)
-                user = authenticate(username=email, password=password)
+                user = models.User.objects.get(username=username)
+                user = authenticate(username=username, password=password)
                 if user is not None:
                     login(request, user)
                     if user.is_superuser:
@@ -110,7 +109,7 @@ class Login(View):
                 else:
                     messages.error(request, "Incorrect password")
             except models.User.DoesNotExist:
-                messages.error(request, "Invalid email")
+                messages.error(request, "Invalid username")
         
         return render(request, self.template, {'form': form})
 

@@ -33,8 +33,8 @@
    	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand">
-			<i class="lni lni-nextjs"></i>
-        <span class="logo_name">REACT</span>
+			<img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="" class="logo">
+			<hr class="logo-divider">
         <span class="text"></span>
 		</a>
 		<ul class="side-menu top">
@@ -58,31 +58,21 @@
 					<span>Manage Students</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
-					<!-- <li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Student Enquiry</span>
-						</a>
-					</li> -->
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Admission</span>
+							<i class='bx bx-user-plus'></i><span class="ms-4">Student Admission</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:re-admission-list' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Re-Admission List</span>
+							<i class='bx bx-user-circle'></i><span class="ms-4">Re-Admission List</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees list</span>
+							<i class='bx bx-money-withdraw'></i><span class="ms-4">Student Fees list</span>
 						</a>
 					</li>
-					<!-- <li class="sidebar-item">
-						<a href="{% url 'users:referral_amount' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
-						</a>
-					</li> -->
 				</ul>
 			</li>
 			<li class="sidebar-item">
@@ -95,29 +85,16 @@
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authe">
 					<li class="sidebar-item">
 						<a href="{% url 'course:award_categories' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Award Categories</span>
+							<i class='bx bx-category'></i><span class="ms-4">Award Categories</span>
 						</a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'course:course_list' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">Courses</span>
+							<i class='bx bx-book'></i><span class="ms-4">Courses</span>
 						</a>
 					</li>
-					<!--<li class="sidebar-item">
-						<a href="{% url 'users:student_payment_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Student Fees</span>
-						</a>
-					</li>
-						<li class="sidebar-item">
-						<a href="" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Set Referral Amount</span>
-						</a>
-					</li>-->
 				</ul>
 			</li>
-
-
-			
 
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
@@ -151,7 +128,7 @@
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#authent" aria-expanded="false" aria-controls="authent" onclick="toggleChevron(this)">
 									
-					<i class='bx bxs-doughnut-chart'></i>
+					<i class='bx bx-award' ></i>
 					<span>Certificates</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="authent">
@@ -288,7 +265,7 @@
 		    <!-- <label for="switch-mode" class="switch-mode"></label> -->
 		
 		    <!-- Display Date and Time -->
-		    <div class="date-time">
+		    <div class="date-time" style="color: navy;">
 		        <span id="current-date-time"></span>
 		    </div>
 		

@@ -12,27 +12,16 @@ from django.forms.widgets import HiddenInput
 class SignUpForm(forms.Form):
 
     full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Your Full Name'}))
-    email = forms.EmailField(max_length=254,
-    widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
-    contact = forms.CharField(max_length=10,
-    validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control','Placeholder':'Enter Mobile Number'}))
+    username = forms.CharField(widget=forms.TextInput( attrs={'class': 'form-control','placeholder':'Enter Your Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Confirm Password'}))
 
 
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email address already exists")
-        return email
-
-    def clean_contact(self):
-        contact = self.cleaned_data.get('contact')
-        if User.objects.filter(contact=contact).exists():
-            raise forms.ValidationError("Contact number already exists")
-        return contact
-
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Username already taken")
+        return username
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -61,7 +50,7 @@ class SignUpForm(forms.Form):
         return cleaned_data
 
 class LoginForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter a Valid Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
     
 class ForgotPasswordForm(forms.Form):
@@ -139,13 +128,20 @@ class AddUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
 class StudentForm(forms.ModelForm):
+    registered_user = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_admitted=False, is_superuser=False),
+        required=False,
+        empty_label="Select a Registered User",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     total_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     balance = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     course_fees = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-   
+
     class Meta:
         model = User
         fields = [
+            'registered_user',
             'student_image', 'student_signature', 'roll_number', 'abbreviation', 'full_name', 'select_one',
             'father_husband_name', 'show_father_husband_on_certificate', 'mother_name', 'course_of_interest',
             'email', 'contact', 'alternative_contact', 'date_of_birth', 'gender', 'state', 'city', 'pincode',
@@ -158,17 +154,19 @@ class StudentForm(forms.ModelForm):
             'display_admission_form_id_card_fees_recipt': forms.RadioSelect(choices=User.YESNO),
         }
         labels = {
-            'father_husband_name': 'Father/Husband name',
-            'show_father_husband_on_certificate': 'Show father/husband on certificate'
+            'father_husband_name': 'Father/Husband Name',
+            'show_father_husband_on_certificate': 'Show Father/Husband on Certificate'
         }
- 
+
     def __init__(self, *args, **kwargs):
-        # Fetch and remove the 'course_id' and 'admit_existing_user' if provided
+        # Fetch and remove 'course_id' and 'admit_existing_user' if provided
         course_id = kwargs.pop('course_id', None)
         self.admit_existing_user = kwargs.pop('admit_existing_user', False)
-        
         super().__init__(*args, **kwargs)
-        
+
+        # Customize the display of registered users in the dropdown
+        self.fields['registered_user'].label_from_instance = self.get_user_label
+
         # Populate course fees based on course_of_interest
         if course_id:
             try:
@@ -176,14 +174,18 @@ class StudentForm(forms.ModelForm):
                 self.fields['course_fees'].initial = course.course_fees
             except Course.DoesNotExist:
                 self.fields['course_fees'].initial = "Course not found"
-    
+
+    def get_user_label(self, obj):
+        """Customize the label to show full name with username."""
+        return f"{obj.full_name} ({obj.username})"
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         # Validate email only if not admitting an existing user
         if not self.admit_existing_user and User.objects.filter(email=email, is_admitted=True).exists():
             raise ValidationError("A user with this email already exists.")
         return email
- 
+
     def clean_contact(self):
         contact = self.cleaned_data.get('contact')
         # Validate contact only if not admitting an existing user

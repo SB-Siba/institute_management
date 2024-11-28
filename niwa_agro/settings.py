@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "drf_yasg",
     'whitenoise.runserver_nostatic',
-    'ckeditor',
+    'django_summernote',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,13 +47,6 @@ INSTALLED_APPS = [
     'course',
     'certificate',
 ]
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': '100%',
-    },
-}
 
 
 MIDDLEWARE = [
@@ -146,7 +139,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 SITE_URL = 'http://127.0.0.1:8000'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
@@ -155,7 +148,9 @@ if PRODUCTION == 'True':
     STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
 
 else:
-    pass
+    STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 MEDIA_URL = '/media/'

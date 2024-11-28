@@ -1,7 +1,6 @@
 
 from django.db import models
 from django.utils import timezone  
-from ckeditor.fields import RichTextField
 
 
 class AwardCategory(models.Model):
