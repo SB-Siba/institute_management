@@ -31,6 +31,8 @@ class ApplyCertificateForm(forms.ModelForm):
         required=True,
         widget=forms.Select(attrs={'class': 'form-control', 'id': 'student-select'})
     )
+    batch = forms.ModelChoiceField(queryset=Batch.objects.all(), required=False)  # Optional if derived from the course
+
 
     class Meta:
         model = Requested

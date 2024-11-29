@@ -31,10 +31,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const courseField = document.querySelector('select[name="course"]');
-    const studentField = document.querySelector('select[name="student"]');
-
-    if (!courseField || !studentField) return;
+        const courseField = document.querySelector('select[name="course"]');
+        const studentField = document.querySelector('select[name="student"]');
+        const fetchStudentsUrl = "{% url 'certificate:get-students-by-course' course_id=0 %}";
+        if (!courseField || !studentField) return;
 
     courseField.addEventListener('change', function () {
         const courseId = this.value;
@@ -43,38 +43,37 @@
             studentField.innerHTML = '<option value="">Select a student</option>';
             return;
         }
+        const fetchUrl = "{% url 'certificate:get-students-by-course' course_id='0' %}".replace('0', courseId);
 
-        fetch(`${fetchStudentsUrl}${courseId}/`)
-            .then(response => {
-                if (!response.ok) {
-                    console.error(`Error: ${response.statusText}`);
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
+        fetch(fetchUrl)
+            .then(response => response.json())
             .then(data => {
-                console.log("Fetched Students:", data); // Debug log
                 studentField.innerHTML = ''; // Clear previous options
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select a student';
                 studentField.appendChild(defaultOption);
 
-                data.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.id;
-                    option.textContent = student.full_name;
-                    studentField.appendChild(option);
-                });
+                if (data.students && data.students.length > 0) {
+                    data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        studentField.appendChild(option);
+                    });
+                } else {
+                    const noStudentsOption = document.createElement('option');
+                    noStudentsOption.value = '';
+                    noStudentsOption.textContent = 'No students available';
+                    studentField.appendChild(noStudentsOption);
+                }
             })
             .catch(error => {
-                console.error('Error fetching student data:', error);
-                studentField.innerHTML = '<option value="">Failed to load students</option>';
+                console.error('Error fetching students:', error);
+                studentField.innerHTML = '<option value="">Error loading students</option>';
             });
-
-        });
+    });
 });
-
 </script>
 
 {% endblock content %}

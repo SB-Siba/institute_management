@@ -69,6 +69,7 @@ urlpatterns = [
     path('all-users/', admin_views.AllUserListView.as_view(), name='all_user_list'),
     path('user/edit/<int:pk>/', admin_views.UserEditView.as_view(), name='user_edit'),
     path('delete_user/<int:user_id>/', admin_views.DeleteUserView.as_view(), name='delete_user'),
+    path('student-details/<int:pk>/', admin_views.StudentsDetailView.as_view(), name='student_details'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:

@@ -14,7 +14,7 @@ print(vars(os.getenv))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = [
@@ -152,7 +152,7 @@ PRODUCTION = str(os.getenv('PRODUCTION'))
 
 if PRODUCTION == 'True':
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
-    STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR , "static")
 
 else:
     pass

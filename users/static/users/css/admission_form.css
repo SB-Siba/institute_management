@@ -5,21 +5,21 @@ body {
     background-color: #f7f7f7;
 }
 
-.bebas-neue-regular {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 53px;
-    font-weight: 600;
-    color: #333;
-    letter-spacing: 2px;
-    word-spacing: 5px;
-}
-
 .certificate-container {
     width: 265mm;
     height: auto;
     margin: 0 auto;
     padding: 10px;
     background-color: #fff;
+}
+
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 43px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 2px;
+    word-spacing: 5px;
 }
 
 .certificate-border {
@@ -83,6 +83,15 @@ body {
     line-height: .1;
 }
 
+.title-content {
+    text-align: center;
+    flex-grow: 1;
+}
+.iso-text,
+.CERTIFICtE {
+    text-align: center;
+    margin-left: 150px;
+}
 
 .Rational_edu{
     font-family: "Poppins", sans-serif;
@@ -116,6 +125,20 @@ right: 0;
 .verification p {
     color: #999;
     font-style: italic;
+}
+.form-label {
+    font-weight: 600; /* Make the label text slightly bolder */
+    margin-bottom: 5px; /* Add space between label and box */
+    display: block; /* Ensure the label is on its own line */
+}
+
+.border {
+    border: 1px solid #ccc; /* Light gray border for a soft look */
+    min-height: 40px; /* Ensure consistent height for empty boxes */
+}
+
+.bg-light {
+    background-color: #f8f9fa; /* Light background color */
 }
 
 .certificate-details p {
@@ -178,21 +201,54 @@ right: 0;
     height: 70px; /* Reduced height */
     width: auto; /* Maintain aspect ratio */
 }
-.CERTIFICtE{
-    font-family: "UnifrakturMaguntia", cursive;
-    letter-spacing: 5px !important;
-    font-size: 70px !important;
-    font-weight: 500;
-    margin-top: -15px;
-
+.content_div {
+    text-align: center; /* Center align the main content */
+    margin-bottom: 20px;
 }
+.CERTIFICtE{
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 5px !important;
+    font-size: 26px !important;
+    font-weight: 700;
+    margin-top: -15px;
+}
+.bg-black {
+    font-size: 20px;
+    font-weight: 500;
+}
+.terms-container{
+    width: 30%;
+    height: 50%;
+    border: 2px solid;
+}
+    .small-container {
+        width: 300px;
+        padding: 10px;
+        margin: 10px auto;
+        border: 2px solid #000;
+        border-radius: 40px;
+        text-align: left;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+    
+    .roll-number {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
 .content_div p{
     font-size: 22px;
     margin-top: -35px;
     font-weight: 600;
     font-family:"Poppins",sans-serif ;
     text-align: center;
-    /* justify-content: center; */
+    justify-content: center;
     color: #333;
 }
 
@@ -200,10 +256,11 @@ right: 0;
     height: 172px;
     width: 150px;
     border: 3px solid black;
+    margin-right: 30px;
 }
 .student_sign{
     border: 2px solid black;
-    height: 55px;
+    height: 70px;
     width: 200px;
 }
 .student_sign img{

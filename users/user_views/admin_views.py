@@ -160,6 +160,13 @@ class AddNewStudentView(View):
                 'user_form': user_form,
                 'courses': courses,
             })
+        
+class StudentsDetailView(View):
+    template_name = app + 'students_details.html'
+
+    def get(self, request, pk):
+        student = get_object_or_404(User, pk=pk)
+        return render(request, self.template_name, {'student': student})
     
 class StudentUpdateView(View):
     model = User
