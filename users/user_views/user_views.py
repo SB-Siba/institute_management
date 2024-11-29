@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from datetime import datetime
 from django.conf import settings
@@ -201,3 +202,45 @@ class SupportView(View):
             messages.success(request, 'Your support request has been submitted successfully.')
             return redirect('users:support')
         return render(request, self.template_name, {'form': form})
+    
+from django.contrib.auth.mixins import LoginRequiredMixin
+class MyCoursesView(LoginRequiredMixin, View):
+    template_name = app + 'my_course.html'
+
+    def get(self, request, *args, **kwargs):
+        # Handle GET request
+        user = request.user
+        context = {
+            'student_image':user.student_image.url if user.student_image else None,
+            'student_signature':user.student_signature.url if user.student_signature else None,
+            'course': user.course_of_interest,
+            'roll_number': user.roll_number,
+            'abbreviation': user.abbreviation,
+            'full_name': user.full_name,
+            'select_one': user.select_one,
+            'father_husband_name': user.father_husband_name,
+            'course_fees': user.course_fees,
+            'fees_received': user.fees_received,
+            'balance': user.balance,
+            'gender': user.gender
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        # Handle POST request (e.g., user submits updates or actions)
+        action = request.POST.get('action')
+        
+        if action == "update_fees":
+            new_fees = request.POST.get('fees_received')
+            if new_fees:
+                try:
+                    # Update fees received and balance for the user
+                    user = request.user
+                    user.fees_received = float(new_fees)
+                    user.balance = user.course_fees - user.fees_received
+                    user.save()
+                    return HttpResponse("Fees updated successfully!")
+                except ValueError:
+                    return HttpResponse("Invalid data provided!", status=400)
+        
+        return HttpResponse("Unhandled POST action!", status=400)

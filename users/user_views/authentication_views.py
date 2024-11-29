@@ -70,7 +70,7 @@ class Registration(View):
                     # )
                     
                     messages.success(request, "Registration successful! You are now logged in.")
-                    return redirect('users:home')
+                    return redirect('users:login')
                 else:
                     messages.error(request, "Authentication failed. Please try again.")
             except Exception as e:

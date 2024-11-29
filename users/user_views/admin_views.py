@@ -158,48 +158,44 @@ class AddNewStudentView(View):
 
     def post(self, request):
         course_id = request.POST.get('course_of_interest')
+        user_form = StudentForm(request.POST, request.FILES)  # Initialize form with POST data
         admit_existing_user = request.POST.get('admit_existing_user', False) == 'true'
 
         # Initialize the form with POST data
-        user_form = StudentForm(request.POST, request.FILES)
 
         if user_form.is_valid():
-            email = user_form.cleaned_data.get('email')
+            full_name = user_form.cleaned_data.get('full_name')
 
             try:
                 # Check if the user is already registered (but not admitted)
-                student = User.objects.get(email=email)
-
-                if student.is_admitted:
-                    # If the user is already admitted, notify the admin
-                    messages.error(request, 'This user is already admitted to a course.')
-                    return redirect('users:student_list')  # Redirect to the student list page
-
-                # If the user is not admitted, update their admission status and assign the course
-                student.is_admitted = True
-                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
-                student.save()
-
-                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
-                return redirect('users:student_list')
+                student = User.objects.get(full_name=full_name)
 
             except User.DoesNotExist:
-                # If the user does not exist, create a new user and admit them to the course
+            # Create a new user if not found
                 student = user_form.save(commit=False)
-                student.is_admitted = True  # Mark as admitted
-                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
-                student.save()
 
-                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
-                return redirect('users:student_list')
+        # Dynamically update all fields from the form
+            for field, value in user_form.cleaned_data.items():
+                if hasattr(student, field):
+                    setattr(student, field, value)
 
-        else:
+        # Update additional fields
+            student.is_admitted = True
+            student.course_of_interest = Course.objects.get(id=course_id) if course_id else None
+
+            # Save the student instance
+            student.save()
+
+            messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
+            return redirect('users:student_list')
+
+            
             # If the form is not valid, re-render the page with form errors
-            courses = Course.objects.all()
-            return render(request, self.template, {
-                'user_form': user_form,
-                'courses': courses,
-            })
+        courses = Course.objects.all()
+        return render(request, self.template, {
+            'user_form': user_form,
+            'courses': courses,
+        })
     
 class StudentUpdateView(View):
     model = User
