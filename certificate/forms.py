@@ -19,34 +19,23 @@ class SearchForm(forms.Form):
 
 class ApplyCertificateForm(forms.ModelForm):
     course = forms.ModelChoiceField(
-        queryset=Course.objects.all(),
+        queryset=Course.objects.none(),  # Set to none initially
         label="Course",
         required=True,
         widget=forms.Select(attrs={'class': 'form-control', 'id': 'course-select'})
     )
 
-    student = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_admitted=True),
-        label="Student",
-        required=True,
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'student-select'})
-    )
-
     class Meta:
         model = Requested
-        fields = ['student', 'course']
+        fields = ['course']  # 'student' is not included since it's automatically set
 
     def __init__(self, *args, **kwargs):
-        course_id = kwargs.pop('course_id', None)
+        user = kwargs.pop('user', None)  # Extract the logged-in user
         super().__init__(*args, **kwargs)
 
-        # Populate the student field based on the course_id if provided
-        if course_id:
-            self.fields['student'].queryset = User.objects.filter(course_of_interest_id=course_id)
-        # Custom label for students in the dropdown
-        self.fields['student'].label_from_instance = lambda obj: (
-            f"{obj.full_name} ({obj.email})" if obj.full_name else obj.roll_number
-        )
+        if user:
+            # Filter courses to show only those the user is enrolled in
+            self.fields['course'].queryset = Course.objects.filter(students=user)
 
 
 class RequestedCertificateForm(forms.ModelForm):

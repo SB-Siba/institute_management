@@ -1,14 +1,19 @@
 from datetime import date
 from decimal import Decimal
+from io import BytesIO
+import json
 import random
 import string
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
+import qrcode
 from certificate.forms import ApplyCertificateForm, SearchForm
 from certificate.models import ApprovedCertificate, ApprovedCertificate, Requested
 from course.models import ExamResult
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 from users.models import User
 
@@ -30,18 +35,7 @@ class AllExamResultsView(View):
         }
         return render(request, self.template_name, context)
     
-class DesignedCertificateView(View):
-    template_name = app + 'designed_certificate.html'
 
-    def get(self, request, *args, **kwargs):
-        context = {
-            # For example, you can pass dynamic data to the template
-            'certificate_holder': 'JITENDRA PRADHAN',
-            'score': '73.20%',
-            'course': 'POST GRADUATE DIPLOMA IN COMPUTER APPLICATION',
-            # Add other data as needed
-        }
-        return render(request, self.template_name, context)\
         
 class ApplyCertificateView(View):
     form_class = ApplyCertificateForm
@@ -56,6 +50,7 @@ class ApplyCertificateView(View):
         if form.is_valid():
             course = form.cleaned_data['course']
             student = form.cleaned_data['student']
+            batch = form.cleaned_data.get('batch') or course.batch
 
             if student:  # If a specific student is selected
                 users = User.objects.filter(id=student.id)
@@ -65,6 +60,8 @@ class ApplyCertificateView(View):
             if not users.exists():
                 messages.warning(request, "No students found for the selected course.")
                 return render(request, self.template_name, {'form': form})
+            batch = student.batch
+            print(f"DEBUG:Batch: {batch}")
 
             for user in users:
                 exam_result = ExamResult.objects.filter(student=user, course=course).first()
@@ -82,6 +79,7 @@ class ApplyCertificateView(View):
                 Requested.objects.create(
                     user=user,
                     course=course,
+                    batch=batch, 
                     exam_data=exam_data,
                     status='Pending'
                 )
@@ -119,23 +117,36 @@ class RequestedCertificatesListView(View):
         context = {'applications': applications}
         return render(request, self.template_name, context)
 
-    def post(self, request, application_id):
-        application = get_object_or_404(Requested, id=application_id)
-        action = request.POST.get('action')
+    def post(self, request, application_id=None):
+        if not application_id:
+            return HttpResponseNotFound("Application ID not provided.")
+        
+        try:
+            application = get_object_or_404(Requested, id=application_id)
+            data = json.loads(request.body)
+            action = data.get('action')
 
-        if action == 'approve':
-            application.status = 'Approved'
-            application.is_approved = True
-            application.save()
-            ApprovedCertificate.objects.create(
-                user=application.user, 
-                course=application.course,
-                batch=application.batch, 
-            )
-        elif action == 'reject':
-            application.status = 'Rejected'
-            application.save()
-        return JsonResponse({'status': application.status})
+            if action == 'approve':
+                application.status = 'Approved'
+                application.is_approved = True
+                application.save()
+                ApprovedCertificate.objects.update_or_create(
+                    user=application.user,
+                    course=application.course,
+                    batch=application.batch,
+                    defaults={'applied_date': application.applied_date, 'status': 'Approved'},
+                )
+            elif action == 'reject':
+                application.status = 'Rejected'
+                application.is_approved = False
+                application.save()
+            else:
+                return JsonResponse({'error': 'Invalid action'}, status=400)
+
+            return JsonResponse({'status': application.status})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 class ApprovedCertificatesListView(View):
@@ -189,76 +200,105 @@ def toggle_certificate_status(request, pk):
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-
-# class UpdateCertificateView(View):
-#     model = ApprovedCertificate
-#     template_name = app + 'update_certificate.html'
-#     fields = ['user', 'batch', 'course']  # Editable fields for updating certificates
-
-#     def get(self, request, pk):
-#         """Handles GET requests to display the form."""
-#         application = get_object_or_404(ApprovedCertificate, pk=pk)
-
-#         # Populate context with dynamic fields
-#         context = {
-#             'application': application,
-#             'student_name_on_marksheet': application.user.full_name,
-#             'father_name': application.user.father_name,  # Assuming this field exists
-#             'surname_name': application.user.surname,
-#             'mother_name': application.user.mother_name,
-#             'date_of_birth': application.user.date_of_birth,
-#             'subjects': application.course.course_subject,  # Assuming subjects stored in JSONField
-#             'exam_title': "POST GRADUATE DIPLOMA IN COMPUTER APPLICATION",
-#             'certificate_no': f"PGDCA-{application.pk:05d}",
-#             'certificate_date': application.applied_date.strftime('%d %b %Y'),
-#         }
-#         return render(request, self.template_name, context)
-
-#     def post(self, request, pk):
-#         """Handles POST requests to update the certificate."""
-#         application = get_object_or_404(ApprovedCertificate, pk=pk)
-
-#         # Update fields from form submission
-#         application.user.full_name = request.POST.get('student_name_on_marksheet')
-#         application.user.father_name = request.POST.get('father_name')
-#         application.user.surname = request.POST.get('surname_name')
-#         application.user.mother_name = request.POST.get('mother_name')
-#         application.user.date_of_birth = request.POST.get('date_of_birth')
-
-#         # Assuming `subjects` and other data are submitted in JSON format
-#         application.course.course_subject = request.POST.get('subjects')
-
-#         # Save changes
-#         application.save()
-#         messages.success(request, "Certificate updated successfully!")
-#         return redirect('certificate:approved-certificates')
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 
 class DesignedCertificateView(View):
-    template_name = app + 'designed_certificate.html'  
+    template_name = app + 'designed_certificate.html'
 
     def generate_certificate_no(self):
         while True:
             certificate_no = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
             if not ApprovedCertificate.objects.filter(certificate_no=certificate_no).exists():
                 return certificate_no
+            
+    def generate_certificate_pdf(self, certificate, qr_code_url,exam_result):
+        # Render the HTML content for the certificate
+        context = {
+            'application': certificate,
+            'percentage': exam_result.percentage,
+            'grade': exam_result.grade,
+            'course_name': exam_result.course.course_name,
+            'course_duration': exam_result.course.course_duration,
+            'course_period': '23 Nov 2023 TO 22 Nov 2024',
+            'date_of_issue': date.today().strftime('%d-%m-%Y'),
+            'qr_code_url': qr_code_url,
+        }
 
-    def get(self, request,application_id, *args, **kwargs):
+        html_content = render_to_string(self.template_name, context)
+
+        # Convert HTML to PDF using xhtml2pdf
+        pdf_output = BytesIO()
+        pisa_status = pisa.CreatePDF(html_content, dest=pdf_output)
+
+        if pisa_status.err:
+            print("Error while generating PDF")
+            return None
+        return pdf_output.getvalue()
+
+    def get(self, request, application_id, *args, **kwargs):
         application = get_object_or_404(ApprovedCertificate, id=application_id)
         if not application.certificate_no:
             application.certificate_no = self.generate_certificate_no()
             application.save()
+        
         exam_result = ExamResult.objects.filter(student=application.user).first()
         if not exam_result:
             return render(request, 'error_page.html', {'message': 'Exam result not found.'})
-        date_of_issue = date.today().strftime('%d-%m-%Y')
+        
+        qr_file_name = f"qrcodes/qr_{application.certificate_no}.png"
+        if default_storage.exists(qr_file_name):
+            qr_code_url = default_storage.url(qr_file_name)
+        else:
+        # Generate the QR code for the certificate
+            local_domain = "http://127.0.0.1:8000"
+            certificate_pdf_url = f"{local_domain}/media/certificates/{application.certificate_no}.pdf"
+            print(f"Generated certificate URL: {certificate_pdf_url}")
+            qr_code = qrcode.make(certificate_pdf_url)
+
+            # Save the QR code as an image file
+            qr_image = BytesIO()
+            qr_code.save(qr_image)
+            qr_image.seek(0)
+            qr_file_name = f"qr_{application.certificate_no}.png"
+            file_path = default_storage.save(f"qrcodes/{qr_file_name}", ContentFile(qr_image.read()))
+            qr_code_url = default_storage.url(file_path)
+
+        pdf_file_name = f"certificates/{application.certificate_no}.pdf"
+        if default_storage.exists(pdf_file_name):
+            pdf_url = default_storage.url(pdf_file_name)
+        else:
+            pdf_content = self.generate_certificate_pdf(application, qr_code_url,exam_result)
+        # Save the PDF in the media folder
+            if pdf_content:
+                pdf_path = default_storage.save(f"certificates/{application.certificate_no}.pdf", ContentFile(pdf_content))
+                pdf_url = default_storage.url(pdf_path)
+            else:
+                return render(request, 'error_page.html', {'message': 'PDF generation failed.'})
+            
         context = {
             'application': application,
             'percentage': exam_result.percentage,
             'grade': exam_result.grade,
             'course_name': exam_result.course.course_name,
             'course_duration': exam_result.course.course_duration,
+            'percentage': exam_result.percentage,
+            'grade': exam_result.grade,
             'course_period': '23 Nov 2023 TO 22 Nov 2024',
-            'date_of_issue': date_of_issue,
+            'qr_code_url': qr_code_url,
+            'pdf_url': pdf_url, 
+            'institute_details': {
+                'name': "RATIONAL EDUCATION AND COMPUTER TRAINING",
+                'email': "step2reactindia@gmail.com",
+                'contact': "9778577090",
+                'address': "SUBASH JENA COLONY, BANPUR ROAD, BALUGAON, STREET NO 37C, KHORDHA, ODISHA",
+            },
         }
-        
         return render(request, self.template_name, context)
+    
+def verify_certificate(request, certificate_no):
+    # Try to fetch the certificate with the provided certificate_no
+    certificate = get_object_or_404(ApprovedCertificate, certificate_no=certificate_no)
+    
+    
+    return render(request, 'certificate_verification.html')

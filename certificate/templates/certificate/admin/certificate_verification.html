@@ -1,0 +1,41 @@
+{% extends 'users/admin/base.html' %}
+
+{% block title %}Certificate Verification{% endblock title %}
+
+{% block content %}
+<div class="certificate-details">
+    <h1 class="text-center">Certificate Verification</h1>
+    
+    <div class="text-center">
+        <img src="{{ application.user.student_image.url }}" alt="Student Photo" class="student-photo mb-3">
+    </div>
+    
+    <p><strong>Name of Student:</strong> {{ user.full_name }}</p>
+    <p class="text-uppercase">S/O {{ application.user.father_husband_name }}</p>
+    
+    <p><strong>Certificate Number:</strong> {{ certificate_no }}</p>
+    <p><strong>Course Duration:</strong> {{ course_duration }}</p>
+    <p><strong>Certificate Period:</strong> {{ course_period }}</p>
+    <p><strong>Marks Obtained:</strong> {{ percentage }}%</p>
+    <p><strong>Grade Secured:</strong> {{ grade }}</p>
+    <p><strong>Certificate Issue Date:</strong> {{ date_of_issue }}</p>
+    
+    <h3 class="text-center mt-5">Authorized Center & Controller of Examination</h3>
+    
+    <div class="mt-4">
+        <h4>Institute Details:</h4>
+        <p><strong>Name:</strong> {{ institute_details.name }}</p>
+        <p><strong>Email:</strong> {{ institute_details.email }}</p>
+        <p><strong>Contact:</strong> {{ institute_details.contact }}</p>
+        <p><strong>Address:</strong> {{ institute_details.address }}</p>
+    </div>
+    
+    <div class="qr-code text-center mt-5">
+        <img src="{{ qr_code_url }}" alt="QR Code">
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ pdf_url }}" class="btn btn-primary" download>Download Certificate</a>
+    </div>
+</div>
+{% endblock content %}

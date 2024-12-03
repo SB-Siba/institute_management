@@ -1,6 +1,26 @@
 {% load static %}
 {% block content %}
-
+<style>
+    @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 10px !important;
+            }
+ 
+            #backButton {
+                display: none;
+            }
+ 
+            #downloadButton {
+                display: none;
+            }
+        }
+        
+        .certificate-qr-code{
+            width: 200px;
+        }
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +32,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,700;1,300;1,400&family=Rubik+Distressed&display=swap" rel="stylesheet">
 </head>
-<style>
-
-</style>
 <body>
     <div class="certificate-container ">
         <div class="certificate-border ">
@@ -76,12 +93,12 @@
 
                     <!-- Right Column (Verification Code and Scanner) -->
                     <div class="col-lg-4 mt-5 d-flex justify-content-end">
-                        <div>
-                            <div class=" text-center">
+                        <div class="scanner">
+                            <div class=" text-center" style="margin-left: -200px;">
                                 <p class="fw-bold" style="font-size: 15px;">FOR ONLINE <br> VERIFICATION SCAN</p>
                             </div>
-                            <div class=" text-center">
-                                <img src="{% static 'path/to/scanner_code.png' %}" alt="Scanner Code" class="mt-2">
+                            <div class=" text-center" style="margin-left: -200px;">
+                                <img src="{{ qr_code_url }}" alt="QR Code" class="certificate-qr-code">
                             </div>
                         </div>
                     </div>
@@ -176,6 +193,10 @@
               
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-center my-4">
+        <button id="backButton" class="btn btn-secondary me-4" onclick="window.history.back();">Back</button>
+        <button id="downloadButton" class="btn btn-primary" onclick="window.print();">Download Certificate</button>
     </div>
 </body>
 {% endblock %}

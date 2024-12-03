@@ -1,34 +1,76 @@
 {% extends 'users/user/base.html' %}
-{ load static }
+{% load static %}
+
 {% block content %}
 <div class="container my-4">
-    <h2>My Courses</h2>
-
+    <h2>My Course Details</h2>
+    
     {% if course %}
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Course Details</h5>
-            {% if student_image %}
-            <p><strong>Student Image:</strong> <img src="{{ student_image }}" alt="Student Image" width="100"></p>
+            <!-- Course Name and Code -->
+            <h5 class="card-title">{{ course.course_name }} ({{ course.course_code }})</h5>
+            
+            <!-- Course Image -->
+            {% if course.course_image %}
+            <div class="course-image mb-3">
+                <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" 
+                    class="img-fluid" 
+                    style="max-width: 300px; height: auto;">
+            </div>
             {% endif %}
-            {% if student_signature %}
-            <p><strong>Student Signature:</strong> <img src="{{ student_signature }}" alt="Student Signature" width="100"></p>
+            
+            <!-- Duration -->
+            {% if course.course_duration %}
+            <p><strong>Duration:</strong> {{ course.course_duration }}</p>
             {% endif %}
-            <p><strong>Abbreviationr:</strong> {{ abbreviation }}</p>
-            <p><strong>Full Name:</strong> {{ full_name }}</p>
-            <p><strong>Selected:</strong> {{ select_one }}</p>
-            <p><strong>Father/Husband name:</strong> {{ father_husband_name }}</p>
-
-            <p><strong>Course Of Intrest:</strong> {{ course_of_interest }}</p>
-            <p><strong>Roll Number:</strong> {{ roll_number }}</p>
-            <p><strong>Course Fees:</strong> {{ course_fees }}</p>
-            <p><strong>Fees Received:</strong> {{ fees_received }}</p>
-            <p><strong>Balance:</strong> {{ balance }}</p>
-            <p><strong>Gender:</strong>{{ gender }}</p>
+            
+            <!-- Course Fees -->
+            {% if course.course_fees %}
+            <p><strong>Course Fees:</strong> ₹{{ course.course_fees }}</p>
+            {% endif %}
+            
+            <!-- Minimum Amount to Pay -->
+            {% if course.minimum_fees %}
+            <p><strong>Minimum Amount to Pay:</strong> ₹{{ course.minimum_fees }}</p>
+            {% endif %}
+            
+            <!-- Course Subjects in Table -->
+            {% if course.course_subject %}
+            <p><strong>Course Subjects:</strong></p>
+            <table class="table table-bordered" style="border: 2px solid navy;">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Subject Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in course.course_subject %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ subject.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+            {% endif %}
+            
+            <!-- Course Syllabus -->
+            {% if course.course_syllabus %}
+            <p><strong>Syllabus:</strong></p>
+            <p>{{ course.course_syllabus }}</p>
+            {% endif %}
+            
+            <!-- Eligibility -->
+            {% if course.eligibility %}
+            <p><strong>Eligibility:</strong></p>
+            <p>{{ course.eligibility }}</p>
+            {% endif %}
         </div>
     </div>
     {% else %}
-    <p>You have not enrolled in any course yet.</p>
+    <p>You are not yet admitted to any course.</p>
     {% endif %}
 </div>
-{% endblock %}
+{% endblock content %}

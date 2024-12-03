@@ -15,10 +15,10 @@ body {
 }
 
 .certificate-container {
-    width: 100%;
-    max-width: 1000px;
+    width: 265mm;
+    height: auto;
     margin: 0 auto;
-    padding: 40px;
+    padding: 10px;
     background-color: #fff;
 }
 
@@ -99,7 +99,6 @@ position: absolute;
 top: -50px;
 right: 0;
 }
-
 
 .signature {
     padding-right: 40px;

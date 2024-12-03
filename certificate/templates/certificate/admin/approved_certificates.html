@@ -7,7 +7,7 @@
 {% block content %}
 <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet"><div class="container mt-4">
     <h2>Approved Certificates</h2>
-
+    {% csrf_token %}
     <button class="btn btn-primary mb-4" onclick="toggleFilter()">Toggle Filter</button>
     <div id="filterForm" style="display: none;">
         <form method="get">
@@ -57,7 +57,8 @@
                     <td>{{ application.course.course_name }}</td>
                     <td>{{ application.batch.name }}</td>
                     <td>{{ application.applied_date|date:"d M Y" }}</td>
-                    <td><a href="{% url 'certificate:designed_certificate' application.id %}" class="lni lni-certificate-badge-1" style="font-size: 2em;"></a></td>
+                    <td><a href="{% url 'certificate:designed_certificate' application.id %}" class="lni lni-certificate-badge-1" style="font-size: 2em;"></a>
+                        {{ application.status }}</td>
                 </tr>
                 {% empty %}
                 <tr>

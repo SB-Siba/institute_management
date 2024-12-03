@@ -83,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('amount-', 'Amount -'),
         ('percent-', 'Percent -'),
     ]
-
+    courses = models.ManyToManyField(Course, related_name='students', blank=True)
     student_image = models.ImageField(upload_to='student_photos/', max_length=250, blank=True, null=True)
     student_signature = models.ImageField(upload_to='student_signatures/', max_length=250, blank=True, null=True)
     roll_number = models.CharField(max_length=20, unique=True, null=True, blank=True)

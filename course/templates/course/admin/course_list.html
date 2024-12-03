@@ -198,6 +198,7 @@
                 <!-- Action Buttons -->
                 <td>
                     <a href="{% url 'course:edit_course' course.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'course:course_details' course.pk %}" class="btn btn-info btn-sm">View Details</a>
                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-course-id="{{ course.id }}">Delete</button>
                 </td>
             </tr>

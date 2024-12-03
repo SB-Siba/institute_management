@@ -11,6 +11,8 @@ from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 app = "users/user/"
 
 class ProfileView(View):
@@ -148,7 +150,7 @@ class ProfileDeleteAddress(View):
 
         return redirect("users:alladdress")
 
-class AccountDetails(View):
+class DashboardView(View):
     template = app + "index.html"
 
     def get(self, request):
@@ -157,10 +159,16 @@ class AccountDetails(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
-
-        return render(request, self.template, {
+        # Fetch the enrolled course(s) for the user
+        enrolled_course = None
+        if hasattr(user, 'course_of_interest'):  # or replace with correct field name
+            enrolled_course = user.course_of_interest  # Assuming 'course_of_interest' is a related field
+        context = {
             'userobj': user,
-        })
+            'enrolled_course': enrolled_course,
+        }
+
+        return render(request, self.template, context)
 
 class UpdateProfileView(UpdateView):
     model = User
@@ -203,8 +211,7 @@ class SupportView(View):
             return redirect('users:support')
         return render(request, self.template_name, {'form': form})
     
-from django.contrib.auth.mixins import LoginRequiredMixin
-class MyCoursesView(LoginRequiredMixin, View):
+class MyCoursesView(View):
     template_name = app + 'my_course.html'
 
     def get(self, request, *args, **kwargs):

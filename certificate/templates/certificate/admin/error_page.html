@@ -1,0 +1,10 @@
+{% extends 'users/admin/base.html' %}
+
+{% block title %}Certificate Verification Error{% endblock title %}
+
+{% block content %}
+<div class="error-details">
+    <h1>Certificate Verification Failed</h1>
+    <p>{{ message }}</p>
+</div>
+{% endblock content %}

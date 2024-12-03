@@ -73,7 +73,7 @@ class AwardCategoryDeleteView(View):
         try:
             category = AwardCategory.objects.get(id=category_id)
             category.delete()
-            return redirect('course:award_categories')  # Redirect to the award category list view
+            return JsonResponse({'status': 'success'}, status=200) 
         except AwardCategory.DoesNotExist:
             return JsonResponse({'error': 'Award category not found.'}, status=404)
 
@@ -135,7 +135,13 @@ class CourseCreateView(View):
 
         return render(request, self.template_name, {'form': form, 'subjects': []})
 
-    
+class CourseDetailView(View):
+    template_name = app + 'course_details.html'
+
+    def get(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        return render(request, self.template_name, {'course': course})
+
 class CourseEditView(View):
     template_name = app + 'edit_course.html'
 
