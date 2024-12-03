@@ -1,4 +1,5 @@
 from collections import defaultdict
+import os
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -13,7 +14,7 @@ from course.models import Course
 import csv
 from django.db.models import Q
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
@@ -22,6 +23,10 @@ from django.http import JsonResponse
 from django.views.generic import UpdateView
 from django.utils import timezone
 from users.models import Attendance
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
+
 app = "users/admin/"
 
 # admin dashboard and manage users list
@@ -147,6 +152,7 @@ def get_course_fee(request):
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class AddNewStudentView(View):
     template = app + 'add_new_student.html'  # Update with your actual template path
+    confirmation_template = os.path.join('users/email/admission_confirmation.html')
 
     def get(self, request):
         user_form = StudentForm()
@@ -185,17 +191,48 @@ class AddNewStudentView(View):
 
             # Save the student instance
             student.save()
+            # Prepare the email context
+            course = student.course_of_interest
+            context = {
+               'full_name': student.full_name,
+                'course': {
+                    'course_name': course.course_name if course else "Not Selected",
+                    'award': course.award if course else "N/A",
+                    'course_fees': course.course_fees if course else 0,
+                    'course_mrp': course.course_mrp if course else 0,
+                    'minimum_fees': course.minimum_fees if course else 0,
+                    'course_duration': course.course_duration if course else "N/A",
+                    'exam_fees': course.exam_fees if course else 0,
+                    'eligibility': course.eligibility if course else "N/A",
+                    'status': course.status if course else "N/A",
+                    'course_syllabus': course.course_syllabus if course else "N/A",
+                    'course_subject': course.course_subject if course else [],
+                },
+            }
+
+            # Send confirmation email
+            email_subject = "Admission Confirmation - REACT Institute"
+            email_body = render_to_string(self.confirmation_template, context)
+
+            email = EmailMessage(
+                subject=email_subject,
+                body=email_body,
+                to=[student.email],  # Ensure the `email` field exists and is valid
+            )
+            email.content_subtype = "html"
+            email.send()
 
             messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
+
             return redirect('users:student_list')
 
             
             # If the form is not valid, re-render the page with form errors
-            courses = Course.objects.all()
-            return render(request, self.template, {
-                'user_form': user_form,
-                'courses': courses,
-            })
+        courses = Course.objects.all()
+        return render(request, self.template, {
+            'user_form': user_form,
+            'courses': courses,
+        })
         
 class StudentsDetailView(View):
     template_name = app + 'students_details.html'
@@ -890,6 +927,16 @@ class UserEditView(View):
 
 class DeleteUserView(View):
     def delete(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
-        user.delete()
-        return JsonResponse({'success': True, 'user_id': user.id})
+        # Ensure the request is an AJAX request
+        if not request.is_ajax():
+            return HttpResponseBadRequest("Invalid request")
+
+        try:
+            # Fetch the user and delete
+            user = get_object_or_404(User, id=user_id)
+            user_id = user.id  # Save user ID for the response
+            user.delete()
+            return JsonResponse({'success': True, 'message': 'User deleted successfully.', 'user_id': user_id})
+        except Exception as e:
+            # Handle unexpected exceptions and return an error message
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
