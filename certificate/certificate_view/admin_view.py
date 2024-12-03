@@ -14,7 +14,8 @@ from certificate.models import ApprovedCertificate, ApprovedCertificate, Request
 from course.models import ExamResult
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 from users.models import User
 
 
@@ -200,8 +201,6 @@ def toggle_certificate_status(request, pk):
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-from django.template.loader import render_to_string
-from xhtml2pdf import pisa
 
 class DesignedCertificateView(View):
     template_name = app + 'designed_certificate.html'

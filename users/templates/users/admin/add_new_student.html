@@ -19,6 +19,25 @@
         margin-bottom: 20px;
     }
 
+    /* Form field styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
     /* Button styling */
     .btn {
         padding: 10px 15px;
@@ -48,11 +67,12 @@
         background-color: #5a6268;
     }
 </style>
+
 <h2>Add New Student</h2>
 <div class="container">
-    
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <!-- New User Registration Form -->
         {{ user_form.as_p }}
 
         <!-- Submit Button -->

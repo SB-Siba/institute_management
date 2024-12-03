@@ -32,6 +32,7 @@ urlpatterns = [
     path('profile/update-address/<str:address_id>/', user_views.ProfileUpdateAddress.as_view(), name='profile_update_address'),
     path('profile/delete-address/<str:address_id>/', user_views.ProfileDeleteAddress.as_view(), name='profile_delete_address'),
     path('support/', user_views.SupportView.as_view(), name='support'),
+    path('my-courses/', user_views.MyCoursesView.as_view(), name='my_courses'),
 
 
     # admin 

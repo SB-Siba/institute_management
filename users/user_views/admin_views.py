@@ -1,10 +1,14 @@
+from base64 import b64encode
 from collections import defaultdict
+import io
+import os
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
+import qrcode
 from helpers import utils
 from users import models,forms
 from users.forms import BatchForm, StudentForm, StudentPaymentForm,ReAdmissionForm
@@ -31,7 +35,47 @@ class AdminDashboard(View):
     template = app + "index.html"
 
     def get(self, request):
-        return render(request, self.template)
+        query = request.GET.get('search', '')  # Allow search query for filtering students
+        if query:
+            students = User.objects.filter(Q(full_name__icontains=query), is_superuser=False, is_staff=False)
+        else:
+            students = User.objects.filter(is_superuser=False, is_staff=False)
+
+        # Fetch the latest payment details for each student
+        student_data = []
+        for student in students:
+            # Get the latest payment for each student
+            latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
+
+            # Calculate fees details for each student
+            total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
+            fees_received = latest_payment.amount if latest_payment else 0
+            balance = total_fees - fees_received
+
+            student_data.append({
+                'user': student,
+                'latest_payment_date': latest_payment.date if latest_payment else None,
+                'total_fees': total_fees,
+                'fees_received': fees_received,
+                'balance': balance,
+            })
+
+        # Calculate the overall totals
+        total_fees = sum(data['total_fees'] for data in student_data)
+        total_paid_fees = sum(data['fees_received'] for data in student_data)
+        total_balance_fees = sum(data['balance'] for data in student_data)
+
+        # Context to pass to the template
+        context = {
+            "students": student_data,
+            "total_fees": total_fees,
+            "total_paid_fees": total_paid_fees,
+            "total_balance_fees": total_balance_fees,
+            "search_query": query,
+        }
+
+        # Render the template with dynamic context
+        return render(request, self.template, context)
 
 class StudentListView(View):
     template_name = app + 'student_list.html'
@@ -104,9 +148,13 @@ def get_course_fee(request):
             return JsonResponse({'error': 'Course not found'}, status=404)
     return JsonResponse({'error': 'No course_id provided'}, status=400)
 
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class AddNewStudentView(View):
     template = app + 'add_new_student.html'  # Update with your actual template path
+    confirmation_template = os.path.join('users/email/admission_confirmation.html')
 
     def get(self, request):
         user_form = StudentForm()
@@ -118,55 +166,109 @@ class AddNewStudentView(View):
 
     def post(self, request):
         course_id = request.POST.get('course_of_interest')
+        user_form = StudentForm(request.POST, request.FILES)  # Initialize form with POST data
         admit_existing_user = request.POST.get('admit_existing_user', False) == 'true'
 
         # Initialize the form with POST data
-        user_form = StudentForm(request.POST, request.FILES)
 
         if user_form.is_valid():
-            email = user_form.cleaned_data.get('email')
+            full_name = user_form.cleaned_data.get('full_name')
 
             try:
                 # Check if the user is already registered (but not admitted)
-                student = User.objects.get(email=email)
-
-                if student.is_admitted:
-                    # If the user is already admitted, notify the admin
-                    messages.error(request, 'This user is already admitted to a course.')
-                    return redirect('users:student_list')  # Redirect to the student list page
-
-                # If the user is not admitted, update their admission status and assign the course
-                student.is_admitted = True
-                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
-                student.save()
-
-                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
-                return redirect('users:student_list')
+                student = User.objects.get(full_name=full_name)
 
             except User.DoesNotExist:
-                # If the user does not exist, create a new user and admit them to the course
+            # Create a new user if not found
                 student = user_form.save(commit=False)
-                student.is_admitted = True  # Mark as admitted
-                student.course_of_interest = Course.objects.get(id=course_id)  # Assign the course
-                student.save()
 
-                messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
-                return redirect('users:student_list')
+        # Dynamically update all fields from the form
+            for field, value in user_form.cleaned_data.items():
+                if hasattr(student, field):
+                    setattr(student, field, value)
 
-        else:
+        # Update additional fields
+            student.is_admitted = True
+            student.course_of_interest = Course.objects.get(id=course_id) if course_id else None
+
+            # Save the student instance
+            student.save()
+            # Prepare the email context
+            course = student.course_of_interest
+            context = {
+               'full_name': student.full_name,
+                'course': {
+                    'course_name': course.course_name if course else "Not Selected",
+                    'award': course.award if course else "N/A",
+                    'course_fees': course.course_fees if course else 0,
+                    'course_mrp': course.course_mrp if course else 0,
+                    'minimum_fees': course.minimum_fees if course else 0,
+                    'course_duration': course.course_duration if course else "N/A",
+                    'exam_fees': course.exam_fees if course else 0,
+                    'eligibility': course.eligibility if course else "N/A",
+                    'status': course.status if course else "N/A",
+                    'course_syllabus': course.course_syllabus if course else "N/A",
+                    'course_subject': course.course_subject if course else [],
+                },
+            }
+
+            # Send confirmation email
+            email_subject = "Admission Confirmation - REACT Institute"
+            email_body = render_to_string(self.confirmation_template, context)
+
+            email = EmailMessage(
+                subject=email_subject,
+                body=email_body,
+                to=[student.email],  # Ensure the `email` field exists and is valid
+            )
+            email.content_subtype = "html"
+            email.send()
+
+            messages.success(request, f'{student.full_name} has been admitted to the course successfully!')
+
+            return redirect('users:student_list')
+
+            
             # If the form is not valid, re-render the page with form errors
-            courses = Course.objects.all()
-            return render(request, self.template, {
-                'user_form': user_form,
-                'courses': courses,
-            })
-        
+        courses = Course.objects.all()
+        return render(request, self.template, {
+            'user_form': user_form,
+            'courses': courses,
+        })
+    
 class StudentsDetailView(View):
     template_name = app + 'students_details.html'
 
     def get(self, request, pk):
+        # Fetch the student details
         student = get_object_or_404(User, pk=pk)
-        return render(request, self.template_name, {'student': student})
+
+        # Prepare data to encode in the QR code
+        student_data = {
+            "id": student.pk,
+            "name": student.full_name,  # Use full_name instead of combining first_name and last_name
+            "email": student.email,
+            "phone": student.contact if hasattr(student, 'contact') else "N/A",
+        }
+        
+        # Convert data to QR code content (e.g., JSON)
+        qr_data_string = str(student_data)
+        
+        # Generate the QR code
+        qr = qrcode.make(qr_data_string)
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        
+        # Convert QR code to base64 to render in HTML
+        qr_data = b64encode(buffer.getvalue()).decode()
+        qr_image = f"data:image/png;base64,{qr_data}"
+        
+        # Pass data to the template
+        context = {
+            'student': student,
+            'qr_image': qr_image,
+        }
+        return render(request, self.template_name, context)
     
 class StudentUpdateView(View):
     model = User

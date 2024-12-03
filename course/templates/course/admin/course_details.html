@@ -77,7 +77,7 @@
         <p><strong>Minimum Fees:</strong> ₹{{ course.minimum_fees }}</p>
         <p><strong>Duration:</strong> {{ course.course_duration }} months</p>
         <p><strong>Exam Fees:</strong> ₹{{ course.exam_fees }}</p>
-        <p><strong>Eligibility:</strong> {{ course.eligibility }}</p>
+        <p><strong>Eligibility:</strong> {{ course.eligibility|safe }}</p>
         <p><strong>Status:</strong> {{ course.status }}</p>
         <p>
             <strong>Video Links:</strong> 
@@ -88,7 +88,7 @@
 
     <div class="course-detail-section">
         <h2>Course Syllabus</h2>
-        <p>{{ course.course_syllabus }}</p>
+        <p>{{ course.course_syllabus|safe }}</p>
     </div>
 
     <div class="course-detail-section">

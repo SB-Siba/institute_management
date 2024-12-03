@@ -12,8 +12,86 @@
         }
     }
     .certificate-qr-code {
-        width: 150px;
+        width: 120px;
     }
+    .terms-container {
+        max-width: 300px; /* Limit the width */
+        border: 1px solid #ccc; /* Add a subtle border */
+        border-radius: 8px; /* Rounded corners */
+        background-color: #f9f9f9; /* Light background */
+        padding: 15px; /* Inner padding */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+        margin: 0 auto; /* Center it horizontally if necessary */
+}
+
+.terms-text h5 {
+  font-size: 16px; /* Smaller heading size */
+  margin-bottom: 10px;
+}
+
+.terms-text p {
+  font-size: 14px; /* Smaller paragraph font */
+  margin: 0; /* Minimal spacing */
+  line-height: 1.5; /* Improve readability */
+  color: #333; /* Subtle text color */
+}
+
+.terms-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+    gap: 20px; /* Equal gap between sections */
+    margin: 20px 0;
+}
+
+.seal-signature {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: space-between;
+    text-align: center;
+    height: 200px; /* Adjust to ensure consistency */
+}
+
+.terms-container {
+    flex: 2; /* Make the Terms & Conditions section wider */
+    text-align: justify;
+}
+
+.iso-logo, 
+.qr-code {
+    flex: 1;
+    text-align: center;
+}
+
+.iso-logo img,
+.qr-code img {
+    display: block;
+    margin: 0 auto;
+    max-height: 150px;
+    max-width: 150px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: start; /* Align items to the top */
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc; /* Optional: Add a top border for separation */
+}
+
+.footer-section {
+    flex: 1; /* Ensure equal spacing between sections */
+    padding: 0 10px;
+    text-align: center; /* Center-align text in each section */
+}
+
+.footer-section p {
+    margin: 5px 0; /* Add some space between lines */
+    font-size: 14px; /* Adjust font size for readability */
+}
+
 </style>
 
 <head>
@@ -217,34 +295,59 @@
                   </div>
                 </div>
 
-                 <!-- Terms and Conditions -->
-                 <div class="d-flex justify-content-between align-items-center">
-                  <div>Seals & Signature.</div>
-                  <div class="terms-container">
-                    <div class="terms-text">
-                        <h5 class="p-2 text-white bg-black text-center"><b>Terms and Conditions:</b></h5>
-                        <p>Terms and cconditions are aimed at protecting the business(you). They give business owners the Opportunity to set their rules(within applicable law) of how their service or product maybe used including, but not limited to, thing like copyright conditions, age limits, and the governor  law of the contract.</p>
+                <div class="d-flex justify-content-between align-items-start terms-row">
+                    <!-- Seals & Signature -->
+                    <div class="seal-signature">
+                        <p>Seals & Signature</p>
+                        <div class="seal-space"></div> <!-- Blank space for seal -->
                     </div>
-                </div>
-                <div>
-                  <img src="static/users/images/iso-9001-2015-Logo.webp" alt="">
-                </div>
-                <!-- QR Code -->
-                <div class="qr-code-container">
+                
+                    <!-- Terms and Conditions -->
+                    <div class="terms-container">
+                        <div class="terms-text">
+                            <h5 class="text-white bg-black text-center"><b>Terms and Conditions:</b></h5>
+                            <p>Terms and conditions are aimed at protecting the business (you). They give business owners the opportunity to set their rules (within applicable law) of how their service or product may be used, including but not limited to, things like copyright conditions, age limits, and the governing law of the contract.</p>
+                        </div>
+                    </div>
+                
+                    <!-- ISO Logo -->
+                    <div class="iso-logo">
+                        <img src="{% static 'image/logo-ISO-9001_2015-768x768.png' %}" alt="ISO 9001 Logo" height="150px" width="150px">
+                    </div>
+                
+                    <!-- QR Code -->
                     <div class="qr-code">
-                        <img src="QR-code-link" alt="QR Code" class="certificate-qr-code">
+                        <img src="{{ qr_image }}" alt="QR Code" height="150px" width="150px">
+                    </div>                    
+                </div>
+                <div class="footer-container">
+                    <!-- Black Space for Signature -->
+                    <div class="signature-space"></div>
+                    
+                    <!-- Footer Content -->
+                    <div class="footer-content d-flex justify-content-between align-items-start">
+                        <!-- Controller of Examination -->
+                        <div class="footer-section text-center signature">
+                            <p><strong>CONTROLLER OF EXAMINATION</strong></p>
+                        </div>
+                
+                        <!-- Contact Information -->
+                        <div class="footer-section text-center">
+                            <p>Contact No: 9778577090 / 8895895988 / 8895644410</p>
+                            <p>Address: AT: Subash Jena Colony (High School Road, Balugaon)</p>
+                            <p>PO/PS- Balugaon, Zip/Pin- 752030, Khordha, Odisha, India</p>
+                        </div>
+                
+                        <!-- Director -->
+                        <div class="footer-section text-center signature">
+                            <p><strong>BRAJA SUNDARA BEHERA</strong></p>
+                            <p><strong>DIRECTOR</strong></p>
+                        </div>
                     </div>
-                </div>
-                 </div>
+                </div>                
           </div>
-      </div>
-  </div>
-                <!-- Footer -->
-                <div class="text-center mt-5">
-                    <p>Contact No: 9778577090 / 8895895988 / 8895644410</p>
-                    <p>Address: AT: Subash Jena Colony (High School Road, Balugaon)</p>
-                    <p>PO/PS- Balugaon, Zip/Pin- 752030, Khordha, Odisha, India</p>
-                </div>
+                
+                
             </div>
         </div>
     </div>

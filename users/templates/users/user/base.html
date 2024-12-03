@@ -33,8 +33,8 @@
    	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand">
-			<i class="lni lni-nextjs"></i>
-        <span class="logo_name">REACT</span>
+			<img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="" class="logo">
+			<hr class="logo-divider">
         <span class="text"></span>
 		</a>
 		<ul class="side-menu top">
@@ -51,7 +51,7 @@
 				</a>
 			</li>
             <li class="active sidebar-item">
-				<a href="#">
+				<a href="{% url 'users:my_courses' %}">
 					<i class='bx bx-notepad' ></i>
 					<span class="text">My Course</span>
 				</a>
@@ -114,7 +114,7 @@
 		    </a>
 		    <a href="#" class="profile">
 		        <img src="{% static 'users/images/user!.webp' %}">
-		        <span class="admin_name">{{request.user.email}}</span>
+		        <span class="admin_name">{{request.user.username}}</span>
 		    </a>
 		</nav>
 		<!-- NAVBAR -->

@@ -88,13 +88,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     student_signature = models.ImageField(upload_to='student_signatures/', max_length=250, blank=True, null=True)
     roll_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
     abbreviation = models.CharField(max_length=10, choices=[('Mr.', 'Mr.'), ('Ms.', 'Ms.')], blank=True)
-    full_name = models.CharField(max_length=255, null=True, blank=True)
+    full_name = models.CharField(max_length=50, null=True, blank=True)
     select_one = models.CharField(max_length=10, choices=[('S/O', 'S/O'), ('D/O', 'D/O'), ('W/O', 'W/O')], blank=True)
     father_husband_name = models.CharField(max_length=100, blank=True)
     show_father_husband_on_certificate = models.BooleanField(default=False)
     mother_name = models.CharField(max_length=100, blank=True)
     course_of_interest = models.ForeignKey('course.Course', on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(null=True, blank=True, unique=True)
+    username = models.CharField(max_length=10, unique=True, null=True, blank=True)
     password = models.CharField(max_length=128, null=True, blank=True)
     contact = models.CharField(max_length=10, null=True, blank=True, unique=True)
     alternative_contact = models.CharField(max_length=10, null=True, blank=True, unique=True)
@@ -137,7 +138,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     deletion_date = models.DateTimeField(null=True, blank=True)
     token = models.CharField(max_length=100, null=True, blank=True)
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["password"]
 
     objects = MyAccountManager()

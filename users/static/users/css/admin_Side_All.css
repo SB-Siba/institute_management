@@ -68,30 +68,42 @@ body::-webkit-scrollbar {
 	width: 60px;
 }
 #sidebar .brand {
-	height: 80px;
-	display: flex;
-	align-items: center;
-	position: sticky;
-	top: 0;
-	left: 0;
-	background: #0B1739;
-	z-index: 500;
-	box-sizing: content-box;
-	font-size: 28px;
+  height: 150px;               /* Adjust height for better vertical layout */
+  display: flex;
+  flex-direction: column;      /* Stack logo and name vertically */
+  align-items: center;         /* Center items horizontally */
+  justify-content: center;     /* Center items vertically */
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #0B1739;
+  z-index: 500;
+  box-sizing: content-box;
+  font-size: 28px;
   font-weight: 500;
   color: #fff;
   min-width: 60px;
-  /* margin: 0 20px; */
+  padding: 10px 0;            
 }
-#sidebar .brand .lni-nextjs {
-	min-width: 60px;
-	display: flex;
-	justify-content: center;
+
+#sidebar .logo {
+  width: 250px;                
+  height: 130px;              
+  margin-bottom: -30px;  
+}
+
+#sidebar .logo-divider {
+  width: 80%;       
+  border: none;   
+  border-top: 5px dashed #fff; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-top: 0px;   
+  margin-bottom: 0;  
 }
 #sidebar .side-menu {
 	width: 100%;
-	margin-top: 48px;
-    padding: 0;
+	margin-top: 0px;
+  padding: 0;
 }
 
 #sidebar .side-menu li.active {
@@ -113,7 +125,7 @@ body::-webkit-scrollbar {
 	overflow-x: hidden;
 }
 .sidebar-links i {
-  /* margin-right: 1rem; */
+  margin-right: 1rem; 
 }
 .sidebar-item {
   margin-bottom: 0.5rem;
@@ -433,6 +445,13 @@ nav .sidebar-button{
      color: #e05260;
      background: #f7d4d7;
    }
+   .box-image {
+    width: 600px;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
  .total-order{
     font-size: 20px;
     font-weight: 500;

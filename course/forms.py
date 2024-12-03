@@ -3,19 +3,19 @@ from datetime import timedelta
 from doctest import Example
 from django import forms
 from course.models import AwardCategory, Course, Exam, ExamResult
-from ckeditor.widgets import CKEditorWidget
 from django.forms.widgets import ClearableFileInput
+from django_summernote.widgets import SummernoteWidget
 
 from users.models import Batch, User
 
 class MultiFileInput(ClearableFileInput):
-    allow_multiple_selected = True  # Allow multiple files to be selected
+    allow_multiple_selected = True
 
     def __init__(self, attrs=None):
         super().__init__(attrs)
         if attrs is None:
             attrs = {}
-        attrs.update({'multiple': 'multiple'})  # Add the 'multiple' attribute to the widget
+        attrs.update({'multiple': 'multiple'})
         self.attrs = attrs
 
 
@@ -45,8 +45,8 @@ class CourseForm(forms.ModelForm):
             'minimum_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 30 hours'}),
             'exam_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'course_syllabus': forms.Textarea(attrs={'class': 'form-control'}),
-            'eligibility': forms.Textarea(attrs={'class': 'form-control'}),
+            'course_syllabus': SummernoteWidget(),
+            'eligibility': SummernoteWidget(),
             'course_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'course_video_links': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
@@ -65,7 +65,6 @@ class CourseForm(forms.ModelForm):
             if not pdf_file.name.endswith('.pdf'):
                 raise forms.ValidationError('Only PDF files are allowed.')
         return pdf_files
-
 
 class ExamapplyForm(forms.ModelForm):
     course = forms.ModelChoiceField(
@@ -104,7 +103,6 @@ class ExamapplyForm(forms.ModelForm):
         label="Passing Marks",
         widget=forms.NumberInput(attrs={'placeholder': 'Passing Marks'})
     )
-
   
     class Meta:
         model = Exam

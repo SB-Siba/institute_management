@@ -1,0 +1,34 @@
+{% extends 'users/user/base.html' %}
+{ load static }
+{% block content %}
+<div class="container my-4">
+    <h2>My Courses</h2>
+
+    {% if course %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Course Details</h5>
+            {% if student_image %}
+            <p><strong>Student Image:</strong> <img src="{{ student_image }}" alt="Student Image" width="100"></p>
+            {% endif %}
+            {% if student_signature %}
+            <p><strong>Student Signature:</strong> <img src="{{ student_signature }}" alt="Student Signature" width="100"></p>
+            {% endif %}
+            <p><strong>Abbreviationr:</strong> {{ abbreviation }}</p>
+            <p><strong>Full Name:</strong> {{ full_name }}</p>
+            <p><strong>Selected:</strong> {{ select_one }}</p>
+            <p><strong>Father/Husband name:</strong> {{ father_husband_name }}</p>
+
+            <p><strong>Course Of Intrest:</strong> {{ course_of_interest }}</p>
+            <p><strong>Roll Number:</strong> {{ roll_number }}</p>
+            <p><strong>Course Fees:</strong> {{ course_fees }}</p>
+            <p><strong>Fees Received:</strong> {{ fees_received }}</p>
+            <p><strong>Balance:</strong> {{ balance }}</p>
+            <p><strong>Gender:</strong>{{ gender }}</p>
+        </div>
+    </div>
+    {% else %}
+    <p>You have not enrolled in any course yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

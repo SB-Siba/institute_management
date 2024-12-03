@@ -5,6 +5,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* From Uiverse.io by cssbuttons-io */ 
+/* Signing effect for the text */
+/* Base header styling */
+.shining-header {
+  position: relative;
+  color: #fff;
+  overflow: hidden; /* Ensures the shine effect stays within bounds */
+  z-index: 1;
+}
+
+/* Shining animation */
+.shining-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150px;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0.6;
+  animation: shine-header 2.5s infinite;
+  z-index: 2; /* Ensures it overlays the content */
+}
+
+/* Ensures the header text remains on top */
+.shining-header h6 {
+  position: relative;
+  z-index: 3;
+}
+
+/* Keyframes for the shine effect */
+@keyframes shine-header {
+  0% {
+    left: -150px;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
 
 .u-button {
   font-family:'Poppins',sans-serif ;
@@ -1543,37 +1589,56 @@ object-fit: cover;
 /* ------------Footer  Section page CSS----------------------------------*/
 
 footer {
-  background-color: var(--footer);
+  background: linear-gradient(45deg, #1a73e8, #673ab7, #ff5722, #009688);
+  background-size: 300% 300%; /* Enables smooth gradient animation */
+  animation: gradientAnimation 8s ease infinite; /* Animates the gradient */
   padding: 3rem 0;
   color: var(--third);
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .footer_div_ul div ul li a {
   text-decoration: none;
   color: var(--third);
-  font-size:12px;
+  font-size: 12px;
   font-weight: 400;
-line-height: 30px;
-font-family:"Inter", sans-serif;
+  line-height: 30px;
+  font-family: "Inter", sans-serif;
+  transition: color 0.3s ease; /* Smooth color transition on hover */
 }
 
-.footer_div_ul div h6{
-color: var(--h6);
-font-size:13px;
-font-weight: 400;
-text-transform: uppercase;
+.footer_div_ul div ul li a:hover {
+  color: #fff; /* Changes color on hover */
 }
 
+.footer_div_ul div h6 {
+  color: var(--h6);
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
 
-.footer_div_ul div p{
+.footer_div_ul div p {
   text-decoration: none;
   color: var(--third);
-  font-size:12px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 25px;
-  font-family:"Inter", sans-serif;
+  font-family: "Inter", sans-serif;
 }
-.footer_div_uldiv p i{
+
+.footer_div_ul div p i {
   padding: 5px;
 }
 
@@ -1581,15 +1646,14 @@ text-transform: uppercase;
   list-style: none;
 }
 
-.footer_subhead p{
+.footer_subhead p {
   text-decoration: none;
   color: var(--third);
-  font-size:12px;
+  font-size: 12px;
   font-weight: 100;
-line-height: auto;
-font-family:"Inter", sans-serif;
+  line-height: auto;
+  font-family: "Inter", sans-serif;
 }
-
 
 
 .form_container {

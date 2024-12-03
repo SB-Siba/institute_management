@@ -1,7 +1,7 @@
 
+import bleach
 from django.db import models
 from django.utils import timezone  
-from ckeditor.fields import RichTextField
 
 
 class AwardCategory(models.Model):
@@ -38,9 +38,14 @@ class Course(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
     batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
     
+    def save(self, *args, **kwargs):  
+        # Clean HTML from eligibility and course_syllabus fields  
+        self.eligibility = bleach.clean(self.eligibility,strip=False)  
+        self.course_syllabus = bleach.clean(self.course_syllabus,strip=False)  
+        super().save(*args, **kwargs) 
+
     def __str__(self):
         return self.course_name 
-    
 
 class Exam(models.Model):
     STATUS_CHOICES = (

@@ -1,6 +1,7 @@
 import json
 from msilib.schema import ListView
 from winreg import DeleteKey
+import bleach
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -99,6 +100,11 @@ class CourseListView(View):
 
 class CourseCreateView(View):
     template_name = app + 'add_course.html'
+    allowed_tags = [  
+        'b', 'i', 'u', 'strong', 'em', 'p', 'br', 'table', 'tr', 'td', 'th', 'tbody', 'thead', 'ul',   
+        'ol', 'li', 'blockquote'  
+    ]  
+    allowed_attrs = {}
 
     def get(self, request):
         form = CourseForm()
@@ -125,6 +131,8 @@ class CourseCreateView(View):
         elif 'add_course' in request.POST:
             if form.is_valid():
                 course = form.save(commit=False)
+                course.eligibility = bleach.clean(request.POST.get('eligibility', ''),tags=self.allowed_tags, attributes=self.allowed_attrs, strip=False)  
+                course.course_syllabus = bleach.clean(request.POST.get('course_syllabus', ''), tags=self.allowed_tags, attributes=self.allowed_attrs, strip=False)  
                 if not course.status:
                     course.status = 'active'
                 course.course_subject = [{'id': i + 1, 'name': subject} for i, subject in enumerate(subjects)]
