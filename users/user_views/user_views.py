@@ -5,12 +5,15 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
+from course.models import Course
 from users import forms
 from users.models import User
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 app = "users/user/"
 
 class ProfileView(View):
@@ -148,7 +151,7 @@ class ProfileDeleteAddress(View):
 
         return redirect("users:alladdress")
 
-class AccountDetails(View):
+class DashboardView(View):
     template = app + "index.html"
 
     def get(self, request):
@@ -157,10 +160,24 @@ class AccountDetails(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
+        # Fetch the enrolled course(s) for the user
+        enrolled_course = user.course_of_interest
 
-        return render(request, self.template, {
-            'userobj': user,
-        })
+        # Prepare fee details if a course is enrolled
+        paid_fees = getattr(user, 'fees_received', 0)
+        balance_fees = getattr(user, 'balance', 0)
+        total_fees = getattr(user, 'course_fees', 0)
+
+        # Pass the data to the template context
+        context = {
+            "user": user,
+            "course": enrolled_course,
+            "paid_fees": paid_fees,
+            "balance_fees": balance_fees,
+            "total_fees": total_fees,
+        }
+
+        return render(request, self.template, context)
 
 class UpdateProfileView(UpdateView):
     model = User
@@ -203,8 +220,7 @@ class SupportView(View):
             return redirect('users:support')
         return render(request, self.template_name, {'form': form})
     
-from django.contrib.auth.mixins import LoginRequiredMixin
-class MyCoursesView(LoginRequiredMixin, View):
+class MyCoursesView(View):
     template_name = app + 'my_course.html'
 
     def get(self, request, *args, **kwargs):

@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container my-4">
-    <h2>My Course Details</h2>
+    <h2>Apply  for Certificate</h2>
     
     {% if course %}
     <div class="card">
@@ -24,17 +24,7 @@
             {% if course.course_duration %}
             <p><strong>Duration:</strong> {{ course.course_duration }}</p>
             {% endif %}
-            
-            <!-- Course Fees -->
-            {% if course.course_fees %}
-            <p><strong>Course Fees:</strong> ₹{{ course.course_fees }}</p>
-            {% endif %}
-            
-            <!-- Minimum Amount to Pay -->
-            {% if course.minimum_fees %}
-            <p><strong>Minimum Amount to Pay:</strong> ₹{{ course.minimum_fees }}</p>
-            {% endif %}
-            
+        
             <!-- Course Subjects in Table -->
             {% if course.course_subject %}
             <p><strong>Course Subjects:</strong></p>
@@ -55,22 +45,29 @@
                 </tbody>
             </table>            
             {% endif %}
-            
-            <!-- Course Syllabus -->
-            {% if course.course_syllabus %}
-            <p><strong>Syllabus:</strong></p>
-            <p>{{ course.course_syllabus }}</p>
-            {% endif %}
-            
-            <!-- Eligibility -->
-            {% if course.eligibility %}
-            <p><strong>Eligibility:</strong></p>
-            <p>{{ course.eligibility }}</p>
+        
+        </div>
+    </div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    <!-- Apply Certificate Button -->
+   {% if already_applied %}
+                <p class="text-success">You have already applied for a certificate for this course.</p>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Apply for Certificate</button>
+                </form>
             {% endif %}
         </div>
     </div>
     {% else %}
-    <p>You are not yet admitted to any course.</p>
+    <p>You are not enrolled in any course.</p>
     {% endif %}
 </div>
 {% endblock content %}

@@ -197,7 +197,9 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                document.querySelector(`button[data-id="${categoryId}"]`).closest('tr').remove();
+                const row = document.querySelector(`button[data-id="${categoryId}"]`).closest('tr');
+                if (row) row.remove();
+                // document.querySelector(`button[data-id="${categoryId}"]`).closest('tr').remove();
                 $('#deleteModal').modal('hide');
                 displayAlert('Award category deleted successfully.');
             } else {

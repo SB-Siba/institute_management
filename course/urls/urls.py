@@ -40,4 +40,6 @@ urlpatterns = [
 
         #user side
     path('user-courses/', user_views.UserCourseListView.as_view(), name='user_course_list'),
+    path('exam-results/', user_views.ExamResultsView.as_view(), name='exam_results'),
+    path('<int:pk>/', user_views.CourseDetailView.as_view(), name="course_details"),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

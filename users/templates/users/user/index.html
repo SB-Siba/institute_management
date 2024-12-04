@@ -2,10 +2,14 @@
 {% load static %}
 
 {% block content %}
-
 <style>
     .box {
         height: 35dvh !important;
+        padding: 1em;
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
     .buttons {
         display: flex;
@@ -14,13 +18,8 @@
     }
     .buttons .top-buttons {
         display: flex;
-        gap: 10px; /* Adjust spacing between buttons */
+        gap: 10px;
     }
-    .buttons .bottom-button {
-        margin-top: 10px;
-        text-align: center;
-    }
-    /* General button styling */
     .btn {
         background-color: #007bff;
         color: #fff;
@@ -36,58 +35,52 @@
 </style>
 
 <main class="py-6">
-  <div class="container-fluid">
-    <!-- Welcome Message Section -->
-    <div class="welcome-section">
-        <h4 class="heading">Welcome, 
-            {% if user.is_authenticated %}
-              MR. {{ user.full_name|upper }}
-            {% endif %}
-          </h4>
-    </div>
-    <br><br>
+    <div class="container-fluid">
+        <!-- Welcome Section -->
+        <div class="welcome-section mb-4">
+            <h4>Welcome, MR. {{ user.full_name|upper }}</h4>
+        </div>
 
-    <!-- Course Information Section -->
-    <div class="overview-boxes">
-      {% if enrolled_course %}
-        <!-- Display the enrolled course information -->
-        <div class="box">
-          <div class="right-side">
-            <div class="box-topic">{{ enrolled_course.course_of_interest }}</div>
-            <p>Joined On: {{ enrolled_course.join_date|date:"d F Y" }}</p>
-            <p>Exam Status: {{ enrolled_course.exam_status }}</p>
-            <div class="buttons">
-              <div class="top-buttons">
-                <a href="#" class="btn">My Certificate</a>
-                <a href="#" class="btn">My Marksheet</a>
-              </div>
-              <div class="bottom-button">
-                <a href="#" class="btn">Course Info</a>
-              </div>
+        <!-- Course Information Section -->
+        <div class="row">
+            {% if course %}
+            <!-- Display Course Details -->
+            <div class="col-md-6">
+                <div class="box">
+                    <h5 class="card-title">{{ course.course_name }} ({{ course.course_code }})</h5>
+                    <p><strong>Joined On:</strong> {{ course.admission_date|date:"d F Y" }}</p>
+                    <p><strong>Exam Status:</strong> {{ course.exam_status }}</p>
+                    <div class="buttons">
+                        <div class="top-buttons">
+                            <a href="#" class="btn">My Certificate</a>
+                            <a href="#" class="btn">My Marksheet</a>
+                        </div>
+                        <div class="bottom-button">
+                            <a href="#" class="btn">Course Info</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      {% else %}
-        <!-- Display message if no course is enrolled -->
-        <div class="box">
-          <div class="right-side">
-            <div class="box-topic">No Course Enrolled</div>
-            <p>You are not yet admitted to any course.</p>
-          </div>
-        </div>
-      {% endif %}
 
-      <!-- Fee Details Section -->
-      <div class="box">
-        <div class="right-side">
-          <div class="box-topic">Balance Fees</div>
-          <p>Paid Fees: 5000.00</p>
-          <p>Balance Fees: 2000.00</p>
-          <p>Total Fees: 7000.00</p>
+            <!-- Display Fee Details -->
+            <div class="col-md-6">
+                <div class="box">
+                    <h5>Fee Details</h5>
+                    <p><strong>Paid Fees:</strong> ₹{{ paid_fees }}</p>
+                    <p><strong>Balance Fees:</strong> ₹{{ balance_fees }}</p>
+                    <p><strong>Total Fees:</strong> ₹{{ total_fees }}</p>
+                </div>
+            </div>
+            {% else %}
+            <!-- No Course Enrolled -->
+            <div class="col-md-12">
+                <div class="box">
+                    <h5>No Course Enrolled</h5>
+                    <p>You are not yet admitted to any course.</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
-      </div>
     </div>
-  </div>
 </main>
-
 {% endblock content %}

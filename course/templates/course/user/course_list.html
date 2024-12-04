@@ -21,12 +21,16 @@
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ course.course_code }}</td>
-                <td>{{ course.course_name }}</td>
+                <td><a href="{% url 'course:course_details' course.pk %}">
+                    {{ course.course_name }}
+                </a></td>
                 <td>{{ course.course_fees }}</td>
                 <td>{{ course.course_mrp }}</td>
                 <td>{{ course.minimum_fees }}</td>
                 <td>{{ course.course_duration }}</td>
                 <td>{{ course.status }}</td>
+                
+                
             </tr>
             {% empty %}
             <tr>
