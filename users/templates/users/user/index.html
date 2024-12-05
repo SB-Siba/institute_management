@@ -2,93 +2,111 @@
 {% load static %}
 
 {% block content %}
-
 <style>
-    .box {
-        height: 35dvh !important;
-    }
-    .buttons {
+    .card-container {
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .card {
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        width: calc(33.33% - 20px); /* Three cards per row */
+        padding: 15px;
+        background-color: #fff;
+        transition: transform 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card img {
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+    .card .card-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .card .card-text {
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        color: #555;
+    }
+    .card .card-actions {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
     }
-    .buttons .top-buttons {
-        display: flex;
-        gap: 10px; /* Adjust spacing between buttons */
-    }
-    .buttons .bottom-button {
-        margin-top: 10px;
-        text-align: center;
-    }
-    /* General button styling */
-    .btn {
+    .card .btn {
         background-color: #007bff;
         color: #fff;
-        padding: 0.5em 1em;
+        padding: 5px 10px;
         border-radius: 5px;
-        text-align: center;
-        transition: background-color 0.3s;
         text-decoration: none;
+        font-size: 0.8em;
+        transition: background-color 0.3s ease;
     }
-    .btn:hover {
+    .card .btn:hover {
         background-color: #0056b3;
+    }
+    .no-courses {
+        text-align: center;
+        color: #888;
+        margin-top: 20px;
     }
 </style>
 
 <main class="py-6">
-  <div class="container-fluid">
-    <!-- Welcome Message Section -->
-    <div class="welcome-section">
-      <h4 class="heading">
-        Welcome,
-        {% if user.is_authenticated %}
-          MR. {{ user.full_name|upper }}
-        {% endif %}
-      </h4>
-    </div>
+    <div class="container-fluid">
+        <!-- Welcome Section -->
+        <div class="welcome-section mb-4">
+            <h4>Welcome, MR. {{ user.full_name|upper }}</h4>
+        </div>
 
-    <!-- Course Information Section -->
-    <div class="overview-boxes">
-      {% if course %}
-      <!-- Display the enrolled course information -->
-        <div class="box">
-          <div class="right-side">
-            <div class="box-topic">{{ course.course_name }}</div>  <!-- Show Course Name -->
-            <p><strong>Course Code:</strong> {{ course.course_code }}</p>  <!-- Optional Course Code -->
-            <p><strong>Joined On:</strong> {{ course.admission_date|date:"d F Y" }}</p>
-            <p><strong>Exam Status:</strong> {{ course.exam_status }}</p>
-            <div class="buttons">
-              <div class="top-buttons">
-                <a href="#" class="btn">My Certificate</a>
-                <a href="#" class="btn">My Marksheet</a>
-              </div>
-              <div class="bottom-button">
-                <a href="#" class="btn">Course Info</a>
-              </div>
+        <!-- Course Enrollment Section -->
+        <div>
+            <h4>Your Enrolled Courses</h4>
+            {% if applications %}
+            <div class="card-container">
+                {% for application in applications %}
+                <div class="card">
+                    <div class="card-body text-center">
+                        <!-- Student Image -->
+                        {% if application.user.student_image %}
+                        <img src="{{ application.user.student_image.url }}" alt="Student Image">
+                        {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" alt="Default Image">
+                        {% endif %}
+
+                        <!-- Full Name -->
+                        <div class="card-title">{{ application.user.full_name }}</div>
+
+                        <!-- Course and Batch -->
+                        <div class="card-text">
+                            <strong>Course:</strong> {{ application.course.course_of_interest }}<br>
+                            <strong>Applied Date:</strong> {{ application.applied_date|date:"d M Y" }}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="card-actions">
+                            <a href="{% url 'certificate:designed_certificate' application.id %}" class="btn">View Certificate</a>
+                            <a href="{% url 'certificate:verify_marksheets' application.id %}" class="btn">View Marksheet</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-          </div>
+            {% else %}
+            <div class="no-courses">
+                <p>No course enrolled.</p>
+            </div>
+            {% endif %}
         </div>
-      {% else %}
-        <!-- Display message if no course is enrolled -->
-        <div class="box">
-          <div class="right-side">
-            <div class="box-topic">No Course Enrolled</div>
-            <p>You are not yet admitted to any course.</p>
-          </div>
-        </div>
-      {% endif %}
-
-      <!-- Fee Details Section -->
-      <div class="box">
-        <div class="right-side">
-            <div class="box-topic">Balance Fees</div>
-            <p><strong>Paid Fees:</strong> Rs. {{ paid_fees }}</p>
-            <p><strong>Balance Fees:</strong> Rs. {{ balance_fees }}</p>
-            <p><strong>Total Fees:</strong> Rs. {{ total_fees }}</p>
-        </div>
-    </div>    
     </div>
-  </div>
 </main>
-
 {% endblock content %}

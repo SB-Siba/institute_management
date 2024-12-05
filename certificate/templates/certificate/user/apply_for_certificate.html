@@ -1,81 +1,73 @@
 {% extends 'users/user/base.html' %}
-
-{% block title %}Apply for Certificate{% endblock title %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Apply for Certificate</h2>
-
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert 
-            {% if 'success' in message.tags %}
-                alert-success
-            {% elif 'warning' in message.tags %}
-                alert-warning
-            {% elif 'error' in message.tags %}
-                alert-danger
-            {% elif 'info' in message.tags %}
-                alert-info
-            {% endif %}">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="course" class="form-label">Course</label>
-            {{ form.course }}
+<div class="container my-4">
+    <h2>Apply  for Certificate</h2>
+    
+    {% if course %}
+    <div class="card">
+        <div class="card-body">
+            <!-- Course Name and Code -->
+            <h5 class="card-title">{{ course.course_name }} ({{ course.course_code }})</h5>
+            
+            <!-- Course Image -->
+            {% if course.course_image %}
+            <div class="course-image mb-3">
+                <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" 
+                    class="img-fluid" 
+                    style="max-width: 300px; height: auto;">
+            </div>
+            {% endif %}
+            
+            <!-- Duration -->
+            {% if course.course_duration %}
+            <p><strong>Duration:</strong> {{ course.course_duration }}</p>
+            {% endif %}
+        
+            <!-- Course Subjects in Table -->
+            {% if course.course_subject %}
+            <p><strong>Course Subjects:</strong></p>
+            <table class="table table-bordered" style="border: 2px solid navy;">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Subject Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in course.course_subject %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ subject.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+            {% endif %}
+        
         </div>
-
-        <button type="submit" class="btn btn-primary">Apply Certificate</button>
-    </form>
+    </div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    <!-- Apply Certificate Button -->
+   {% if already_applied %}
+                <p class="text-success">You have already applied for a certificate for this course.</p>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Apply for Certificate</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p>You are not enrolled in any course.</p>
+    {% endif %}
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const courseField = document.querySelector('select[name="course"]');
-        const studentField = document.querySelector('select[name="student"]');
-        const fetchStudentsUrl = "{% url 'certificate:get-students-by-course' course_id=0 %}";
-        if (!courseField || !studentField) return;
-
-    courseField.addEventListener('change', function () {
-        const courseId = this.value;
-
-        if (!courseId) {
-            studentField.innerHTML = '<option value="">Select a student</option>';
-            return;
-        }
-        const fetchUrl = "{% url 'certificate:get-students-by-course' course_id='0' %}".replace('0', courseId);
-
-        fetch(fetchUrl)
-            .then(response => response.json())
-            .then(data => {
-                studentField.innerHTML = ''; // Clear previous options
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = 'Select a student';
-                studentField.appendChild(defaultOption);
-
-                if (data.students && data.students.length > 0) {
-                    data.students.forEach(student => {
-                        const option = document.createElement('option');
-                        option.value = student.id;
-                        option.textContent = student.name;
-                        studentField.appendChild(option);
-                    });
-                } else {
-                    const noStudentsOption = document.createElement('option');
-                    noStudentsOption.value = '';
-                    noStudentsOption.textContent = 'No students available';
-                    studentField.appendChild(noStudentsOption);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching students:', error);
-                studentField.innerHTML = '<option value="">Error loading students</option>';
-            });
-    });
-});
-</script>
 {% endblock content %}

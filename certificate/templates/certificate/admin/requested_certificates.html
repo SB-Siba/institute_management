@@ -149,6 +149,40 @@
             applicationId = button.getAttribute('data-id');
         });
 
+        // Delete action
+        deleteForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const actionUrl = deleteForm.getAttribute('action');
+
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the row from the table
+                    const row = document.querySelector(`#action-buttons-${applicationId}`).closest('tr');
+                    row.remove();
+                    alert(data.message); // Optional: show a success message
+                } else {
+                    alert('Deletion failed.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            })
+            .finally(() => {
+                const bootstrapModal = bootstrap.Modal.getInstance(deleteModal);
+                bootstrapModal.hide();
+            });
+        });
+
         // Approve action
         confirmApproveButton.addEventListener('click', function () {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;

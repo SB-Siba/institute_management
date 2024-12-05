@@ -29,7 +29,6 @@ from users.models import Attendance
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
-
 app = "users/admin/"
 
 # admin dashboard and manage users list
@@ -152,8 +151,6 @@ def get_course_fee(request):
             return JsonResponse({'error': 'Course not found'}, status=404)
     return JsonResponse({'error': 'No course_id provided'}, status=400)
 
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class AddNewStudentView(View):
@@ -591,7 +588,12 @@ class TakeAttendanceView(View):
         today_date = request.GET.get('date', date.today().strftime('%Y-%m-%d'))
         selected_batch = request.GET.get('batch', None)
         batches = Batch.objects.all()
-        students = User.objects.filter(batch__id=selected_batch) if selected_batch else None
+
+        admitted_students = User.objects.filter(batch__id=selected_batch) if selected_batch else User.objects.none()
+        readmitted_students = User.objects.filter(readmission__batch__id=selected_batch) if selected_batch else User.objects.none()
+
+        students = admitted_students.union(readmitted_students)
+
         attendance_records = Attendance.objects.filter(date=today_date, student__batch__id=selected_batch) if selected_batch else []
         attendance_status_map = {record.student.id: record.status for record in attendance_records}
 
@@ -599,7 +601,7 @@ class TakeAttendanceView(View):
             'today_date': today_date,
             'batches': batches,
             'students': students,
-            'attendance_status_map': attendance_status_map, 
+            'attendance_status_map': attendance_status_map,
             'selected_batch': selected_batch
         }
         return render(request, self.template, context)
@@ -607,7 +609,12 @@ class TakeAttendanceView(View):
     def post(self, request):
         selected_batch = request.POST.get('batch')
         attendance_date = request.POST.get('date', date.today())
-        students = User.objects.filter(batch__id=selected_batch)
+
+        admitted_students = User.objects.filter(batch__id=selected_batch) if selected_batch else User.objects.none()
+        readmitted_students = User.objects.filter(readmission__batch__id=selected_batch) if selected_batch else User.objects.none()
+
+        students = admitted_students.union(readmitted_students)
+
         for student in students:
             attendance_status = request.POST.get(f'attendance_{student.id}')
             Attendance.objects.update_or_create(
@@ -632,17 +639,32 @@ class AttendanceReportView(View):
         date_range = []
 
         if selected_batch and start_date and end_date:
+            # Parse date range
             start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
             end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
             date_range = [start_date_obj + timedelta(days=i) for i in range((end_date_obj - start_date_obj).days + 1)]
-            students = User.objects.filter(batch__id=selected_batch).select_related('course_of_interest')
+            
+            # Fetch admitted and readmitted students
+            admitted_students = User.objects.filter(batch__id=selected_batch).values('id', 'full_name', 'course_of_interest_id')
+            readmitted_students = User.objects.filter(readmission__batch__id=selected_batch).values('id', 'full_name', 'course_of_interest_id')
+            combined_students = admitted_students.union(readmitted_students)
+
+            # Convert combined_students back to queryset for further usage
+            student_ids = [student['id'] for student in combined_students]
+            students = User.objects.filter(id__in=student_ids).select_related('course_of_interest')
+
+            # Fetch attendance records
             attendance_records = Attendance.objects.filter(
-                student__batch__id=selected_batch,
+                student__in=students,
                 date__range=[start_date_obj, end_date_obj]
             ).select_related('student')
+            
+            # Map attendance data
             attendance_map = defaultdict(lambda: {date: 'Not Attended' for date in date_range})
             for record in attendance_records:
                 attendance_map[record.student.id][record.date] = record.status
+
+            # Prepare attendance data for each student
             for student in students:
                 attendance_row = []
                 for date in date_range:

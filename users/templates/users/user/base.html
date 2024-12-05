@@ -71,10 +71,16 @@
 			</li>
 			<li class="active sidebar-item">
 				<a href="{% url 'certificate:apply_certificate' %}">
-					<i class='bx bxs-dashboard' ></i>
+					<i class='bx bxs-dashboard'></i>
 					<span class="text">Apply For Certificates</span>
 				</a>
 			</li>
+			<li class=" active sidebar-item">
+				<a href="{% url 'certificate:approved_cer' %}">
+					<i class='bx bxs-book-content'></i>
+					<span class="text">Approved Certificates</span>
+				</a>
+			</li>	
 			<li>
 				<a href="{% url 'users:support' %}" class="">
 					<i class='bx bx-support'></i>
@@ -119,11 +125,11 @@
 		        <span class="num">8</span>
 		    </a>
 		    <a href="#" class="profile">
-		        {% if student.student_image %}
+		        <!-- {% if student.student_image %}
               <img src="{{ student.student_image.url }}" alt="Photo" width="50" height="50">
             {% else %}
               <img src="{% static 'images/default-profile.png' %}" alt="Default Photo" width="50" height="50">
-            {% endif %}
+            {% endif %} -->
 		        <span class="admin_name">{{request.user.username}}</span>
 		    </a>
 		</nav>

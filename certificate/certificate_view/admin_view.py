@@ -150,7 +150,7 @@ class RequestedCertificatesListView(View):
             return JsonResponse({'error': str(e)}, status=500)
 
 
-class ApprovedCertificatesListView(View):
+class ApprovedCertificatesList(View):
     template_name = app +  'approved_certificates.html'
 
     def get(self, request):

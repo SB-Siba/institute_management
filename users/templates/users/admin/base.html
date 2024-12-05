@@ -153,7 +153,7 @@
 						<a href="#" class="sidebar-links">
 							<i class="bx bxs-message-dots"></i><span class="text ms-3">Old Approved Certificate</span>
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</li>
 			<!--<li>
@@ -275,11 +275,11 @@
 		        <span class="num">8</span>
 		    </a>
 			<a href="#" class="profile">
-				{% if request.user.student_image %}
+				<!-- {% if request.user.student_image %}
 					<img src="{{ request.user.student_image.url }}" alt="Student Photo">
 				{% else %}
 					<img src="{% static 'users/images/default-user.webp' %}" alt="Default User">
-				{% endif %}
+				{% endif %} -->
 				<span class="admin_name">{{ request.user.username }}</span>
 			</a>
 		</nav>
