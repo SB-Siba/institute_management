@@ -23,5 +23,6 @@ urlpatterns = [
     #admin message 
     path('admin/messages/', admin_views.AdminMessageListView.as_view(), name='admin_message_list'),
     path('admin/messages/<int:message_id>/', admin_views.AdminMessageDetailView.as_view(), name='admin_message_detail'),
+    path('admin/messages/<int:message_id>/', admin_views.AdminMessageDeleteView.as_view(), name='admin_message_delete'),
 
 ]

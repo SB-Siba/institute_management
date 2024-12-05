@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     .box {
-        height: 35dvh !important;
+        height: auto;
         padding: 1em;
         border: 1px solid #007bff;
         border-radius: 10px;
@@ -13,12 +13,10 @@
     }
     .buttons {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .buttons .top-buttons {
-        display: flex;
+        flex-wrap: wrap;
         gap: 10px;
+        justify-content: center;
+        margin-top: 1em;
     }
     .btn {
         background-color: #007bff;
@@ -48,16 +46,19 @@
             <div class="col-md-6">
                 <div class="box">
                     <h5 class="card-title">{{ course.course_name }} ({{ course.course_code }})</h5>
+                    
+                    {% if course.admission_date %}
                     <p><strong>Joined On:</strong> {{ course.admission_date|date:"d F Y" }}</p>
+                    {% endif %}
+                    
+                    {% if course.exam_status %}
                     <p><strong>Exam Status:</strong> {{ course.exam_status }}</p>
+                    {% endif %}
+                    
                     <div class="buttons">
-                        <div class="top-buttons">
-                            <a href="#" class="btn">My Certificate</a>
-                            <a href="#" class="btn">My Marksheet</a>
-                        </div>
-                        <div class="bottom-button">
-                            <a href="#" class="btn">Course Info</a>
-                        </div>
+                        <a href="#" class="btn">My Certificate</a>
+                        <a href="#" class="btn">My Marksheet</a>
+                        <a href="#" class="btn">Course Info</a>
                     </div>
                 </div>
             </div>
@@ -66,9 +67,9 @@
             <div class="col-md-6">
                 <div class="box">
                     <h5>Fee Details</h5>
+                    <p><strong>Total Fees:</strong> ₹{{ total_fees }}</p>
                     <p><strong>Paid Fees:</strong> ₹{{ paid_fees }}</p>
                     <p><strong>Balance Fees:</strong> ₹{{ balance_fees }}</p>
-                    <p><strong>Total Fees:</strong> ₹{{ total_fees }}</p>
                 </div>
             </div>
             {% else %}

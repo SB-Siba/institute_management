@@ -160,18 +160,21 @@ class DashboardView(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
-        # Fetch the enrolled course(s) for the user
-        enrolled_course = user.course_of_interest
+        # Fetch the enrolled course for the user
+        enrolled_course = user.course_of_interest  # Ensure this is a ForeignKey or properly set field
+        
+        if enrolled_course:
+            print(f"Enrolled course: {enrolled_course.course_name}")  # Debug
 
-        # Prepare fee details if a course is enrolled
+        # Prepare data related to fees and other course details
         paid_fees = getattr(user, 'fees_received', 0)
         balance_fees = getattr(user, 'balance', 0)
         total_fees = getattr(user, 'course_fees', 0)
 
-        # Pass the data to the template context
+        # Context preparation for the dashboard
         context = {
             "user": user,
-            "course": enrolled_course,
+            "course": enrolled_course,  # Check if this is None
             "paid_fees": paid_fees,
             "balance_fees": balance_fees,
             "total_fees": total_fees,
