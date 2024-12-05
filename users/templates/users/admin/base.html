@@ -70,7 +70,7 @@
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
-							<i class='bx bx-money-withdraw'></i><span class="ms-4">Student Fees list</span>
+							<i class='fas fa-money-bill-alt'></i><span class="ms-4">Student Fees list</span>
 						</a>
 					</li>
 				</ul>
@@ -147,7 +147,8 @@
 						<a href="{% url 'certificate:approved_certificates' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">Approved Certificates</span>
 						</a>
-					</li>				
+					</li>
+											
 					<li class="sidebar-item">
 						<a href="#" class="sidebar-links">
 							<i class="bx bxs-message-dots"></i><span class="text ms-3">Old Approved Certificate</span>
@@ -273,10 +274,14 @@
 		        <i class='bx bxs-bell'></i>
 		        <span class="num">8</span>
 		    </a>
-		    <a href="#" class="profile">
-		        <img src="{% static 'users/images/user!.webp' %}">
-		        <span class="admin_name">{{request.user.username}}</span>
-		    </a>
+			<a href="#" class="profile">
+				{% if request.user.student_image %}
+					<img src="{{ request.user.student_image.url }}" alt="Student Photo">
+				{% else %}
+					<img src="{% static 'users/images/default-user.webp' %}" alt="Default User">
+				{% endif %}
+				<span class="admin_name">{{ request.user.username }}</span>
+			</a>
 		</nav>
 		<!-- NAVBAR -->
      

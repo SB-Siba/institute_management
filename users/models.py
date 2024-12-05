@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 import random
 import string
@@ -160,7 +161,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def user_type_display(self):
         return "Student" if self.is_admitted else "User"
+    def generate_reset_password_token(self):
+        self.token = str(uuid.uuid4())
+        self.token_expiration = datetime.now() + timedelta(hours=1)  # Token valid for 1 hour
+        self.save()
+        return self.token
 
+    def reset_password(self, token, new_password):
+        if self.token == token and datetime.now() <= self.token_expiration:
+            self.set_password(new_password)
+            self.token = None  # Clear the token
+            self.token_expiration = None  # Clear expiration
+            self.save()
+            return True
+        return False
+    
+    
 class Installment(models.Model):
     student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
     installment_name = models.CharField(max_length=100)

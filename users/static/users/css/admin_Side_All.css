@@ -125,7 +125,7 @@ body::-webkit-scrollbar {
 	overflow-x: hidden;
 }
 .sidebar-links i {
-  /* margin-right: 1rem; */
+  margin-right: 1rem; 
 }
 .sidebar-item {
   margin-bottom: 0.5rem;

@@ -6,12 +6,14 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 from users import forms
-from users.models import User
+from users.models import Payment, User
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+
 
 app = "users/user/"
 
@@ -159,13 +161,26 @@ class DashboardView(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
-        # Fetch the enrolled course(s) for the user
+        total_fees = 0
+        paid_fees = 0
+        balance_fees = 0
+
         enrolled_course = None
-        if hasattr(user, 'course_of_interest'):  # or replace with correct field name
-            enrolled_course = user.course_of_interest  # Assuming 'course_of_interest' is a related field
+        if hasattr(user, 'course_of_interest'):
+
+            if enrolled_course and hasattr(enrolled_course, 'fees'):
+                total_fees = enrolled_course.fees
+
+            paid_fees = Payment.objects.filter(student=user, course=enrolled_course).aggregate(Sum('amount'))['amount__sum'] or 0
+
+            balance_fees = total_fees - paid_fees
+
         context = {
             'userobj': user,
             'enrolled_course': enrolled_course,
+            'total_fees': total_fees,
+            'paid_fees': paid_fees,
+            'balance_fees': balance_fees,
         }
 
         return render(request, self.template, context)

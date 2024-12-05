@@ -15,4 +15,6 @@ urlpatterns = [
     path('get-students-by-course/<int:course_id>/', user_view.get_students_by_course, name='get-students-by-course'),
     path('requested-certificates/<int:application_id>/', admin_view.RequestedCertificatesListView.as_view(), name='requested_certificate_action'),
     path('verify_certificate/<str:certificate_no>/', admin_view.verify_certificate, name='verify_certificate'),
+    path('marksheet/<int:application_id>/', admin_view.MarksSheetView.as_view(), name='verify_marksheet'),
+
 ]

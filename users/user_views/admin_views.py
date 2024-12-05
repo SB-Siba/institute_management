@@ -1,4 +1,6 @@
+from base64 import b64encode
 from collections import defaultdict
+import io
 import os
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
@@ -6,6 +8,7 @@ from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
+import qrcode
 from helpers import utils
 from users import models,forms
 from users.forms import BatchForm, StudentForm, StudentPaymentForm,ReAdmissionForm
@@ -149,6 +152,9 @@ def get_course_fee(request):
             return JsonResponse({'error': 'Course not found'}, status=404)
     return JsonResponse({'error': 'No course_id provided'}, status=400)
 
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class AddNewStudentView(View):
     template = app + 'add_new_student.html'  # Update with your actual template path
@@ -233,13 +239,40 @@ class AddNewStudentView(View):
             'user_form': user_form,
             'courses': courses,
         })
-        
+    
 class StudentsDetailView(View):
     template_name = app + 'students_details.html'
 
     def get(self, request, pk):
+        # Fetch the student details
         student = get_object_or_404(User, pk=pk)
-        return render(request, self.template_name, {'student': student})
+
+        # Prepare data to encode in the QR code
+        student_data = {
+            "id": student.pk,
+            "name": student.full_name,  # Use full_name instead of combining first_name and last_name
+            "email": student.email,
+            "phone": student.contact if hasattr(student, 'contact') else "N/A",
+        }
+        
+        # Convert data to QR code content (e.g., JSON)
+        qr_data_string = str(student_data)
+        
+        # Generate the QR code
+        qr = qrcode.make(qr_data_string)
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        
+        # Convert QR code to base64 to render in HTML
+        qr_data = b64encode(buffer.getvalue()).decode()
+        qr_image = f"data:image/png;base64,{qr_data}"
+        
+        # Pass data to the template
+        context = {
+            'student': student,
+            'qr_image': qr_image,
+        }
+        return render(request, self.template_name, context)
     
 class StudentUpdateView(View):
     model = User

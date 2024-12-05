@@ -140,7 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-SITE_URL = 'http://127.0.0.1:8000'
+SITE_URL = 'http://127.0.0.1:8000/users'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
 if PRODUCTION == 'True':
@@ -184,8 +184,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreplyf577@gmail.com'
-EMAIL_HOST_PASSWORD = 'lxlb pidz ggno lujv'
-DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
+EMAIL_HOST_PASSWORD = 'nuof azfj attm ijbq'
 
 
 

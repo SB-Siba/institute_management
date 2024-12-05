@@ -49,13 +49,14 @@
 
     <!-- Course Information Section -->
     <div class="overview-boxes">
-      {% if enrolled_course %}
-        <!-- Display the enrolled course information -->
+      {% if course %}
+      <!-- Display the enrolled course information -->
         <div class="box">
           <div class="right-side">
-            <div class="box-topic">{{ enrolled_course.course_of_interest }}</div>
-            <p><strong>Joined On:</strong> {{ enrolled_course.admission_date|date:"d F Y" }}</p>
-            <p><strong>Exam Status:</strong> {{ enrolled_course.exam_status }}</p>
+            <div class="box-topic">{{ course.course_name }}</div>  <!-- Show Course Name -->
+            <p><strong>Course Code:</strong> {{ course.course_code }}</p>  <!-- Optional Course Code -->
+            <p><strong>Joined On:</strong> {{ course.admission_date|date:"d F Y" }}</p>
+            <p><strong>Exam Status:</strong> {{ course.exam_status }}</p>
             <div class="buttons">
               <div class="top-buttons">
                 <a href="#" class="btn">My Certificate</a>
@@ -80,12 +81,12 @@
       <!-- Fee Details Section -->
       <div class="box">
         <div class="right-side">
-          <div class="box-topic">Balance Fees</div>
-          <p><strong>Paid Fees:</strong> 5000.00</p>
-          <p><strong>Balance Fees:</strong> 2000.00</p>
-          <p><strong>Total Fees:</strong> 7000.00</p>
+            <div class="box-topic">Balance Fees</div>
+            <p><strong>Paid Fees:</strong> Rs. {{ paid_fees }}</p>
+            <p><strong>Balance Fees:</strong> Rs. {{ balance_fees }}</p>
+            <p><strong>Total Fees:</strong> Rs. {{ total_fees }}</p>
         </div>
-      </div>
+    </div>    
     </div>
   </div>
 </main>

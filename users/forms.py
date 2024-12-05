@@ -54,25 +54,12 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
     
 class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField()
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if not User.objects.filter(email=email).exists():
-            raise forms.ValidationError("No user found with this email address.")
-        return email
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address','oninput': 'this.value = this.value.toLowerCase()'}))
+    
  
 class ResetPasswordForm(forms.Form):
     new_password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
-    def clean(self):
-        cleaned_data = super().clean()
-        new_password = cleaned_data.get('new_password')
-        confirm_password = cleaned_data.get('confirm_password')
-        if new_password != confirm_password:
-            raise forms.ValidationError("Passwords do not match.")
-        return cleaned_data
- 
-
 
 class UpdateProfileForm(forms.Form):
     
@@ -83,7 +70,7 @@ class UpdateProfileForm(forms.Form):
     full_name.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Full Name',"required":"required"})
 
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
-    validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
+    validators=[RegexValidator(regex=r'^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     profile_pic = forms.FileField(label='Select an image file', required=False)
     profile_pic.widget.attrs.update({'class': 'form-control', 'type': 'file'})
@@ -98,7 +85,8 @@ class AddressForm(forms.Form):
     Address2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
 
     contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
-    validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
+    validators=[RegexValidator(regex=r'^[9876]\d{9}$')],
+    widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     country = forms.CharField(max_length=255)
     country.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})

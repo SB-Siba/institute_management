@@ -1,4 +1,5 @@
 
+import bleach
 from django.db import models
 from django.utils import timezone  
 
@@ -9,7 +10,6 @@ class AwardCategory(models.Model):
 
     def __str__(self):
         return self.category_name
-    
 
 class Course(models.Model):
     
@@ -37,9 +37,14 @@ class Course(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
     batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
     
+    def save(self, *args, **kwargs):  
+        # Clean HTML from eligibility and course_syllabus fields  
+        self.eligibility = bleach.clean(self.eligibility,strip=False)  
+        self.course_syllabus = bleach.clean(self.course_syllabus,strip=False)  
+        super().save(*args, **kwargs) 
+
     def __str__(self):
         return self.course_name 
-    
 
 class Exam(models.Model):
     STATUS_CHOICES = (
@@ -106,15 +111,15 @@ class ExamResult(models.Model):
             self.percentage = (self.obtained_mark / self.total_mark) * 100
 
         # Determine grade based on percentage
-        if self.percentage >= 90:
+        if self.percentage >= 85:
             self.grade = 'A+'
-        elif self.percentage >= 80:
-            self.grade = 'A'
         elif self.percentage >= 70:
+            self.grade = 'A'
+        elif self.percentage >= 55:
             self.grade = 'B'
-        elif self.percentage >= 60:
+        elif self.percentage >= 40:
             self.grade = 'C'
-        elif self.percentage >= 50:
+        elif self.percentage >= 30:
             self.grade = 'D'
         else:
             self.grade = 'E'
