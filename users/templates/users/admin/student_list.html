@@ -163,7 +163,7 @@
           <td>{{ student.admission_date }}</td>
           <td>
             <div class="action-buttons">
-              <a href="{% url 'users:update_student' student.pk %}" class="btn btn-edit">Edit</a>
+              <!-- <a href="{% url 'users:update_student' student.pk %}" class="btn btn-edit">Edit</a> -->
               <a href="{% url 'users:student_details' student.id %}" class="btn btn-primary">View</a>
               <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ student.id }}">Delete</button>
             </div>

@@ -52,7 +52,7 @@ class ExamResultsView(View):
 
 class CourseDetailView(View):
     model = Course
-    template_name = app + "course_detail.html"
+    template_name = app + "course_details.html"
     context_object_name = "course"
     
     def get(self, request, pk, *args, **kwargs):

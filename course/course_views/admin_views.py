@@ -143,8 +143,8 @@ class CourseCreateView(View):
 
         return render(request, self.template_name, {'form': form, 'subjects': []})
 
-class CourseDetailView(View):
-    template_name = app + 'course_details.html'
+class CourseDetail(View):
+    template_name = app + 'course_detail.html'
 
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)

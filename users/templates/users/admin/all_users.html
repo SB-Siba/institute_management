@@ -17,7 +17,6 @@
                     <th scope="col">Email</th>
                     <th scope="col">Contact</th>
                     <th scope="col">User Type</th>
-                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,10 +36,7 @@
                                 User
                             {% endif %}
                         </td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ user.id }}">Delete</button>
-                        </td>
+                        
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -64,7 +60,6 @@
                     <th scope="col">Email</th>
                     <th scope="col">Contact</th>
                     <th scope="col">User Type</th>
-                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,10 +73,7 @@
                         <td>{{ student.contact|default:"N/A" }}</td>
                         <!-- All admitted users should show as "Student" -->
                         <td>Student</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ student.id }}">Delete</button>
-                        </td>
+                        
                     </tr>
                     {% endfor %}
                 {% else %}

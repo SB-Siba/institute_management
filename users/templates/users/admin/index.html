@@ -118,11 +118,17 @@
           <h5>Fees Section</h5>
           <div class="container">
             <div class="row mb-3">
-              <div class="">
-                Total Course Fees: Rs. {{ total_fees }} <br />
-                Total Fees Paid: Rs. {{ total_paid_fees }} <br />
-                Total Balance Fees: Rs. {{ total_balance_fees }}
-              </div>
+              <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Total Course Fees: Rs. {{ total_fees }}</strong> 
+                </div>
+                <div class="col-md-4">
+                    <strong>Total Fees Paid: Rs. {{ total_paid_fees }}</strong> 
+                </div>
+                <div class="col-md-4">
+                    <strong>Total Balance Fees: Rs. {{ total_balance_fees }}</strong> 
+                </div>
+            </div>
               <a
                 href="{% url 'users:student_fees_list'%}"
                 class="btn btn-primary"
@@ -141,35 +147,37 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-     // Doughnut chart data and configuration
-     new Chart(document.getElementById("chartjs-pie"), {
-         type: 'doughnut',
-         data: {
-             labels: ['Balance Fees', 'Paid Fees'],
-             datasets: [{
-                 label: 'Fees',
-                 data: [{{ total_balance_fees }}, {{ total_paid_fees }}],
-                 backgroundColor: [
-                     'rgba(255, 99, 132, 0.2)',
-                     'rgba(54, 162, 235, 0.2)'
-                 ],
-                 borderColor: [
-                     'rgba(255, 99, 132, 1)',
-                     'rgba(54, 162, 235, 1)'
-                 ],
-                 borderWidth: 1
-             }]
-         },
-         options:  
-  {
-             plugins: {
-                 legend: {
-                     display: true,  
-
-                     position: 'bottom'
-                 }
-             }
-         }
-     });
+  // Doughnut chart data and configuration
+  new Chart(document.getElementById("chartjs-pie"), {
+      type: 'doughnut',
+      data: {
+          labels: ['Balance Fees', 'Paid Fees'],
+          datasets: [{
+              label: 'Fees',
+              data: [{{ total_balance_fees }}, {{ total_paid_fees }}],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          plugins: {
+              legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                      color: 'white' // Set the labels' color to white
+                  }
+              }
+          }
+      }
+  });
 </script>
+
 {% endblock %} {% endblock content %}

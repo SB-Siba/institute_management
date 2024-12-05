@@ -50,17 +50,17 @@ class AdminDashboard(View):
             # Get the latest payment for each student
             latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
 
-            # Calculate fees details for each student
-            total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
-            fees_received = latest_payment.amount if latest_payment else 0
-            balance = total_fees - fees_received
+            # # Calculate fees details for each student
+            # total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
+            # fees_received = latest_payment.amount if latest_payment else 0
+            # balance = total_fees - fees_received
 
             student_data.append({
                 'user': student,
                 'latest_payment_date': latest_payment.date if latest_payment else None,
-                'total_fees': total_fees,
-                'fees_received': fees_received,
-                'balance': balance,
+                'total_fees': student.total_fees,
+                'fees_received': student.fees_received,
+                'balance': student.balance,
             })
 
         # Calculate the overall totals

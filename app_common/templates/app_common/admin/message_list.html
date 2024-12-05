@@ -16,15 +16,15 @@
                             <th scope="col">Contact</th>
                             <th scope="col">Date & Time</th>
                             <th scope="col">User Type</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Actions</th>
                         </tr>
                       </thead>
                       <tbody id="test_table_tbody">
                         {% for message in messages %}
                         <tr>
-                            <td class="tb-body">{{ message.full_name|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.user.full_name|default:"N/A" }}</td>
                             <td class="tb-body">{{ message.email|default:"N/A" }}</td>
-                            <td class="tb-body">{{ message.contact|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.user.contact|default:"N/A" }}</td>
                             <td class="tb-body">{{ message.created_at }}</td>
                             <td class="tb-body">
                                 {% if message.user %}
@@ -34,7 +34,11 @@
                                 {% endif %}
                             </td>
                             <td class="tb-body">
-                                <a href="{% url 'app_common:admin_message_detail' message.id %}" class="text-info">View Details</a>
+                                <a href="{% url 'app_common:admin_message_detail' message.id %}?type={{ message.type }}" class="text-info">View Details</a>
+                                <form method="post" action="{% url 'app_common:admin_message_delete' message.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
