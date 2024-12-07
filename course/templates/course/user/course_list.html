@@ -1,0 +1,60 @@
+{% extends 'users/user/base.html' %}
+{% block content %}
+<div class="container">
+    <h1 class="h3 mb-3">Available Courses</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sr.</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Course Fees</th>
+                <th>Course MRP</th>
+                <th>Minimum Fees</th>
+                <th>Duration</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in page_obj.object_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ course.course_code }}</td>
+                <td><a href="{% url 'course:course_details' course.pk %}">
+                    {{ course.course_name }}
+                </a></td>
+                <td>{{ course.course_fees }}</td>
+                <td>{{ course.course_mrp }}</td>
+                <td>{{ course.minimum_fees }}</td>
+                <td>{{ course.course_duration }}</td>
+                <td>{{ course.status }}</td>
+                
+                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No courses available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between">
+        <div>
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="btn btn-secondary btn-sm">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary btn-sm">Last</a>
+            {% endif %}
+        </div>
+        <div>
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

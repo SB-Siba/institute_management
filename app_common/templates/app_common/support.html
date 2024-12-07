@@ -1,0 +1,86 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Support | reactedu.in
+{% endblock title %}
+
+{% block content %}
+
+<section>
+  <div  id="conatct_us">
+    <div class="container">
+      <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+        </ol>
+      </nav>
+    <h3 class="text-center border-bottom pb-lg-3">Contact Us</h3>
+    </div>
+
+    <div class="contact_us_image">
+        <img src="{% static 'app_common\images\img3.jpg' %}" alt="">
+    </div>
+
+    <div class="container">
+      <div class="row contactus-page mt-lg-4">
+       
+        <div class="col col-lg-8">
+          <div class="contact-form ">
+                
+            <h4 class="">Let's get in touch</h4>
+            <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-field">
+               {{ field }}
+              </div>
+                {% endfor %}
+                
+                <button type="submit" class="u-button text-uppercase">Send Message</button>
+            </form>
+        </div>
+        </div>
+        <div class="col col-lg-4">
+          <div class="Address-page">
+           
+              <h5>Name</h5>
+              <p>RATIONAL EDUCATION AND COMPUTER TRAINING</p>
+              <h5>Address</h5>
+              <p>SUBASH JENA COLONY, HIGH SCHOOL ROAD, BALUGAON,
+                DIST-KHORDHA, ORISHA-752030, STREET NO 37C<br>
+              </p>
+              <h5>Phone</h5>
+              <p>+91 9778577090
+              <br>
+                8895895988</p>
+              <h5>E-mail:</h5>
+              <p>step2reactindia@gmail.com</p>
+              <h5>Follow us</h5>
+              <p class="social-icons">
+                <a href="#">
+                  <i class="fa-brands fa-square-facebook"></i>
+              </a>
+              <a href="#">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+              <a href="#">
+                  <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#">
+                  <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-youtube"></i>
+            </a>
+              </p>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Locate Us | reactedu.in
+{% endblock title %}
+{% block content %}
+
+<section class="container my-lg-5 my-3">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" class="mb-lg-4">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Locate us</li>
+        </ol>
+      </nav>
+      <h3>Locate Us</h3>
+      <p class="locateuss">At Niwa Agro, we are dedicated to providing innovative agricultural solutions across the region. Whether you're a farmer, partner, or client, we’re always here to help you grow with the best resources available. Visit us at our headquarters or reach out to our regional offices for any inquiries or assistance.</p>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3743.448436937358!2d85.83312367734666!3d20.240228565992847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19a725fd1221e3%3A0x1244a977ef751f51!2s3607-3605%2C%20Lane%205A%2C%20Gouri%20Nagar%2C%20Old%20Town%2C%20Bhubaneswar%2C%20Odisha%20751002!5e0!3m2!1sen!2sin!4v1724155763027!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</section>
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends 'users/user/base.html' %}
+
+{% block content %}
+<h2 class="mt-4 mb-4">Exam Results List</h2>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Sr.</th>
+                <th>Student Name</th>
+                <th>Course Name</th>
+                <th>Total Mark</th>
+                <th>Obtained Theory Marks</th>
+                <th>Obtained Practical Marks</th>
+                <th>Total Obtained Marks</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+                <th>Result</th>
+                <th>Created On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in exam_results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ result.student.full_name }}</td>  <!-- Assuming 'full_name' exists on the student model -->
+                <td>{{ result.course.course_name }}</td>
+                <td>{{ result.total_mark }}</td>
+                <td>{{ result.obtained_theory_marks }}</td>
+                <td>{{ result.obtained_practical_marks }}</td>
+                <td>{{ result.obtained_mark }}</td>
+                <td>{{ result.percentage }}%</td>
+                <td>{{ result.grade }}</td>
+                <td>{{ result.result|title }}</td>
+                <td>{{ result.created_on|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11">No exam results found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

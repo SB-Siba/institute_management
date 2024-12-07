@@ -1,0 +1,70 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %} About Us | reactedu.in {% endblock title %}
+{% block content %}
+<!-- AOS Library CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<section>
+    <div class="container" id="about">
+        <div>
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                </ol>
+              </nav>
+            <h3 class="text-center border-bottom pb-lg-3">About Us</h3>
+            <p>On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot fore see the pain and trouble that are bound to belongs to who fail in their duty.</p>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6">
+                    <h4>Why Choose Us?</h4><br>            
+                    <!-- Why Choose Us List -->
+                    <ul class="list-unstyled">
+                        <li><strong>1. Comprehensive Curriculum:</strong> Our courses are meticulously designed to cover a wide range of computer software and vocational subjects, ensuring that our students receive a holistic education that meets industry standards.</li>
+                        <li><strong>2. Experienced Instructors:</strong> Our team of experienced instructors are experts in their respective fields, dedicated to providing quality education and personalized guidance to every student.</li>
+                        <li><strong>3. Flexible Learning Options:</strong> We understand that our students have busy schedules, which is why we offer flexible learning options, including both in-person and online classes, to accommodate diverse needs.</li>
+                        <li><strong>4. Hands-on Training:</strong> Learning by doing is at the core of our teaching philosophy. Through hands-on training and practical exercises, our students gain valuable real-world experience that prepares them for success in their chosen careers.</li>
+                        <li><strong>5. Supportive Community:</strong> At Rational Education and Computer Training, we foster a supportive learning environment where students can collaborate, learn from each other, and grow together as a community.</li>
+                    </ul>
+                    </div>
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React about.jpg' %}" alt="About Us" data-aos="fade-up">
+                </div>
+                <p>Whether you're looking to master essential software programs, explore new career opportunities, or simply expand your knowledge, Rational Education and Computer Training is here to help you achieve your goals. Join us today and embark on a journey of learning and growth!</p>
+                <p><strong>Ready to take the next step?</strong> Contact us now to learn more about our courses and enrollment process.</p>    
+            </div>
+            <br><br>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React_mission.jpg' %}" alt="About Us" data-aos="fade-right">
+                </div>
+                <div class="col col-12 col-lg-6">
+                    <h4 class="mb-lg-4 text-center text-success">OUR MISSION</h4>
+                    <p class="text-dark lh-lg">At Rational Education and Computer Training, our mission is to empower individuals of all ages and backgrounds with the knowledge and skills necessary to succeed in today's rapidly evolving digital landscape. Through comprehensive and accessible education, we aim to bridge the gap between aspiration and achievement, nurturing a community of lifelong learners equipped to thrive in a technology-driven world.Our vision at Rational Education and Computer Training is to be a leading institution of excellence in computer education and vocational training, recognized for our commitment to innovation, quality, and inclusivity. We aspire to cultivate a dynamic learning environment where creativity, critical thinking, and collaboration flourish, enabling our students to unleash their full potential and make meaningful contributions to society.</p>
+                </div>
+            </div>
+            <br><br><br>
+            <div class="row p-lg-2">
+                <div class="col col-12 col-lg-6">
+                    <h4 class="mb-lg-4 text-center text-success">OUR VISION</h4>
+                    <p class="text-dark lh-lg">Our vision at Rational Education and Computer Training is to be a leading institution of excellence in computer education and vocational training, recognized for our commitment to innovation, quality, and inclusivity. We aspire to cultivate a dynamic learning environment where creativity, critical thinking, and collaboration flourish, enabling our students to unleash their full potential and make meaningful contributions to society.</p>
+                </div>
+                <div class="col col-12 col-lg-6 side_img">
+                    <img class="img-fluid" src="{% static 'app_common/images/React_vision.jpg' %}" alt="About Us" data-aos="fade-left">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- AOS Library JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 1200,  // Animation duration
+    once: true       // Animation happens only once when it enters the viewport
+  });
+</script>
+
+{% endblock content %}

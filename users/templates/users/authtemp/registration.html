@@ -1,0 +1,91 @@
+{% extends 'users/authtemp/master.html' %}
+{% load static %}
+{% block title %}Signup Page{% endblock title %}
+
+{% block content %}
+<section class=" login_background">
+    <div class="signup_card">
+      <div class="card " >
+        <div class="row">
+          <div class="col col-lg-6 px-lg-3">
+            <div class="card-body border p-2 ">
+                <h5 class="text-center fs-3 fw-bold"> Create an Account !</h5>         
+                {% if messages %}
+                        <div class="alert-container">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if request.GET.next %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        {% endif %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="col-form-label">{{ field.label }}:</label>
+                                {{ field }}
+                                {% if field.name == 'password'  %}
+                                    <i class="fa-solid fa-eye " id="toggle-password"></i>
+                                {% endif %}
+                                {% if field.name == 'confirm_password' %}
+                                    <i class="fa-solid fa-eye " id="toggle-confirm-password"></i>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        {% if form.errors %}
+                            <div class="form-errors">
+                                <ul>
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <button type="submit" class="Login_Button">Register</button>
+                    </form>
+                    
+                <div class=" text-center w-100 sign_up">
+                    <small>Already have an account?</small>
+                    <a href="{% url 'users:login' %}" class="ms-lg-1 text-warning text-decoration-none ">Login</a>
+                  </div>
+              </div>
+              
+          </div>
+          <div class="col col-lg-6 leftside_image">
+            <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="">
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    document.getElementById('toggle-password')?.addEventListener('click', function() {
+        var passwordField = document.querySelector('input[name="password"]');
+        var type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+ 
+    document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
+        var confirmPasswordField = document.querySelector('input[name="confirm_password"]');
+        var type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPasswordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
+{% endblock content %}

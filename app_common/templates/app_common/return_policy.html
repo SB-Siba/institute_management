@@ -1,0 +1,88 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %} Retrun Policy | reactedu.in {% endblock title %}
+{% block content %}
+
+
+
+<section>
+    <div class="container" id="return">
+        <div>
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Privacy Policy</li>
+                </ol>
+              </nav>
+            <h3 class="text-center border-bottom pb-lg-3">Return Policy</h3>
+            <p >At Niwa Agro, we strive to provide the highest quality products and services to our customers. If you are not completely satisfied with your purchase, we are here to help.</p>    
+            <ul>
+                <li>
+                    <h5>Return Eligibility :</h5>
+                    <ul>
+                        <li>Items must be returned within 30 days from the date of purchase.</li>
+                        <li>Items must be unused, in the same condition that you received them, and in their original packaging.</li>
+                        <li>Proof of purchase, such as a receipt or order confirmation, is required for all returns.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Non-Returnable Items :</h5>
+                    <ul>Certain items are not eligible for return, including:
+                        <li>Perishable goods (e.g., seeds, live plants)</li>
+                        <li>Custom or personalized orders</li>
+                        <li>Items marked as final sale</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Return Process :</h5>
+                    <ul>To initiate a return, please follow these steps:
+                        <li>Contact our customer service team at [email address] or [phone number] to request a return authorization.</li>
+                        <li>Once your return is authorized, package the item securely and include your proof of purchase.</li>
+                        <li>Ship the item to the following address:
+                            Niwa Agro Returns
+                            [Address]
+                            [City, State, Zip Code]</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Refunds :</h5>
+                    <ul>
+                        <li>Once we receive your return, we will inspect the item and notify you of the status of your refund.</li>
+                        <li>If your return is approved, we will process a refund to your original method of payment within 10 business days.</li>
+                        <li>Shipping costs are non-refundable. If you receive a refund, the cost of return shipping will be deducted from your refund.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Exchanges :</h5>
+                    <ul>
+                        <li>We only replace items if they are defective or damaged. If you need to exchange an item, contact us at [email address] or [phone number].</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5> Shipping Returns :</h5>
+                    <ul>
+                        <li>You will be responsible for paying for your own shipping costs for returning your item. Shipping costs are non-refundable.</li>
+                        <li>We recommend using a trackable shipping service or purchasing shipping insurance. We cannot guarantee that we will receive your returned item.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Contact Us :</h5>
+                    <ul>If you have any questions about our return policy, please contact us at:
+                        <li>Email: niwacare@outlook.com</li>
+                        <li>Phone:+91 7735955569</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-center fw-semibold">Thank you for choosing Niwa Agro. We appreciate your business and are committed to ensuring your satisfaction.</p>
+        </div>
+        
+    </div>
+</section>
+
+
+{% endblock content %}
+
+
+
+
+

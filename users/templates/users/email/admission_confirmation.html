@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #00796b;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .section p {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f9f9f9;
+        }
+        .image {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to REACT Institute!</h1>
+            <p>Hello {{ full_name }},</p>
+            <p>Thank you for enrolling in our <strong>{{ course.course_name }}</strong> course.</p>
+        </div>
+
+        {% if course.course_image %}
+        <div class="image">
+            <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}">
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h2>Course Information</h2>
+            <p><strong>Award:</strong> {{ course.award }}</p>
+            <p><strong>Fees:</strong> ₹{{ course.course_fees }}</p>
+            <p><strong>MRP:</strong> ₹{{ course.course_mrp }}</p>
+            <p><strong>Minimum Fees:</strong> ₹{{ course.minimum_fees }}</p>
+            <p><strong>Duration:</strong> {{ course.course_duration }}</p>
+            <p><strong>Exam Fees:</strong> ₹{{ course.exam_fees }}</p>
+            <p><strong>Eligibility:</strong> {{ course.eligibility|safe }}</p>
+            <p><strong>Status:</strong> {{ course.status }}</p>
+            <p>
+                <strong>Video Links:</strong> 
+                {% if course.video_link_1 %}<a href="{{ course.video_link_1 }}" target="_blank">Link 1</a>{% endif %}
+                {% if course.video_link_2 %} | <a href="{{ course.video_link_2 }}" target="_blank">Link 2</a>{% endif %}
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Course Syllabus</h2>
+            <p>{{ course.course_syllabus|safe }}</p>
+        </div>
+
+        <div class="section">
+            <h2>Subjects</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Subject Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in course.course_subject %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ subject.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing REACT Institute. We wish you great success in your learning journey!</p>
+            <p>Best regards,<br>REACT Institute Team</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Contact Message</h4>
+      <div class="vstack gap-4">
+          <div class="tablecard">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                      <thead class="table-light">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">E-Mail</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Date & Time</th>
+                            <th scope="col">User Type</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="test_table_tbody">
+                        {% for message in messages %}
+                        <tr>
+                            <td class="tb-body">{{ message.user.full_name|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.email|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.user.contact|default:"N/A" }}</td>
+                            <td class="tb-body">{{ message.created_at }}</td>
+                            <td class="tb-body">
+                                {% if message.user %}
+                                    Authenticated
+                                {% else %}
+                                    Unauthenticated
+                                {% endif %}
+                            </td>
+                            <td class="tb-body">
+                                <a href="{% url 'app_common:admin_message_detail' message.id %}?type={{ message.type }}" class="text-info">View Details</a>
+                                <form method="post" action="{% url 'app_common:admin_message_delete' message.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>                    
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,163 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* Container and layout */
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin-bottom: 20px;
+    }
+
+    /* Form field styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<h2>Add New Student</h2>
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- New User Registration Form -->
+        {{ user_form.as_p }}
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Register Admission</button>
+            <a href="{% url 'users:student_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const courseField = document.getElementById('id_course_of_interest');
+        const courseFeesField = document.getElementById('id_course_fees');
+        const totalFeesField = document.getElementById('id_total_fees');
+        const balanceField = document.getElementById('id_balance');
+        const discountRateField = document.getElementById('id_discount_rate');
+        const discountAmountField = document.getElementById('id_discount_amount');
+        const feesReceivedField = document.getElementById('id_fees_received');
+        const remarksField = document.getElementById('id_remarks');
+        
+        // Function to update the course-related fields based on the selected course
+        courseField.addEventListener('change', function () {
+            const courseId = courseField.value;
+            if (courseId) {
+                fetch(`/get-course-fees/${courseId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.course_fees) {
+                            courseFeesField.value = data.course_fees;
+                            updateCalculations();
+                        } else {
+                            clearFields();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching course fees:', error);
+                        clearFields();
+                    });
+            } else {
+                clearFields();
+            }
+        });
+
+        // Function to clear course details fields
+        function clearFields() {
+            courseFeesField.value = '';
+            totalFeesField.value = '';
+            balanceField.value = '';
+            discountRateField.value = '';
+            discountAmountField.value = '';
+            feesReceivedField.value = '';
+            remarksField.value = '';
+        }
+
+        // Recalculate total fees and balance when discount or fees received change
+        discountRateField.addEventListener('input', updateCalculations);
+        discountAmountField.addEventListener('input', updateCalculations);
+        feesReceivedField.addEventListener('input', updateCalculations);
+
+        function updateCalculations() {
+            const courseFees = parseFloat(courseFeesField.value) || 0;
+            const discountRate = parseFloat(discountRateField.value) || 0;
+            const discountAmount = parseFloat(discountAmountField.value) || 0;
+            const feesReceived = parseFloat(feesReceivedField.value) || 0;
+
+            let finalDiscountAmount = 0;
+            let totalFees = courseFees;
+
+            // Calculate discount based on rate or amount
+            if (discountRate > 0) {
+                finalDiscountAmount = (discountRate / 100) * courseFees;
+            }
+
+            if (discountAmount > 0) {
+                finalDiscountAmount = discountAmount;
+            }
+
+            // Calculate total fees and balance
+            totalFees = courseFees - finalDiscountAmount;
+            discountAmountField.value = finalDiscountAmount.toFixed(2);
+            totalFeesField.value = totalFees.toFixed(2);
+            const balance = totalFees - feesReceived;
+            balanceField.value = balance.toFixed(2);
+        }
+    });
+</script>
+{% endblock content %}

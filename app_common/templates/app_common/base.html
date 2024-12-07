@@ -1,0 +1,529 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+
+  <!-- ---------CSS FILES--------- -->
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/User_Side_All.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
+
+  <!------------ ICONS FILE------ -->
+  <link rel="icon" href="{% static 'app_common/images/rationallogo.jpg' %}" style="border-radius: 50%;">
+  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!------------ BOOTSTRAP FILE------ -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+
+   
+    
+  <!------------ ADDITIONAL FILES------ -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-oS4TFIAtFt5S6Gx2coZRwyOomJ5z1iX6Cn5u9z9Bks4b7mHr3y7QqD1gBsxs9f2e" crossorigin="anonymous" />
+ 
+
+  <script src="
+  https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <style>
+    /* Contact Container Styling */
+    .contact-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: #077aec;
+      height: 160px;
+      width: 60%;
+      max-width: 1000px;           /* Limits container width */
+      margin: 0 auto 20px;          /* Centers container with spacing at the bottom */
+      border-radius: 20px;
+      position: relative;
+      bottom: -55px;
+      transform: scale(1);          /* Default scale */
+      transition: transform 0.3s ease-in-out; /* Smooth transition for zoom effect */
+      z-index: 1;
+    }
+  
+    /* Zoom-in effect */
+    .contact-container.zoomed {
+      transform: scale(1.2);        /* Adjust scale for zoom intensity */
+    }
+  
+    /* Styling for icons in contact sections */
+    .contact-section i {
+      font-size: 20px;              /* Icon size */
+      color: white;                 /* Icon color */
+      margin-bottom: 10px;          /* Space between icon and heading */
+      display: block;
+      text-align: center;
+    }
+  
+    /* Contact Section Styling */
+    .contact-section {
+      width: 30%;                   /* Each section takes up 30% of the container */
+      color: #fff;                  /* Text color */
+      text-align: center;           /* Center-align text */
+    }
+  
+    .contact-section h6 {
+      font-size: 13px;
+      margin: 5px 0;                /* Space between heading and paragraph */
+    }
+  
+    .contact-section p {
+      margin: 5px 0; 
+      font-size: 13px;
+      }
+  
+    /* Footer Styling */
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;           /* Adds padding for visual separation */
+      margin-top: 20px;             /* Space above footer */
+    }
+  
+    .footer-content {
+      max-width: 1200px;            /* Limits footer content width */
+      margin: 0 auto;               /* Centers footer content */
+      padding: 20px;
+    }
+  
+    /* Quick Links Styling */
+    .quick-links {
+      margin-bottom: 20px;          /* Space between Quick Links and footer text */
+    }
+  
+    .quick-links h6 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  
+    /* Non-Responsive Grid Layout for 4 Columns */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
+      gap: 20px;                /* Space between columns */
+      justify-items: center;    /* Center the content within columns */
+      max-width: 1200px;        /* Aligns grid width with footer and contact container */
+      margin: 0 auto;           /* Centers the grid */
+      margin-top: 20px;
+    }
+  
+    .links-column ul {
+      list-style: none;         /* Remove bullet points */
+      padding: 0;
+    }
+  
+    .links-column ul li {
+      margin-bottom: 8px;
+    }
+  
+    .links-column ul li a {
+      text-decoration: none;
+      color: white;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+  
+    .links-column ul li a:hover {
+      color: #077aec;           /* Link color on hover */
+    }
+  
+    /* Footer Text Styling */
+    footer p {
+      font-size: 14px;
+      margin-top: 20px;
+    }
+  </style>  
+
+</head>
+
+<body>
+  {% if user.is_authenticated %}
+
+  
+  {% elif not user.is_authenticated %}
+
+  <!-- Additional Header -->
+  <header class="p-3 bg-dark text-white shining-header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6>
+            <i class='bx bxs-bank'></i> &nbsp;Welcome to RATIONAL EDUCATION AND COMPUTER TRAINING
+          </h6>
+        </div>
+      </div>
+    </div>
+  </header>    
+<!-- Space between headers -->
+<div style="height: 80px;">
+  <div class="d-flex justify-content-between align-items-center px-5">
+    <!-- Left: Logo -->
+    <a class="navbar-brand" href="{% url 'users:home' %}">
+      <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" alt="Certificate Logo" class="certificate-logo">
+    </a>
+
+    <!-- Center: Contact Details -->
+    <div class="d-flex flex-column text-center mx-4" style="font-size: 18px; justify-content: center;">
+      <div class="d-inline-flex gap-2">
+        <strong><i class='bx bxs-envelope'></i> Mail Us:</strong>
+        <a href="mailto:step2reactindia@gmail.com" class="text-decoration-none">step2reactindia@gmail.com</a>
+        <strong><i class='bx bxs-phone'></i> Call Us:</strong>
+        <a href="tel:+919778577090" class="text-decoration-none">+91 97785 77090</a>
+      </div>
+    </div>
+
+    <!-- Right: Login Buttons -->
+    <div class="d-flex gap-2">
+      <a href="{% url 'users:signup' %}" class="btn btn-outline-success">Signup</a>
+      <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Login</a>
+    </div>
+  </div>
+</div>
+
+
+  <header class="p-lg-3">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-lg-1 col-6" id="menu-bar">
+      
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="offcanvas offcanvas-start w-50" data-bs-scroll="true" tabindex="-1"
+          id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+          <div class="offcanvas-header">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="list-unstyled">
+              <li><a class="nav-link" href="#">Home</a></li>
+              <li><a class="nav-link" href="#">about us</a></li>
+              <li><a class="nav-link" href="#">Services</a></li>
+              <li><a class="nav-link" href="#">Blogs</a></li>
+              <li><a class="nav-link" href="#">Contact</a></li>
+            
+            </ul>
+          </div>
+        </div>
+      </div>
+
+        <!-- full screen header -->
+
+
+        <div class="col-lg-15 col-xl-19 d-none mt-lg-10 d-lg-block" id="nav_buttons">
+          <ul class="d-flex justify-content-center align-items-center list-unstyled text-uppercase HeaderButton">
+              <li class="nav-item ms-3" id="Navbarlinks">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'users:home' %}active{% endif %}" aria-current="page" href="{% url 'users:home' %}">Home</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:about_us' %}active{% endif %}" href="{% url 'app_common:about_us' %}">About Us</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_courses' %}active{% endif %}" href="{% url 'app_common:our_courses' %}">Courses</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_services' %}active{% endif %}" href="">Our Services</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_achievers' %}active{% endif %}" href="{% url 'app_common:our_achievers' %}">Our Achievers</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:gallery' %}active{% endif %}" href="">Gallery</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:job_updates' %}active{% endif %}" href="">Job Updates</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:certifications' %}active{% endif %}" href="">Certifications</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:contact_support' %}active{% endif %}" href="{% url 'app_common:contact_support' %}">Contact Us</a>
+              </li>
+          </ul>
+      </div>      
+        <!-- close full screen header -->
+
+      </div>
+    </div>
+  </header>
+  {% endif %}
+
+  {% block content %}
+  
+  {% endblock %}
+
+  <!-- Contact Information Container (Split between footer and above) -->
+  <div class="contact-container">
+    <div class="contact-section">
+      <i class='bx bxs-map'></i>
+      <h6>Registered Office Address</h6>
+      <p>SUBASH JENA COLONY, HIGH SCHOOL ROAD, BALUGAON,<br>
+         DIST-KHORDHA, ORISHA-752030, STREET NO 37C</p>
+    </div>
+    
+    <div class="contact-section">
+      <i class='bx bxs-phone'></i>
+      <h6>Phone Numbers</h6>
+      <p>+91 9778577090</p>
+      <p>+91 8895895988</p>
+    </div>
+  
+    <div class="contact-section">
+      <i class='bx bxs-envelope'></i>
+      <h6>Email Address</h6>
+      <p>step2reactindia@gmail.com</p>
+    </div>
+  </div>  
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <!-- Quick Links Section with 4 columns -->
+    <div class="quick-links">
+      <h6>Quick Links</h6>
+      <div class="links-grid">
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Downloads</a></li>
+            <li><a href="#">Privacy Policies</a></li>
+          </ul>
+        </div>
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Payments Methods</a></li>
+            <li><a href="#">Refund policies</a></li>
+            <li><a href="#">Disclaimer</a></li>
+            <li><a href="#">Our Blogs</a></li>
+          </ul>
+        </div>
+        <div class="links-column">
+          <ul>
+            <li><a href="#">Our Affiliations</a></li>
+            <li><a href="#">Our Team</a></li>
+            <li><a href="#">Our Register Center's</a></li>
+            <li><a href="#">Franchise Details</a></li>
+          </ul>
+        </div>
+        <div class="links-column">
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Text -->
+    <p>This Website is Designed and Developed by ❤ Brainsie Tech. © 2024 RATIONAL EDUCATION AND COMPUTER TRAINING</p>
+  </div>
+</footer>
+       
+  {% block js %}
+
+  {% endblock js %}
+  
+  <script> 
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    const formOpenBtn = document.querySelector("#form_open"),
+          home = document.querySelector(".home"),
+          formContainer = document.querySelector(".form_container"),
+          formCloseBtn = document.querySelector(".form_close"),
+          signupBtn = document.querySelector("#SignUp"),
+          loginBtn = document.querySelector("#SignIn");
+
+    formOpenBtn.addEventListener("click", () => {
+        home.classList.add("show");
+    });
+
+    formCloseBtn.addEventListener("click", () => {
+        home.classList.remove("show");
+        formContainer.classList.remove("active");
+    });
+
+    signupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.add("active");
+    });
+
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.remove("active");
+    });
+});
+
+</script>
+<script>
+
+
+$(document).ready(function () {
+    $('#search').keyup(function () {
+      var search_term = $(this).val();
+      if (search_term.length >= 1) {
+        $.ajax({
+          type: 'POST',
+          url: '',
+          data: {
+            'search_term': search_term,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function (response) {
+            var suggestionsHtml = '';
+            response.forEach(function (product) {
+              // Modify the suggestionsHtml to include both title and ID
+              suggestionsHtml += '<div class="suggestion border-bottom border-1 cursor-pointer suggestion-hover" data-id="' + product.id + '">' + product.title + '</div>';
+            });
+            $('#search-suggestions').html(suggestionsHtml).show();
+          }
+        });
+      } else {
+        $('#search-suggestions').hide();
+      }
+    });
+
+    // Handle click on suggestion
+    $(document).on('click', '.suggestion', function () {
+      // Get the ID of the clicked suggestion
+      var productId = $(this).data('id');
+      // Construct the URL using Django template syntax
+      var productUrl = ''.replace('0', productId);
+      // Redirect the user to the product details page
+      window.location.href = productUrl;
+    });
+
+    // Hide suggestions when clicking outside
+    $(document).click(function (event) {
+      if (!$(event.target).closest('#search-suggestions').length && !$(event.target).is('#search')) {
+        $('#search-suggestions').hide();
+      }
+    });
+  });
+
+</script>
+<script>
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchIcon = document.getElementById('search-icon');
+    const searchForm = document.getElementById('search-form');
+    
+    searchIcon.addEventListener('click', function () {
+      if (searchForm.style.display === 'block') {
+        searchForm.style.display = 'none';
+      } else {
+        searchForm.style.display = 'block';
+      }
+    });
+
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent actual form submission for demonstration
+      // Add your form submission logic here, e.g., AJAX request
+      searchForm.style.display = 'none';
+    });
+  });
+    
+  </script>
+  <script>
+  $(document).ready(function() {
+    $('.testimonial-slider').slick({
+        autoplay: true,
+        autoplaySpeed: 0,  // Set to 0 for continuous autoplay
+        speed: 3000,  // Adjust speed to control how fast the slide scrolls
+        cssEase: 'linear',  // Use linear easing for a uniform scrolling speed
+        draggable: false,  // Disable dragging for a smoother experience
+        infinite: true,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        arrows: false,
+        dots: false,
+        pauseOnHover: false,  // Prevents pause on hover
+        responsive: [
+            {
+                breakpoint: 991,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 575,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+        ]
+    });
+});
+
+
+</script>
+<script>
+  // Function to check if the element is in the viewport
+  function isElementInViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  // Function to apply the zoom effect when the container is in view
+  function checkZoomEffect() {
+    var contactContainer = document.querySelector('.contact-container');
+    if (isElementInViewport(contactContainer)) {
+      contactContainer.classList.add('zoomed');
+    } else {
+      contactContainer.classList.remove('zoomed');
+    }
+  }
+
+  // Listen for scroll events
+  window.addEventListener('scroll', checkZoomEffect);
+
+  // Initial check on page load
+  checkZoomEffect();
+</script>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

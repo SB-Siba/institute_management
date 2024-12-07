@@ -1,0 +1,36 @@
+{% extends 'users/admin/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Add New Batch</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label">Batch Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_timing" class="form-label">Batch Timing</label>
+                            {{ form.timing }}
+                        </div>
+                        <div class="mb-3">
+                            
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_total_seats" class="form-label">Total Seats</label>
+                            {{ form.total_seats }}
+                        </div>
+                        <div> <button type="submit" class="btn btn-primary">Submit</button>
+                             <a href="{% url 'users:list_batches' %}"  class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

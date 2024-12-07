@@ -1,0 +1,49 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Message Details {% endblock title %}
+{% block content %}
+<section class="py-lg-2">
+  <div class="container">
+      <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Message Details</h4>
+      <div class="product-form-container">
+        <div>
+          <!-- Dynamic handling of message name -->
+          <p><strong>Name:</strong> 
+            {% if type == 'contact' %}
+              {{ message.name|default:"N/A" }}
+            {% else %}
+              {{ message.user.full_name|default:"N/A" }}
+            {% endif %}
+          </p>
+
+          <!-- Dynamic handling of message email -->
+          <p><strong>Email:</strong> {{ message.email|default:"N/A" }}</p>
+
+          <!-- Dynamic handling of message contact -->
+          <p><strong>Contact:</strong> 
+            {% if type == 'contact' %}
+              {{ message.contact|default:"N/A" }}
+            {% else %}
+              {{ message.user.contact|default:"N/A" }}
+            {% endif %}
+          </p>
+
+          <!-- Displaying the actual message -->
+          <p><strong>Message:</strong> {{ message.description|default:"N/A" }}</p>
+          
+          <!-- Displaying date and time -->
+          <p><strong>Date & Time:</strong> {{ message.created_at|default:"N/A" }}</p>
+    
+          <!-- Reply form -->
+          <form method="post" class="lh-lg">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary w-100 my-3" id="save-btn">Send Reply</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</section>
+{% endblock content %}

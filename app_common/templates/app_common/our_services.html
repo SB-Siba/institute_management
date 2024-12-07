@@ -1,0 +1,63 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %} Our Services | reactedu.in {% endblock title %}
+{% block content %}
+
+        <section>
+            <div class="conatiner" id="return">
+                
+                <div>
+                    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Privacy Policy</li>
+                        </ol>
+                      </nav>
+                    <h3 class="text-center border-bottom pb-lg-3">Our Services</h3>
+                    <p >At Niwa Agro, we are dedicated to revolutionizing agriculture through innovative and sustainable practices. Our services are designed to support farmers, agribusinesses, and communities in achieving their agricultural goals while promoting environmental stewardship. </p>
+                    <ul>
+                        <li>
+                            <h5>Agricultural Consultancy:</h5>
+                            <p>We provide expert consultancy services to help farmers make informed decisions about crop selection, pest management, soil health, and more. Our team of experienced agronomists works closely with farmers to develop customized plans that optimize yields and ensure sustainable practices.</p>
+                        </li>
+                        <li>
+                            <h5>Farm Management Solutions:</h5>
+                            <p>Our farm management solutions encompass a wide range of services, including land preparation, crop planning, and resource management. We utilize advanced technologies and best practices to enhance efficiency and productivity on the farm.</p>
+                        </li>
+                        <li>
+                            <h5>Supply of Agricultural Inputs</h5>
+                            <p>We supply high-quality agricultural inputs such as seeds, fertilizers, pesticides, and equipment. Our products are sourced from reputable manufacturers and are designed to improve crop performance and resilience.</p>
+                        </li>
+                        <li>
+                            <h5>Training and Capacity Building</h5>
+                            <p>We offer training programs and workshops to educate farmers on the latest agricultural techniques and technologies. Our capacity-building initiatives aim to empower farmers with the knowledge and skills needed to succeed in modern agriculture.</p>
+                        </li>
+                        <li>
+                            <h5>Market Access and Support</h5>
+                            <p>We assist farmers in accessing local and international markets for their produce. Our market support services include market research, branding, and marketing strategies to help farmers get the best prices for their crops.</p>
+                        </li>
+                        <li>
+                            <h5>Research and Development</h5>
+                            <p>Niwa Agro is committed to continuous innovation in agriculture. Our research and development efforts focus on developing new technologies and practices that address the challenges faced by farmers and promote sustainable agriculture.</p>
+                        </li>
+                        <li>
+                            <h5>Sustainable Farming Practices</h5>
+                            <p>We advocate for and support sustainable farming practices that protect the environment and ensure long-term agricultural productivity. Our services include advice on organic farming, conservation agriculture, and integrated pest management.</p>
+                        </li>
+                        <li>
+                            <h5>Financial Services</h5>
+                            <p>We provide financial services and support to farmers, including access to credit, insurance, and investment opportunities. Our goal is to help farmers manage their finances effectively and invest in their future growth.</p>
+                        </li>
+                    </ul>
+                    <p class="fw-semibold">At Niwa Agro, we are passionate about agriculture and committed to the success of our farmers. Our comprehensive range of services is designed to meet the needs of today’s farmers and drive the future of agriculture.</p>
+                   
+                </div>
+
+            </div>
+  
+
+
+
+
+
+{% endblock content %}

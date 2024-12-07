@@ -1,0 +1,17 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Update Student</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Student Form Fields -->
+        {{ form.as_p }}
+        
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Update Student</button>
+        <a href="{% url 'users:student_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

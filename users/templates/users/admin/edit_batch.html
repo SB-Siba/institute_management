@@ -1,0 +1,73 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .form-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input, select {
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        background-color: #f9f9f9;
+        padding: 8px;
+    }
+
+    input:focus, select:focus {
+        border-color: #007bff;
+        background-color: #fff;
+        outline: none;
+    }
+
+    .btn {
+        border-radius: 0.25rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+</style>
+
+<div class="container mt-8">
+    <div class="form-container">
+        <h2>{% if form.instance.pk %}Edit Batch{% else %}Add Batch{% endif %}</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {{ form.non_field_errors }}
+            
+            <!-- Render Form Fields with Custom Styling -->
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="text-danger">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'users:list_batches' %}" class="btn btn-secondary ms-3">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
