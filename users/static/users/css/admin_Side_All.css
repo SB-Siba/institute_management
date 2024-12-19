@@ -129,6 +129,7 @@ body::-webkit-scrollbar {
 }
 .sidebar-item {
   margin-bottom: 0.5rem;
+  margin-left: -0.5rem;
 }
 a.sidebar-links{
 	padding: .625rem 0rem;

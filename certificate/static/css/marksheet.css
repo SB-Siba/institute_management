@@ -50,11 +50,11 @@ body {
 
 .certificate-background {
     position: absolute;
-    top: 60%;
+    top: 79%;
     left: 50%;
     transform: translate(-50%, -60%);
     opacity: 0.09;
-    height: 25%;
+    height: 50%;
     width: 60%;
     z-index: 1;
 }

@@ -6,10 +6,10 @@
 
 {% block content %}
 <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet">
-<div class="container mt-4">
-    <h2>Approved Certificates</h2>
+<div class="container mt-0">
+    <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Approved Certificates</h4>
     {% csrf_token %}
-    <button class="btn btn-primary mb-4" onclick="toggleFilter()">Toggle Filter</button>
+    <!-- <button class="btn btn-primary mb-4" onclick="toggleFilter()">Toggle Filter</button> -->
     <div id="filterForm" style="display: none;">
         <form method="get">
             <div class="form-row">

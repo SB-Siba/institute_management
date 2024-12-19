@@ -45,8 +45,16 @@ class CourseForm(forms.ModelForm):
             'minimum_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 30 hours'}),
             'exam_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'course_syllabus': SummernoteWidget(),
-            'eligibility': SummernoteWidget(),
+            'course_syllabus': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Enter course syllabus here...'
+            }),
+            'eligibility': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Enter eligibility criteria here...'
+            }),
             'course_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'course_video_links': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),

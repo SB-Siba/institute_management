@@ -105,6 +105,10 @@
 
 <body>
     <div class="certificate-container">
+        <div class="corner-triangle top-left"></div>
+        <div class="corner-triangle top-right"></div>
+        <div class="corner-triangle bottom-left"></div>
+        <div class="corner-triangle bottom-right"></div>
         <div class="certificate-border">
             <div class="certificate-content text-center">
                 <!-- Logo Section -->
@@ -129,7 +133,7 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                   <!-- Title Content -->
                   <div class="text-center title-content mx-auto">
-                      <h1 class="bebas-neue-regular">RATIONAL EDUCATION AND COMPUTER TRAINING</h1>
+                      <h1 class="bebas-neue-regular" style="margin-left: 0; font-size: 40px;">RATIONAL EDUCATION AND COMPUTER TRAINING</h1>
                       <p class="iso-text"><b>An ISO 9001:2015 Certified Organization</b></p>
                       <h3 class="CERTIFICtE"><u>Admission Form</u></h3>
                   </div>                
@@ -160,7 +164,8 @@
                       <label class="form-label"><b>Course of Interest:</b></label>
                       <div class="border p-1 rounded bg-light">{{ student.course_of_interest }}</div>
                   </div>
-
+                    <!-- Background/Decorative Image -->
+                    <img src="{% static 'images/logoMain.png' %}" alt="Decorative Image" class="certificate-background">
                     <!-- Student Details -->
                     <div class="row mb-3">
                         <div class="col-md-4">
@@ -321,29 +326,54 @@
                     </div>                    
                 </div>
                 <div class="footer-container">
-                    <!-- Black Space for Signature -->
-                    <div class="signature-space"></div>
                     
-                    <!-- Footer Content -->
-                    <div class="footer-content d-flex justify-content-between align-items-start">
-                        <!-- Controller of Examination -->
-                        <div class="footer-section text-center signature">
-                            <p><strong>CONTROLLER OF EXAMINATION</strong></p>
-                        </div>
-                
-                        <!-- Contact Information -->
-                        <div class="footer-section text-center">
-                            <p>Contact No: 9778577090 / 8895895988 / 8895644410</p>
-                            <p>Address: AT: Subash Jena Colony (High School Road, Balugaon)</p>
-                            <p>PO/PS- Balugaon, Zip/Pin- 752030, Khordha, Odisha, India</p>
-                        </div>
-                
-                        <!-- Director -->
-                        <div class="footer-section text-center signature">
-                            <p><strong>BRAJA SUNDARA BEHERA</strong></p>
-                            <p><strong>DIRECTOR</strong></p>
-                        </div>
-                    </div>
+                    <!-- Signature Area -->
+        <div class="row">
+            <!-- Left Signature -->
+            <div
+            class="col-3 text-start Left_Signature"
+            style="margin-left: 5px">
+            <p class="p-0 m-0">
+                <img
+                src="{% static 'images/sabita sign.jpg' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 130px; height: auto"
+                />
+            </p>
+            <p class="p-0 m-0">---------------------</p>
+            <p style="margin: 0; text-transform: uppercase">SABITA DASH</p>
+            <p>Controller Of Examination</p>
+            </div>
+            <div class="col-6 p-0 mt-4">
+            <div class="contact-address" style="letter-spacing: 3px !important">
+                <p>Contact No: 9778577090 / 8895895988</p>
+                <p>
+                ADDRESS:-AT:SUBASH JENA COLONY, STREET NO 37C (HIGH SCHOOL ROAD,
+                BALUGAON)
+                </p>
+                <p>PO/PS- BALUGAON, ZIP/PIN- 752030, KHORDHA, ODISHA, INDIA</p>
+            </div>
+            </div>
+            <!-- Right Signature -->
+            <div
+            class="col-3 text-end Right_Signature"
+            style="margin-right: -20px">
+            <p class="p-0 m-0">
+                <img
+                src="{% static 'images/DIRECTOR SIGNcopy.png' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 150px; height: auto; margin-right: 15%;"
+                />
+            </p>
+            <p class="p-0 mt-3">---------------------</p>
+            <p style="margin-right: 0%; text-transform: uppercase">
+                BRAJASUNDAR BEHERA
+            </p>
+            <b><p style="margin-right: 40%">Director</p></b>
+        </div>
+    </div>
                 </div>                
           </div>
                 

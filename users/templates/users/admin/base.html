@@ -70,7 +70,7 @@
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'users:student_fees_list' %}" class="sidebar-links">
-							<i class='fas fa-money-bill-alt'></i><span class="ms-4">Student Fees list</span>
+							<i class='bx bxs-wallet-alt'></i><span class="ms-4">Student Fees list</span>
 						</a>
 					</li>
 				</ul>
@@ -122,8 +122,6 @@
 				</ul>
 			</li>
 
-
-
 			<li class="sidebar-item">
 				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse" 
    					data-bs-target="#authent" aria-expanded="false" aria-controls="authent" onclick="toggleChevron(this)">
@@ -135,7 +133,7 @@
 					
 					<li class="sidebar-item">
 						<a href="{% url 'certificate:requested_certificates' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">Requested Certificates</span>
+							<i class="lni lni-list"></i><span class="ms-1">Requested Certificates</span>
 						</a>
 					</li>
 					<!-- <li class="sidebar-item">
@@ -145,15 +143,15 @@
 					</li>				 -->
 					<li class="sidebar-item">
 						<a href="{% url 'certificate:approved_certificates' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">Approved Certificates</span>
+							<i class="lni lni-line-double"></i><span class="ms-1">Approved Certificates</span>
 						</a>
 					</li>
 											
 					<li class="sidebar-item">
 						<a href="#" class="sidebar-links">
-							<i class="bx bxs-message-dots"></i><span class="text ms-3">Old Approved Certificate</span>
+							<i class="bx bxs-message-dots"></i><span class="text ms-1">Old Approved Certificate</span>
 						</a>
-					</li> -->
+					</li>
 				</ul>
 			</li>
 			<!--<li>
@@ -217,21 +215,7 @@
 					</li>
 				</ul>
 			</li>
-         <!-- {% comment %}
-      		<li>
-				<a href="" class="">
-					<i class='bx bxs-group' ></i>
-					<span class="text">Review&Ratings</span>
-				</a>
-			</li>
-			{% endcomment %}
-			<li>
-				<a href="" class="">
-					<i class='bx bx-package' ></i>
-					<span class="text">Delivery Settings</span>
-				</a>
-			</li> -->
-			<li>
+			<li class="sidebar-item">
 				<a href="{% url 'app_common:admin_message_list' %}" class="">
 					<i class='bx bxs-contact'></i>
 					<span class="text">Contact Message</span>
@@ -239,9 +223,9 @@
 			</li>
 		</ul>
 		<ul class="side-menu">
-			<li>
+			<li class="sidebar-item">
 				<a  href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="logout">
-					<i class="lni  lni-exit"></i>
+					<i class="bx bxs-exit"></i>
 					<span class="text">Logout</span>
 				</a>
 			</li>

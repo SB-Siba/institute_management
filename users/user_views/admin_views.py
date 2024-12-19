@@ -50,23 +50,18 @@ class AdminDashboard(View):
             # Get the latest payment for each student
             latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
 
-            # # Calculate fees details for each student
-            # total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
-            # fees_received = latest_payment.amount if latest_payment else 0
-            # balance = total_fees - fees_received
-
             student_data.append({
                 'user': student,
                 'latest_payment_date': latest_payment.date if latest_payment else None,
-                'total_fees': student.total_fees,
-                'fees_received': student.fees_received,
-                'balance': student.balance,
+                'total_fees': student.total_fees or 0,  # Default to 0 if total_fees is None
+                'fees_received': student.fees_received or 0,  # Default to 0 if fees_received is None
+                'balance': student.balance or 0,  # Default to 0 if balance is None
             })
 
         # Calculate the overall totals
-        total_fees = sum(data['total_fees'] for data in student_data)
-        total_paid_fees = sum(data['fees_received'] for data in student_data)
-        total_balance_fees = sum(data['balance'] for data in student_data)
+        total_fees = sum(data['total_fees'] for data in student_data if data['total_fees'] is not None)
+        total_paid_fees = sum(data['fees_received'] for data in student_data if data['fees_received'] is not None)
+        total_balance_fees = sum(data['balance'] for data in student_data if data['balance'] is not None)
 
         # Context to pass to the template
         context = {
@@ -79,6 +74,7 @@ class AdminDashboard(View):
 
         # Render the template with dynamic context
         return render(request, self.template, context)
+
 
 class StudentListView(View):
     template_name = app + 'student_list.html'

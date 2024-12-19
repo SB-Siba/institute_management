@@ -9,8 +9,10 @@ body {
     width: 265mm;
     height: auto;
     margin: 0 auto;
-    padding: 10px;
+    padding: 40px;
     background-color: #fff;
+    position: relative;
+    z-index: 2;
 }
 
 .bebas-neue-regular {
@@ -22,10 +24,51 @@ body {
     word-spacing: 5px;
 }
 
+.corner-triangle {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    z-index: 1; /* Place these elements in the background */
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-top: 65px solid navy; /* Adjust size and color */
+    border-right: 30px solid transparent;
+    border-left: 65px solid navy;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-top: 65px solid navy; /* Adjust size and color */
+    border-left: 30px solid transparent;
+    border-right: 65px solid navy;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-bottom: 65px solid navy; /* Adjust size and color */
+    border-right: 30px solid transparent;
+    border-left: 65px solid navy;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-bottom: 65px solid navy; /* Adjust size and color */
+    border-left: 30px solid transparent;
+    border-right: 65px solid navy;
+}
+
 .certificate-border {
     border: 10px solid #ffcc00; /* Outer border */
     padding: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    position: relative; /* Keeps the border in the stacking context */
+    z-index: 3;
 }
 
 .watermark {
@@ -51,12 +94,12 @@ body {
 
 .certificate-background {
     position: absolute;
-    top: 60%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -60%);
     opacity: 0.09;
-    height: 25%;
-    width: 60%;
+    height: 30%;
+    width: 80%;
     z-index: 1;
 }
 .certificate-content{
@@ -324,8 +367,6 @@ line-height: .3;
 word-spacing: 1px;
 letter-spacing: 1px;
 font-family: "Poppins", sans-serif;
-
-
 }
 
 .Left_Signature p:nth-child(2){
