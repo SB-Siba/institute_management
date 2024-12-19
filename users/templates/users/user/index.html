@@ -59,6 +59,42 @@
         color: #888;
         margin-top: 20px;
     }
+    .btn-more-info {
+  font-size: 1rem;
+  color: navajowhite;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 2px solid #3b2ab5;
+  background-color:#007bff;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+}
+
+.btn-more-info:hover {
+  color: #fff;
+  background-color: #4e3687;
+}
+
+.btn-more-info::after {
+  content: '→';
+  font-size: 1.2rem;
+  color: #28a745;
+  margin-left: 8px;
+  position: relative;
+  top: 1px;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.btn-more-info:hover::after {
+  transform: translateX(5px);
+  color: #fff;
+  opacity: 1;
+}
 </style>
 
 <main class="py-6">
@@ -70,52 +106,21 @@
 
         <!-- Course Enrollment Section -->
         <div>
-            <h4>Your Enrolled Courses</h4>
-            {% if applications %}
-            <div class="card-container">
-                {% for application in applications %}
-                <div class="card">
-                    <div class="card-body text-center">
-                        <!-- Student Image -->
-                        {% if application.user.student_image %}
-                        <img src="{{ application.user.student_image.url }}" alt="Student Image">
-                        {% else %}
-                        <img src="{% static 'images/default-profile.png' %}" alt="Default Image">
-                        {% endif %}
-
-                        <!-- Full Name -->
-                        <div class="card-title">{{ application.user.full_name }}</div>
-
-                        <!-- Course and Batch -->
-                        <div class="card-text">
-                            <strong>Course:</strong> {{ application.course.course_of_interest }}<br>
-                            <strong>Applied Date:</strong> {{ application.applied_date|date:"d M Y" }}
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="card-actions">
-                            <a href="{% url 'certificate:designed_certificate' application.id %}" class="btn">View Certificate</a>
-                            <a href="{% url 'certificate:verify_marksheets' application.id %}" class="btn">View Marksheet</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="no-courses">
-                <p>No course enrolled.</p>
-            </div>
-            {% endif %}
+            <!-- <a href="{% url 'users:my_courses' %}"><h4>My Courses</h4></a> -->
+            <a href="{% url 'users:my_courses' %}" class="btn-more-info position-fixed" style="right: 65%;">
+                <h4>My Courses</h4>
+            </a>
         </div>
+            
+    </div>
         <!-- Image Box -->
-      <div class="box1">
         <div class="right-side">
           <div class="box-topic"></div>
         </div>
         <img
           src="{% static 'app_common/images/institute_homepage.jpg' %}"
           alt="Sample Image"
-          class="box-image"
+          class="box-image" style="margin-top: 8%;"
         />
       </div>
     </div>

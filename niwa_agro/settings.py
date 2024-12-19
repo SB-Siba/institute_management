@@ -94,15 +94,15 @@ DATABASES = {
  }
 
 
-"""DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'react',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',  
-    }
-}"""
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'react_institute',
+#         'USER': 'postgres',
+#         'PASSWORD': '12345',
+#         'HOST': 'localhost',  
+#     }
+# }
 
 
 # Password validation

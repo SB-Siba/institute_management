@@ -167,7 +167,7 @@ class DashboardView(View):
             return redirect("users:login")
 
         # Fetch the admitted course
-        enrolled_course = user.course_of_interest  # Assuming this is the admitted course
+        enrolled_course = user.course.course_name  # Assuming this is the admitted course
 
         # Initialize fees-related variables
         total_fees = 0

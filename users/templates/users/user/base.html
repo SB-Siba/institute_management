@@ -28,8 +28,6 @@
 
   </style>
   <body>
-
-    
    	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand">
@@ -81,7 +79,7 @@
 					<span class="text">Approved Certificates</span>
 				</a>
 			</li>	
-			<li>
+			<li class=" active sidebar-item">
 				<a href="{% url 'users:support' %}" class="">
 					<i class='bx bx-support'></i>
 					<span class="text">Help Support</span>
@@ -89,7 +87,7 @@
 			</li>
 		</ul>
 		<ul class="side-menu">
-			<li>
+			<li class=" active sidebar-item">
 				<a  href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="logout">
 					<i class="lni  lni-exit"></i>
 					<span class="text">Logout</span>

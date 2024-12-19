@@ -14,18 +14,62 @@ body {
     word-spacing: 5px;
 }
 
+.corner-triangle {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    z-index: 1; /* Place these elements in the background */
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-top: 65px solid navy; /* Adjust size and color */
+    border-right: 30px solid transparent;
+    border-left: 65px solid navy;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-top: 65px solid navy; /* Adjust size and color */
+    border-left: 30px solid transparent;
+    border-right: 65px solid navy;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-bottom: 65px solid navy; /* Adjust size and color */
+    border-right: 30px solid transparent;
+    border-left: 65px solid navy;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-bottom: 65px solid navy; /* Adjust size and color */
+    border-left: 30px solid transparent;
+    border-right: 65px solid navy;
+}
+
 .certificate-container {
     width: 265mm;
     height: auto;
     margin: 0 auto;
-    padding: 10px;
+    padding: 40px;
     background-color: #fff;
+    position: relative;
+    z-index: 2; /* Ensures this container appears above the corner triangles */
 }
 
 .certificate-border {
-    border: 10px solid #ffcc00; /* Outer border */
+    border: 5px solid #ffcc00;
     padding: 20px;
+    margin-top: -10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    position: relative; /* Keeps the border in the stacking context */
+    z-index: 3; /* Ensures the border appears above the corner triangles */
 }
 
 .watermark {
@@ -46,24 +90,23 @@ body {
 
 .certificate-logo {
     width: 220px;
-    height: 140px;
+    height: 180px;
 }
 
 .certificate-background {
     position: absolute;
-    top: 60%;
+    top: 69%;
     left: 50%;
     transform: translate(-50%, -60%);
     opacity: 0.09;
-    height: 25%;
-    width: 60%;
+    height: 30%;
+    width: 70%;
     z-index: 1;
 }
 .certificate-content{
     background-image:url('../../../../app_common/static/app_common/images/rationallogo.jpg' ) ;
-    background: url("../images/RATIONAL\ EDUCATION\ AND\ COMPUTER\ TRAINING.png");
-    
-    
+    background: url("../images/RATIONAL EDUCATION AND COMPUTER TRAINING.png");
+    background-size: 60%;
 }
 .Student_name h3{
     font-family: "Poppins", sans-serif;
@@ -82,7 +125,6 @@ body {
     word-spacing: 5px;
     line-height: .1;
 }
-
 
 .Rational_edu{
     font-family: "Poppins", sans-serif;
@@ -267,8 +309,6 @@ line-height: .3;
 word-spacing: 1px;
 letter-spacing: 1px;
 font-family: "Poppins", sans-serif;
-
-
 }
 
 .Left_Signature p:nth-child(2){

@@ -76,7 +76,6 @@ class UpdateProfileForm(forms.Form):
     profile_pic.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
 
-
 class AddressForm(forms.Form):
     Address1 = forms.CharField(max_length=255)
     Address1.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
@@ -198,7 +197,6 @@ class ReAdmissionForm(forms.ModelForm):
     total_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
     fees_received = forms.DecimalField(required=False, widget=forms.HiddenInput())
     balance = forms.DecimalField(required=False, widget=forms.HiddenInput())
-
 
     class Meta:
         model = ReAdmission  
