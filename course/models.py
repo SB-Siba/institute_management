@@ -61,7 +61,7 @@ class Exam(models.Model):
     passing_marks = models.PositiveIntegerField(null=True, blank=True, help_text="Enter the minimum passing marks")
     course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='exams', null=True, blank=True)
     subjects = models.JSONField(default=list, blank=True)
-    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE)
+    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
   
     def __str__(self):
