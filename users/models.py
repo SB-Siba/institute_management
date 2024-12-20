@@ -94,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     father_husband_name = models.CharField(max_length=100, blank=True)
     show_father_husband_on_certificate = models.BooleanField(default=False)
     mother_name = models.CharField(max_length=100, blank=True)
-    course_of_interest = models.ForeignKey('course.Course', on_delete=models.CASCADE, null=True, blank=True)
+    course_of_interest = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(null=True, blank=True, unique=True)
     username = models.CharField(max_length=10, unique=True, null=True, blank=True)
     password = models.CharField(max_length=128, null=True, blank=True)
