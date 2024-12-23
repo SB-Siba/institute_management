@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import user_passes_test
 import qrcode
 from helpers import utils
 from users import models,forms
-from users.forms import BatchForm, StudentForm, StudentPaymentForm,ReAdmissionForm
-from users.models import OnlineClass, Payment, Batch, ReAdmission, ReferralSettings, User
+from users.forms import BatchForm, StudentForm, StudentPaymentForm
+from users.models import OnlineClass, Payment, Batch, User
 from course.models import Course
 import csv
 from django.db.models import Q
@@ -308,53 +308,6 @@ class StudentDeleteView(View):
         student.delete()
         return JsonResponse({'success': True})
 
-class ReAdmissionView(View):
-    template_name = app + 're_admission.html'
-    form_class = ReAdmissionForm
-    success_url = reverse_lazy('users:re-admission-list')
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
-
-    def form_valid(self, form):
-        try:
-            student = form.cleaned_data['student']
-            course = form.cleaned_data['course_of_interest']
-            batch = form.cleaned_data['batch']
-            remarks = form.cleaned_data.get('remarks', '')
-            course_fees = form.cleaned_data.get('course_fees', 0)
-            discount_amount = form.cleaned_data.get('discount_amount', 0)
-            fees_received = form.cleaned_data.get('fees_received', 0)
-            total_fees = form.cleaned_data.get('total_fees', 0)
-            balance = form.cleaned_data.get('balance', 0)
-
-            re_admission = ReAdmission.objects.create(
-                student=student,
-                course=course,
-                batch=batch,
-                remarks=remarks,
-                course_fees=course_fees,
-                discount_amount=discount_amount,
-                total_fees=total_fees,
-                fees_received=fees_received,
-                balance=balance,
-                date=timezone.now()
-            )
-            return redirect(self.success_url)
-        except Exception as e:
-            print("Error during form submission:", e)
-            return self.form_invalid(form)
-    def form_invalid(self, form):
-        print("Form is invalid. Errors:", form.errors)
-        return render(self.request, self.template_name, {'form': form})
-
 # AJAX view to fetch course fees dynamically
 class GetCourseFeesView(View):
     def get(self, request, course_id, *args, **kwargs):
@@ -365,79 +318,6 @@ class GetCourseFeesView(View):
             'exam_fees': course.exam_fees,
         }
         return JsonResponse(data)
-
-# AJAX view to fetch remaining batch seats dynamically
-class GetBatchRemainingSeatsView(View):
-    def get(self, request, batch_id, *args, **kwargs):  
-        batch = get_object_or_404(Batch, id=batch_id)  
-  
-        return JsonResponse({  
-            'batch_id': batch.id,  
-            'remaining_seats': batch.remaining_seats,    
-        }) 
-        
-
-class ReAdmissionListView(View):
-    template_name =  app + 're_admission_list.html'
-    
-    def get(self, request, *args, **kwargs):
-        re_admissions = ReAdmission.objects.all()
-        context = {'re_admissions': re_admissions}
-        return render(request, self.template_name, context)
-    
-class ReAdmissionDeleteView(View):
-    model = ReAdmission
-    success_url = reverse_lazy('users:re-admission-list')
-    
-    def post(self, request, *args, **kwargs):
-        self.object = get_object_or_404(ReAdmission, pk=kwargs['pk'])
-        self.object.delete()
-        return redirect(self.success_url)
-    
-
-class ReAdmissionUpdateView(UpdateView):    
-    model = ReAdmission
-    form_class = ReAdmissionForm
-    template_name = app + 're_admission_update.html'  
-    success_url = reverse_lazy('users:re-admission-list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Re-Admission'
-        return context
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        selected_course = self.object.course  
-
-        if selected_course:
-            form.fields['course_of_interest'].queryset = Course.objects.filter(
-                Q(status='Active') | Q(id=selected_course.id)
-            )
-            form.fields['course_of_interest'].initial = selected_course
-
-        # Make student field read-only
-        form.fields['student'].widget.attrs['readonly'] = True
-        form.fields['student'].widget.attrs['disabled'] = True
-        return form
-
-    def form_valid(self, form):
-        # Get and convert the values from the POST data
-        total_fees = self.request.POST.get('total_fees', '0')
-        balance = self.request.POST.get('balance', '0')
-
-        try:
-            form.instance.total_fees = float(total_fees)
-            form.instance.balance = float(balance)
-        except ValueError:
-            form.add_error(None, "Invalid input for fees or balance.")
-            return self.form_invalid(form)
-
-        # Save the form and redirect
-        response = super().form_valid(form)
-        # Print for debugging if necessary
-        print(f"Updated ReAdmission ID {self.object.id}: Total Fees - {form.instance.total_fees}, Balance - {form.instance.balance}")
-        return response
     
 class CourseDetailsView(View):                                                                          
     def get(self, request, course_id):

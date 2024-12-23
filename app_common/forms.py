@@ -4,27 +4,23 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
 class ContactMessageForm(forms.Form):
-    name = forms.CharField(
+    full_name = forms.CharField(
         max_length=255,
         required=False,
-        widget=forms.TextInput(attrs={ 'class':'form-control','placeholder': 'Name',}),
-       
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={ 'class':'form-control', 'placeholder': 'Email'}),
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
         required=True,
-       
     )
     contact = forms.CharField(
         max_length=10,
-        
         validators=[RegexValidator(regex='^[9876]\d{9}$')],
-        widget=forms.TextInput(attrs={ 'class':'form-control','placeholder': 'Phone Number'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
     )
     message = forms.CharField(
-        widget=forms.Textarea(attrs={ 'class':'form-control','placeholder': 'Comment here!'}),
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Comment here!'}),
         required=True,
-      
     )
 
 

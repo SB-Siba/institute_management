@@ -176,16 +176,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return True
         return False
     
-    
-class Installment(models.Model):
-    student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
-    installment_name = models.CharField(max_length=100)
-    amount = models.FloatField(default=0.0, null=True, blank=True)
-    date = models.DateField()
-
-    def __str__(self):
-        return f"{self.installment_name} - {self.amount}"
-        
 class Payment(models.Model):
     PAYMENT_MODE_CHOICES = [
         ('cash', 'Cash'),
@@ -201,11 +191,14 @@ class Payment(models.Model):
     payment_mode = models.CharField(max_length=20, choices=PAYMENT_MODE_CHOICES, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     
-class ReferralSettings(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=300.00)
+class Attendance(models.Model):
+    student = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
 
     def __str__(self):
-        return f"Referral Amount: {self.amount}"
+        return f"{self.student.name} - {self.date} - {self.status}"
+    
 
 class OnlineClass(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
@@ -216,28 +209,6 @@ class OnlineClass(models.Model):
 
     def __str__(self):
         return self.title
-    
-class Attendance(models.Model):
-    student = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
-
-    def __str__(self):
-        return f"{self.student.name} - {self.date} - {self.status}"
-    
-class ReAdmission(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    course_fees = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total_fees = models.DecimalField(max_digits=10, decimal_places=2)
-    fees_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField(default=timezone.now)
-    remarks = models.TextField(blank=True, null=True)
-    def __str__(self):
-        return f"{self.student.full_name} - {self.course.course_name} - {self.date}"
 
 class Support(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
