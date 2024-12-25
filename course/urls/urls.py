@@ -3,7 +3,7 @@ from django.conf import settings
 from django.urls import path
 from certificate.certificate_view import admin_view
 from course.course_views import admin_views, user_views
-from course.models import Exam
+# from course.models import Exam
 from users import forms
 from app_common.app_common_views import app_common_views
 from django.contrib.auth import views as auth_view

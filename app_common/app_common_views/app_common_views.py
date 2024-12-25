@@ -3,8 +3,8 @@ from django.views import View
 from django.contrib import messages
 from app_common import forms
 from app_common.models import ContactMessage
-from course.models import Course
-from users.models import Attendance, User
+# from course.models import Course
+from users.models import Attendance, Course, User
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm

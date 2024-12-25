@@ -52,7 +52,6 @@ urlpatterns = [
     path('attendance-report/', admin_views.AttendanceReportView.as_view(), name='attendance_report'),
     path('student-attendance-report/', admin_views.StudentAttendanceReportView.as_view(), name='student_attendance_report'),
     path('batch-details/', admin_views.BatchDetailsView.as_view(), name='batch_details'),
-    path('referral-amount/', admin_views.ReferralAmountView.as_view(), name='referral_amount'),
     path('user/user_detail/<int:user_id>', admin_views.StudentDetailView.as_view(), name='user_detail'),
     path('online_class_filter/', admin_views.FilterClass.as_view(), name='online_class_filter'),
     path('batches/', admin_views.BatchListView.as_view(), name='list_batches'),
