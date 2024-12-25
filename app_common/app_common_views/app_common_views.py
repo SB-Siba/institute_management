@@ -3,8 +3,8 @@ from django.views import View
 from django.contrib import messages
 from app_common import forms
 from app_common.models import ContactMessage
-from course.models import Course
-from users.models import Attendance, User
+# from course.models import Course
+from users.models import Attendance, Course, User
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm
@@ -95,14 +95,14 @@ class ContactSupport(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             initial_data = {
-                'name': request.user.full_name if request.user.full_name else '',
+                'full_name': request.user.full_name if request.user.full_name else '',
                 'email': request.user.email if request.user.email else '',
                 'contact': request.user.contact if request.user.contact else '',
             }
             template = self.support_template
         else:
             initial_data = {
-                'name': '',
+                'full_name': '',
                 'email': '',
                 'contact': '',
             }
@@ -116,7 +116,7 @@ class ContactSupport(View):
         if form.is_valid():
             # Create a new ContactMessage instance
             contact_message = ContactMessage(
-                name=form.cleaned_data['name'],
+                full_name=form.cleaned_data['full_name'],
                 email=form.cleaned_data['email'],
                 contact=form.cleaned_data['contact'],
                 message=form.cleaned_data['message']

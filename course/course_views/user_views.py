@@ -2,7 +2,9 @@ from django.http import HttpResponseNotAllowed, JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
-from course.models import Course, ExamResult
+
+from users.models import Course, ExamResult
+# from course.models import Course, ExamResult
 
 
 app = "course/user/"
@@ -35,8 +37,8 @@ class ExamResultsView(View):
         exam_results = ExamResult.objects.filter(student=request.user).order_by('-created_on')
 
         for result in exam_results:
-            # Calculate percentage and result dynamically (can also be handled in save method)
-            result.percentage = (result.obtained_mark / result.total_mark) * 100
+            # Calculate percentage and result dynamically
+            result.percentage = round((result.obtained_mark / result.total_mark) * 100, 2)  # Round to 2 decimal places
             result.result = 'Passed' if result.percentage >= 50 else 'Failed'
 
         # Extract grade choices for the filter dropdown

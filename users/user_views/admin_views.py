@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import user_passes_test
 import qrcode
 from helpers import utils
 from users import models,forms
-from users.forms import BatchForm, StudentForm, StudentPaymentForm,ReAdmissionForm
-from users.models import OnlineClass, Payment, Batch, ReAdmission, ReferralSettings, User
-from course.models import Course
+from users.forms import BatchForm, StudentForm, StudentPaymentForm
+from users.models import Course, OnlineClass, Payment, Batch, User
+# from course.models import Course
 import csv
 from django.db.models import Q
 from django.utils import timezone
@@ -308,53 +308,6 @@ class StudentDeleteView(View):
         student.delete()
         return JsonResponse({'success': True})
 
-class ReAdmissionView(View):
-    template_name = app + 're_admission.html'
-    form_class = ReAdmissionForm
-    success_url = reverse_lazy('users:re-admission-list')
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
-
-    def form_valid(self, form):
-        try:
-            student = form.cleaned_data['student']
-            course = form.cleaned_data['course_of_interest']
-            batch = form.cleaned_data['batch']
-            remarks = form.cleaned_data.get('remarks', '')
-            course_fees = form.cleaned_data.get('course_fees', 0)
-            discount_amount = form.cleaned_data.get('discount_amount', 0)
-            fees_received = form.cleaned_data.get('fees_received', 0)
-            total_fees = form.cleaned_data.get('total_fees', 0)
-            balance = form.cleaned_data.get('balance', 0)
-
-            re_admission = ReAdmission.objects.create(
-                student=student,
-                course=course,
-                batch=batch,
-                remarks=remarks,
-                course_fees=course_fees,
-                discount_amount=discount_amount,
-                total_fees=total_fees,
-                fees_received=fees_received,
-                balance=balance,
-                date=timezone.now()
-            )
-            return redirect(self.success_url)
-        except Exception as e:
-            print("Error during form submission:", e)
-            return self.form_invalid(form)
-    def form_invalid(self, form):
-        print("Form is invalid. Errors:", form.errors)
-        return render(self.request, self.template_name, {'form': form})
-
 # AJAX view to fetch course fees dynamically
 class GetCourseFeesView(View):
     def get(self, request, course_id, *args, **kwargs):
@@ -365,79 +318,6 @@ class GetCourseFeesView(View):
             'exam_fees': course.exam_fees,
         }
         return JsonResponse(data)
-
-# AJAX view to fetch remaining batch seats dynamically
-class GetBatchRemainingSeatsView(View):
-    def get(self, request, batch_id, *args, **kwargs):  
-        batch = get_object_or_404(Batch, id=batch_id)  
-  
-        return JsonResponse({  
-            'batch_id': batch.id,  
-            'remaining_seats': batch.remaining_seats,    
-        }) 
-        
-
-class ReAdmissionListView(View):
-    template_name =  app + 're_admission_list.html'
-    
-    def get(self, request, *args, **kwargs):
-        re_admissions = ReAdmission.objects.all()
-        context = {'re_admissions': re_admissions}
-        return render(request, self.template_name, context)
-    
-class ReAdmissionDeleteView(View):
-    model = ReAdmission
-    success_url = reverse_lazy('users:re-admission-list')
-    
-    def post(self, request, *args, **kwargs):
-        self.object = get_object_or_404(ReAdmission, pk=kwargs['pk'])
-        self.object.delete()
-        return redirect(self.success_url)
-    
-
-class ReAdmissionUpdateView(UpdateView):    
-    model = ReAdmission
-    form_class = ReAdmissionForm
-    template_name = app + 're_admission_update.html'  
-    success_url = reverse_lazy('users:re-admission-list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Re-Admission'
-        return context
-    
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        selected_course = self.object.course  
-
-        if selected_course:
-            form.fields['course_of_interest'].queryset = Course.objects.filter(
-                Q(status='Active') | Q(id=selected_course.id)
-            )
-            form.fields['course_of_interest'].initial = selected_course
-
-        # Make student field read-only
-        form.fields['student'].widget.attrs['readonly'] = True
-        form.fields['student'].widget.attrs['disabled'] = True
-        return form
-
-    def form_valid(self, form):
-        # Get and convert the values from the POST data
-        total_fees = self.request.POST.get('total_fees', '0')
-        balance = self.request.POST.get('balance', '0')
-
-        try:
-            form.instance.total_fees = float(total_fees)
-            form.instance.balance = float(balance)
-        except ValueError:
-            form.add_error(None, "Invalid input for fees or balance.")
-            return self.form_invalid(form)
-
-        # Save the form and redirect
-        response = super().form_valid(form)
-        # Print for debugging if necessary
-        print(f"Updated ReAdmission ID {self.object.id}: Total Fees - {form.instance.total_fees}, Balance - {form.instance.balance}")
-        return response
     
 class CourseDetailsView(View):                                                                          
     def get(self, request, course_id):
@@ -579,17 +459,19 @@ class AddNewPaymentView(View):
         return balance
 
 class TakeAttendanceView(View):
-    template =  app + "take_attendance.html"  
+    template = app + "take_attendance.html"  
+
     def get(self, request):
         today_date = request.GET.get('date', date.today().strftime('%Y-%m-%d'))
         selected_batch = request.GET.get('batch', None)
         batches = Batch.objects.all()
 
+        # Fetch admitted students for the selected batch
         admitted_students = User.objects.filter(batch__id=selected_batch) if selected_batch else User.objects.none()
-        readmitted_students = User.objects.filter(readmission__batch__id=selected_batch) if selected_batch else User.objects.none()
 
-        students = admitted_students.union(readmitted_students)
+        students = admitted_students
 
+        # Fetch attendance records for the selected date and batch
         attendance_records = Attendance.objects.filter(date=today_date, student__batch__id=selected_batch) if selected_batch else []
         attendance_status_map = {record.student.id: record.status for record in attendance_records}
 
@@ -606,11 +488,12 @@ class TakeAttendanceView(View):
         selected_batch = request.POST.get('batch')
         attendance_date = request.POST.get('date', date.today())
 
+        # Fetch admitted students for the selected batch
         admitted_students = User.objects.filter(batch__id=selected_batch) if selected_batch else User.objects.none()
-        readmitted_students = User.objects.filter(readmission__batch__id=selected_batch) if selected_batch else User.objects.none()
 
-        students = admitted_students.union(readmitted_students)
+        students = admitted_students
 
+        # Update or create attendance records for each student
         for student in students:
             attendance_status = request.POST.get(f'attendance_{student.id}')
             Attendance.objects.update_or_create(
@@ -635,32 +518,27 @@ class AttendanceReportView(View):
         date_range = []
 
         if selected_batch and start_date and end_date:
-            # Parse date range
+            # Parse the date range
             start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
             end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
             date_range = [start_date_obj + timedelta(days=i) for i in range((end_date_obj - start_date_obj).days + 1)]
-            
-            # Fetch admitted and readmitted students
+
+            # Fetch admitted students for the selected batch
             admitted_students = User.objects.filter(batch__id=selected_batch).values('id', 'full_name', 'course_of_interest_id')
-            readmitted_students = User.objects.filter(readmission__batch__id=selected_batch).values('id', 'full_name', 'course_of_interest_id')
-            combined_students = admitted_students.union(readmitted_students)
+            students = User.objects.filter(id__in=[student['id'] for student in admitted_students]).select_related('course_of_interest')
 
-            # Convert combined_students back to queryset for further usage
-            student_ids = [student['id'] for student in combined_students]
-            students = User.objects.filter(id__in=student_ids).select_related('course_of_interest')
-
-            # Fetch attendance records
+            # Fetch attendance records for the selected date range
             attendance_records = Attendance.objects.filter(
                 student__in=students,
                 date__range=[start_date_obj, end_date_obj]
             ).select_related('student')
-            
-            # Map attendance data
+
+            # Map attendance data to the students
             attendance_map = defaultdict(lambda: {date: 'Not Attended' for date in date_range})
             for record in attendance_records:
                 attendance_map[record.student.id][record.date] = record.status
 
-            # Prepare attendance data for each student
+            # Prepare the attendance data for each student
             for student in students:
                 attendance_row = []
                 for date in date_range:
@@ -736,22 +614,6 @@ class BatchDetailsView(View):
         batches = Batch.objects.all()
         context = {'batches': batches}
         return render(request, self.template, context)
-
-class ReferralAmountView(View):
-    template = app + "referral_amount.html"
-
-    def get(self, request):
-        referral_settings = ReferralSettings.objects.first()
-        context = {'referral_amount': referral_settings.amount if referral_settings else 300.00}
-        return render(request, self.template, context)
-
-    def post(self, request):
-        new_amount = request.POST.get('amount', 300.00)
-        referral_settings, created = ReferralSettings.objects.get_or_create(id=1)
-        referral_settings.amount = new_amount
-        referral_settings.save()
-
-        return redirect('users:referral_amount')
     
 
 class FilterClass(View):
@@ -787,9 +649,9 @@ class BatchListView(View):
     def get(self, request):
         batches = Batch.objects.all().order_by('id')
         for batch in batches:
+            # Only count new admissions
             new_admissions_count = User.objects.filter(batch=batch).count()
-            re_admissions_count = ReAdmission.objects.filter(batch=batch).count()
-            batch.number_of_students = new_admissions_count + re_admissions_count
+            batch.number_of_students = new_admissions_count
             batch.save()
 
         search_query = request.GET.get('search_query', '').strip()
@@ -811,6 +673,7 @@ class BatchListView(View):
             'pagination_count': int(pagination_count),
         }
         return render(request, self.template_name, context)
+
     
 class AddNewBatchView(View):
     template_name = app + 'add_new_batch.html'
@@ -840,18 +703,19 @@ class BatchUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         batch = self.get_object()
         
+        # Only count new admissions
         new_admissions_count = User.objects.filter(batch=batch).count()
-        re_admissions_count = ReAdmission.objects.filter(batch=batch).count()
         
-        context['number_of_students'] = new_admissions_count + re_admissions_count
+        context['number_of_students'] = new_admissions_count
         return context
 
     def form_valid(self, form):
         batch = form.save(commit=False)
+        
+        # Only count new admissions
         new_admissions_count = User.objects.filter(batch=batch).count()
-        re_admissions_count = ReAdmission.objects.filter(batch=batch).count()
-        batch.number_of_students = new_admissions_count + re_admissions_count
-
+        
+        batch.number_of_students = new_admissions_count
         batch.save()
         return redirect(self.success_url)
     

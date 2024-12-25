@@ -2,10 +2,11 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 import random
 import string
+import bleach
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser ,PermissionsMixin
 from django.urls import reverse
-from course.models import Course
+# from course.models import Course
 from users.manager import MyAccountManager
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
@@ -74,6 +75,48 @@ class Batch(models.Model):
 
     def __str__(self):
         return self.name or "Unknown Batch"
+    
+class AwardCategory(models.Model):
+    category_name = models.CharField(max_length=255)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.category_name
+    
+class Course(models.Model):
+    
+    STATUS_CHOICES = [
+        ('Active', 'Active'),
+        ('Inactive', 'Inactive'),
+    ]
+    course_code = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    award = models.ForeignKey(AwardCategory, on_delete=models.CASCADE, null=True, blank=True)
+    course_name = models.CharField(max_length=200, blank=True, null=True)
+    course_subject = models.JSONField(default=list, blank=True, null=True)
+    course_fees = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
+    course_mrp = models.DecimalField(default=0.0 ,max_digits=10, decimal_places=2,blank=True, null=True)
+    minimum_fees = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
+    course_duration = models.CharField(max_length=100,blank=True, null=True)
+    exam_fees = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    course_video_link_1 = models.URLField(blank=True, null=True)
+    course_video_link_2 = models.URLField(blank=True, null=True)
+    course_syllabus = models.TextField(blank=True, null=True)
+    eligibility = models.TextField(blank=True, null=True)
+    course_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
+    pdf_files = models.FileField(upload_to='course_materials/', blank=True, null=True)
+    course_video_links = models.JSONField(default=list, blank=True, null=True)
+    display_course_fees_on_website = models.BooleanField(default=False,blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
+    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
+    
+    def save(self, *args, **kwargs):  
+        # Clean HTML from eligibility and course_syllabus fields  
+        self.eligibility = bleach.clean(self.eligibility,strip=False)  
+        self.course_syllabus = bleach.clean(self.course_syllabus,strip=False)  
+        super().save(*args, **kwargs) 
+
+    def __str__(self):
+        return self.course_name 
 
 class User(AbstractBaseUser, PermissionsMixin):
     YESNO = (
@@ -84,7 +127,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('amount-', 'Amount -'),
         ('percent-', 'Percent -'),
     ]
-    courses = models.ManyToManyField(Course, related_name='students', blank=True)
     student_image = models.ImageField(upload_to='student_photos/', max_length=250, blank=True, null=True)
     student_signature = models.ImageField(upload_to='student_signatures/', max_length=250, blank=True, null=True)
     roll_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
@@ -176,16 +218,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return True
         return False
     
-    
-class Installment(models.Model):
-    student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
-    installment_name = models.CharField(max_length=100)
-    amount = models.FloatField(default=0.0, null=True, blank=True)
-    date = models.DateField()
-
-    def __str__(self):
-        return f"{self.installment_name} - {self.amount}"
-        
 class Payment(models.Model):
     PAYMENT_MODE_CHOICES = [
         ('cash', 'Cash'),
@@ -201,11 +233,14 @@ class Payment(models.Model):
     payment_mode = models.CharField(max_length=20, choices=PAYMENT_MODE_CHOICES, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     
-class ReferralSettings(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=300.00)
+class Attendance(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
 
     def __str__(self):
-        return f"Referral Amount: {self.amount}"
+        return f"{self.student.name} - {self.date} - {self.status}"
+    
 
 class OnlineClass(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
@@ -216,28 +251,6 @@ class OnlineClass(models.Model):
 
     def __str__(self):
         return self.title
-    
-class Attendance(models.Model):
-    student = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
-
-    def __str__(self):
-        return f"{self.student.name} - {self.date} - {self.status}"
-    
-class ReAdmission(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    course_fees = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total_fees = models.DecimalField(max_digits=10, decimal_places=2)
-    fees_received = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField(default=timezone.now)
-    remarks = models.TextField(blank=True, null=True)
-    def __str__(self):
-        return f"{self.student.full_name} - {self.course.course_name} - {self.date}"
 
 class Support(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -252,3 +265,104 @@ class Support(models.Model):
 
     def __str__(self):
         return f"Support Request by {self.user.username} - {self.created_at}"
+    
+
+class Exam(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('appeared', 'Appeared'),
+        ('postponed', 'Postponed'),
+        ('cancel', 'Cancel'),
+     )
+    exam_name = models.CharField(max_length=200, default='exam', blank=True)
+    date = models.DateField(default=timezone.now)  # This will now work correctly
+    duration = models.DurationField(help_text="Enter the duration in HH:MM:SS format")
+    total_marks = models.PositiveIntegerField(null=False, blank=False)
+    total_questions = models.PositiveIntegerField(null=True, blank=True, help_text="Enter the total number of questions")
+    passing_marks = models.PositiveIntegerField(null=True, blank=True, help_text="Enter the minimum passing marks")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams', null=True, blank=True)
+    subjects = models.JSONField(default=list, blank=True)
+    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+  
+    def __str__(self):
+        return self.get_status_display()
+
+    class Meta:
+        verbose_name = 'Exam Status'
+        verbose_name_plural = 'Exam Statuses'
+def __str__(self):
+        return f"{self.course} - {self.exam_date}"
+
+class ExamResult(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exam_results', null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exam_results', null=True, blank=True)
+    obtained_theory_marks = models.IntegerField(null=True, blank=True, default=0)
+    obtained_practical_marks = models.IntegerField(null=True, blank=True, default=0)
+    total_mark = models.FloatField(default=0)
+    obtained_mark = models.FloatField(null=True, blank=True, default=0)
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    grade = models.CharField(max_length=2, choices=[
+        ('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C')
+    ], blank=True)
+    result = models.CharField(max_length=7, choices=[('passed', 'Passed'), ('failed', 'Failed')], blank=True)
+    created_on = models.DateField(auto_now_add=True)
+    subjects_data = models.JSONField(default=list)
+
+    def __str__(self):
+        student_name = self.student.full_name if self.student else "Unknown Student"
+        course_name = self.course.course_name if self.course else "No Course"
+        return f"Result for {student_name} in {course_name}"
+
+    def save(self, *args, **kwargs):
+        # Calculate obtained marks
+        self.obtained_mark = (self.obtained_theory_marks or 0) + (self.obtained_practical_marks or 0)
+
+        # Calculate percentage if total_mark is valid
+        if self.total_mark > 0:
+            self.percentage = (self.obtained_mark / self.total_mark) * 100
+
+        # Determine grade based on percentage
+        if self.percentage >= 85:
+            self.grade = 'A+'
+        elif self.percentage >= 70:
+            self.grade = 'A'
+        elif self.percentage >= 55:
+            self.grade = 'B'
+        elif self.percentage >= 40:
+            self.grade = 'C'
+        else:
+            self.grade = None  # No grade below 40%
+
+        # Set result status
+        self.result = 'passed' if self.grade in ['A+', 'A', 'B', 'C'] else 'failed'
+
+        super().save(*args, **kwargs)
+
+class ApprovedCertificate(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, blank=True, null=True)  
+    applied_date = models.DateField(default=timezone.now,null=True, blank=True)
+    status = models.CharField(max_length=20, blank=True, null=True)
+    certificate_no = models.CharField(max_length=15, unique=True, blank=True, null=True)
+    exam_result = models.OneToOneField(ExamResult, on_delete=models.SET_NULL, related_name='approved_certificate', null=True, blank=True, help_text="Link to the related exam result")
+
+    def __str__(self):
+        return f"Approved Certificate for {self.user} - {self.course}"
+
+
+class CertificateDesign(models.Model):
+    pass
+
+
+class Requested(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, blank=True, null=True)  
+    applied_date = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=20, blank=True, null=True)
+    exam_data = models.JSONField(default=dict, blank=True, null=True) 
+
+    def __str__(self):
+        return f"Requested Certificate for {self.user} - {self.course}"

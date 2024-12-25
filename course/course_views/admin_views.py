@@ -9,8 +9,8 @@ from django.views import View
 from django.contrib import messages
 from django.core.paginator import Paginator
 from course.forms import AwardCategoryForm, CourseForm, ExamResultForm, ExamapplyForm
-from course.models import AwardCategory, Course, Exam, ExamResult
-from users.models import User
+# from course.models import AwardCategory, Course, Exam, ExamResult
+from users.models import AwardCategory, Course, Exam, ExamResult, User
 
 app = "course/admin/"
 

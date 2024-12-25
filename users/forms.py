@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from users.models import Batch, ReAdmission, Support, User, Installment, Payment, User, Course
+from users.models import Batch, Support, User, Payment, User, Course
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -185,56 +185,6 @@ class StudentForm(forms.ModelForm):
         if not re.match(r"^\d{12}$", aadhar):  # Exactly 12 digits
             raise ValidationError("Please enter a valid 12-digit Aadhaar number.")
         return aadhar
-
-class ReAdmissionForm(forms.ModelForm):
-    student = forms.ModelChoiceField(queryset=User.objects.filter(course_of_interest__isnull=False), required=True, label="Select Student")
-    course_of_interest = forms.ModelChoiceField(queryset=Course.objects.filter(status='Active'), required=True, label="Course of Interest")
-    exam_type = forms.ChoiceField(choices=[('OFFLINE', 'OFFLINE'), ('ONLINE', 'ONLINE')], required=True, label="Select Exam Type")
-    batch = forms.ModelChoiceField(queryset=Batch.objects.all(), required=True)
-    course_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    discount_rate = forms.CharField(required=False, widget=forms.HiddenInput())
-    discount_amount = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    total_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    fees_received = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    balance = forms.DecimalField(required=False, widget=forms.HiddenInput())
-
-    class Meta:
-        model = ReAdmission  
-        fields = ['student', 'course_of_interest', 'exam_type', 'batch', 
-                  'course_fees', 'discount_rate', 'discount_amount', 
-                  'total_fees', 'fees_received', 'balance', 'date', 'remarks']
-        widgets = {
-            'remarks': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter any remarks here...'}),
-        }
-    def __init__(self, *args, **kwargs):
-        instance = kwargs.pop('instance', None)
-        super(ReAdmissionForm, self).__init__(*args, **kwargs)
-                # Do something with the instance if needed
-        if instance:
-            self.instance = instance    
-        
-        
-class InstallmentForm(forms.ModelForm):
-    class Meta:
-        model = Installment
-        fields = ['installment_name', 'amount', 'date']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-        }
-
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        if amount is None or amount == '':
-            return 0  # Default to 0 if no amount is entered
-        if amount < 0:
-            raise ValidationError("Amount cannot be negative.")
-        return amount
-
-    def clean_date(self):
-        date = self.cleaned_data.get('date')
-        if not date:
-            raise forms.ValidationError("Date is required.")
-        return date
 
 class StudentPaymentForm(forms.ModelForm):
     class Meta:

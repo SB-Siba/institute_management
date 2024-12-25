@@ -8,10 +8,10 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 import qrcode
-from course.models import Course
-from certificate.models import ApprovedCertificate
+# from course.models import Course
+# from certificate.models import ApprovedCertificate
 from users import forms
-from users.models import Payment, User
+from users.models import ApprovedCertificate, Course, Payment, User
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
