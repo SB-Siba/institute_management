@@ -153,11 +153,44 @@
 
             // Calculate total fees and balance
             totalFees = courseFees - finalDiscountAmount;
-            discountAmountField.value = finalDiscountAmount.toFixed(2);
+            discountAmountField.value = finalDiscountAmount;
             totalFeesField.value = totalFees.toFixed(2);
             const balance = totalFees - feesReceived;
             balanceField.value = balance.toFixed(2);
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const batchField = document.getElementById('id_batch');
+    const remainingSeatsField = document.getElementById('id_remaining_seats_for_batch');
+
+    // Fetch remaining seats when batch changes
+    batchField.addEventListener('change', function () {
+        const batchId = batchField.value;
+        if (batchId) {
+            fetch(`/batch-details/${batchId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.remaining_seats !== undefined) {
+                        remainingSeatsField.value = data.remaining_seats;
+                    } else {
+                        remainingSeatsField.value = 'N/A';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching batch details:', error);
+                    remainingSeatsField.value = 'N/A';
+                });
+        } else {
+            remainingSeatsField.value = '';
+        }
+    });
+});
+
 </script>
 {% endblock content %}

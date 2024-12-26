@@ -166,7 +166,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     course_fees = models.FloatField(max_length=100, blank=True, null=True)
     admission_date = models.DateField(default=timezone.now)
     discount_rate = models.CharField(max_length=10, choices=DISCOUNT_CHOICES, default='amount-', blank=True)
-    discount_amount = models.FloatField(null=True, blank=True)
+    discount_amount = models.FloatField(default=0.0, null=True, blank=True)
     total_fees = models.FloatField(default=0.0, null=True, blank=True, editable=False)
     fees_received = models.FloatField(null=True, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
@@ -252,19 +252,7 @@ class OnlineClass(models.Model):
     def __str__(self):
         return self.title
 
-class Support(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField()
-    mobile = models.CharField(
-        max_length=15,
-        validators=[RegexValidator(r'^\+?1?\d{9,15}$', 'Enter a valid mobile number.')]
-    )
-    email = models.EmailField(blank=True, null=True)
-    file = models.FileField(upload_to='support_files/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Support Request by {self.user.username} - {self.created_at}"
     
 
 class Exam(models.Model):

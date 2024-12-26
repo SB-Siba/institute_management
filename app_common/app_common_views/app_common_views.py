@@ -79,11 +79,10 @@ class OurCourseDetailView(View):
     def get(self, request, course_code):
         course = get_object_or_404(Course, course_code=course_code)
         
-        # Check if 'subjects' attribute exists on the course, otherwise set an empty list
         subjects = getattr(course, 'subjects', [])
         context = {
             'course': course,
-            'subjects': subjects if subjects else []  # Use empty list if subjects are missing
+            'subjects': subjects if subjects else []  
         }
         return render(request, self.template_name, context)
 
@@ -92,7 +91,7 @@ class ContactSupport(View):
     contact_template = app + 'contact_us.html'
     support_template = app + 'support.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         if request.user.is_authenticated:
             initial_data = {
                 'full_name': request.user.full_name if request.user.full_name else '',
@@ -114,15 +113,12 @@ class ContactSupport(View):
     def post(self, request, *args, **kwargs):
         form = forms.ContactMessageForm(request.POST)
         if form.is_valid():
-            # Create a new ContactMessage instance
             contact_message = ContactMessage(
                 full_name=form.cleaned_data['full_name'],
                 email=form.cleaned_data['email'],
                 contact=form.cleaned_data['contact'],
                 message=form.cleaned_data['message']
             )
-            
-            # Associate the message with the authenticated user if available
             if request.user.is_authenticated:
                 contact_message.user = request.user
             
@@ -149,15 +145,8 @@ class PrivacyPolicy(View):
     template = app + "privacy_policy.html"
 
     def get(self, request):
-       
         return render(request, self.template)
 
-class ReturnPolicy(View):
-    template = app + "return_policy.html"
-
-    def get(self, request):
-       
-        return render(request, self.template)
 
 class OurServices(View):
     template = app + "our_services.html"
@@ -176,22 +165,20 @@ class OurAchieversView(View):
     template = app + "our_achievers.html"
     
     def get(self, request):
-        # Get the current month and year
         current_month = datetime.now().month
         current_year = datetime.now().year
         
-        # Filter attendance for the current month
         students_with_attendance = Attendance.objects.filter(
             date__month=current_month,
             date__year=current_year
         ).values('student').annotate(present_days=Count('status', filter=models.Q(status="Present")))
 
-        # Find the student with maximum attendance
         max_attendance = max(students_with_attendance, key=lambda x: x['present_days'])['present_days']
-        
-        # Get all students with the maximum attendance
+
         achievers = User.objects.filter(
             id__in=[attendance['student'] for attendance in students_with_attendance if attendance['present_days'] == max_attendance]
-        ).select_related('course_of_interest')  # Use the correct related field 'course_of_interest'
+        ).select_related('course_of_interest')  
+
+        current_month_name = datetime.now().strftime("%B")
         
-        return render(request, self.template, {'achievers': achievers})
+        return render(request, self.template, {'achievers': achievers,'current_month': current_month_name})

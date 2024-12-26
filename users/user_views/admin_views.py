@@ -81,7 +81,7 @@ class StudentListView(View):
    
     def get(self, request):
         search_query = request.GET.get('q', '').strip()
-        students = User.objects.filter(is_admitted=True)
+        students = User.objects.filter(is_admitted=True).order_by('full_name')
 
         # Apply search filter if query is provided
         if search_query:
@@ -274,10 +274,11 @@ class StudentUpdateView(View):
     success_url = reverse_lazy('users:student_list')
 
     def get_object(self):
-        return get_object_or_404(User, pk=self.kwargs['pk'])
+        return get_object_or_404(self.model, pk=self.kwargs['pk'])
 
     def get_context_data(self, form=None):
-        form = form or self.form_class(instance=self.get_object())
+        if form is None:
+            form = self.form_class(instance=self.get_object())
         return {'form': form}
 
     def get(self, request, *args, **kwargs):
@@ -609,11 +610,13 @@ class StudentAttendanceReportView(View):
 class BatchDetailsView(View):
     template = app + "batch_details.html"
     
-    def get(self, request):
-        # Retrieve all batches from the database
-        batches = Batch.objects.all()
-        context = {'batches': batches}
-        return render(request, self.template, context)
+    def get(self, request,batch_id):
+        try:
+            batch = Batch.objects.get(id=batch_id)
+            remaining_seats = batch.total_seats - batch.number_of_students
+            return JsonResponse({'remaining_seats': remaining_seats})
+        except Batch.DoesNotExist:
+            return JsonResponse({'error': 'Batch not found'}, status=404)
     
 
 class FilterClass(View):
@@ -624,7 +627,6 @@ class FilterClass(View):
         search_query = request.GET.get('search_query', '')
         pagination_size = request.GET.get('pagination', 10)  # Default to 10 entries per page if not provided
 
-        # Filter the online classes based on the search query (or show all if no query is provided)
         if search_query:
             online_classes = OnlineClass.objects.filter(course__course_name__icontains=search_query).order_by('id')
         else:

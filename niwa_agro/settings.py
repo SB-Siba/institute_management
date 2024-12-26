@@ -100,9 +100,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'react_institute',
         'USER': 'postgres',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',  
-        'PORT': '5432', 
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432',  
     }
 }
 
