@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 import random
 import string
@@ -83,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('amount-', 'Amount -'),
         ('percent-', 'Percent -'),
     ]
-    courses = models.ManyToManyField(Course, related_name='students', blank=True)
+    courses = models.ManyToManyField('course.Course', related_name='students', blank=True)
     student_image = models.ImageField(upload_to='student_photos/', max_length=250, blank=True, null=True)
     student_signature = models.ImageField(upload_to='student_signatures/', max_length=250, blank=True, null=True)
     roll_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
@@ -93,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     father_husband_name = models.CharField(max_length=100, blank=True)
     show_father_husband_on_certificate = models.BooleanField(default=False)
     mother_name = models.CharField(max_length=100, blank=True)
-    course_of_interest = models.ForeignKey('course.Course', on_delete=models.CASCADE, null=True, blank=True)
+    course_of_interest = models.ForeignKey('course.Course', on_delete=models.CASCADE,related_name='+', null=True, blank=True)
     email = models.EmailField(null=True, blank=True, unique=True)
     username = models.CharField(max_length=10, unique=True, null=True, blank=True)
     password = models.CharField(max_length=128, null=True, blank=True)
@@ -160,7 +161,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def user_type_display(self):
         return "Student" if self.is_admitted else "User"
+    def generate_reset_password_token(self):
+        self.token = str(uuid.uuid4())
+        self.token_expiration = datetime.now() + timedelta(hours=1)  # Token valid for 1 hour
+        self.save()
+        return self.token
 
+    def reset_password(self, token, new_password):
+        if self.token == token and datetime.now() <= self.token_expiration:
+            self.set_password(new_password)
+            self.token = None  # Clear the token
+            self.token_expiration = None  # Clear expiration
+            self.save()
+            return True
+        return False
+    
+    
 class Installment(models.Model):
     student = models.ForeignKey(User, related_name='installments', on_delete=models.CASCADE)
     installment_name = models.CharField(max_length=100)

@@ -3,20 +3,25 @@
 
 {% block content %}
 <div class="container my-4">
-    <h2>My Course Details</h2>
+    <h2 class="mb-4">My Course Details</h2>
     
     {% if course %}
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <!-- Course Name and Code -->
-            <h5 class="card-title">{{ course.course_name }} ({{ course.course_code }})</h5>
+            <h5 class="card-title text-primary">{{ course.course_name }} ({{ course.course_code }})</h5>
+            
+            <!-- Admission Form Button -->
+            <div class="mb-3">
+                <a href="{% url 'users:admission_form' course.id %}" class="btn btn-success">Admission Form</a>
+            </div>
             
             <!-- Course Image -->
             {% if course.course_image %}
-            <div class="course-image mb-3">
+            <div class="text-center mb-3">
                 <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" 
-                    class="img-fluid" 
-                    style="max-width: 300px; height: auto;">
+                    class="img-fluid rounded" 
+                    style="max-width: 500px; height: auto; border: 1px solid #ddd;">
             </div>
             {% endif %}
             
@@ -37,9 +42,9 @@
             
             <!-- Course Subjects in Table -->
             {% if course.course_subject %}
-            <p><strong>Course Subjects:</strong></p>
-            <table class="table table-bordered" style="border: 2px solid navy;">
-                <thead>
+            <h6 class="mt-4"><strong>Course Subjects:</strong></h6>
+            <table class="table table-striped table-bordered" style="border: 2px solid navy;">
+                <thead class="table-primary">
                     <tr>
                         <th>Sl No</th>
                         <th>Subject Name</th>
@@ -58,19 +63,25 @@
             
             <!-- Course Syllabus -->
             {% if course.course_syllabus %}
-            <p><strong>Syllabus:</strong></p>
-            <p>{{ course.course_syllabus }}</p>
+            <div class="mt-4">
+                <h6><strong>Syllabus:</strong></h6>
+                <p>{{ course.course_syllabus }}</p>
+            </div>
             {% endif %}
             
             <!-- Eligibility -->
             {% if course.eligibility %}
-            <p><strong>Eligibility:</strong></p>
-            <p>{{ course.eligibility }}</p>
+            <div class="mt-4">
+                <h6><strong>Eligibility:</strong></h6>
+                <p>{{ course.eligibility }}</p>
+            </div>
             {% endif %}
         </div>
     </div>
     {% else %}
-    <p>You are not yet admitted to any course.</p>
+    <div class="alert alert-warning mt-4" role="alert">
+        <p>You are not yet admitted to any course. Please contact the administration for more details.</p>
+    </div>
     {% endif %}
 </div>
 {% endblock content %}

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-from course.models import Course
+from course.models import Course, ExamResult
 from users.models import Batch, User
 from django.utils import timezone
 
@@ -13,6 +13,7 @@ class ApprovedCertificate(models.Model):
     applied_date = models.DateField(default=timezone.now,null=True, blank=True)
     status = models.CharField(max_length=20, blank=True, null=True)
     certificate_no = models.CharField(max_length=15, unique=True, blank=True, null=True)
+    exam_result = models.OneToOneField(ExamResult, on_delete=models.SET_NULL, related_name='approved_certificate', null=True, blank=True, help_text="Link to the related exam result")
 
     def __str__(self):
         return f"Approved Certificate for {self.user} - {self.course}"

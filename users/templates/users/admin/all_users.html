@@ -17,7 +17,6 @@
                     <th scope="col">Email</th>
                     <th scope="col">Contact</th>
                     <th scope="col">User Type</th>
-                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,10 +36,6 @@
                                 User
                             {% endif %}
                         </td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ user.id }}">Delete</button>
-                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -59,11 +54,11 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col">Sl No</th>
+                    <th scope="col">Full name</th>
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
                     <th scope="col">Contact</th>
                     <th scope="col">User Type</th>
-                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,14 +67,12 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ student.full_name }}</td>
+                        <td>{{ student.username }}</td>
                         <td>{{ student.email }}</td>
                         <td>{{ student.contact|default:"N/A" }}</td>
                         <!-- All admitted users should show as "Student" -->
                         <td>Student</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ student.id }}">Delete</button>
-                        </td>
+                        
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -129,21 +122,40 @@
 </section>
 
 <script>
-    // JavaScript to handle delete confirmation
     document.addEventListener('DOMContentLoaded', function () {
-        const deleteModal = document.getElementById('deleteModal');
-        let userIdToDelete = null;
+    const deleteModal = document.getElementById('deleteModal');
+    let userIdToDelete = null;
 
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            userIdToDelete = button.getAttribute('data-user-id');
-        });
-
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-            if (userIdToDelete) {
-                window.location.href = `/delete-user/${userIdToDelete}/`;
-            }
-        });
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        userIdToDelete = button.getAttribute('data-user-id');
     });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (userIdToDelete) {
+            fetch(`/delete-user/${userIdToDelete}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', // Add the CSRF token here
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the deleted user's row from the table
+                    document.querySelector(`tr[data-user-id="${data.user_id}"]`).remove();
+                    alert(data.message);
+                    // Hide the modal after successful deletion
+                    bootstrap.Modal.getInstance(deleteModal).hide();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('An unexpected error occurred: ' + error.message);
+            });
+        }
+    });
+});
 </script>
 {% endblock %}

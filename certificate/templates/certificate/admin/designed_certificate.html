@@ -1,202 +1,300 @@
-{% load static %}
-{% block content %}
+{% load static %} {% block content %}
 <style>
-    @media print {
-            body {
-                margin: 0;
-                padding: 0;
-                font-size: 10px !important;
-            }
- 
-            #backButton {
-                display: none;
-            }
- 
-            #downloadButton {
-                display: none;
-            }
-        }
-        
-        .certificate-qr-code{
-            width: 200px;
-        }
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 10px !important;
+    }
+
+    #backButton {
+      display: none;
+    }
+
+    #downloadButton {
+      display: none;
+    }
+  }
+
+  .certificate-qr-code {
+    width: 200px;
+  }
 </style>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/certificate.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,700;1,300;1,400&family=Rubik+Distressed&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/certificate.css' %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,700;1,300;1,400&family=Rubik+Distressed&display=swap"
+    rel="stylesheet"
+  />
 </head>
 <body>
-    <div class="certificate-container ">
-        <div class="certificate-border ">
-            <div class="certificate-content text-center">
-                <!-- Watermark Image -->
-                <!-- <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" class="watermark" alt="Watermark"> -->
+  <div class="certificate-container">
+    <div class="corner-triangle top-left"></div>
+    <div class="corner-triangle top-right"></div>
+    <div class="corner-triangle bottom-left"></div>
+    <div class="corner-triangle bottom-right"></div>
+    <div class="certificate-border">
+      <div class="certificate-content text-center">
+        <!-- Watermark Image -->
+        <!-- <img src="{% static 'image/RATIONAL EDUCATION AND COMPUTER TRAINING_114776258_logo.jpg' %}" class="watermark" alt="Watermark"> -->
 
-                <!-- Logo Image -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="certificate-headers">
-                        <img src="{% static 'app_common/images/msme.png' %}" alt="Certificate Logo">
-                    </div>
-                    <div class="certificate-headers">
-                        <img src="{% static 'app_common/images/digi.png' %}" alt="Certificate Logo">
-                    </div>
-                    <div class="certificate-header">
-                        <img src="{% static 'images/logoMain.png' %}" alt="Certificate Logo" class="certificate-logo">
-                    </div>
-                    <div class="certificate-headers2">
-                        <img src="{% static 'app_common/images/beti.png' %}" alt="Certificate Logo">
-                    </div>
-                    <div class="certificate-headers2">
-                        <img src="{% static 'app_common/images/swatch.png' %}" alt="Certificate Logo">
-                    </div>
-                </div>
-
-               <div class="content_div ">
-                <h1 class="bebas-neue-regular">RATIONAL EDUCATION AND COMPUTER TRAINING</h1>
-                <br>
-                <p><b>As ISO 9001:2015 Certified Organization</b></p>
-                <h1 class="CERTIFICtE">Certificate</h1>
-               </div>
-
-                <!-- New 3-column section after the ISO certification line -->
-                <div class="row mt-3">
-                    <!-- Left Column -->
-                   <div class="col-lg-4 d-flex justify-content-start">
-                      <div>
-                        <div class=" ">
-                            <img src="{% static 'app_common/images/ISO.png' %}" alt="Left Image 2" height="160px" width="160px" class="mb-2">
-                        </div>
-                        <div>
-                            <img src="{% static 'app_common/images/IAF.png' %}" alt="Left Image 1" height="140px" width="140px" class="mb-2">
-                        </div>
-                      </div>
-                   </div>
-
-                    <!-- Middle Column (Student Photo and Signature) -->
-                     <div class="col-lg-4 mt-5">
-                        <div class=" text-center student_img">
-                            <img src="{{ application.user.student_image.url }}" alt="Student Photo" class="mb-2 student-photo">
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <div class=" text-center student_sign">
-                                <img src="{{ application.user.student_signature.url }}" alt="Signature" class=" student-signature">
-                            </div>
-                        </div>
-                     </div>
-
-                    <!-- Right Column (Verification Code and Scanner) -->
-                    <div class="col-lg-4 mt-5 d-flex justify-content-end">
-                        <div class="scanner">
-                            <div class=" text-center" style="margin-left: -200px;">
-                                <p class="fw-bold" style="font-size: 15px;">FOR ONLINE <br> VERIFICATION SCAN</p>
-                            </div>
-                            <div class=" text-center" style="margin-left: -200px;">
-                                <img src="{{ qr_code_url }}" alt="QR Code" class="certificate-qr-code">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="this_is_certify">
-                    <p><b>This is to certify that,</b></p>
-                    <div class="underline-hr bg-black"> </div>
-                </div>
-                
-
-                <!-- Background/Decorative Image -->
-                <img src="{% static 'images/ReactMain Logo.png' %}" alt="Decorative Image" class="certificate-background">
-
-             <div class="Student_name">
-                <h3 class="text-uppercase">{{ application.user.full_name }}</h3>
-                <h6 class="text-uppercase">S/O- {{ application.user.father_husband_name }}</h6>
-                <div class="underline-hr2 bg-black"> </div>
-             </div>
-             <div>
-                <p class="Rational_edu"><b>RATIONAL EDUCATION AND COMPUTER TRAINING | BALUGAON</b></p>
-                <div class="underline-hr3 bg-black"> </div>
-             </div>
-             <span>
-                <p class="inline-text"><b>Has passed the prescribed examination with </b></p>
-                <h3 class="inline-heading"><b> {{ grade }}</b></h3>
-                <p class="inline-text"><b> grade</b></p>
-                <p class="inline-text"><b>( </b></p>
-                <h3 class="inline-heading"> <b> {{ percentage }}</b> </h3>
-                    <p class="inline-text"><b> marks )</b></p>
-                    <p class="inline-text"><b> has been awarded the</b></p>
-               
-            </span>
-            <h4 class="post_garduate">{{course_name}}</h4>
-
-                <div class="duration_div">
-                    <p class="fs-6">(COURSE DURATION: {{course_duration}})</p>
-                <p class="fs-6">(COURSE PERIOD: 04 Oct 2023 TO 03 Oct 2024)</p>
-                </div>
-                
-
-              <div class="inline-text">
-                <p class="m-0"><b>design and devloped as per the standards of</b></p>
-                <p class=" Rational_edu mt-1"><b>RATIONAL EDUCATION AND COMPUTER TRAINING </b></p>
-              </div>
-              <div class="mb-4">
-                <p class="inline-text"><b>An ISO 9001:2015 Certified Organization</b></p>
-              </div>
-
-                <div class="position-relative d-flex justify-content-center ">
-                    <div class="certificate-details ">
-                        <p class="m-0">Certificate No : {{application.certificate_no}}</p>
-                        <p class="mt-1">Date Of Issue : {{date_of_issue}}</p>
-                        
-                    </div>
-                    <div class="position-absolute imgISo">
-                        <img src="{% static 'app_common/images/ISO_with_tick.png' %}" alt="ISo Halmark" height="80px">
-                    </div>
-                    
-                </div>
-                <div>
-                    <div>
-                        <p class="details-para m-0">Online Certificate Verification Available on:</p>
-                        <p class="details-para">www.reactedu.in</p>
-                    </div>
-                </div>
-
-                <!-- Signature Area -->
-                <div class="row">
-                    <!-- Left Signature -->
-                    <div class="col-3 text-start Left_Signature">
-                        <p class="p-0 m-0">---------------------</p>
-                        <p style="margin: 0; text-transform: uppercase;">SABITA DASH</p>
-                        <p>Controller Of Examination</p>
-                    </div>
-                        <div class="col-6 p-0">
-                            <div class="contact-address">
-                                <p>Contact No: 9778577090 / 8895895988 / 8895644410</p>
-                                <p>ADDRESS:-AT:SUBASH JENA COLONY (HIGH SCHOOL ROAD, BALUGAON)</p>
-                                <p>PO/PS- BALUGAON, ZIP/PIN- 752030, KHORDHA, ODISHA, INDIA</p>
-                            </div>
-
-                        </div>
-                    <!-- Right Signature -->
-                    <div class="col-3 text-end Right_Signature">
-                        <p class="p-0 m-0"><img src="" alt=""></p>
-                        <p style="margin: 0; text-transform: uppercase;">BRAJASUNDAR BEHERA</p>
-                        <p>Director</p>
-                    </div>
-                </div>
-
-                <!-- Contact and Address Section -->
-              
-            </div>
+        <!-- Logo Image -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="certificate-headers">
+            <img
+              src="{% static 'app_common/images/msme.png' %}"
+              alt="Certificate Logo"
+            />
+          </div>
+          <div class="certificate-headers">
+            <img
+              src="{% static 'app_common/images/digi.png' %}"
+              alt="Certificate Logo"
+            />
+          </div>
+          <div class="certificate-header">
+            <img
+              src="{% static 'images/ReactMain Logo.png' %}"
+              alt="Certificate Logo"
+              class="certificate-logo"
+            />
+          </div>
+          <div class="certificate-headers2">
+            <img
+              src="{% static 'app_common/images/beti.png' %}"
+              alt="Certificate Logo"
+            />
+          </div>
+          <div class="certificate-headers2">
+            <img
+              src="{% static 'app_common/images/swatch.png' %}"
+              alt="Certificate Logo"
+            />
+          </div>
         </div>
+
+        <div class="content_div">
+          <h1 class="bebas-neue-regular">
+            RATIONAL EDUCATION AND COMPUTER TRAINING
+          </h1>
+          <br />
+          <p><b>As ISO 9001:2015 Certified Organization</b></p>
+          <h1 class="CERTIFICtE">Certificate</h1>
+        </div>
+
+        <!-- New 3-column section after the ISO certification line -->
+        <div class="row mt-3">
+          <!-- Left Column -->
+          <div class="col-lg-4 d-flex justify-content-start">
+            <div>
+              <div class=" ">
+                <img
+                  src="{% static 'app_common/images/ISO.png' %}"
+                  alt="Left Image 2"
+                  height="160px"
+                  width="160px"
+                  class="mb-2"
+                />
+              </div>
+              <div>
+                <img
+                  src="{% static 'app_common/images/IAF.png' %}"
+                  alt="Left Image 1"
+                  height="140px"
+                  width="140px"
+                  class="mb-2"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Column (Student Photo and Signature) -->
+          <div class="col-lg-4 mt-5">
+            <div class="text-center student_img">
+              <img
+                src="{{ application.user.student_image.url }}"
+                alt="Student Photo"
+                class="mb-2 student-photo"
+              />
+            </div>
+            <div class="d-flex justify-content-center">
+              <div class="text-center student_sign">
+                <img
+                  src="{{ application.user.student_signature.url }}"
+                  alt="Signature"
+                  class="student-signature"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Verification Code and Scanner) -->
+          <div class="col-lg-4 mt-5 d-flex justify-content-end">
+            <div class="scanner">
+              <div class="text-center" style="margin-left: -200px">
+                <p class="fw-bold" style="font-size: 15px">
+                  FOR ONLINE <br />
+                  VERIFICATION SCAN
+                </p>
+              </div>
+              <div class="text-center" style="margin-left: -200px">
+                <img
+                  src="{{ qr_code_url }}"
+                  alt="QR Code"
+                  class="certificate-qr-code"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="this_is_certify">
+          <p><b>This is to certify that,</b></p>
+          <div class="underline-hr bg-black"></div>
+        </div>
+
+        <!-- Background/Decorative Image -->
+        <img
+          src="{% static 'images/logoMain.png' %}"
+          alt="Decorative Image"
+          class="certificate-background"
+        />
+
+        <div class="Student_name">
+          <h3 class="text-uppercase">{{ application.user.full_name }}</h3>
+          <h6 class="text-uppercase">
+            S/O- {{ application.user.father_husband_name }}
+          </h6>
+          <div class="underline-hr2 bg-black"></div>
+        </div>
+        <div>
+          <p class="Rational_edu">
+            <b>RATIONAL EDUCATION AND COMPUTER TRAINING | BALUGAON</b>
+          </p>
+          <div class="underline-hr3 bg-black"></div>
+        </div>
+        <span>
+          <p class="inline-text">
+            <b>Has passed the prescribed examination with </b>
+          </p>
+          <h3 class="inline-heading"><b> {{ grade }}</b></h3>
+          <p class="inline-text"><b> grade</b></p>
+          <p class="inline-text"><b>( </b></p>
+          <h3 class="inline-heading"><b> {{ percentage }}</b></h3>
+          <p class="inline-text"><b> marks )</b></p>
+          <p class="inline-text"><b> has been awarded the</b></p>
+        </span>
+        <h4 class="post_garduate">{{course_name}}</h4>
+
+        <div class="duration_div">
+          <p class="fs-6">(COURSE DURATION: {{course_duration}})</p>
+        </div>
+
+        <div class="inline-text">
+          <p class="m-0"><b>design and devloped as per the standards of</b></p>
+          <p class="Rational_edu mt-1">
+            <b>RATIONAL EDUCATION AND COMPUTER TRAINING </b>
+          </p>
+        </div>
+        <div class="mb-4">
+          <p class="inline-text">
+            <b>An ISO 9001:2015 Certified Organization</b>
+          </p>
+        </div>
+
+        <div class="position-relative d-flex justify-content-center">
+          <div class="certificate-details">
+            <p class="m-0">Certificate No : {{application.certificate_no}}</p>
+            <p class="mt-1">Date Of Issue : {{application.applied_date}}</p>
+          </div>
+          <div class="position-absolute imgISo">
+            <img
+              src="{% static 'app_common/images/ISO_with_tick.png' %}"
+              alt="ISo Halmark"
+              height="80px"
+            />
+          </div>
+        </div>
+        <div>
+          <div>
+            <p class="details-para m-0">
+              Online Certificate Verification Available on:
+            </p>
+            <p class="details-para">www.reactedu.in</p>
+          </div>
+        </div>
+
+        <!-- Signature Area -->
+        <div class="row">
+          <!-- Left Signature -->
+          <div class="col-3 text-start Left_Signature">
+            <p class="p-0 m-0">
+              <img
+                src="{% static 'images/sabita sign.jpg' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 130px; height: auto"
+              />
+            </p>
+            <p class="p-0 mx-2">---------------------</p>
+            <p style="margin-left: 10px; text-transform: uppercase">SABITA DASH</p>
+            <p style="margin-left: 10px;">Controller Of Examination</p>
+          </div>
+          <div class="col-6 p-0">
+            <div class="contact-address" style="letter-spacing: 3px !important">
+              <p>Contact No: 9778577090 / 8895895988</p>
+              <p>
+                ADDRESS:-AT:SUBASH JENA COLONY, STREET NO 37C (HIGH SCHOOL ROAD,
+                BALUGAON)
+              </p>
+              <p>PO/PS- BALUGAON, ZIP/PIN- 752030, KHORDHA, ODISHA, INDIA</p>
+            </div>
+          </div>
+          <!-- Right Signature -->
+          <div class="col-3 text-end Right_Signature">
+            <p class="p-0 mt-0">
+              <img
+                src="{% static 'images/DIRECTOR SIGNcopy.png' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 150px; height: auto; margin-right: 20px;"
+              />
+            </p>
+            <p class="p-0 m-0">---------------------</p>
+            <p style="margin: 0; text-transform: uppercase">
+              BRAJASUNDAR BEHERA
+            </p>
+            <b><p style="margin-right: 60%">Director</p></b>
+          </div>
+        </div>
+        <!-- Contact and Address Section -->
+      </div>
     </div>
-    <div class="d-flex justify-content-center my-4">
-        <button id="backButton" class="btn btn-secondary me-4" onclick="window.history.back();">Back</button>
-        <button id="downloadButton" class="btn btn-primary" onclick="window.print();">Download Certificate</button>
-    </div>
+  </div>
+  <div class="d-flex justify-content-center my-4">
+    <button
+      id="backButton"
+      class="btn btn-secondary me-4"
+      onclick="window.history.back();"
+    >
+      Back
+    </button>
+    <button
+      id="downloadButton"
+      class="btn btn-primary"
+      onclick="window.print();"
+    >
+      Download Certificate
+    </button>
+  </div>
 </body>
 {% endblock %}

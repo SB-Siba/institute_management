@@ -28,8 +28,6 @@
 
   </style>
   <body>
-
-    
    	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand">
@@ -71,16 +69,17 @@
 			</li>
 			<li class="active sidebar-item">
 				<a href="{% url 'certificate:apply_certificate' %}">
-					<i class='bx bxs-dashboard' ></i>
+					<i class='bx bxs-dashboard'></i>
 					<span class="text">Apply For Certificates</span>
 				</a>
 			</li>
 			<li class=" active sidebar-item">
-				<a href="{% url 'certificate:approved_cer' %}" class="sidebar-links">
-					<i class="bx bxs-book-content"></i><span class="text">Approved Certificates</span>
+				<a href="{% url 'certificate:approved_cer' %}">
+					<i class='bx bxs-book-content'></i>
+					<span class="text">Approved Certificates</span>
 				</a>
 			</li>	
-			<li>
+			<li class=" active sidebar-item">
 				<a href="{% url 'users:support' %}" class="">
 					<i class='bx bx-support'></i>
 					<span class="text">Help Support</span>
@@ -88,7 +87,7 @@
 			</li>
 		</ul>
 		<ul class="side-menu">
-			<li>
+			<li class=" active sidebar-item">
 				<a  href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="logout">
 					<i class="lni  lni-exit"></i>
 					<span class="text">Logout</span>

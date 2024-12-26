@@ -10,7 +10,6 @@ class AwardCategory(models.Model):
 
     def __str__(self):
         return self.category_name
-    
 
 class Course(models.Model):
     
@@ -36,12 +35,12 @@ class Course(models.Model):
     course_video_links = models.JSONField(default=list, blank=True, null=True)
     display_course_fees_on_website = models.BooleanField(default=False,blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
-    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
+    batch = models.ForeignKey("users.Batch", on_delete=models.CASCADE, null=True, blank=True)
     
     def save(self, *args, **kwargs):  
         # Clean HTML from eligibility and course_syllabus fields  
-        self.eligibility = bleach.clean(self.eligibility,strip=False)  
-        self.course_syllabus = bleach.clean(self.course_syllabus,strip=False)  
+        # self.eligibility = bleach.clean(self.eligibility,strip=False)  
+        # self.course_syllabus = bleach.clean(self.course_syllabus,strip=False)  
         super().save(*args, **kwargs) 
 
     def __str__(self):
@@ -60,9 +59,9 @@ class Exam(models.Model):
     total_marks = models.PositiveIntegerField(null=False, blank=False)
     total_questions = models.PositiveIntegerField(null=True, blank=True, help_text="Enter the total number of questions")
     passing_marks = models.PositiveIntegerField(null=True, blank=True, help_text="Enter the minimum passing marks")
-    course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='exams', null=True, blank=True)
+    course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='+', null=True, blank=True)
     subjects = models.JSONField(default=list, blank=True)
-    batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE)
+    batch = models.ForeignKey("users.Batch", on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
   
     def __str__(self):
@@ -75,57 +74,46 @@ def __str__(self):
         return f"{self.course} - {self.exam_date}"
 
 class ExamResult(models.Model):
-    student = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='exam_results',null=True, blank=True)
-    course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='exam_results', null=True, blank=True)
+    student = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='exam_results', null=True, blank=True)
+    course = models.ForeignKey('course.Course', on_delete=models.CASCADE, related_name='+', null=True, blank=True)
     obtained_theory_marks = models.IntegerField(null=True, blank=True, default=0)
     obtained_practical_marks = models.IntegerField(null=True, blank=True, default=0)
     total_mark = models.FloatField(default=0)
     obtained_mark = models.FloatField(null=True, blank=True, default=0)
-    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Updated to DecimalField
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     grade = models.CharField(max_length=2, choices=[
-        ('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E')
-    ],blank=True)
-    result = models.CharField(max_length=7, choices=[('passed', 'Passed'), ('failed', 'Failed')],blank=True)
+        ('A+', 'A+'), ('A', 'A'), ('B', 'B'), ('C', 'C')
+    ], blank=True)
+    result = models.CharField(max_length=7, choices=[('passed', 'Passed'), ('failed', 'Failed')], blank=True)
     created_on = models.DateField(auto_now_add=True)
     subjects_data = models.JSONField(default=list)
 
-    # Updated __str__ method to handle potential None values
     def __str__(self):
-        student_name = self.student.name if self.student else "Unknown Student"
-        course_name = self.course.course_name if self.course and self.course.course_name else "No Course"
+        student_name = self.student.full_name if self.student else "Unknown Student"
+        course_name = self.course.course_name if self.course else "No Course"
         return f"Result for {student_name} in {course_name}"
 
-    
     def save(self, *args, **kwargs):
-        # Ensure the student and course names are stored correctly
-        if self.student:
-            self.student_name = self.student.full_name if hasattr(self.student, 'full_name') else "Unknown Student"
-        
-        if self.course:
-            self.course_name = self.course.course_name if hasattr(self.course, 'course_name') else "No Course"
-
-        # Calculate the total obtained marks
+        # Calculate obtained marks
         self.obtained_mark = (self.obtained_theory_marks or 0) + (self.obtained_practical_marks or 0)
-        
-        # Calculate percentage
+
+        # Calculate percentage if total_mark is valid
         if self.total_mark > 0:
             self.percentage = (self.obtained_mark / self.total_mark) * 100
 
         # Determine grade based on percentage
-        if self.percentage >= 90:
+        if self.percentage >= 85:
             self.grade = 'A+'
-        elif self.percentage >= 80:
-            self.grade = 'A'
         elif self.percentage >= 70:
+            self.grade = 'A'
+        elif self.percentage >= 55:
             self.grade = 'B'
-        elif self.percentage >= 60:
+        elif self.percentage >= 40:
             self.grade = 'C'
-        elif self.percentage >= 50:
-            self.grade = 'D'
         else:
-            self.grade = 'E'
+            self.grade = None  # No grade below 40%
 
         # Set result status
-        self.result = 'passed' if self.grade != 'E' else 'failed'
+        self.result = 'passed' if self.grade in ['A+', 'A', 'B', 'C'] else 'failed'
 
         super().save(*args, **kwargs)

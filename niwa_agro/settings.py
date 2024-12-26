@@ -86,23 +86,24 @@ WSGI_APPLICATION = 'niwa_agro.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.sqlite3',
+#          'NAME': BASE_DIR / 'db.sqlite3',
+#      }
+#  }
+
+
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': BASE_DIR / 'db.sqlite3',
-     }
- }
-
-
-"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'react',
+        'NAME': 'react_institute',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': 'localhost',  
+        'HOST': 'localhost',
+        'PORT': '5432',  
     }
-}"""
+}
 
 
 # Password validation
@@ -140,7 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-SITE_URL = 'http://127.0.0.1:8000'
+SITE_URL = 'http://127.0.0.1:8000/users'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
 if PRODUCTION == 'True':

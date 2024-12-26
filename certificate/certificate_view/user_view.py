@@ -1,5 +1,6 @@
 from decimal import Decimal
 from pyexpat.errors import messages
+import random
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
@@ -88,4 +89,53 @@ class ApprovedCer(View):
         context = {
             'applications': applications,
         }
+        return render(request, self.template_name, context)
+    
+    
+class MarksSheet(View):
+    template_name = app + 'marksheet.html'
+
+    def get(self, request, application_id, *args, **kwargs):
+        application = get_object_or_404(ApprovedCertificate, id=application_id)
+        exam_result = ExamResult.objects.filter(student=application.user).first()
+        
+        if not exam_result:
+            return render(request, 'error_page.html', {'message': 'Exam result not found.'})
+
+        # Generate random marksheet number in the format RCT-XXXX-MKT
+        random_number = random.randint(1000, 9999)  # Generate a random 4-digit number
+        marksheet_no = f"RCT-{random_number}-MKT"
+
+        # Calculate total theory, practical, and overall marks
+        total_theory_marks = sum(
+            subject.get("total_theory_marks", 0) for subject in exam_result.subjects_data
+        )
+        total_practical_marks = sum(
+            subject.get("total_practical_marks", 0) for subject in exam_result.subjects_data
+        )
+        total_mark = total_theory_marks + total_practical_marks
+
+        # Prepare context data for the template
+        context = {
+            'student_name': exam_result.student.full_name,
+            'father_name': exam_result.student.father_husband_name,
+            'mother_name': exam_result.student.mother_name,
+            'course_name': exam_result.student.course_of_interest.course_name if exam_result.student.course_of_interest else 'N/A',
+            'institute_name': "RATIONAL EDUCATION AND COMPUTER TRAINING",
+            'course_duration': exam_result.student.course_of_interest.course_duration if exam_result.student.course_of_interest else 'N/A',
+            'marksheet_no': marksheet_no,
+            'dob': exam_result.student.date_of_birth,
+            'course_period': "2024",
+            'subjects': exam_result.subjects_data,
+            'obtained_theory_marks': exam_result.obtained_theory_marks,
+            'obtained_practical_marks': exam_result.obtained_practical_marks,
+            'obtained_mark': exam_result.obtained_mark,
+            'total_theory_marks': total_theory_marks,
+            'total_practical_marks': total_practical_marks,
+            'percentage': exam_result.percentage,
+            'grade': exam_result.grade,
+            'subject_data': exam_result.subjects_data,
+            'total_mark': total_mark,
+        }
+
         return render(request, self.template_name, context)

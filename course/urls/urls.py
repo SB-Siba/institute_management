@@ -36,7 +36,7 @@ urlpatterns = [
     path('delete/<int:pk>/', admin_views.DeleteExamView.as_view(), name='delete_exam'),
     path('get-students/<int:course_id>/', admin_views.get_students_by_course, name='get_students_by_course'),
     path('get-subjects/<int:course_id>/', admin_views.get_subjects_by_course, name='get_subjects_by_course'),
-    path('<int:pk>/details/', admin_views.CourseDetailView.as_view(), name='course_details'),
+    path('<int:pk>/details/', admin_views.CourseDetail.as_view(), name='course_detail'),
 
         #user side
     path('user-courses/', user_views.UserCourseListView.as_view(), name='user_course_list'),

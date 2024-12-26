@@ -114,7 +114,7 @@
                 </p>
                 <p><strong>Minimum Amount To Pay:</strong> ₹{{ course.minimum_fees|floatformat:2 }}</p>
                 <!-- Admission Button -->
-                <a href="#" class="admission-button">Admission Now</a>
+                <a href="{% url 'users:login'%}" class="admission-button">Admission Now</a>
             </div>
         </div>
     </div>

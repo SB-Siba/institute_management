@@ -1,18 +1,24 @@
+from base64 import b64encode
+import io
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from datetime import datetime
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
+import qrcode
 from course.models import Course
+from certificate.models import ApprovedCertificate
 from users import forms
-from users.models import User
+from users.models import Payment, User
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+
 
 app = "users/user/"
 
@@ -160,24 +166,34 @@ class DashboardView(View):
         if not user.is_authenticated:
             return redirect("users:login")
 
-        # Fetch the enrolled course for the user
-        enrolled_course = user.course_of_interest  # Ensure this is a ForeignKey or properly set field
-        
+        # Fetch the admitted course
+        enrolled_course = user.course.course_name  # Assuming this is the admitted course
+
+        # Initialize fees-related variables
+        total_fees = 0
+        paid_fees = 0
+        balance_fees = 0
+
         if enrolled_course:
-            print(f"Enrolled course: {enrolled_course.course_name}")  # Debug
+            # Fetch total fees from the course
+            total_fees = enrolled_course.course_fees if enrolled_course.course_fees else 0
 
-        # Prepare data related to fees and other course details
-        paid_fees = getattr(user, 'fees_received', 0)
-        balance_fees = getattr(user, 'balance', 0)
-        total_fees = getattr(user, 'course_fees', 0)
+            # Calculate paid fees
+            paid_fees = Payment.objects.filter(student=user, course=enrolled_course).aggregate(Sum('amount'))['amount__sum'] or 0
 
-        # Context preparation for the dashboard
+            # Calculate balance fees
+            balance_fees = total_fees - paid_fees
+
+        # Fetch approved certificates
+        applications = ApprovedCertificate.objects.filter(user=user)
+
         context = {
-            "user": user,
-            "course": enrolled_course,  # Check if this is None
-            "paid_fees": paid_fees,
-            "balance_fees": balance_fees,
-            "total_fees": total_fees,
+            'userobj': user,
+            'course': enrolled_course,
+            'total_fees': total_fees,
+            'paid_fees': paid_fees,
+            'balance_fees': balance_fees,
+            'applications': applications,
         }
 
         return render(request, self.template, context)
@@ -263,3 +279,41 @@ class MyCoursesView(View):
                     return HttpResponse("Invalid data provided!", status=400)
         
         return HttpResponse("Unhandled POST action!", status=400)
+    
+class AdmissionFormView(View):
+    template_name = 'users/admin/students_details.html'
+
+    def get(self, request, course_id):
+        # Fetch the logged-in user (assuming you want the currently logged-in user's details)
+        student = get_object_or_404(User, id=request.user.id)
+
+        # Fetch the course details
+        course = get_object_or_404(Course, id=course_id)
+
+        # Prepare data to encode in the QR code
+        student_data = {
+            "id": student.pk,
+            "name": student.full_name,  # Use full_name instead of combining first_name and last_name
+            "email": student.email,
+            "phone": student.contact if hasattr(student, 'contact') else "N/A",
+        }
+        
+        # Convert data to QR code content (e.g., JSON)
+        qr_data_string = str(student_data)
+        
+        # Generate the QR code
+        qr = qrcode.make(qr_data_string)
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        
+        # Convert QR code to base64 to render in HTML
+        qr_data = b64encode(buffer.getvalue()).decode()
+        qr_image = f"data:image/png;base64,{qr_data}"
+
+        # Pass data to the template
+        context = {
+            'student': student,
+            'course': course,
+            'qr_image': qr_image,
+        }
+        return render(request, self.template_name, context)

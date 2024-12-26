@@ -143,8 +143,8 @@ class CourseCreateView(View):
 
         return render(request, self.template_name, {'form': form, 'subjects': []})
 
-class CourseDetailView(View):
-    template_name = app + 'course_details.html'
+class CourseDetail(View):
+    template_name = app + 'course_detail.html'
 
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
@@ -389,18 +389,16 @@ class AddStudentResultsView(View):
                 })
 
             percentage = (total_obtained_marks / total_marks) * 100 if total_marks > 0 else 0
-            if percentage >= 90:
+            if percentage >= 85:
                 grade = 'A+'
-            elif percentage >= 80:
-                grade = 'A'
             elif percentage >= 70:
+                grade = 'A'
+            elif percentage >= 55:
                 grade = 'B'
-            elif percentage >= 60:
+            elif percentage >= 40:
                 grade = 'C'
-            elif percentage >= 50:
-                grade = 'D'
             else:
-                grade = 'E'
+                grade = 'D'
 
             exam_result = ExamResult.objects.create(
                 student=student,
@@ -411,7 +409,7 @@ class AddStudentResultsView(View):
                 obtained_practical_marks=obtained_practical_total,
                 percentage=percentage,
                 grade=grade,
-                result='passed' if grade != 'E' else 'failed',
+                result='passed' if grade != 'D' else 'failed',
                 subjects_data=subjects_data
             )
 
@@ -524,18 +522,16 @@ class UpdateStudentResultsView(View):
         percentage = (total_obtained_marks / total_marks) * 100 if total_marks > 0 else 0
 
         # Determine grade based on percentage
-        if percentage >= 90:
+        if percentage >= 85:
             grade = 'A+'
-        elif percentage >= 80:
-            grade = 'A'
         elif percentage >= 70:
+            grade = 'A'
+        elif percentage >= 55:
             grade = 'B'
-        elif percentage >= 60:
+        elif percentage >= 40:
             grade = 'C'
-        elif percentage >= 50:
-            grade = 'D'
         else:
-            grade = 'E'
+            grade = 'D'
 
         # Update the ExamResult instance
         exam_result.subjects_data = updated_subjects_data
@@ -544,7 +540,7 @@ class UpdateStudentResultsView(View):
         exam_result.obtained_practical_marks = obtained_practical_total
         exam_result.percentage = percentage
         exam_result.grade = grade
-        exam_result.result = 'passed' if grade != 'E' else 'failed'
+        exam_result.result = 'passed' if grade != 'D' else 'failed'
         exam_result.save()
 
         messages.success(request, "Marks updated successfully!")

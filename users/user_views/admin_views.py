@@ -17,7 +17,7 @@ from course.models import Course
 import csv
 from django.db.models import Q
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
@@ -50,23 +50,18 @@ class AdminDashboard(View):
             # Get the latest payment for each student
             latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
 
-            # Calculate fees details for each student
-            total_fees = student.total_fees  # Assuming 'total_fees' field exists on User model
-            fees_received = latest_payment.amount if latest_payment else 0
-            balance = total_fees - fees_received
-
             student_data.append({
                 'user': student,
                 'latest_payment_date': latest_payment.date if latest_payment else None,
-                'total_fees': total_fees,
-                'fees_received': fees_received,
-                'balance': balance,
+                'total_fees': student.total_fees or 0,  # Default to 0 if total_fees is None
+                'fees_received': student.fees_received or 0,  # Default to 0 if fees_received is None
+                'balance': student.balance or 0,  # Default to 0 if balance is None
             })
 
         # Calculate the overall totals
-        total_fees = sum(data['total_fees'] for data in student_data)
-        total_paid_fees = sum(data['fees_received'] for data in student_data)
-        total_balance_fees = sum(data['balance'] for data in student_data)
+        total_fees = sum(data['total_fees'] for data in student_data if data['total_fees'] is not None)
+        total_paid_fees = sum(data['fees_received'] for data in student_data if data['fees_received'] is not None)
+        total_balance_fees = sum(data['balance'] for data in student_data if data['balance'] is not None)
 
         # Context to pass to the template
         context = {
@@ -79,6 +74,7 @@ class AdminDashboard(View):
 
         # Render the template with dynamic context
         return render(request, self.template, context)
+
 
 class StudentListView(View):
     template_name = app + 'student_list.html'
@@ -243,7 +239,33 @@ class StudentsDetailView(View):
     def get(self, request, pk):
         # Fetch the student details
         student = get_object_or_404(User, pk=pk)
-        return render(request, self.template_name, {'student': student})
+
+        # Prepare data to encode in the QR code
+        student_data = {
+            "id": student.pk,
+            "name": student.full_name,  # Use full_name instead of combining first_name and last_name
+            "email": student.email,
+            "phone": student.contact if hasattr(student, 'contact') else "N/A",
+        }
+        
+        # Convert data to QR code content (e.g., JSON)
+        qr_data_string = str(student_data)
+        
+        # Generate the QR code
+        qr = qrcode.make(qr_data_string)
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        
+        # Convert QR code to base64 to render in HTML
+        qr_data = b64encode(buffer.getvalue()).decode()
+        qr_image = f"data:image/png;base64,{qr_data}"
+        
+        # Pass data to the template
+        context = {
+            'student': student,
+            'qr_image': qr_image,
+        }
+        return render(request, self.template_name, context)
     
 class StudentUpdateView(View):
     model = User
@@ -956,6 +978,16 @@ class UserEditView(View):
 
 class DeleteUserView(View):
     def delete(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
-        user.delete()
-        return JsonResponse({'success': True, 'user_id': user.id})
+        # Ensure the request is an AJAX request
+        if not request.is_ajax():
+            return HttpResponseBadRequest("Invalid request")
+
+        try:
+            # Fetch the user and delete
+            user = get_object_or_404(User, id=user_id)
+            user_id = user.id  # Save user ID for the response
+            user.delete()
+            return JsonResponse({'success': True, 'message': 'User deleted successfully.', 'user_id': user_id})
+        except Exception as e:
+            # Handle unexpected exceptions and return an error message
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
