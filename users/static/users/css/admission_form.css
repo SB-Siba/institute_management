@@ -103,9 +103,8 @@ body {
     z-index: 1;
 }
 .certificate-content{
-    background-image:url('../../../../app_common/static/app_common/images/rationallogo.jpg' ) ;
-    background: url("../images/RATIONAL\ EDUCATION\ AND\ COMPUTER\ TRAINING.png");
-    
+   
+   
     
 }
 .Student_name h3{
