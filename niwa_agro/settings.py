@@ -4,17 +4,16 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+from dotenv import dotenv_values
+env_vars = dotenv_values(".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
-print(vars(os.getenv))
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env_vars['DEBUG']
+
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -96,13 +95,13 @@ WSGI_APPLICATION = 'niwa_agro.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'react_institute',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '5432',  
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env_vars["DB_NAME"],
+        "USER": env_vars["DB_USER"],
+        "PASSWORD": env_vars["DB_PASSWORD"],
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
@@ -145,14 +144,11 @@ STATIC_URL = '/static/'
 SITE_URL = 'http://127.0.0.1:8000/users'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
-if PRODUCTION == 'True':
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
-    STATIC_ROOT = os.path.join(BASE_DIR , "static")
 
-else:
-    STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
+STATIC_ROOT = os.path.join(BASE_DIR , "static")
+
+
 
 
 MEDIA_URL = '/media/'
