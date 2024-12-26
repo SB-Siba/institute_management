@@ -1,6 +1,4 @@
 import json
-from msilib.schema import ListView
-from winreg import DeleteKey
 import bleach
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
