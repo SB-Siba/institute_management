@@ -10,13 +10,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 import qrcode
 from certificate.forms import ApplyCertificateForm, SearchForm
-from certificate.models import ApprovedCertificate, ApprovedCertificate, Requested
-from course.models import Course, ExamResult
+# from certificate.models import ApprovedCertificate, ApprovedCertificate, Requested
+# from course.models import Course, ExamResult
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
-from users.models import User
+from users.models import ApprovedCertificate, ExamResult, Requested, User
 
 
 app = "certificate/admin/"

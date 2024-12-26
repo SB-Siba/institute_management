@@ -1,7 +1,8 @@
 import re
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm,SetPasswordForm
-from users.models import Batch, ReAdmission, Support, User, Installment, Payment, User, Course
+from app_common.models import ContactMessage
+from users.models import Batch,User, Payment, User, Course
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -130,7 +131,7 @@ class StudentForm(forms.ModelForm):
         fields = [
             'registered_user',
             'student_image', 'student_signature', 'roll_number', 'abbreviation', 'full_name', 'select_one',
-            'father_husband_name', 'show_father_husband_on_certificate', 'mother_name', 'course_of_interest',
+            'father_husband_name', 'mother_name', 'course_of_interest',
             'email', 'contact', 'alternative_contact', 'date_of_birth', 'gender', 'state', 'city', 'pincode',
             'permanent_address', 'aadhar_card_number', 'caste', 'qualification', 'occupation', 'course_fees',
             'discount_rate', 'discount_amount', 'fees_received', 'remarks', 'batch', 'remaining_seats_for_batch',
@@ -139,10 +140,10 @@ class StudentForm(forms.ModelForm):
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             'password': forms.PasswordInput(),
             'display_admission_form_id_card_fees_recipt': forms.RadioSelect(choices=User.YESNO),
+            'remaining_seats_for_batch':forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
         }
         labels = {
             'father_husband_name': 'Father/Husband Name',
-            'show_father_husband_on_certificate': 'Show Father/Husband on Certificate'
         }
 
     def __init__(self, *args, **kwargs):
@@ -185,56 +186,6 @@ class StudentForm(forms.ModelForm):
         if not re.match(r"^\d{12}$", aadhar):  # Exactly 12 digits
             raise ValidationError("Please enter a valid 12-digit Aadhaar number.")
         return aadhar
-
-class ReAdmissionForm(forms.ModelForm):
-    student = forms.ModelChoiceField(queryset=User.objects.filter(course_of_interest__isnull=False), required=True, label="Select Student")
-    course_of_interest = forms.ModelChoiceField(queryset=Course.objects.filter(status='Active'), required=True, label="Course of Interest")
-    exam_type = forms.ChoiceField(choices=[('OFFLINE', 'OFFLINE'), ('ONLINE', 'ONLINE')], required=True, label="Select Exam Type")
-    batch = forms.ModelChoiceField(queryset=Batch.objects.all(), required=True)
-    course_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    discount_rate = forms.CharField(required=False, widget=forms.HiddenInput())
-    discount_amount = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    total_fees = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    fees_received = forms.DecimalField(required=False, widget=forms.HiddenInput())
-    balance = forms.DecimalField(required=False, widget=forms.HiddenInput())
-
-    class Meta:
-        model = ReAdmission  
-        fields = ['student', 'course_of_interest', 'exam_type', 'batch', 
-                  'course_fees', 'discount_rate', 'discount_amount', 
-                  'total_fees', 'fees_received', 'balance', 'date', 'remarks']
-        widgets = {
-            'remarks': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter any remarks here...'}),
-        }
-    def __init__(self, *args, **kwargs):
-        instance = kwargs.pop('instance', None)
-        super(ReAdmissionForm, self).__init__(*args, **kwargs)
-                # Do something with the instance if needed
-        if instance:
-            self.instance = instance    
-        
-        
-class InstallmentForm(forms.ModelForm):
-    class Meta:
-        model = Installment
-        fields = ['installment_name', 'amount', 'date']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-        }
-
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        if amount is None or amount == '':
-            return 0  # Default to 0 if no amount is entered
-        if amount < 0:
-            raise ValidationError("Amount cannot be negative.")
-        return amount
-
-    def clean_date(self):
-        date = self.cleaned_data.get('date')
-        if not date:
-            raise forms.ValidationError("Date is required.")
-        return date
 
 class StudentPaymentForm(forms.ModelForm):
     class Meta:
@@ -283,16 +234,15 @@ class BatchForm(forms.ModelForm):
         model = Batch
         fields = ['name', 'timing','total_seats']
 
-class SupportForm(forms.ModelForm):
-    file = forms.FileField(required=False, label="Attach Files")
+class ContactMessageForm(forms.ModelForm):
+    file = forms.FileField(required=False)
     class Meta:
-        model = Support
-        fields = ['description', 'mobile', 'email', 'file']
+        model = ContactMessage
+        fields = ['message', 'contact', 'email']
         widgets = {
-            'description': forms.Textarea(attrs={'placeholder': 'Please add your queries here...', 'class': 'form-control'}),
-            'mobile': forms.TextInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'placeholder': 'Please add your queries here...', 'class': 'form-control'}),
+            'contact': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'file': forms.FileInput(attrs={'class': 'form-control'}),
 
         }
 

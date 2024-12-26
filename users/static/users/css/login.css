@@ -8,7 +8,7 @@
   }
 /*=================== Login CSS ==================================*/
 .login_background {
-    background-image: url("../../.././static/users/images/freebg.jpg");
+    background-image: url("../images/Computer\ Background.jpg");
     height: 100vh;
     width: 100%;
     background-position: center;
@@ -158,8 +158,6 @@
     width: 100%;
     height: 100%;
 }
-
-
 
 
 /* For large screens (desktops and laptops) */

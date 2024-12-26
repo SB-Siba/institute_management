@@ -8,10 +8,10 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.contrib import messages
 import qrcode
-from course.models import Course
-from certificate.models import ApprovedCertificate
+# from course.models import Course
+# from certificate.models import ApprovedCertificate
 from users import forms
-from users.models import Payment, User
+from users.models import ApprovedCertificate, Course, Payment, User
 from uuid import uuid4
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -220,8 +220,8 @@ class SupportView(View):
     template_name = app + 'help_support.html'
 
     def get(self, request):
-        form = forms.SupportForm(initial={
-            'mobile': request.user.contact,
+        form = forms.ContactMessageForm(initial={
+            'contact': request.user.contact,
             'email': request.user.email
         })
         return render(request, self.template_name, {'form': form})
@@ -230,7 +230,7 @@ class SupportView(View):
         if not request.user.is_authenticated:
             return redirect('login') 
 
-        form = forms.SupportForm(request.POST, request.FILES)
+        form = forms.ContactMessageForm(request.POST, request.FILES)
         if form.is_valid():
             support = form.save(commit=False)
             support.user = request.user  

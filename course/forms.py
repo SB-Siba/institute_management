@@ -2,11 +2,11 @@
 from datetime import timedelta
 from doctest import Example
 from django import forms
-from course.models import AwardCategory, Course, Exam, ExamResult
+# from course.models import AwardCategory, Course, Exam, ExamResult
 from django.forms.widgets import ClearableFileInput
 from django_summernote.widgets import SummernoteWidget
 
-from users.models import Batch, User
+from users.models import AwardCategory, Batch, Course, Exam, ExamResult, User
 
 class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True

@@ -5,9 +5,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from certificate.forms import ApplyCertificateForm
-from certificate.models import ApprovedCertificate, Requested
-from course.models import Course, ExamResult
-from users.models import User
+# from certificate.models import ApprovedCertificate, Requested
+# from course.models import Course, ExamResult
+from users.models import ApprovedCertificate, ExamResult, Requested, User
 from django.contrib import messages
 
  

@@ -1,8 +1,8 @@
 from django import forms
 from django.db.models import Q 
-from certificate.models import Requested
-from course.models import Course
-from users.models import Batch, User
+# from certificate.models import Requested
+# from course.models import Course
+from users.models import Batch, Course, Requested, User
 
 class SearchForm(forms.Form):
     q = forms.CharField(required=False, label='Search')
