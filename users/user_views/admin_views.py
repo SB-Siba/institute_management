@@ -235,11 +235,11 @@ class AddNewStudentView(View):
     
 class StudentsDetailView(View):
     template_name = app + 'students_details.html'
+    public_ip = "13.202.160.50"
 
     def get(self, request, pk):
         # Fetch the student details
         student = get_object_or_404(User, pk=pk)
-        public_ip = "127.0.0.1:8000"
 
         # Prepare data to encode in the QR code
         student_data = {
@@ -248,8 +248,12 @@ class StudentsDetailView(View):
             "email": student.email,
             "phone": student.contact if hasattr(student, 'contact') else "N/A",
         }
+        if request.get_host().startswith("127.0.0.1") or "localhost" in request.get_host():
+            host = "127.0.0.1:8000"  # Local server
+        else:
+            host = self.public_ip
         
-        student_detail_url = f"http://{public_ip}/student-details/{student.pk}/"
+        student_detail_url = f"http://{host}/student-details/{student.pk}/"
 
         # Generate the QR code with the URL
         qr = qrcode.make(student_detail_url)
