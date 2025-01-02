@@ -239,6 +239,7 @@ class StudentsDetailView(View):
     def get(self, request, pk):
         # Fetch the student details
         student = get_object_or_404(User, pk=pk)
+        public_ip = "127.0.0.1:8000"
 
         # Prepare data to encode in the QR code
         student_data = {
@@ -248,11 +249,10 @@ class StudentsDetailView(View):
             "phone": student.contact if hasattr(student, 'contact') else "N/A",
         }
         
-        # Convert data to QR code content (e.g., JSON)
-        qr_data_string = str(student_data)
-        
-        # Generate the QR code
-        qr = qrcode.make(qr_data_string)
+        student_detail_url = f"http://{public_ip}/student-details/{student.pk}/"
+
+        # Generate the QR code with the URL
+        qr = qrcode.make(student_detail_url)
         buffer = io.BytesIO()
         qr.save(buffer, format="PNG")
         
@@ -264,6 +264,7 @@ class StudentsDetailView(View):
         context = {
             'student': student,
             'qr_image': qr_image,
+            'student_detail_url': student_detail_url,  # For displaying or debugging
         }
         return render(request, self.template_name, context)
     
