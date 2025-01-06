@@ -104,7 +104,6 @@ class Course(models.Model):
     eligibility = models.TextField(blank=True, null=True)
     course_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
     pdf_files = models.FileField(upload_to='course_materials/', blank=True, null=True)
-    course_video_links = models.JSONField(default=list, blank=True, null=True)
     display_course_fees_on_website = models.BooleanField(default=False,blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
     batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)

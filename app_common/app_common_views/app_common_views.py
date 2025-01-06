@@ -168,17 +168,24 @@ class OurAchieversView(View):
         current_month = datetime.now().month
         current_year = datetime.now().year
         
+        # Get attendance data
         students_with_attendance = Attendance.objects.filter(
             date__month=current_month,
             date__year=current_year
         ).values('student').annotate(present_days=Count('status', filter=models.Q(status="Present")))
 
-        max_attendance = max(students_with_attendance, key=lambda x: x['present_days'])['present_days']
-
-        achievers = User.objects.filter(
-            id__in=[attendance['student'] for attendance in students_with_attendance if attendance['present_days'] == max_attendance]
-        ).select_related('course_of_interest')  
+        if students_with_attendance:
+            # Find max present_days if attendance data exists
+            max_attendance = max(students_with_attendance, key=lambda x: x['present_days'])['present_days']
+            
+            # Get achievers based on max present_days
+            achievers = User.objects.filter(
+                id__in=[attendance['student'] for attendance in students_with_attendance if attendance['present_days'] == max_attendance]
+            ).select_related('course_of_interest')
+        else:
+            # No attendance data, set achievers to an empty queryset
+            achievers = User.objects.none()
 
         current_month_name = datetime.now().strftime("%B")
         
-        return render(request, self.template, {'achievers': achievers,'current_month': current_month_name})
+        return render(request, self.template, {'achievers': achievers, 'current_month': current_month_name})

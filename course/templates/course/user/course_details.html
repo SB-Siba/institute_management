@@ -1,52 +1,112 @@
-{% extends 'users/user/base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'users/user/base.html' %} {% load static %} {% block content %}
 <div class="container my-3 p-4 bg-white shadow-sm rounded">
-    <u><h1 class="text-center mb-4">{{ course.course_name }}</h1></u>
-    <div class="row align-items-center">
-        <!-- Course Image Section -->
-        <div class="col-md-4">
-            {% if course.course_image %}
-                <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" class="img-fluid rounded shadow">
-            {% else %}
-                <img src="{% static 'path/to/default/image.png' %}" alt="No Image" class="img-fluid rounded shadow">
-            {% endif %}
-        </div>
-        
-        <!-- Course Details Section -->
-        <div class="col-md-8">
-            <p><strong>Course Code:</strong> {{ course.course_code }}</p>
-            <p><strong>Course Fees:</strong> {{ course.course_fees }}</p>
-            <p><strong>MRP:</strong> {{ course.course_mrp }}</p>
-            <p><strong>Minimum Fees:</strong> {{ course.minimum_fees }}</p>
-            <p><strong>Duration:</strong> {{ course.course_duration }}</p>
-            <p><strong>Status:</strong> {{ course.status }}</p>
-        </div>
+  <u><h1 class="text-center mb-4">{{ course.course_name }}</h1></u>
+  <div class="row align-items-center">
+    <!-- Course Image Section -->
+    <div class="col-md-4">
+      {% if course.course_image %}
+      <img
+        src="{{ course.course_image.url }}"
+        alt="{{ course.course_name }}"
+        class="img-fluid rounded shadow"
+      />
+      {% else %}
+      <img
+        src="{% static 'path/to/default/image.png' %}"
+        alt="No Image"
+        class="img-fluid rounded shadow"
+      />
+      {% endif %}
     </div>
 
-    <!-- Subjects Section -->
-    <h3 class="mt-5">Subjects</h3>
-    {% if course.course_subject %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">Sr. No.</th>
-                        <th scope="col">Subject Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for subject in course.course_subject %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ subject.name }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Course Details Section -->
+    <div class="col-md-8">
+      <p><strong>Course Code:</strong> {{ course.course_code }}</p>
+      <p><strong>Course Fees:</strong> {{ course.course_fees }}</p>
+      <p><strong>MRP:</strong> {{ course.course_mrp }}</p>
+      <p><strong>Minimum Fees:</strong> {{ course.minimum_fees }}</p>
+      <p><strong>Duration:</strong> {{ course.course_duration }} Months</p>
+      <p><strong>Status:</strong> {{ course.status }}</p>
+      <!-- Add a Modal for Warning -->
+      <div
+        class="modal fade"
+        id="warningModal"
+        tabindex="-1"
+        aria-labelledby="warningModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger" id="warningModalLabel">
+                Warning
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              The video link is not available at the moment.
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
-    {% else %}
-        <p>No subjects available.</p>
-    {% endif %}
+      </div>
+
+      <!-- Video Links -->
+      <p>
+        <strong>Video Links:</strong>
+        {% if course.course_video_link_1 %}
+        <a href="{{ course.course_video_link_1 }}" target="_blank">Video 1</a>
+        {% else %}
+        <a href="#" data-bs-toggle="modal" data-bs-target="#warningModal"
+          >Video 1</a
+        >
+        {% endif %} | {% if course.course_video_link_2 %}
+        <a href="{{ course.course_video_link_2 }}" target="_blank">Video 2</a>
+        {% else %}
+        <a href="#" data-bs-toggle="modal" data-bs-target="#warningModal"
+          >Video 2</a
+        >
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Subjects Section -->
+  <h3 class="mt-5">Subjects</h3>
+  {% if course.course_subject %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Sr. No.</th>
+          <th scope="col">Subject Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subject in course.course_subject %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ subject.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No subjects available.</p>
+  {% endif %}
 </div>
 {% endblock %}
