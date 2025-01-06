@@ -185,7 +185,7 @@ React Institute {% endblock title %} {% block content %}
                     />
                     <h4 class="achiever-name mt-3">{{ achiever.full_name }}</h4>
                     <p><strong>Course:</strong> {{ achiever.course_of_interest.course_name }}</p>
-                    <p class="text-success font-weight-bold">BEST OF ATTENDANCE FOR THE MONTH</p>
+                    <p class="text-success font-weight-bold">BEST OF ATTENDANCE FOR THIS MONTH</p>
                 </div>
             </div>
             {% empty %}
@@ -196,7 +196,7 @@ React Institute {% endblock title %} {% block content %}
 </section>
 
 
-<section class="section mx-5 pt-5 pb-5 testimonial-section">
+<section id="our-team-section" class="section mx-5 pt-5 pb-5 testimonial-section">
   <div class="row">
     <div
       class="col-12 d-flex align-items-center justify-content-center flex-column"
@@ -278,9 +278,6 @@ React Institute {% endblock title %} {% block content %}
     </div>
   </div>
 </section>  
-<!-- --------------------------Start Accordian------------------------------------- -->
-
-<!-- --------------------------------------------End Accordian------------------------------------- -->
 
 <script>
   function toggleSection(sectionId) {

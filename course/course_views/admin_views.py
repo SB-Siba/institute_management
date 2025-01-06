@@ -169,12 +169,17 @@ class CourseEditView(View):
         form = CourseForm(request.POST, request.FILES, instance=course)
         subjects = course.course_subject if course.course_subject else []
 
+        # Handle adding a new subject
         if 'add_subject' in request.POST:
             subject_name = request.POST.get('course_subject', '').strip()
-
             if subject_name:
-                # Append new subject to the list, ensuring each has a unique ID
-                subjects.append({'id': len(subjects) + 1, 'name': subject_name})
+                # Add a new subject with a unique ID
+                subject_id = len(subjects) + 1
+                subjects.append({'id': subject_id, 'name': subject_name})
+
+            # Save updated subjects to the course
+            course.course_subject = subjects
+            course.save()
 
             return render(request, self.template_name, {
                 'form': form,
@@ -182,11 +187,18 @@ class CourseEditView(View):
                 'course': course
             })
 
+        # Handle deleting a subject
         elif 'delete_subject' in request.POST:
-            subject_index = int(request.POST.get('delete_subject'))
+            try:
+                subject_index = int(request.POST.get('delete_subject'))
+                if 0 <= subject_index < len(subjects):
+                    subjects.pop(subject_index)  # Remove the selected subject
 
-            if 0 <= subject_index < len(subjects):
-                subjects.pop(subject_index)  # Remove the selected subject
+                    # Save updated subjects to the course
+                    course.course_subject = subjects
+                    course.save()
+            except (ValueError, IndexError):
+                pass  # Ignore invalid indices
 
             return render(request, self.template_name, {
                 'form': form,
@@ -194,24 +206,19 @@ class CourseEditView(View):
                 'course': course
             })
 
+        # Handle editing the course
         elif 'edit_course' in request.POST:
             if form.is_valid():
                 course = form.save(commit=False)
 
                 # Save updated subjects as JSON in the course_subject field
-                course.course_subject = [{'id': subject['id'], 'name': subject['name']} for subject in subjects]
+                course.course_subject = subjects
                 course.save()
 
-                # Redirect to course list after successful edit
                 messages.success(request, 'Course updated successfully!')
                 return redirect('course:course_list')
-            else:
-                return render(request, self.template_name, {
-                    'form': form,
-                    'subjects': subjects,
-                    'course': course
-                })
 
+        # Render the form with errors if any
         return render(request, self.template_name, {
             'form': form,
             'subjects': subjects,

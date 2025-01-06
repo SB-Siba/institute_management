@@ -394,6 +394,9 @@ transform: scale(1.03);
 .whychoose{
   background:var(--gradient);
 }
+.list-unstyled{
+  font-family: sans-serif;
+}
   .aboutreact_bg div a{
   background-color: var(--secondary2);
   width: 50%;
