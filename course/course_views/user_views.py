@@ -52,6 +52,7 @@ class ExamResultsView(View):
 
         return render(request, self.template_name, context)
 
+
 class CourseDetailView(View):
     model = Course
     template_name = app + "course_details.html"
