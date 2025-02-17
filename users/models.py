@@ -104,7 +104,6 @@ class Course(models.Model):
     eligibility = models.TextField(blank=True, null=True)
     course_image = models.ImageField(upload_to='course_images/', blank=True, null=True)
     pdf_files = models.FileField(upload_to='course_materials/', blank=True, null=True)
-    course_video_links = models.JSONField(default=list, blank=True, null=True)
     display_course_fees_on_website = models.BooleanField(default=False,blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active',blank=True, null=True)
     batch = models.ForeignKey('users.Batch', on_delete=models.CASCADE, null=True, blank=True)
@@ -166,7 +165,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     course_fees = models.FloatField(max_length=100, blank=True, null=True)
     admission_date = models.DateField(default=timezone.now)
     discount_rate = models.CharField(max_length=10, choices=DISCOUNT_CHOICES, default='amount-', blank=True)
-    discount_amount = models.FloatField(null=True, blank=True)
+    discount_amount = models.FloatField(default=0.0, null=True, blank=True)
     total_fees = models.FloatField(default=0.0, null=True, blank=True, editable=False)
     fees_received = models.FloatField(null=True, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
@@ -252,19 +251,7 @@ class OnlineClass(models.Model):
     def __str__(self):
         return self.title
 
-class Support(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField()
-    mobile = models.CharField(
-        max_length=15,
-        validators=[RegexValidator(r'^\+?1?\d{9,15}$', 'Enter a valid mobile number.')]
-    )
-    email = models.EmailField(blank=True, null=True)
-    file = models.FileField(upload_to='support_files/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Support Request by {self.user.username} - {self.created_at}"
     
 
 class Exam(models.Model):

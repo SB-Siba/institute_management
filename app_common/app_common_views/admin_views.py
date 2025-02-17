@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from app_common.models import ContactMessage
 from app_common.forms import ReplyForm
-from users.models import Support
+from django.core.exceptions import PermissionDenied
 from users.user_views.emails import send_template_email
 from itertools import chain
 
@@ -17,17 +17,15 @@ class AdminMessageListView(View):
 
     def get(self, request, *args, **kwargs):
         contact_messages = ContactMessage.objects.all().order_by('-created_at')
-        support_messages = Support.objects.all().order_by('-created_at')
 
         # Add a `type` attribute to each message
         for message in contact_messages:
             message.type = 'contact'
-        for message in support_messages:
-            message.type = 'support'
+    
 
         # Combine both message types, sorted by created_at
         messages_list = sorted(
-            chain(contact_messages, support_messages),
+            chain(contact_messages),
             key=lambda message: message.created_at,
             reverse=True
         )
@@ -38,19 +36,20 @@ class AdminMessageListView(View):
 class AdminMessageDetailView(View):
     template = app + 'admin/message_detail.html'
 
-    def get(self, request, message_id, *args, **kwargs):
+    def get(self, request, message_id):
         message_type = request.GET.get('type', 'contact')
 
         # Get the message object based on the type (contact or support)
         if message_type == 'contact':
             message = get_object_or_404(ContactMessage, id=message_id)
         else:
-            message = get_object_or_404(Support, id=message_id)
+            message = get_object_or_404(ContactMessage, id=message_id)
 
         # If the user is authenticated, check if the message belongs to the user
         if request.user.is_authenticated and message.user == request.user:
-            # Optionally, you can fetch authenticated user messages here
-            pass
+            if message.user != request.user:
+                raise PermissionDenied("You don't have permission to view this message.")
+            
 
         # Pass the message and message type to the template
         return render(request, self.template, {
@@ -64,7 +63,7 @@ class AdminMessageDetailView(View):
         if message_type == 'contact':
             message = get_object_or_404(ContactMessage, id=message_id)
         else:
-            message = get_object_or_404(Support, id=message_id)
+            message = get_object_or_404(ContactMessage, id=message_id)
 
         # Handle the form submission or redirection here
         return HttpResponseRedirect(reverse('app_common:admin_message_list'))
@@ -76,7 +75,7 @@ class AdminMessageDeleteView(View):
         if message_type == 'contact':
             message = get_object_or_404(ContactMessage, id=message_id)
         else:
-            message = get_object_or_404(Support, id=message_id)
+            message = get_object_or_404(ContactMessage, id=message_id)
 
         message.delete()
         messages.success(request, "Message deleted successfully.")
@@ -92,7 +91,7 @@ class AdminMessageBulkDeleteView(View):
             if message_type == 'contact':
                 ContactMessage.objects.filter(id__in=selected_ids).delete()
             elif message_type == 'support':
-                Support.objects.filter(id__in=selected_ids).delete()
+                ContactMessage.objects.filter(id__in=selected_ids).delete()
 
             messages.success(request, "Selected messages deleted successfully.")
         else:

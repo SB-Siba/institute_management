@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
 
   <!------------ ICONS FILE------ -->
-  <link rel="icon" href="{% static 'app_common/images/rationallogo.jpg' %}" style="border-radius: 50%;">
+  <link rel="icon" href="{% static 'app_common/images/logo.jpg' %}" style="border-radius: 50%;">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -45,7 +45,7 @@
   <script src="
   https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-  <style>
+<style>
     /* Contact Container Styling */
     .contact-container {
       display: flex;
@@ -157,7 +157,7 @@
       font-size: 14px;
       margin-top: 20px;
     }
-  </style>  
+</style>  
 
 </head>
 
@@ -226,7 +226,7 @@
               <li><a class="nav-link" href="#">Home</a></li>
               <li><a class="nav-link" href="#">about us</a></li>
               <li><a class="nav-link" href="#">Services</a></li>
-              <li><a class="nav-link" href="#">Blogs</a></li>
+          
               <li><a class="nav-link" href="#">Contact</a></li>
             
             </ul>
@@ -248,21 +248,12 @@
               <li class="nav-item ms-3">
                   <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_courses' %}active{% endif %}" href="{% url 'app_common:our_courses' %}">Courses</a>
               </li>
-              <li class="nav-item ms-3">
+              <!-- <li class="nav-item ms-3">
                   <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_services' %}active{% endif %}" href="">Our Services</a>
-              </li>
+              </li> -->
               <li class="nav-item ms-3">
                   <a class="nav-link {% if request.resolver_match.url_name == 'app_common:our_achievers' %}active{% endif %}" href="{% url 'app_common:our_achievers' %}">Our Achievers</a>
               </li>
-              <!-- <li class="nav-item ms-3">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:gallery' %}active{% endif %}" href="">Gallery</a>
-              </li>
-              <li class="nav-item ms-3">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:job_updates' %}active{% endif %}" href="">Job Updates</a>
-              </li>
-              <li class="nav-item ms-3">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'app_common:certifications' %}active{% endif %}" href="">Certifications</a>
-              </li> -->
               <li class="nav-item ms-3">
                   <a class="nav-link {% if request.resolver_match.url_name == 'app_common:contact_support' %}active{% endif %}" href="{% url 'app_common:contact_support' %}">Contact Us</a>
               </li>
@@ -308,37 +299,26 @@
     <!-- Quick Links Section with 4 columns -->
     <div class="quick-links">
       <h6>Quick Links</h6>
-      <div class="links-grid">
+      <div class="links-grid" style="margin-left: 22%;">
         <div class="links-column">
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Terms & Conditions</a></li>
-            <li><a href="#">Downloads</a></li>
-            <li><a href="#">Privacy Policies</a></li>
+            <li><a href="{% url 'app_common:about_us' %}">About Us</a></li>
+            <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
+            <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
           </ul>
         </div>
         <div class="links-column">
           <ul>
             <li><a href="#">Payments Methods</a></li>
-            <li><a href="#">Refund policies</a></li>
-            <li><a href="#">Disclaimer</a></li>
-            <li><a href="#">Our Blogs</a></li>
+            <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policies</a></li>
+            <li><a href="#our-team-section">Our Team</a></li>
           </ul>
         </div>
         <div class="links-column">
           <ul>
             <li><a href="#">Our Affiliations</a></li>
-            <li><a href="#">Our Team</a></li>
             <li><a href="#">Our Register Center's</a></li>
             <li><a href="#">Franchise Details</a></li>
-          </ul>
-        </div>
-        <div class="links-column">
-          <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Support</a></li>
           </ul>
         </div>
       </div>

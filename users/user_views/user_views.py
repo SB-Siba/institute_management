@@ -220,8 +220,8 @@ class SupportView(View):
     template_name = app + 'help_support.html'
 
     def get(self, request):
-        form = forms.SupportForm(initial={
-            'mobile': request.user.contact,
+        form = forms.ContactMessageForm(initial={
+            'contact': request.user.contact,
             'email': request.user.email
         })
         return render(request, self.template_name, {'form': form})
@@ -230,7 +230,7 @@ class SupportView(View):
         if not request.user.is_authenticated:
             return redirect('login') 
 
-        form = forms.SupportForm(request.POST, request.FILES)
+        form = forms.ContactMessageForm(request.POST, request.FILES)
         if form.is_valid():
             support = form.save(commit=False)
             support.user = request.user  

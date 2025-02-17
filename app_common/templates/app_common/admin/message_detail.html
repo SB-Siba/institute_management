@@ -39,11 +39,11 @@
           <!-- Display Message -->
           <p><strong>Message:</strong>
             {% if message.user %}
-              {{ message.message|default:"N/A" }}
+                {{ message.message }}
             {% else %}
-              {{ message.message|default:"N/A" }}
+                {{ message.message|default:"N/A" }}
             {% endif %}
-          </p>
+        </p>        
 
           <!-- Display Date & Time -->
           <p><strong>Date & Time:</strong> {{ message.created_at|date:"Y-m-d H:i:s"|default:"N/A" }}</p>

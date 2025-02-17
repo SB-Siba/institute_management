@@ -1,7 +1,7 @@
 {% extends 'users/user/base.html' %}
 {% block content %}
 <style>
-    #description{
+    #message{
         height: 10px;
     }
 </style>
@@ -13,13 +13,13 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="description" class="form-label" id="description">Please add your queries here...</label>
-                    {{ form.description }}
+                    <label for="description" class="form-label" id="description">Please add your queries here.</label>
+                    {{ form.message }}
                 </div>
 
                 <div class="mb-3">
                     <label for="mobile" class="form-label">Mobile</label>
-                    {{ form.mobile }}
+                    {{ form.contact }}
                 </div>
 
                 <div class="mb-3">
@@ -27,10 +27,7 @@
                     {{ form.email }}
                 </div>
 
-                <div class="mb-3">
-                    <label for="file" class="form-label">Attach Files</label>
-                    {{ form.file }}
-                </div>
+             
 
                 <div class="d-flex justify-content-end">
                     <a href="{% url 'users:support' %}" class="btn btn-secondary me-2">Cancel</a>

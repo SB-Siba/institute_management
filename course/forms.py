@@ -34,7 +34,7 @@ class CourseForm(forms.ModelForm):
         fields = [
             'course_code', 'award', 'course_name', 'course_fees',
             'course_mrp', 'minimum_fees', 'course_duration', 'exam_fees', 'course_video_link_1', 
-            'course_video_link_2', 'course_syllabus', 'eligibility', 'course_image', 'course_video_links',
+            'course_video_link_2', 'course_syllabus', 'eligibility', 'course_image',
             'display_course_fees_on_website', 'status'
         ]
         widgets = {
@@ -43,7 +43,7 @@ class CourseForm(forms.ModelForm):
             'course_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_mrp': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'minimum_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'course_duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 30 hours'}),
+            'course_duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 12  months'}),
             'exam_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'course_syllabus': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -56,7 +56,6 @@ class CourseForm(forms.ModelForm):
                 'placeholder': 'Enter eligibility criteria here...'
             }),
             'course_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'course_video_links': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'display_course_fees_on_website': forms.RadioSelect(choices=[(True, 'Yes'), (False, 'No')]),
             'status': forms.Select(choices=Course.STATUS_CHOICES, attrs={'class': 'form-control'}),
         }
