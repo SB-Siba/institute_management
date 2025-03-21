@@ -1,0 +1,187 @@
+{% extends 'users/admin/base.html' %} 
+{% load static %} 
+{% block content %}
+<link rel="stylesheet" href="{% static 'users/css/Admin_Responsive.css' %}">
+  <link rel="stylesheet" href="{% static 'users/css/Admin_Side_All.css' %}">
+<main class="py-6">
+  <div class="container-fluid">
+    <div>
+      <i><h4 class="heading">
+        Welcome To <strong>RATIONAL EDUCATION AND COMPUTER TRAINING</strong>
+      </h4></i>
+    </div>
+    <div class="overview-boxes">
+      <!-- Direct Admission Box -->
+      <a href="{% url 'users:add_new_student' %}" class="box-link">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Direct Admission</div>
+            <div class="indicator">
+              <i class="bx bx-right-arrow-alt"></i>
+            </div>
+          </div>
+          <i class="bx bx-user-plus cart"></i>
+        </div>
+      </a>
+
+      <!-- Fees Details Box -->
+      <a href="{% url 'users:student_fees_list' %}" class="box-link">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Fees Details</div>
+            <div class="indicator">
+              <i class="bx bx-right-arrow-alt"></i>
+            </div>
+          </div>
+          <i class="bx bx-wallet cart"></i>
+        </div>
+      </a>
+
+      <!-- Take Attendance Box -->
+      <a href="{% url 'users:take_attendance' %}" class="box-link">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Take Attendance</div>
+            <div class="indicator">
+              <i class="bx bx-right-arrow-alt"></i>
+            </div>
+          </div>
+          <i class="bx bx-user-check cart"></i>
+        </div>
+      </a>
+
+      <!-- Batch Details Box -->
+      <a href="{% url 'users:list_batches' %}" class="box-link">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Batch Details</div>
+            <div class="indicator">
+              <i class="bx bx-right-arrow-alt"></i>
+            </div>
+          </div>
+          <i class="bx bx-home cart"></i>
+        </div>
+      </a>
+
+      <!-- Support Box -->
+      <a href="{% url 'app_common:admin_message_list' %}" class="box-link">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Support</div>
+            <div class="indicator">
+              <i class="bx bx-right-arrow-alt"></i>
+            </div>
+          </div>
+          <i class="bx bx-support cart"></i>
+        </div>
+      </a>
+
+      <!-- Image Box -->
+      <div class="box1">
+        <div class="right-side">
+          <div class="box-topic"></div>
+        </div>
+        <img
+          src="{% static 'app_common/images/institute_homepage.jpg' %}"
+          alt="Sample Image"
+          class="box-image"
+        />
+      </div>
+
+      <!-- Balance Fees Report -->
+      <div class="box" style="
+          height: 350px;
+          width: 40%;
+          /* margin-top: -90px; */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+        ">
+        <h5>Balance Fees Report</h5>
+       
+
+        <!-- Doughnut Chart -->
+         <div style="height: 200px">
+        <canvas id="chartjs-pie" ></canvas>
+      </div>
+        <div class="col-6" style="display: flex; flex-direction: row; align-items: ;">
+          <div style="margin-right: 20px;">
+          <h6>Balance Fees</h6>
+          <p>Rs. {{ total_balance_fees }}</p>
+        </div>
+        <div>
+          <h6>Total Fees</h6>
+          <p>Rs. {{ total_fees }}</p>
+        </div>
+        </div>
+      </div>
+      <!-- Fees Section Below Pie Chart -->
+      <div class="box" style="height: 180px; width: 40%; margin-top: 30px">
+        <div class="fees-details">
+          <h5>Fees Section</h5>
+          <div class="container">
+            <div class="row mb-3">
+              <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Total Course Fees: Rs. {{ total_fees }}</strong> 
+                </div>
+                <div class="col-md-4">
+                    <strong>Total Fees Paid: Rs. {{ total_paid_fees }}</strong> 
+                </div>
+                <div class="col-md-4">
+                    <strong>Total Balance Fees: Rs. {{ total_balance_fees }}</strong> 
+                </div>
+            </div>
+              <a
+                href="{% url 'users:student_fees_list'%}"
+                class="btn btn-primary"
+                >View Details</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% block scripts %}
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Doughnut chart data and configuration
+  new Chart(document.getElementById("chartjs-pie"), {
+      type: 'doughnut',
+      data: {
+          labels: ['Balance Fees', 'Paid Fees'],
+          datasets: [{
+              label: 'Fees',
+              data: [{{ total_balance_fees }}, {{ total_paid_fees }}],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          plugins: {
+              legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                      color: 'white' // Set the labels' color to white
+                  }
+              }
+          }
+      }
+  });
+</script>
+
+{% endblock %} {% endblock content %}

@@ -1,0 +1,87 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .form-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="container mt-6">
+    <div class="form-container">
+        <h2>Add Payment</h2>
+        <form method="POST" id="payment-form" novalidate>
+            {% csrf_token %}
+
+            <!-- Student Field (Non-editable) -->
+            <div class="form-group">
+                <label for="student">Student Name</label>
+                <input type="text" value="{{ student.full_name }}" readonly class="form-control">
+                <input type="hidden" name="student" value="{{ student.id }}">
+            </div>
+
+            <div class="form-group">
+                <label for="course">Course Name</label>
+                {% if course %}
+                    <input type="text" value="{{ course.course_name  }}" readonly class="form-control">
+                    <input type="hidden" name="course" value="{{ course.id }}">
+                {% else %}
+                    <input type="text" value="No course assigned" readonly class="form-control">
+                {% endif %}
+            </div>
+
+
+            <!-- Amount Field -->
+            <div class="form-group">
+                <label for="amount">Enter Payment Amount</label>
+                {{ form.amount }}
+            </div>
+
+            <!-- Balance Display -->
+            <div class="form-group">
+                <label>Total Balance Amount:</label>
+                <span id="total_balance">{{ student.balance }}</span>
+            </div>
+
+            <!-- Payment Mode Field -->
+            <div class="form-group">
+                <label for="payment_mode">Payment Mode</label>
+                {{ form.payment_mode }}
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="description">Any Notes</label>
+                {{ form.description }}
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save Payment</button>
+                <a href="{% url 'users:student_fees_list' %}" class="btn btn-secondary ms-3">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('amount').addEventListener('input', updateBalance);
+
+function updateBalance() {
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const initialBalance = parseFloat('{{ balance }}');
+    const newBalance = initialBalance - amount;
+
+    document.getElementById('total_balance').innerText = newBalance.toFixed(2);
+}
+</script>
+{% endblock %}

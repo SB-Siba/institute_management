@@ -1,0 +1,79 @@
+{% extends 'users/admin/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>List Online Classes</h2>
+        <a href="#" class="btn btn-primary">Add Class Details</a>
+    </div>
+    <div class="mt-4">
+        <form action="#" method="get">
+            <label>Show 
+                <select id="entries" class="form-select d-inline-block w-auto" name="pagination">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                entries
+            </label>
+            <input type="text" id="search" class="form-control w-auto d-inline-block float-right" name="search_query" placeholder="Search">
+            <button type="submit">search</button>
+        </form>
+    </div>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Course Name</th>
+                <th>Name</th>
+                <th>Link</th>
+                <th>Expiry Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in online_classes %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ class.course.course_name }}</td>
+                <td>{{ class.title }}</td>
+                <td><a href="{{ class.link }}" target="_blank">Link</a></td>
+                <td>{{ class.expiry_date }}</td>
+                <td>
+                    <!-- Add actions like edit or delete here -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Pagination links -->
+    <div class="d-flex justify-content-center">
+        {% if is_paginated %}
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <a class="page-link">{{ num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

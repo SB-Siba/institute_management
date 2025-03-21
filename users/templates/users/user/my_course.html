@@ -1,0 +1,87 @@
+{% extends 'users/user/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">My Course Details</h2>
+    
+    {% if course %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <!-- Course Name and Code -->
+            <h5 class="card-title text-primary">{{ course.course_name }} ({{ course.course_code }})</h5>
+            
+            <!-- Admission Form Button -->
+            <div class="mb-3">
+                <a href="{% url 'users:admission_form' course.id %}" class="btn btn-success">Admission Form</a>
+            </div>
+            
+            <!-- Course Image -->
+            {% if course.course_image %}
+            <div class="text-center mb-3">
+                <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" 
+                    class="img-fluid rounded" 
+                    style="max-width: 500px; height: auto; border: 1px solid #ddd;">
+            </div>
+            {% endif %}
+            
+            <!-- Duration -->
+            {% if course.course_duration %}
+            <p><strong>Duration:</strong> {{ course.course_duration }}</p>
+            {% endif %}
+            
+            <!-- Course Fees -->
+            {% if course.course_fees %}
+            <p><strong>Course Fees:</strong> ₹{{ course.course_fees }}</p>
+            {% endif %}
+            
+            <!-- Minimum Amount to Pay -->
+            {% if course.minimum_fees %}
+            <p><strong>Minimum Amount to Pay:</strong> ₹{{ course.minimum_fees }}</p>
+            {% endif %}
+            
+            <!-- Course Subjects in Table -->
+            {% if course.course_subject %}
+            <h6 class="mt-4"><strong>Course Subjects:</strong></h6>
+            <table class="table table-striped table-bordered" style="border: 2px solid navy;">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Subject Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in course.course_subject %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ subject.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+            {% endif %}
+            
+            <!-- Course Syllabus -->
+            {% if course.course_syllabus %}
+            <div class="mt-4">
+                <h6><strong>Syllabus:</strong></h6>
+                <p>{{ course.course_syllabus }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Eligibility -->
+            {% if course.eligibility %}
+            <div class="mt-4">
+                <h6><strong>Eligibility:</strong></h6>
+                <p>{{ course.eligibility }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning mt-4" role="alert">
+        <p>You are not yet admitted to any course. Please contact the administration for more details.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

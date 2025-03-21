@@ -1,0 +1,54 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %}Message Details{% endblock title %}
+{% block content %}
+<section class="py-lg-2">
+  <div class="container">
+      <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Message Details</h4>
+      <div class="product-form-container">
+        <div>
+          <!-- Display Name -->
+          <p><strong>Name:</strong> 
+            {% if type == 'contact' %}
+              {% if message.user %}
+                {{ message.user.full_name }}
+              {% else %}
+                {{ message.full_name|default:"N/A" }}
+              {% endif %}
+            {% else %}
+              {{ message.user.full_name|default:"N/A" }}
+            {% endif %}
+          </p>
+
+          <!-- Display Email -->
+          <p><strong>Email:</strong> {{ message.email|default:"N/A" }}</p>
+
+          <!-- Display Contact -->
+          <p><strong>Contact:</strong> 
+            {% if type == 'contact' %}
+              {% if message.user %}
+                {{ message.user.contact|default:"N/A" }}
+              {% else %}
+                {{ message.contact|default:"N/A" }}
+              {% endif %}
+            {% else %}
+              {{ message.user.contact|default:"N/A" }}
+            {% endif %}
+          </p>
+
+          <!-- Display Message -->
+          <p><strong>Message:</strong>
+            {% if message.user %}
+                {{ message.message }}
+            {% else %}
+                {{ message.message|default:"N/A" }}
+            {% endif %}
+        </p>        
+
+          <!-- Display Date & Time -->
+          <p><strong>Date & Time:</strong> {{ message.created_at|date:"Y-m-d H:i:s"|default:"N/A" }}</p>
+        </div>
+      </div>
+  </div>
+</section>
+{% endblock content %}

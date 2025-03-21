@@ -1,0 +1,79 @@
+<!-- {% extends 'users/admin/base.html' %}
+
+{% block title %}Apply for Certificate{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Apply for Certificate</h2>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert 
+            {% if 'success' in message.tags %}
+                alert-success
+            {% elif 'warning' in message.tags %}
+                alert-warning
+            {% elif 'error' in message.tags %}
+                alert-danger
+            {% elif 'info' in message.tags %}
+                alert-info
+            {% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Apply Certificate</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const courseField = document.querySelector('select[name="course"]');
+        const studentField = document.querySelector('select[name="student"]');
+        const fetchStudentsUrl = "{% url 'certificate:get-students-by-course' course_id=0 %}";
+        if (!courseField || !studentField) return;
+
+    courseField.addEventListener('change', function () {
+        const courseId = this.value;
+
+        if (!courseId) {
+            studentField.innerHTML = '<option value="">Select a student</option>';
+            return;
+        }
+        const fetchUrl = "{% url 'certificate:get-students-by-course' course_id='0' %}".replace('0', courseId);
+
+        fetch(fetchUrl)
+            .then(response => response.json())
+            .then(data => {
+                studentField.innerHTML = ''; // Clear previous options
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a student';
+                studentField.appendChild(defaultOption);
+
+                if (data.students && data.students.length > 0) {
+                    data.students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        studentField.appendChild(option);
+                    });
+                } else {
+                    const noStudentsOption = document.createElement('option');
+                    noStudentsOption.value = '';
+                    noStudentsOption.textContent = 'No students available';
+                    studentField.appendChild(noStudentsOption);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching students:', error);
+                studentField.innerHTML = '<option value="">Error loading students</option>';
+            });
+    });
+});
+</script>
+
+{% endblock content %} -->

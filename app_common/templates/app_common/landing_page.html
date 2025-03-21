@@ -1,0 +1,292 @@
+{% extends 'app_common/base.html' %} {% load static %} {% block title%} Home |
+React Institute {% endblock title %} {% block content %}
+
+<!-- --------------------banner section--------------- -->
+<section>
+    <div>
+      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+              <div class="carousel-item" data-bs-interval="2500">
+                <img src="{% static 'app_common/images/Banner1.jpg' %}" class="d-block w-100" alt="Banner Image">
+              </div>
+            <div class="carousel-item active" data-bs-interval="3000">
+              <img src="{% static 'app_common/images/Banner2.jpg' %}" class="d-block w-100" alt="Default Banner Image">
+            </div>
+          </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+          <i class="fa-solid fa-chevron-left"></i>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+          <i class="fa-solid fa-chevron-right"></i>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+<!-- --------------------End Trending Arrival Collection--------------- -->
+
+<!-- --------------------------about niwa agro-------------------------------- -->
+
+<section class="aboutreact_bg">
+    <div class="row p-lg-4">
+        <div class="col-7">
+            <div class="">
+                <div class="aboutreact_bg1">
+                  <h2 class="text-success text-center pb-lg-5">ABOUT US</h2>
+                  <h2>Welcome To RATIONAL EDUCATION AND COMPUTER TRAINING</h2>
+                  <p>
+                    Welcome to Rational Education and Computer Training!
+                    <br />
+                    At Rational Education and Computer Training, we believe in empowering
+                    individuals of all ages and professions with the essential skills and
+                    knowledge needed to thrive in today's digital world. Whether you're a
+                    seasoned professional looking to enhance your skill set or a newcomer
+                    eager to dive into the world of computer software and vocational
+                    courses, our institute is the perfect place for you.
+                  </p>
+                  <div>
+                    <a
+                      href="{% url 'app_common:about_us' %}"
+                      class="text-white text-decoration-none u-button"
+                      >Know More</a
+                    >
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="col-5">
+            <div class="" style="height: 60vh; width:auto; object-fit:contain; overflow: hidden;">
+                <img src="{% static 'app_common/images/React about.jpg'%}" alt="" class="animate__animated animate__fadeInRight">
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="mission-vision-bg">
+  <div class="container p-lg-5 p-3">
+    <div class="row">
+      <!-- Mission Section -->
+      <div class="col-md-6">
+        <div class="mission-section">
+          <div
+            class="d-flex justify-content-between align-items-center"
+            onclick="toggleSection('mission-content')"
+          >
+            <h3 class="text-success">Our Mission</h3>
+            <span class="arrow">&#9662;</span>
+            <!-- Arrow Icon -->
+          </div>
+          <div id="mission-content" class="section-content">
+            <p>
+              At Rational Education and Computer Training, our mission is to
+              empower individuals of all ages and backgrounds with the knowledge
+              and skills necessary to succeed in today's rapidly evolving
+              digital landscape. Through comprehensive and accessible education,
+              we aim to bridge the gap between aspiration and achievement,
+              nurturing a community of lifelong learners equipped to thrive in a
+              technology-driven world.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vision Section -->
+      <div class="col-md-6">
+        <div class="vision-section">
+          <div
+            class="d-flex justify-content-between align-items-center"
+            onclick="toggleSection('vision-content')"
+          >
+            <h3 class="text-success">Our Vision</h3>
+            <span class="arrow">&#9662;</span>
+            <!-- Arrow Icon -->
+          </div>
+          <div id="vision-content" class="section-content">
+            <p>
+              Our vision at Rational Education and Computer Training is to be a
+              leading institution of excellence in computer education and
+              vocational training, recognized for our commitment to innovation,
+              quality, and inclusivity. We aspire to cultivate a dynamic
+              learning environment where creativity, critical thinking, and
+              collaboration flourish, enabling our students to unleash their
+              full potential and make meaningful contributions to society.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- --------------------------End about niwa agro-------------------------------- -->
+
+<section id="react_course">
+    <div class="p-lg-5 p-3">
+        <div class="d-flex justify-content-center align-items-center mb-3">
+            <div class="text-center">
+                <h2 class="text-success mb-2">OUR POPULAR COURSES</h2>
+                <a href="{% url 'app_common:our_courses' %}" class="btn-more-info position-absolute" style="right: 100px;">
+                    Explore Now
+                </a>
+                <p>Explore our most popular courses and start learning today!</p>
+            </div>
+        </div>
+        <div class="row">
+            {% for course in popular_courses %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="course-card">
+                    <div class="course-image-wrapper">
+                        {% if course.course_image %}
+                        <img src="{{ course.course_image.url }}" class="img-fluid" alt="{{ course.course_name }}" />
+                        {% else %}
+                        <img src="{% static 'app_common/images/default-course-image.jpg' %}" class="img-fluid" alt="Default Image" />
+                        {% endif %}
+                        <div class="course-duration">{{ course.course_duration }}</div>
+                    </div>
+                    <div class="course-details">
+                        <h4>{{ course.course_name }} ({{ course.course_code }})</h4>
+                        <p class="course-fees">
+                            Course Fees: {{ course.course_fees|floatformat:2 }}/-
+                            <span class="course-mrp">{{ course.course_mrp|floatformat:2 }}/-</span>
+                        </p>
+                        <p>Minimum Amount to Pay: Rs.{{ course.minimum_fees|floatformat:2 }}</p>
+                        <div class="course-actions">
+                            <a href="{% url 'app_common:our_course_details' course.course_code %}" class="btn btn-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No popular courses available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section> 
+
+  <!-- --------------------------Our Achievers------------------------------------- -->
+  <section id="our-achievers">
+    <div class="container py-5">
+        <div class="d-flex justify-content-center position-relative mb-5">
+            <h2 class="text-success mb-0">Our Achievers</h2>
+            <a href="{% url 'app_common:our_achievers' %}" class="btn-more-info position-absolute" style="right: 0;">
+                More Info
+            </a>
+        </div>
+        <div class="row">
+            {% for achiever in achievers %}
+            <div class="col-md-4 mb-4">
+                <div class="achiever-card">
+                    <img
+                        src="{% if achiever.student_image %}{{ achiever.student_image.url }}{% else %}{% static 'app_common/images/default-avatar.jpg' %}{% endif %}"
+                        alt="{{ achiever.full_name }}"
+                        class="img-fluid achiever-image"
+                    />
+                    <h4 class="achiever-name mt-3">{{ achiever.full_name }}</h4>
+                    <p><strong>Course:</strong> {{ achiever.course_of_interest.course_name }}</p>
+                    <p class="text-success font-weight-bold">BEST OF ATTENDANCE FOR THIS MONTH</p>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No achievers found for this month.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<section id="our-team-section" class="section mx-5 pt-5 pb-5 testimonial-section">
+  <div class="row">
+    <div
+      class="col-12 d-flex align-items-center justify-content-center flex-column"
+    >
+      <h2 class="section-heading border-bottom pb-3 text-success">OUR EXPERIENCED STAFFS</h2>
+    </div>
+  </div>
+
+  <!-- Testimonial cards section -->
+  <div class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+    <!-- Card 1 -->
+    <div class="col">
+      <div class="testimonial-box h-100 p-3 text-center">
+        <div class="testimonial-img-wrapper">
+          <img
+            class="testimonial-img"
+            src="{% static 'app_common/images/BRAJASUNDAR BEHERA_57374676_5_T.jpg' %}"
+            alt="profile"
+          />
+        </div>
+        <div class="testimonial-info mt-3">
+          <h4>BRAJASUNDAR BEHERA</h4>
+          <p class="branch">DIRECTOR & TEACHER, HEAD OFFICE(BALUGAON)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col">
+      <div class="testimonial-box h-100 p-3 text-center">
+        <div class="testimonial-img-wrapper">
+          <img
+            class="testimonial-img"
+            src="{% static 'app_common/images/Mrs. SEETA RANI DAS_40389857_4_T.jpeg' %}"
+            alt="profile"
+          />
+        </div>
+        <div class="testimonial-info mt-3">
+          <h4>Mrs. SEETA RANI DAS</h4>
+          <p class="branch">DIRECTOR & TEACHER,PANPUR BRANCH</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col">
+      <div class="testimonial-box h-100 p-3 text-center">
+        <div class="testimonial-img-wrapper">
+          <img
+            class="testimonial-img"
+            src="{% static 'app_common/images/MRS. SABITA DASH_48400955_logo.jpeg' %}"
+            alt="profile"
+          />
+        </div>
+        <div class="testimonial-info mt-3">
+          <h4>MRS. SABITA DASH</h4>
+          <p class="branch">
+            EXAMINATION CONTROLER AND OFFICE MANAGEMENT DIRECTOR
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col">
+      <div class="testimonial-box h-100 p-3 text-center">
+        <div class="testimonial-img-wrapper">
+          <img
+            class="testimonial-img"
+            src="{% static 'app_common/images/MS. PINKI BEHERA_17975399_logo.jpeg' %}"
+            alt="profile"
+          />
+        </div>
+        <div class="testimonial-info mt-3">
+          <h4>MS. PINKI BEHERA</h4>
+          <p class="branch">TEACHINF & LAB. DIRECTOR</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>  
+
+<script>
+  function toggleSection(sectionId) {
+    const content = document.getElementById(sectionId);
+    const arrow = content.previousElementSibling.querySelector(".arrow");
+
+    content.classList.toggle("show");
+    arrow.classList.toggle("active");
+  }
+</script>
+
+{% endblock content %}

@@ -1,0 +1,53 @@
+{% extends 'users/admin/base.html' %}
+
+{% block content %}
+<h2 class="mt-4 mb-4">Update Exam Results</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Total Theory Marks</th>
+                <th>Obtained Theory Marks</th>
+                <th>Total Practical Marks</th>
+                <th>Obtained Practical Marks</th>
+                <th>Total Marks</th>
+                <th>Total Obtained Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects_data %}
+            <tr>
+                <td>{{ subject.subject }}</td>
+                <td>{{ subject.total_theory_marks }}</td>
+                <td>
+                    <input type="number" name="theory_marks_{{ subject.subject }}" value="{{ subject.theory_marks }}" required>
+                </td>
+                <td>{{ subject.total_practical_marks }}</td>
+                <td>
+                    <input type="number" name="practical_marks_{{ subject.subject }}" value="{{ subject.practical_marks }}" required>
+                </td>
+                <td>{{ subject.total_marks }}</td>
+                <td>{{ subject.obtained_marks }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5"><strong>Total</strong></td>
+                <td>{{ exam_result.total_mark }}</td>
+                <td>{{ exam_result.obtained_mark }}</td>
+            </tr>
+            <tr>
+                <td colspan="5"><strong>Percentage</strong></td>
+                <td colspan="2">{{ exam_result.percentage }}%</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Update Marks</button>
+    <a href="{% url 'course:exam_results_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

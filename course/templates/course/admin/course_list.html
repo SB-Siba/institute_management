@@ -1,0 +1,258 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* Container and layout */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin-bottom: 20px;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-sm {
+        font-size: 12px;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #f8f9fa;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .input-group input {
+        margin-right: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pagination span {
+        margin-top: 10px;
+    }
+
+    /* Layout for search and add button */
+    .d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .d-flex .input-group {
+        flex: 1;
+        max-width: 60%;
+    }
+
+    .d-flex .btn-primary {
+        flex: 0 0 auto;
+    }
+</style>
+
+<h1>List Courses</h1>
+<div class="container">
+    <div class="d-flex mb-3">
+        <!-- Search on the left -->
+        <form method="get" class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search" value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+
+        <!-- Add Course button on the right -->
+        <a href="{% url 'course:add_course' %}" class="btn btn-primary">Add Course</a>
+    </div>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Photo</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Subjects</th>
+                <th>Fees</th>
+                <th>MRP</th>
+                <th>Min Fees</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in page_obj.object_list %}
+            <tr>
+                <!-- Serial Number -->
+                <td>{{ forloop.counter }}</td>
+                
+                <!-- Course Image -->
+                <td>
+                    {% if course.course_image %}
+                        <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" class="img-thumbnail" style="width: 60px; height: auto;">
+                    {% else %}
+                        <img src="{% static 'path/to/default/image.png' %}" alt="No Image" class="img-thumbnail" style="width: 60px; height: auto;">
+                    {% endif %}
+                </td>
+                
+                <!-- Course Details -->
+                <td>{{ course.course_code }}</td>
+                <td>{{ course.course_name }}</td>
+                
+                <!-- Subjects List as Nested Table -->
+                <td>
+                    {% if course.course_subject %}
+                        <table class="table table-sm table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Subject</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in course.course_subject %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ subject.name }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">No subjects available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <span class="text-muted">No subjects available</span>
+                    {% endif %}
+                </td>
+
+                <!-- Fees Details -->
+                <td>{{ course.course_fees }}</td>
+                <td>{{ course.course_mrp }}</td>
+                <td>{{ course.minimum_fees }}</td>
+                
+                <!-- Course Duration & Status -->
+                <td>{{ course.course_duration }} months</td>
+                <td>
+                    {% if course.status == 'Inactive' %}
+                        <span class="badge bg-success">Inactive</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Active</span>
+                    {% endif %}
+                </td>
+                
+                <!-- Action Buttons -->
+                <td>
+                    <a href="{% url 'course:edit_course' course.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'course:course_detail' course.pk %}" class="btn btn-info btn-sm">View Details</a>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-course-id="{{ course.id }}">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1&q={{ search_query }}" class="btn btn-secondary btn-sm">First</a>
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}" class="btn btn-secondary btn-sm">Last</a>
+            {% endif %}
+        </div>
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this course?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var courseId = button.getAttribute('data-course-id');
+        var form = deleteModal.querySelector('#deleteForm');
+        form.action = "{% url 'course:delete_course' pk=0 %}".replace('0', courseId);
+    });
+});
+</script>
+{% endblock %}

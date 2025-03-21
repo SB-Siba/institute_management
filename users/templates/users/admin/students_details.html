@@ -1,0 +1,389 @@
+{% load static %}
+{% block content %}
+<style>
+    @media print {
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 10px !important;
+        }
+        #backButton, #downloadButton {
+            display: none;
+        }
+    }
+    .certificate-qr-code {
+        width: 120px;
+    }
+    .terms-container {
+        max-width: 300px; /* Limit the width */
+        border: 1px solid #ccc; /* Add a subtle border */
+        border-radius: 8px; /* Rounded corners */
+        background-color: #f9f9f9; /* Light background */
+        padding: 15px; /* Inner padding */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+        margin: 0 auto; /* Center it horizontally if necessary */
+}
+
+.terms-text h5 {
+  font-size: 16px; /* Smaller heading size */
+  margin-bottom: 10px;
+}
+
+.terms-text p {
+  font-size: 14px; /* Smaller paragraph font */
+  margin: 0; /* Minimal spacing */
+  line-height: 1.5; /* Improve readability */
+  color: #333; /* Subtle text color */
+}
+
+.terms-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+    gap: 20px; /* Equal gap between sections */
+    margin: 20px 0;
+}
+
+.seal-signature {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: space-between;
+    text-align: center;
+    height: 200px; /* Adjust to ensure consistency */
+}
+
+.terms-container {
+    flex: 2; /* Make the Terms & Conditions section wider */
+    text-align: justify;
+}
+
+.iso-logo, 
+.qr-code {
+    flex: 1;
+    text-align: center;
+}
+
+.iso-logo img,
+.qr-code img {
+    display: block;
+    margin: 0 auto;
+    max-height: 150px;
+    max-width: 150px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: start; /* Align items to the top */
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc; /* Optional: Add a top border for separation */
+}
+
+.footer-section {
+    flex: 1; /* Ensure equal spacing between sections */
+    padding: 0 10px;
+    text-align: center; /* Center-align text in each section */
+}
+
+.footer-section p {
+    margin: 5px 0; /* Add some space between lines */
+    font-size: 14px; /* Adjust font size for readability */
+}
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/admission_form.css' %}">
+</head>
+
+<body>
+    <div class="certificate-container">
+        <div class="corner-triangle top-left"></div>
+        <div class="corner-triangle top-right"></div>
+        <div class="corner-triangle bottom-left"></div>
+        <div class="corner-triangle bottom-right"></div>
+        <div class="certificate-border">
+            <div class="certificate-content text-center">
+                <!-- Logo Section -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="certificate-headers">
+                        <img src="{% static 'app_common/images/msme.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-headers">
+                        <img src="{% static 'app_common/images/digi.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-header">
+                        <img src="{% static 'images/logoMain.png' %}" alt="Certificate Logo" class="certificate-logo">
+                    </div>
+                    <div class="certificate-headers2">
+                        <img src="{% static 'app_common/images/beti.png' %}" alt="Certificate Logo">
+                    </div>
+                    <div class="certificate-headers2">
+                        <img src="{% static 'app_common/images/swatch.png' %}" alt="Certificate Logo">
+                    </div>
+                </div>
+                <!-- Title Section with Student Photo -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <!-- Title Content -->
+                  <div class="text-center title-content mx-auto">
+                      <h1 class="bebas-neue-regular" style="margin-left: 0; font-size: 40px;">RATIONAL EDUCATION AND COMPUTER TRAINING</h1>
+                      <p class="iso-text"><b>An ISO 9001:2015 Certified Organization</b></p>
+                      <h3 class="CERTIFICtE"><u>Admission Form</u></h3>
+                  </div>                
+              
+                  <!-- Student Photo -->
+                  <div class="text-center student_img">
+                      {% if student.student_image %}
+                          <img src="{{ student.student_image.url }}" alt="Student Photo" class="student-photo">
+                      {% else %}
+                          <span>No Photo Available</span>
+                      {% endif %}
+                  </div>
+              </div>              
+                <!-- Admission Details -->
+                <div class="container mt-4">
+                    <!-- Admission Date and Course -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><b>Admission Date:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.admission_date }}</div>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label"><b>Roll number:</b></label>
+                          <div class="border p-1 rounded bg-light">{{ student.roll_number }}</div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label class="form-label"><b>Course of Interest:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.course_of_interest }}</div>
+                  </div>
+                    <!-- Background/Decorative Image -->
+                    <img src="{% static 'images/logoMain.png' %}" alt="Decorative Image" class="certificate-background">
+                    <!-- Student Details -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Student Name:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.full_name }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Father/Husband Name:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.father_husband_name }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Mother Name:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.mother_name }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Contact and Gender -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Aadhar Card Number:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.aadhar_card_number }}</div>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label"><b>Student's Mobile:</b></label>
+                          <div class="border p-1 rounded bg-light">{{ student.contact }}</div>
+                      </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Alternate Mobile:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.alternative_contact }}</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Gender:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.gender }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Email:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.email }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Date of Birth:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.date_of_birth }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Caste, Qualification, and Occupation -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Caste:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.caste }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Qualification:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.qualification }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Occupation:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.occupation }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Address Details -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label"><b>State:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.state }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>City:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.city }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><b>Pin Code:</b></label>
+                            <div class="border p-1 rounded bg-light">{{ student.pincode }}</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                      <!-- Permanent Address -->
+                      <div class="col-md-9">
+                          <label class="form-label"><b>Permanent Address:</b></label>
+                          <div class="border p-4 rounded bg-light">{{ student.permanent_address }}</div>
+                      </div>
+                  
+                      <!-- Signature -->
+                      <div class="col-md-3">
+                          <label class="form-label"><b>Signature:</b></label>
+                          <div class="student_sign">
+                              {% if student.student_signature %}
+                                  <img src="{{ student.student_signature.url }}" alt="Signature">
+                              {% else %}
+                                  <span>No Signature Available</span>
+                              {% endif %}
+                          </div>
+                      </div>
+                  </div>                  
+                </div>
+                <!-- Certificate Issue Section -->
+                <div class="row mb-3">
+                  <div class="col-12">
+                      <div class="p-2 text-white bg-black text-center rounded">
+                          ONLY FOR CERTIFICATE ISSUE
+                      </div>
+                  </div>
+                </div>
+
+                <!-- Fees Section -->
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                      <label class="form-label"><b>Course Fees:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.course_fees }}</div>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="form-label"><b>Paid Fees:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.fees_received }}</div>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="form-label"><b>Balance Fees:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.balance }}</div>
+                  </div>
+                </div>
+
+                <!-- Batch Details Section -->
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                      <label class="form-label"><b>Batch Name:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.batch }}</div>
+                  </div>
+                  <div class="col-md-6">
+                      <label class="form-label"><b>Batch of Registry Person:</b></label>
+                      <div class="border p-1 rounded bg-light">{{ student.batch_registry }}</div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-start terms-row">
+                    <!-- Seals & Signature -->
+                    <div class="seal-signature">
+                        <p>Seals & Signature</p>
+                        <div class="seal-space"></div> <!-- Blank space for seal -->
+                    </div>
+                
+                    <!-- Terms and Conditions -->
+                    <div class="terms-container">
+                        <div class="terms-text">
+                            <h5 class="text-white bg-black text-center"><b>Terms and Conditions:</b></h5>
+                            <p>Terms and conditions are aimed at protecting the business (you). They give business owners the opportunity to set their rules (within applicable law) of how their service or product may be used, including but not limited to, things like copyright conditions, age limits, and the governing law of the contract.</p>
+                        </div>
+                    </div>
+                
+                    <!-- ISO Logo -->
+                    <div class="iso-logo">
+                        <img src="{% static 'image/logo-ISO-9001_2015-768x768.png' %}" alt="ISO 9001 Logo" height="150px" width="150px">
+                    </div>
+                
+                    <!-- QR Code -->
+                    <div class="qr-code">
+                        <img src="{{ qr_image }}" alt="QR Code" height="150px" width="150px">
+                    </div>                    
+                </div>
+                <div class="footer-container">
+                    
+                    <!-- Signature Area -->
+        <div class="row">
+            <!-- Left Signature -->
+            <div
+            class="col-3 text-start Left_Signature"
+            style="margin-left: 5px">
+            <p class="p-0 m-0">
+                <img
+                src="{% static 'images/sabita sign.jpg' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 130px; height: auto"
+                />
+            </p>
+            <p class="p-0 m-0">---------------------</p>
+            <p style="margin: 0; text-transform: uppercase">SABITA DASH</p>
+            <p>Controller Of Examination</p>
+            </div>
+            <div class="col-6 p-0 mt-4">
+            <div class="contact-address" style="letter-spacing: 3px !important">
+                <p>Contact No: 9778577090 / 8895895988</p>
+                <p>
+                ADDRESS:-AT:SUBASH JENA COLONY, STREET NO 37C (HIGH SCHOOL ROAD,
+                BALUGAON)
+                </p>
+                <p>PO/PS- BALUGAON, ZIP/PIN- 752030, KHORDHA, ODISHA, INDIA</p>
+            </div>
+            </div>
+            <!-- Right Signature -->
+            <div
+            class="col-3 text-end Right_Signature"
+            style="margin-right: -20px">
+            <p class="p-0 m-0">
+                <img
+                src="{% static 'images/DIRECTOR SIGNcopy.png' %}"
+                alt=""
+                class="img-fluid"
+                style="width: 150px; height: auto; margin-right: 15%;"
+                />
+            </p>
+            <p class="p-0 mt-3">---------------------</p>
+            <p style="margin-right: 0%; text-transform: uppercase">
+                BRAJASUNDAR BEHERA
+            </p>
+            <b><p style="margin-right: 40%">Director</p></b>
+        </div>
+    </div>
+                </div>                
+          </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center my-4">
+        <button id="backButton" class="btn btn-secondary me-4" onclick="window.history.back();">Back</button>
+        <button id="downloadButton" class="btn btn-primary" onclick="window.print();">Download Certificate</button>
+    </div>
+</body>
+{% endblock %}

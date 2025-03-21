@@ -1,0 +1,40 @@
+{% extends 'users/user/base.html' %}
+{% block content %}
+<style>
+    #message{
+        height: 10px;
+    }
+</style>
+<div class="container d-flex justify-content-center mt-6">
+    <div class="card" style="width: 50%;">
+        <div class="card-body">
+            <h1 class="h4 mb-3 text-center">Add New Support</h1>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="description" class="form-label" id="description">Please add your queries here.</label>
+                    {{ form.message }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="mobile" class="form-label">Mobile</label>
+                    {{ form.contact }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    {{ form.email }}
+                </div>
+
+             
+
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'users:support' %}" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Support</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

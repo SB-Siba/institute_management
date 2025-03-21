@@ -1,0 +1,74 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<section class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Contact Messages</h4>
+    <form method="post" action="{% url 'app_common:admin_message_bulk_delete' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger mb-3">Delete Selected</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"> Select All</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Date & Time</th>
+                    <th>User Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selected_messages" value="{{ message.id }}">
+                        <input type="hidden" name="message_type" value="{{ message.type }}">
+                    </td>
+                    <td>
+                        
+                        {% if message.user %}
+                            {{ message.user.full_name }}
+                        {% else %}
+                            {{ message.full_name|default:"N/A" }}
+                        {% endif %}
+                    </td>
+                    <td>{{ message.email|default:"N/A" }}</td>
+                    <td>
+                        {% if message.user %}
+                            {{ message.user.contact|default:"N/A" }}
+                        {% else %}
+                            {{ message.contact|default:"N/A" }}
+                        {% endif %}
+                    </td>
+                    <td>{{ message.created_at|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if message.user %}
+                            Authenticated
+                        {% else %}
+                            Unauthenticated
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'app_common:admin_message_detail' message.id %}?type={{ message.type }}" class="btn btn-sm btn-primary">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No messages found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+  </div>
+</section>
+
+<script>
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="selected_messages"]');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+</script>
+{% endblock content %}
